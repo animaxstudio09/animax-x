@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANIMAX X - PREMIUM PRO</title>
+    <title>ANIMAX X - PREMIUM </title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,27 +21,31 @@
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
         .auth-card { width: 100%; max-width: 350px; background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; outline: none; }
-        .btn-main { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-main { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-accent { background: var(--accent); color: #000; }
         
-        /* Main UI */
+        /* Layout */
         header { padding: 18px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; position: sticky; top: 0; z-index: 100; }
         .logo { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px; font-size: 20px; }
         .search-box { width: 92%; margin: 10px auto; display: block; padding: 12px 15px; border-radius: 10px; background: #111; border: 1px solid #222; color: #fff; }
 
-        /* Grid & Folders */
+        /* Grid */
         #folder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 15px 100px; }
         .folder-card { height: 210px; border-radius: 18px; overflow: hidden; position: relative; border: 1px solid #222; background: #111; }
         .folder-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .folder-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-size: 9px; padding: 3px 7px; border-radius: 5px; font-weight: 900; }
-        .folder-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, #000); font-family: 'Orbitron'; font-size: 11px; }
+        .folder-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-size: 9px; padding: 3px 7px; border-radius: 5px; font-weight: 900; font-family: 'Orbitron'; }
+        .folder-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, #000); font-family: 'Orbitron'; font-size: 10px; letter-spacing: 1px; }
 
-        /* Views & Player */
+        /* Full Views */
         .full-view { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; }
-        .v-header { padding: 20px; border-bottom: 1px solid #222; display: flex; align-items: center; }
+        .v-header { padding: 20px; border-bottom: 1px solid #222; display: flex; align-items: center; background: #000; position: sticky; top:0; z-index: 10; }
         iframe { width: 100%; aspect-ratio: 16/9; border: none; background: #000; }
 
-        /* Bottom Nav */
+        /* Premium Input Styles */
+        .premium-input-box { background: #080808; border: 1px dashed var(--premium); padding: 20px; border-radius: 15px; margin-top: 25px; }
+        .status-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; margin-top: 10px; font-family: 'Orbitron'; }
+
+        /* Nav */
         nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; background: rgba(15,15,15,0.95); border-radius: 30px; padding: 16px; display: flex; justify-content: space-around; border: 1px solid #333; z-index: 4000; }
         nav i { font-size: 22px; color: #444; }
         nav i.active { color: var(--accent); }
@@ -56,7 +60,7 @@
             <input type="email" id="log-email" placeholder="Email Address">
             <input type="password" id="log-pass" placeholder="Password">
             <button class="btn-main btn-accent" onclick="handleLogin()">SIGN IN</button>
-            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">No account? <span style="color:var(--accent)">Register Now</span></p>
+            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">No account? <span style="color:var(--accent)">Register</span></p>
             <p onclick="forgotPass()" style="font-size:11px; text-align:center; margin-top:10px; color:#444;">Forgot Password?</p>
         </div>
         <div class="auth-card" id="reg-box" style="display:none;">
@@ -71,15 +75,10 @@
     <div id="app-content" style="display:none;">
         <header>
             <div class="logo">ANIMAX <span style="color:var(--accent)">X</span></div>
-            <i class="fas fa-crown" style="color:var(--premium)" onclick="openView('profile-view')"></i>
+            <i class="fas fa-crown" id="header-crown" style="color:#222;" onclick="openView('profile-view')"></i>
         </header>
 
         <input type="text" class="search-box" placeholder="Search Anime or Folders..." onkeyup="searchFn()">
-
-        <div style="width:320px; height:50px; margin:10px auto; background:#111; display:flex; align-items:center; justify-content:center;">
-            <script>atOptions={'key':'9f634c6894bc13ff8f0f19de1fcac9f3','format':'iframe','height':50,'width':320,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
-        </div>
 
         <div id="folder-grid"></div>
 
@@ -92,7 +91,7 @@
     <div id="ep-view" class="full-view">
         <div class="v-header">
             <i class="fas fa-arrow-left" onclick="closeView('ep-view')" style="margin-right:20px; color:var(--accent);"></i>
-            <span id="target-folder" style="font-family:'Orbitron'; font-size:14px;"></span>
+            <span id="target-folder" style="font-family:'Orbitron'; font-size:12px;"></span>
         </div>
         <div id="ep-list-container" style="padding:15px;"></div>
     </div>
@@ -103,19 +102,21 @@
             <span>MY ACCOUNT</span>
         </div>
         <div style="padding:30px; text-align:center;">
-            <div style="width:90px; height:90px; border-radius:50%; background:#222; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; border:2px solid var(--accent);">
-                <i class="fas fa-user-ninja" style="font-size:40px; color:#555;"></i>
+            <div style="width:80px; height:80px; border-radius:50%; background:#111; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; border:2px solid #222;">
+                <i class="fas fa-user-ninja" style="font-size:35px; color:#444;"></i>
             </div>
-            <h4 id="user-display">Guest User</h4>
-            <p style="font-size:12px; color:#555;" id="user-email-display"></p>
+            <h4 id="user-display">User Account</h4>
+            <div id="status-tag" class="status-tag" style="background:#222; color:#777;">FREE ACCESS</div>
 
-            <div style="margin-top:40px; background:#111; padding:20px; border-radius:15px; border:1px solid var(--premium);">
-                <h5 style="color:var(--premium); font-family:'Orbitron';">PREMIUM ACCESS</h5>
-                <p style="font-size:11px; margin:10px 0; color:#888;">Unlock all premium episodes and remove video ads.</p>
-                <button onclick="window.open('https://t.me/aminezone09?text=I%20want%20to%20buy%20premium%20access')" style="width:100%; background:var(--premium); padding:12px; border:none; border-radius:8px; font-weight:900; margin-top:10px;">BUY PREMIUM ACCESS</button>
+            <div class="premium-input-box">
+                <h5 style="color:var(--premium); font-family:'Orbitron'; font-size:12px;">ACTIVATE PREMIUM</h5>
+                <input type="text" id="premium-code-input" placeholder="Enter 10-Digit Code" style="text-align:center; border-color:var(--premium); margin: 15px 0 5px;">
+                <button class="btn-main" onclick="activatePremium()" style="background:var(--premium); color:#000;">VERIFY & ACTIVATE</button>
+                <p style="font-size:10px; color:#555; margin-top:10px;">If you don't have a code, click below</p>
+                <button onclick="window.open('https://t.me/aminezone09?text=I%20want%20to%20buy%20premium%20access')" style="background:none; color:var(--premium); border:none; font-size:12px; font-weight:bold; margin-top:10px; cursor:pointer;">[ BUY PREMIUM CODE ]</button>
             </div>
 
-            <button onclick="handleLogout()" style="margin-top:50px; background:none; border:1px solid #333; color:#ff4444; padding:10px 30px; border-radius:8px;">LOGOUT ACCOUNT</button>
+            <button onclick="handleLogout()" style="margin-top:40px; background:none; border:1px solid #222; color:#ff4444; padding:10px 30px; border-radius:8px; font-size:12px;">LOGOUT</button>
         </div>
     </div>
 
@@ -125,10 +126,6 @@
             <span id="playing-now" style="font-size:11px;"></span>
         </div>
         <iframe id="main-video" src="" allowfullscreen></iframe>
-        <div style="width:320px; height:50px; margin:20px auto; background:#111;">
-            <script>atOptions={'key':'9f634c6894bc13ff8f0f19de1fcac9f3','format':'iframe','height':50,'width':320,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
-        </div>
     </div>
 
     <script>
@@ -146,12 +143,14 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
-        // 1. Auth Management
+        let isPremiumUser = false;
+
+        // 1. Auth & Premium Check
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app-content').style.display = 'block';
-                document.getElementById('user-email-display').innerText = user.email;
+                checkPremium(user.uid);
                 loadData();
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
@@ -159,34 +158,35 @@
             }
         });
 
-        function handleLogin() {
-            const e = document.getElementById('log-email').value;
-            const p = document.getElementById('log-pass').value;
-            auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
+        function checkPremium(uid) {
+            db.ref('users/' + uid).on('value', snap => {
+                if(snap.exists() && snap.val().isPremium) {
+                    isPremiumUser = true;
+                    document.getElementById('status-tag').innerText = "PREMIUM ACTIVE";
+                    document.getElementById('status-tag').style.background = "var(--premium)";
+                    document.getElementById('status-tag').style.color = "#000";
+                    document.getElementById('header-crown').style.color = "var(--premium)";
+                }
+            });
         }
 
-        function handleReg() {
-            const e = document.getElementById('reg-email').value;
-            const p = document.getElementById('reg-pass').value;
-            auth.createUserWithEmailAndPassword(e, p).catch(err => alert(err.message));
+        function activatePremium() {
+            const code = document.getElementById('premium-code-input').value;
+            const uid = auth.currentUser.uid;
+            if(!code) return alert("Please enter code!");
+
+            db.ref('premium_codes/' + code).once('value', snap => {
+                if(snap.exists() && snap.val().status === "unused") {
+                    db.ref('users/' + uid).update({ isPremium: true });
+                    db.ref('premium_codes/' + code).update({ status: "used", usedBy: auth.currentUser.email });
+                    alert("Premium Activated Successfully!");
+                } else {
+                    alert("Invalid or Expired Code!");
+                }
+            });
         }
 
-        function handleLogout() { auth.signOut(); location.reload(); }
-
-        function toggleAuth() {
-            const lb = document.getElementById('login-box');
-            const rb = document.getElementById('reg-box');
-            lb.style.display = lb.style.display === 'none' ? 'block' : 'none';
-            rb.style.display = rb.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function forgotPass() {
-            const e = document.getElementById('log-email').value;
-            if(!e) return alert("Enter email first");
-            auth.sendPasswordResetEmail(e).then(() => alert("Reset link sent to email")).catch(err => alert(err.message));
-        }
-
-        // 2. Data & Folder System
+        // 2. Folder & Video System
         let masterData = {};
         function loadData() {
             db.ref('anime').on('value', snap => {
@@ -202,7 +202,7 @@
                     grid.innerHTML += `
                         <div class="folder-card" onclick="openFolder('${f}')">
                             <img src="${masterData[f][0].thumbnail}">
-                            <div class="folder-badge">${masterData[f].length} EPISODES</div>
+                            <div class="folder-badge">${masterData[f].length} EP</div>
                             <div class="folder-name">${f}</div>
                         </div>`;
                 }
@@ -225,8 +225,8 @@
         }
 
         function playVideo(url, title, prem) {
-            if(prem) {
-                // Open Adsterra Direct Link
+            // যদি ইউজার প্রিমিয়াম না হয় এবং ভিডিওটি প্রিমিয়াম হয়, তবে অ্যাড আসবে
+            if(prem && !isPremiumUser) {
                 window.open("https://www.effectivegatecpm.com/wks31tcv3?key=fbbb30382d249a23d19cac4b07315a5c", "_blank");
             }
             document.getElementById('playing-now').innerText = title;
@@ -234,16 +234,21 @@
             openView('player-view');
         }
 
+        // Auth Actions
+        function handleLogin() { auth.signInWithEmailAndPassword(document.getElementById('log-email').value, document.getElementById('log-pass').value).catch(e => alert(e.message)); }
+        function handleReg() { auth.createUserWithEmailAndPassword(document.getElementById('reg-email').value, document.getElementById('reg-pass').value).catch(e => alert(e.message)); }
+        function handleLogout() { auth.signOut(); }
+        function toggleAuth() { document.getElementById('login-box').style.display = document.getElementById('login-box').style.display === 'none' ? 'block' : 'none'; document.getElementById('reg-box').style.display = document.getElementById('reg-box').style.display === 'none' ? 'block' : 'none'; }
+        function forgotPass() { auth.sendPasswordResetEmail(document.getElementById('log-email').value).then(()=>alert("Reset Link Sent")).catch(e=>alert(e.message)); }
+
+        // Utils
         function searchFn() {
             let val = document.querySelector('.search-box').value.toLowerCase();
-            let cards = document.querySelectorAll('.folder-card');
-            cards.forEach(c => c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none");
+            document.querySelectorAll('.folder-card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none");
         }
-
         function openView(id) { document.getElementById(id).style.display = 'block'; }
         function closeView(id) { document.getElementById(id).style.display = 'none'; }
         function closePlayer() { document.getElementById('main-video').src = ""; closeView('player-view'); }
     </script>
 </body>
-                </html>
-    
+</html>
