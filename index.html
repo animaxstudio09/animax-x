@@ -18,13 +18,13 @@
         body { font-family: 'Outfit', sans-serif; background: var(--dark); color: #fff; overflow-x: hidden; }
 
         /* Banner Ad Container */
-        .ad-container { width: 100%; display: flex; justify-content: center; padding: 10px 0; background: #000; }
+        .ad-container { width: 100%; display: flex; justify-content: center; padding: 10px 0; background: #000; overflow: hidden; }
 
         /* Auth Screen */
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
         .auth-card { width: 100%; max-width: 350px; background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; outline: none; }
-        .btn-main { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-main { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         
         /* Layout */
         header { padding: 18px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; background: #000; position: sticky; top: 0; z-index: 100; }
@@ -35,15 +35,18 @@
         #folder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 15px 100px; }
         .folder-card { height: 210px; border-radius: 18px; overflow: hidden; position: relative; border: 1px solid #222; background: #111; }
         .folder-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .folder-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-size: 9px; padding: 3px 7px; border-radius: 5px; font-weight: 900; }
-        .folder-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, #000); font-family: 'Orbitron'; font-size: 10px; }
+        .folder-badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; font-size: 9px; padding: 3px 7px; border-radius: 5px; font-weight: 900; font-family: 'Orbitron'; }
+        .folder-name { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, #000); font-family: 'Orbitron'; font-size: 10px; letter-spacing: 1px; }
 
         /* Full Views */
         .full-view { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; }
-        .v-header { padding: 20px; border-bottom: 1px solid #222; display: flex; align-items: center; background: #000; }
+        .v-header { padding: 20px; border-bottom: 1px solid #222; display: flex; align-items: center; background: #000; position: sticky; top:0; }
         iframe { width: 100%; aspect-ratio: 16/9; border: none; background: #000; }
 
-        /* Nav */
+        /* Premium Input Box */
+        .premium-box { background: #080808; border: 1px dashed var(--premium); padding: 20px; border-radius: 15px; margin-top: 25px; }
+
+        /* Navigation */
         nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; background: rgba(15,15,15,0.95); border-radius: 30px; padding: 16px; display: flex; justify-content: space-around; border: 1px solid #333; z-index: 4000; }
         nav i { font-size: 22px; color: #444; }
         nav i.active { color: var(--accent); }
@@ -54,16 +57,18 @@
     <div id="auth-screen">
         <div class="logo" style="margin-bottom: 30px;">ANIMAX <span style="color:var(--accent)">X</span></div>
         <div class="auth-card" id="login-box">
-            <input type="email" id="log-email" placeholder="Email Address">
+            <h3 style="text-align:center; margin-bottom:10px;">Login</h3>
+            <input type="email" id="log-email" placeholder="Email">
             <input type="password" id="log-pass" placeholder="Password">
             <button class="btn-main" style="background:var(--accent); color:#000;" onclick="handleLogin()">SIGN IN</button>
-            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">No account? <span style="color:var(--accent)">Register</span></p>
+            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">Don't have an account? <span style="color:var(--accent)">Register</span></p>
         </div>
         <div class="auth-card" id="reg-box" style="display:none;">
-            <input type="email" id="reg-email" placeholder="Email Address">
-            <input type="password" id="reg-pass" placeholder="New Password">
-            <button class="btn-main" style="background:var(--accent); color:#000;" onclick="handleReg()">CREATE ACCOUNT</button>
-            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">Have account? <span style="color:var(--accent)">Login</span></p>
+            <h3 style="text-align:center; margin-bottom:10px;">Register</h3>
+            <input type="email" id="reg-email" placeholder="Email">
+            <input type="password" id="reg-pass" placeholder="Password">
+            <button class="btn-main" style="background:var(--accent); color:#000;" onclick="handleReg()">SIGN UP</button>
+            <p onclick="toggleAuth()" style="font-size:12px; text-align:center; margin-top:15px; color:#666;">Already have an account? <span style="color:var(--accent)">Login</span></p>
         </div>
     </div>
 
@@ -80,7 +85,7 @@
             <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
         </div>
 
-        <input type="text" class="search-box" placeholder="Search Anime Folders..." onkeyup="searchFn()">
+        <input type="text" class="search-box" placeholder="Search Folders..." onkeyup="searchFn()">
 
         <div id="folder-grid"></div>
 
@@ -107,26 +112,26 @@
     <div id="profile-view" class="full-view">
         <div class="v-header">
             <i class="fas fa-arrow-left" onclick="closeView('profile-view')" style="margin-right:20px;"></i>
-            <span>MY PROFILE</span>
+            <span>ACCOUNT</span>
         </div>
         <div style="padding:30px; text-align:center;">
-            <div id="status-tag" style="background:#222; padding:5px; border-radius:5px; font-size:10px; margin-bottom:20px;">FREE USER</div>
+            <div id="status-tag" style="padding:5px; font-size:10px; font-weight:bold;">FREE USER</div>
             
-            <div style="background:#080808; border:1px dashed var(--premium); padding:20px; border-radius:15px;">
-                <h5 style="color:var(--premium);">ACTIVATE PREMIUM CODE</h5>
-                <input type="text" id="premium-code-input" placeholder="Enter Code" style="text-align:center; border-color:var(--premium);">
-                <button class="btn-main" onclick="activatePremium()" style="background:var(--premium); color:#000;">ACTIVATE NOW</button>
-                <button onclick="window.open('https://t.me/aminezone09?text=I%20want%20to%20buy%20premium%20access')" style="background:none; border:none; color:var(--premium); margin-top:15px; font-size:12px; font-weight:bold;">BUY CODE FROM ADMIN</button>
+            <div class="premium-box">
+                <h5 style="color:var(--premium); font-family:'Orbitron';">PREMIUM REDEEM</h5>
+                <input type="text" id="premium-code-input" placeholder="Enter 10-Digit Code" style="text-align:center; border-color:var(--premium);">
+                <button class="btn-main" style="background:var(--premium); color:#000;" onclick="activatePremium()">ACTIVATE</button>
+                <button onclick="window.open('https://t.me/aminezone09?text=I%20want%20to%20buy%20premium%20access')" style="background:none; border:none; color:var(--premium); font-size:12px; margin-top:15px; font-weight:bold;">BUY CODE FROM ADMIN</button>
             </div>
             
-            <button onclick="handleLogout()" style="margin-top:50px; background:none; border:1px solid #333; color:#ff4444; padding:10px 30px; border-radius:8px;">LOGOUT</button>
+            <button onclick="handleLogout()" style="margin-top:50px; background:none; border:1px solid #333; color:red; padding:10px 20px; border-radius:10px;">LOGOUT</button>
         </div>
     </div>
 
     <div id="player-view" class="full-view" style="z-index:6000;">
         <div class="v-header">
             <i class="fas fa-arrow-left" onclick="closePlayer()" style="margin-right:20px;"></i>
-            <span id="playing-now" style="font-size:11px;"></span>
+            <span id="playing-now" style="font-size:10px;"></span>
         </div>
         <iframe id="main-video" src="" allowfullscreen></iframe>
         <div class="ad-container" style="margin-top:20px;">
@@ -138,6 +143,7 @@
     </div>
 
     <script>
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI",
             authDomain: "myanimeapp-8d079.firebaseapp.com",
@@ -153,6 +159,7 @@
 
         let isPremiumUser = false;
 
+        // Auth Logic
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('auth-screen').style.display = 'none';
@@ -178,16 +185,17 @@
 
         function activatePremium() {
             const code = document.getElementById('premium-code-input').value;
-            if(!code) return alert("Enter code");
+            if(!code) return alert("Enter Code!");
             db.ref('premium_codes/' + code).once('value', snap => {
                 if(snap.exists() && snap.val().status === "unused") {
                     db.ref('users/' + auth.currentUser.uid).update({ isPremium: true });
                     db.ref('premium_codes/' + code).update({ status: "used", usedBy: auth.currentUser.email });
-                    alert("Success!");
-                } else { alert("Invalid Code"); }
+                    alert("Premium Activated!");
+                } else { alert("Invalid or Used Code!"); }
             });
         }
 
+        // Data Handling
         let masterData = {};
         function loadData() {
             db.ref('anime').on('value', snap => {
@@ -195,7 +203,7 @@
                 grid.innerHTML = ""; masterData = {};
                 snap.forEach(c => {
                     const d = c.val();
-                    const f = d.folder || "Others";
+                    const f = d.folder || "Uncategorized";
                     if(!masterData[f]) masterData[f] = [];
                     masterData[f].push(d);
                 });
@@ -218,7 +226,7 @@
                 const isPrem = ep.title.toLowerCase().includes("premium") || ep.type === "premium";
                 list.innerHTML += `
                     <div onclick="playVideo('${ep.url}', '${ep.title}', ${isPrem})" style="background:#111; padding:15px; border-radius:12px; margin-bottom:10px; border:1px solid #222; display:flex; justify-content:space-between;">
-                        <span>${ep.title}</span>
+                        <span style="font-size:13px;">${ep.title}</span>
                         ${isPrem ? '<i class="fas fa-crown" style="color:var(--premium)"></i>' : '<i class="fas fa-play" style="color:var(--accent)"></i>'}
                     </div>`;
             });
@@ -227,6 +235,7 @@
 
         function playVideo(url, title, prem) {
             if(prem && !isPremiumUser) {
+                // Non-premium users see a direct link ad
                 window.open("https://www.effectivegatecpm.com/wks31tcv3?key=fbbb30382d249a23d19cac4b07315a5c", "_blank");
             }
             document.getElementById('playing-now').innerText = title;
@@ -234,6 +243,7 @@
             openView('player-view');
         }
 
+        // Handlers
         function handleLogin() { auth.signInWithEmailAndPassword(document.getElementById('log-email').value, document.getElementById('log-pass').value).catch(e => alert(e.message)); }
         function handleReg() { auth.createUserWithEmailAndPassword(document.getElementById('reg-email').value, document.getElementById('reg-pass').value).catch(e => alert(e.message)); }
         function handleLogout() { auth.signOut(); }
