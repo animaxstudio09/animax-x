@@ -12,15 +12,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409",
-    });
-  });
-        </script>
-    
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409",
+        });
+      });
+    </script>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -175,7 +174,7 @@
             font-family: 'Orbitron'; font-size: 10px; color: #444;
         }
         
-        /* AD Container Styling - Initially Empty */
+        /* AD Container Styling */
         .ad-container-center {
             display: flex; justify-content: center; align-items: center;
             margin: 15px 0; overflow: hidden; width: 100%; min-height: 1px;
@@ -350,8 +349,12 @@
         const auth = firebase.auth(), db = firebase.database();
 
         let currentUser = null, isPremium = false, currentVideoId = null;
-        let adSessionClick = false; // Track Smartlink clicks
-        let adsLoaded = false; // Prevent double loading of script ads
+        let adSessionClick = false; 
+        let adsLoaded = false; 
+
+        // Listener references for cleaning up
+        let currentLikeRef = null;
+        let currentViewRef = null;
 
         // --- AUTH SYSTEM ---
         auth.onAuthStateChanged(user => {
@@ -361,7 +364,6 @@
                 document.getElementById('main-app').style.display = 'block';
                 document.getElementById('profile-name').innerText = user.email.split('@')[0].toUpperCase();
                 
-                // IMPORTANT: Check Premium Status before loading anything else
                 checkPremium(user.uid);
                 
                 loadContent();
@@ -373,23 +375,20 @@
             }
         });
 
-        // --- AD SYSTEM (DYNAMIC) ---
+        // --- AD SYSTEM ---
         function loadFreeUserAds() {
-            if(adsLoaded) return; // Prevent multiple injections
+            if(adsLoaded) return; 
             adsLoaded = true;
             console.log("Loading Free User Ads...");
 
-            // 1. Social Bar Script
             let s1 = document.createElement('script');
             s1.src = "https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js";
             document.body.appendChild(s1);
 
-            // 2. Popunder Script
             let s2 = document.createElement('script');
             s2.src = "https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js";
             document.body.appendChild(s2);
 
-            // 3. Banner 320x50 (Home Page)
             const bannerTop = document.getElementById('ad-banner-top');
             if(bannerTop) {
                 bannerTop.innerHTML = `
@@ -399,7 +398,6 @@
                 `;
             }
 
-            // 4. Banner 468x60 (Player Page)
             const bannerPlayer = document.getElementById('ad-banner-player');
             if(bannerPlayer) {
                 bannerPlayer.innerHTML = `
@@ -411,9 +409,7 @@
         }
 
         function triggerSmartLink() {
-            // ONLY trigger if User is NOT Premium
             if(isPremium) return;
-
             if(!adSessionClick) {
                 window.open("https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871", "_blank");
                 adSessionClick = true; 
@@ -425,24 +421,17 @@
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val();
                 if(d && d.premiumExpiry > Date.now()) {
-                    // USER IS PREMIUM
                     isPremium = true;
                     document.getElementById('vip-badge').innerText = "ROYAL VIP MEMBER 👑";
                     document.getElementById('vip-badge').style.borderColor = "var(--gold)";
                     document.getElementById('vip-badge').style.color = "var(--gold)";
-                    
-                    // Hide Ad Containers just in case
                     document.getElementById('ad-banner-top').style.display = 'none';
                     document.getElementById('ad-banner-player').style.display = 'none';
-                    
                 } else {
-                    // USER IS FREE
                     isPremium = false;
                     document.getElementById('vip-badge').innerText = "FREE ACCOUNT";
                     document.getElementById('vip-badge').style.borderColor = "#333";
                     document.getElementById('vip-badge').style.color = "#666";
-                    
-                    // Show Ad Containers and Load Scripts
                     document.getElementById('ad-banner-top').style.display = 'flex';
                     document.getElementById('ad-banner-player').style.display = 'flex';
                     loadFreeUserAds();
@@ -550,11 +539,13 @@
             }, 4000);
         }
 
-        // --- PLAYER & SOCIAL ---
+        // --- PLAYER & SOCIAL (FIXED) ---
         function playVideo(title, url, id, isPrem) {
             if(isPrem && !isPremium) { alert("ROYAL VIP REQUIRED!"); switchTab('profile'); return; }
             
-            // SMARTLINK TRIGGER (Only for Free Users)
+            // Generate a valid ID if somehow missing (Fallback)
+            if(!id) id = title.replace(/[^a-zA-Z0-9]/g, '_');
+
             triggerSmartLink();
 
             currentVideoId = id;
@@ -562,33 +553,58 @@
             const v = document.getElementById('main-video'); v.src = url; v.play();
             document.getElementById('player-view').style.display = 'block';
             
+            // Watchlist
             db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: title, date: Date.now()});
             
-            db.ref(`views/${id}/${currentUser.uid}`).once('value', s => {
-                if(!s.exists()) {
-                    db.ref(`views/${id}/${currentUser.uid}`).set(true);
-                    db.ref(`views/${id}/count`).transaction(c => (c || 0) + 1);
+            // FIX: VIEW COUNT LOGIC
+            const viewRef = db.ref(`views/${id}`);
+            viewRef.child(currentUser.uid).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    // If user hasn't viewed yet, add user ID AND increment count
+                    viewRef.child(currentUser.uid).set(true);
+                    viewRef.child('count').transaction(current_value => {
+                        return (current_value || 0) + 1;
+                    });
                 }
             });
 
+            // Load Likes and View Counts for Display
             loadSocialData(id);
         }
 
         function closePlayer() {
             document.getElementById('main-video').pause();
             document.getElementById('player-view').style.display = 'none';
+            
+            // Clean up listeners when closing player
+            if(currentLikeRef) currentLikeRef.off();
+            if(currentViewRef) currentViewRef.off();
         }
 
         function loadSocialData(id) {
-            db.ref(`likes/${id}`).on('value', s => {
+            // FIX: Remove old listeners to prevent bugs when switching videos
+            if(currentLikeRef) currentLikeRef.off();
+            if(currentViewRef) currentViewRef.off();
+
+            // Likes Listener
+            currentLikeRef = db.ref(`likes/${id}`);
+            currentLikeRef.on('value', s => {
                 const count = s.child('count').val() || 0;
                 document.getElementById('like-count').innerText = count;
                 const userLiked = s.child(currentUser.uid).exists();
                 document.querySelector('#like-btn i').style.color = userLiked ? 'var(--red)' : '#888';
             });
-            db.ref(`views/${id}/count`).on('value', s => document.getElementById('view-count').innerText = s.val() || 0);
+
+            // Views Listener
+            currentViewRef = db.ref(`views/${id}/count`);
+            currentViewRef.on('value', s => {
+                document.getElementById('view-count').innerText = s.val() || 0;
+            });
             
+            // Comments (Optional cleanup could be added here too, keeping simple for now)
             const list = document.getElementById('comments-list');
+            list.innerHTML = ""; // Clear old comments immediately
+            db.ref(`comments/${id}`).off(); // Remove old comment listener
             db.ref(`comments/${id}`).on('child_added', s => {
                 const c = s.val();
                 list.innerHTML = `
@@ -600,12 +616,18 @@
         }
 
         function toggleLike() {
+            if(!currentVideoId) return;
+
             const ref = db.ref(`likes/${currentVideoId}`);
+            
+            // FIX: Simplified transaction for consistency
             ref.child(currentUser.uid).once('value', s => {
                 if(s.exists()) {
+                    // Unlike
                     ref.child(currentUser.uid).remove();
-                    ref.child('count').transaction(c => c - 1);
+                    ref.child('count').transaction(c => (c || 0) - 1);
                 } else {
+                    // Like
                     ref.child(currentUser.uid).set(true);
                     ref.child('count').transaction(c => (c || 0) + 1);
                 }
@@ -640,7 +662,7 @@
                         <div class="short-item">
                             <video src="${d.url}" loop onclick="this.paused?this.play():this.pause()"></video>
                             <div class="short-overlay">
-                                <div class="short-btn" onclick="toggleLike('${d.id}')"><i class="fas fa-heart"></i><span>Like</span></div>
+                                <div class="short-btn"><i class="fas fa-heart"></i><span>Like</span></div>
                                 <div class="short-btn"><i class="fas fa-comment"></i><span>Comment</span></div>
                             </div>
                         </div>`;
