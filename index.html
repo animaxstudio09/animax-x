@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANIMAX X - ULTIMATE</title>
+    <title>ANIMAX PREMIUM </title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,482 +13,637 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
-        :root { --gold: #FFD700; --bg: #000; --card: #0a0a0a; --border: 1px solid #222; }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: #fff; overflow-x: hidden; }
-
-        /* --- AUTH SCREEN (ROYAL LOGIN) --- */
-        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; background-image: radial-gradient(circle at center, #1a1a00 0%, #000 70%); }
-        .auth-card { background: rgba(10, 10, 10, 0.9); padding: 30px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; border: 1px solid var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); backdrop-filter: blur(10px); }
+        :root { 
+            --gold: #D4AF37; 
+            --dark-gold: #AA8C2C;
+            --black: #050505; 
+            --glass: rgba(20, 20, 20, 0.95);
+            --border: 1px solid rgba(212, 175, 55, 0.3);
+            --neon-glow: 0 0 12px rgba(212, 175, 55, 0.4);
+            --red: #ff3b3b;
+        }
         
-        /* --- UI ELEMENTS --- */
-        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.95); position: sticky; top: 0; z-index: 1000; border-bottom: var(--border); }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: #000; color: #fff; overflow-x: hidden; padding-bottom: 70px; }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- Auth Screen --- */
+        #auth-screen {
+            position: fixed; inset: 0; z-index: 10000;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-box {
+            background: rgba(255, 255, 255, 0.03); padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 350px;
+            text-align: center; backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8); animation: fadeIn 0.6s ease-out;
+        }
+        .auth-box h2 { font-family: 'Orbitron'; font-size: 28px; color: #fff; margin-bottom: 30px; letter-spacing: 2px; }
+        .auth-box h2 span { color: var(--gold); text-shadow: var(--neon-glow); }
+        
+        input { 
+            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; 
+            border: 1px solid #333; background: rgba(0,0,0,0.5); color: #fff; 
+            font-family: 'Outfit'; text-align: center; transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); box-shadow: var(--neon-glow); }
+
+        .btn-royal {
+            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700;
+            background: linear-gradient(45deg, var(--dark-gold), var(--gold)); color: #000;
+            font-family: 'Orbitron'; cursor: pointer; letter-spacing: 1px; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .btn-royal:active { transform: scale(0.98); }
+
+        /* --- Main UI Structure --- */
+        .app-view { display: none; padding-top: 60px; animation: fadeIn 0.4s; }
+        
+        header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(0,0,0,0.9); position: fixed; top: 0; left: 0; right: 0; z-index: 100; border-bottom: var(--border); 
+            backdrop-filter: blur(10px);
+        }
         .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; letter-spacing: 1px; }
         .logo span { color: var(--gold); }
-        
-        input { width: 100%; padding: 15px; background: #111; border: var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; font-family: 'Outfit'; }
-        .btn-gold { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: 800; font-family: 'Orbitron'; cursor: pointer; color: #000; text-transform: uppercase; }
-        .btn-gold:active { transform: scale(0.98); }
 
-        /* --- HOME & FOLDERS --- */
-        #banner-slider { width: 94%; height: 180px; margin: 15px auto; border-radius: 15px; overflow: hidden; position: relative; border: var(--border); }
+        /* Slider */
+        #banner-slider, #movie-banner-slider { 
+            width: calc(100% - 30px); height: 180px; margin: 15px auto; border-radius: 15px; 
+            overflow: hidden; position: relative; border: var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
         .slide { position: absolute; inset: 0; opacity: 0; transition: 1s; background-size: cover; background-position: center; }
         .slide.active { opacity: 1; }
-        
-        #folder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px 80px; }
-        .folder-card { background: var(--card); border-radius: 10px; overflow: hidden; aspect-ratio: 2/3; position: relative; border: var(--border); }
+
+        /* Section Title */
+        .section-title {
+            padding: 0 15px; margin-top: 25px; margin-bottom: 15px;
+            font-family: 'Orbitron'; color: var(--gold); letter-spacing: 1px; font-size: 14px; 
+            display:flex; align-items:center; justify-content: space-between;
+        }
+
+        /* GRID 4 SYSTEM */
+        .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 10px; }
+        .folder-card { 
+            position: relative; border-radius: 8px; overflow: hidden; background: #111; 
+            border: 1px solid #222; aspect-ratio: 2/3; transition: 0.2s;
+        }
+        .folder-card:active { transform: scale(0.95); }
         .folder-card img { width: 100%; height: 100%; object-fit: cover; }
-        .folder-overlay { position: absolute; bottom: 0; width: 100%; padding: 30px 5px 8px; background: linear-gradient(transparent, #000); text-align: center; font-size: 11px; font-weight: bold; text-shadow: 0 1px 3px #000; }
+        .folder-info { 
+            position: absolute; bottom: 0; width: 100%; padding: 5px; 
+            background: linear-gradient(to top, #000 10%, transparent); text-align: center; 
+        }
+        .folder-title { font-size: 9px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- SHORTS (TIKTOK STYLE) --- */
-        #shorts-view { display: none; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; padding-bottom: 70px; }
-        .short-container { width: 100%; height: calc(100vh - 70px); scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-        .short-video { width: 100%; height: 100%; object-fit: cover; }
-        .short-overlay { position: absolute; bottom: 20px; left: 10px; right: 60px; z-index: 10; text-shadow: 1px 1px 2px #000; }
-        .short-actions { position: absolute; bottom: 20px; right: 10px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 20; }
-        .action-btn { font-size: 25px; color: #fff; text-align: center; }
-        .action-btn span { display: block; font-size: 10px; margin-top: 5px; font-family: 'Orbitron'; }
+        /* --- Movie Box Specifics --- */
+        #movie-box-view { background: #0a0a0a; min-height: 100vh; }
+        .movie-header { background: #1a0505; border-bottom: 1px solid #ff3b3b; }
+        .movie-header .logo span { color: #ff3b3b; }
+        
+        /* --- Shorts --- */
+        #shorts-view { 
+            position: fixed; inset: 0; background: #000; z-index: 200; 
+            padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; 
+        }
+        .short-item {
+            width: 100%; height: 100vh; scroll-snap-align: start; position: relative;
+            background: #111; display: flex; align-items: center; justify-content: center;
+        }
+        .short-item video { width: 100%; height: 100%; object-fit: cover; }
+        .short-overlay {
+            position: absolute; bottom: 80px; right: 10px; display: flex; flex-direction: column; gap: 20px; z-index: 10;
+        }
+        .short-btn { color: #fff; text-align: center; font-size: 24px; text-shadow: 0 2px 5px #000; }
+        .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- PLAYER & YOUTUBE STYLE --- */
-        #player-view { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; }
-        .video-box { width: 100%; aspect-ratio: 16/9; position: sticky; top: 0; background: #000; z-index: 5001; }
+        /* --- Player & Social --- */
+        #player-view { 
+            position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; display: none; 
+        }
+        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
         video { width: 100%; height: 100%; }
-        
-        /* Premium Lock Overlay */
-        #ad-lock-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.96); z-index: 6000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        
-        /* Interaction Bar */
-        .interaction-bar { display: flex; justify-content: space-around; padding: 15px; border-bottom: var(--border); background: #050505; }
-        .ib-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #aaa; gap: 5px; }
-        .ib-item i { font-size: 18px; }
-        .ib-item.active i { color: var(--gold); }
 
-        /* Comments Section */
-        .comments-sec { padding: 15px; background: #000; padding-bottom: 50px; }
-        .comment-box { display: flex; gap: 10px; margin-bottom: 15px; }
-        .comment-input { flex: 1; background: #111; border: none; border-bottom: 1px solid #333; padding: 10px; color: #fff; }
-        .single-comment { margin-bottom: 15px; display: flex; gap: 10px; }
-        .c-avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--gold); font-size: 12px; }
+        .social-bar {
+            display: flex; justify-content: space-around; padding: 15px; background: #111; border-bottom: 1px solid #222;
+        }
+        .social-action { text-align: center; color: #888; font-size: 18px; }
+        .social-action.active { color: var(--gold); animation: pulse 0.3s ease; }
+        .social-action span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- PROFILE (ROYAL) --- */
-        #profile-view { display: none; padding: 20px; text-align: center; }
-        .profile-header { background: linear-gradient(45deg, #0d0d0d, #1a1a1a); padding: 30px 20px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .profile-header::before { content:''; position: absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle, rgba(255,215,0,0.1), transparent); animation: rotate 10s linear infinite; }
-        @keyframes rotate { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+        .comment-section { padding: 15px; padding-bottom: 100px; }
+        .comment-box {
+            display: flex; margin-bottom: 15px; background: #0a0a0a; padding: 10px; border-radius: 8px; border: 1px solid #222;
+        }
+        .c-avatar { width: 30px; height: 30px; background: #333; border-radius: 50%; margin-right: 10px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .c-body h4 { font-size: 12px; color: var(--gold); margin-bottom: 3px; }
+        .c-body p { font-size: 11px; color: #ccc; }
+
+        /* --- Navigation --- */
+        nav { 
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; 
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(15px); border-radius: 25px; 
+            padding: 12px; display: flex; justify-content: space-around; border: 1px solid #333; z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+        nav i { font-size: 20px; color: #555; transition: 0.3s; padding: 10px; border-radius: 50%; }
+        nav i.active { color: #000; background: var(--gold); box-shadow: var(--neon-glow); }
+
+        /* --- Footer --- */
+        .dev-footer {
+            text-align: center; padding: 20px; margin-top: 30px; border-top: 1px solid #222;
+            font-family: 'Orbitron'; font-size: 10px; color: #444;
+        }
         
-        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--gold); margin: 0 auto 15px; overflow: hidden; position: relative; z-index: 2; }
-        .p-name { font-family: 'Orbitron'; font-size: 18px; position: relative; z-index: 2; }
-        .p-badge { background: var(--gold); color: #000; padding: 4px 12px; border-radius: 15px; font-size: 10px; font-weight: bold; display: inline-block; margin-top: 5px; position: relative; z-index: 2; }
-
-        /* --- BOTTOM NAV --- */
-        nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.98); display: flex; justify-content: space-around; padding: 15px; border-top: var(--border); z-index: 4000; padding-bottom: 20px; }
-        nav i { font-size: 22px; color: #444; transition: 0.3s; }
-        nav i.active { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        /* AD Container Styling - Initially Empty */
+        .ad-container-center {
+            display: flex; justify-content: center; align-items: center;
+            margin: 15px 0; overflow: hidden; width: 100%; min-height: 1px;
+        }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
-        <div class="auth-card" id="login-form">
-            <h2 style="font-family:'Orbitron'; color:var(--gold); margin-bottom:5px;">ANIMAX X</h2>
-            <p style="font-size:10px; color:#777; margin-bottom:20px;">ROYAL STREAMING ACCESS</p>
+        <div class="auth-box" id="login-form">
+            <h2>ANIMAX <span>PREMIUM</span></h2>
             <input type="email" id="email-in" placeholder="Email Address">
             <input type="password" id="pass-in" placeholder="Password">
-            <button class="btn-gold" onclick="handleAuth('login')">ENTER GATE</button>
-            <p style="font-size:10px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Create New Account</p>
+            <button class="btn-royal" onclick="handleAuth('login')">LOGIN</button>
+            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Create New Account</p>
         </div>
-        <div class="auth-card" id="reg-form" style="display:none;">
-            <h2 style="font-family:'Orbitron'; margin-bottom:20px;">REGISTER</h2>
-            <input type="email" id="remail-in" placeholder="Email Address">
-            <input type="password" id="rpass-in" placeholder="Password">
-            <button class="btn-gold" onclick="handleAuth('reg')">JOIN NOW</button>
-            <p style="font-size:10px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Back to Login</p>
+        <div class="auth-box" id="reg-form" style="display:none;">
+            <h2>JOIN <span>ROYAL</span></h2>
+            <input type="email" id="remail-in" placeholder="Valid Email">
+            <input type="password" id="rpass-in" placeholder="Strong Password">
+            <button class="btn-royal" onclick="handleAuth('reg')">REGISTER</button>
+            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Back to Login</p>
         </div>
     </div>
 
-    <div id="main-app" style="display:none;">
+    <div id="main-app" class="app-view">
+        <header>
+            <div class="logo">ANIMAX <span>PREMIUM</span></div>
+            <i class="fas fa-search" style="color:#fff; font-size:18px;"></i>
+        </header>
+
+        <div id="banner-slider"></div>
+
+        <div id="ad-banner-top" class="ad-container-center"></div>
         
-        <div id="home-view">
-            <header>
-                <div class="logo">ANIMAX <span>X</span></div>
-                <div style="font-size:12px; color:var(--gold); font-family:'Orbitron';">PREMIUM</div>
-            </header>
-            
-            <div id="banner-slider"></div>
-            
-            <p style="padding:15px 15px 5px; font-size:12px; font-family:'Orbitron'; color:var(--gold); display:flex; justify-content:space-between;">
-                <span>FEATURED SERIES</span> <i class="fas fa-fire"></i>
-            </p>
-            <div id="folder-grid"></div>
+        <div class="section-title">
+            <span><i class="fas fa-bolt" style="color:var(--gold)"></i> NEW RELEASE</span>
+            <span style="font-size:10px; color:#666">See All</span>
         </div>
 
-        <div id="shorts-view">
-            </div>
+        <div id="anime-grid" class="grid-container"></div>
 
-        <div id="ep-list-view" style="display:none; position:fixed; inset:0; background:#000; z-index:3000; overflow-y:auto; padding-bottom:80px;">
-            <div id="ser-banner" style="width:100%; height:250px; background-size:cover; background-position:center; position:relative;">
-                <i class="fas fa-arrow-left" onclick="document.getElementById('ep-list-view').style.display='none'" style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.6); color:#fff; padding:10px 12px; border-radius:50%; cursor:pointer;"></i>
-                <div style="position:absolute; bottom:0; width:100%; background:linear-gradient(transparent, #000); padding:20px;">
-                    <h2 id="ser-title" style="font-family:'Orbitron'; color:var(--gold); font-size:20px;">SERIES TITLE</h2>
-                </div>
-            </div>
-            <div id="episodes-container" style="padding:15px;"></div>
-        </div>
-
-        <div id="player-view">
-            <div class="video-box">
-                <i class="fas fa-chevron-down" onclick="closePlayer()" style="position:absolute; top:15px; left:15px; z-index:10; background:rgba(0,0,0,0.5); padding:8px 10px; border-radius:50%;"></i>
-                <video id="main-video" controls playsinline></video>
-                
-                <div id="ad-lock-overlay">
-                    <i class="fas fa-crown" style="font-size:40px; color:var(--gold); margin-bottom:20px;"></i>
-                    <h3 style="font-family:'Orbitron'; color:#fff;">PREMIUM CONTENT</h3>
-                    <p style="font-size:11px; color:#aaa; margin:10px 0 20px;">This video is locked. Watch an ad to unlock.</p>
-                    <button class="btn-gold" style="width:200px;" onclick="simulateAd()">WATCH AD TO PLAY</button>
-                    <p style="margin-top:15px; font-size:10px; color:var(--gold);" onclick="showTab('profile')">OR BUY VIP KEY</p>
-                </div>
-            </div>
-
-            <div style="padding:15px 15px 0;">
-                <h3 id="play-title" style="font-family:'Outfit'; font-size:16px; line-height:1.4;">Video Title Here</h3>
-                <p style="font-size:10px; color:#777; margin-top:5px;"><span id="view-count">0</span> views</p>
-            </div>
-
-            <div class="interaction-bar">
-                <div class="ib-item" id="like-btn" onclick="toggleLike()">
-                    <i class="far fa-thumbs-up"></i> <span id="like-count">0</span>
-                </div>
-                <div class="ib-item" onclick="document.querySelector('.comments-sec').scrollIntoView({behavior:'smooth'})">
-                    <i class="far fa-comment-alt"></i> <span>Comment</span>
-                </div>
-                <div class="ib-item">
-                    <i class="fas fa-share"></i> <span>Share</span>
-                </div>
-            </div>
-
-            <div style="padding:10px; text-align:center; background:#111; margin:10px 0;">
-                <p style="font-size:8px; color:#444; margin-bottom:5px;">SPONSORED</p>
-                <script type="text/javascript"> atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} }; </script>
-                <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
-            </div>
-
-            <div class="comments-sec">
-                <h4 style="font-size:12px; margin-bottom:15px;">Comments</h4>
-                <div class="comment-box">
-                    <div class="c-avatar">ME</div>
-                    <input type="text" class="comment-input" id="c-input" placeholder="Add a comment...">
-                    <button onclick="postComment()" style="background:transparent; border:none; color:var(--gold);"><i class="fas fa-paper-plane"></i></button>
-                </div>
-                <div id="comments-list"></div>
-            </div>
-        </div>
-
-        <div id="profile-view">
-            <div class="profile-header">
-                <div class="avatar"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:100%;"></div>
-                <div class="p-name" id="u-id">USER</div>
-                <div class="p-badge" id="u-badge">FREE MEMBER</div>
-            </div>
-
-            <div style="background:#111; padding:20px; border-radius:15px; border:var(--border); margin-bottom:15px;">
-                <p style="color:var(--gold); font-family:'Orbitron'; font-size:12px; margin-bottom:15px;">REDEEM VIP CODE</p>
-                <input type="text" id="license-key" placeholder="XXXX-XXXX-XXXX" style="text-align:center;">
-                <button class="btn-gold" onclick="redeemVip()">ACTIVATE PREMIUM</button>
-            </div>
-
-            <button class="btn-gold" style="background:#0088cc; color:#fff; margin-bottom:10px;" onclick="window.open('https://t.me/aminezone09', '_blank')">
-                <i class="fab fa-telegram-plane"></i> BUY KEY ON TELEGRAM
-            </button>
-            <button class="btn-gold" style="background:#222; color:#fff;" onclick="firebase.auth().signOut()">LOGOUT</button>
-        </div>
-
-        <nav>
-            <i class="fas fa-home active" onclick="showTab('home', this)"></i>
-            <i class="fas fa-bolt" onclick="showTab('shorts', this)"></i> <i class="fas fa-user" onclick="showTab('profile', this)"></i>
-        </nav>
+        <div class="dev-footer">Developed by RJ Rocky</div>
     </div>
+
+    <div id="movie-box-view" class="app-view">
+        <header class="movie-header">
+            <div class="logo">MOVIE <span>BOX</span></div>
+            <i class="fas fa-sign-out-alt" style="color:#fff;" onclick="switchInterface('main')"></i>
+        </header>
+
+        <div id="movie-banner-slider"></div>
+
+        <div class="section-title">
+            <span style="color:#ff3b3b"><i class="fas fa-film"></i> TRENDING MOVIES</span>
+        </div>
+
+        <div id="movie-grid" class="grid-container"></div>
+    </div>
+
+    <div id="shorts-view" style="display:none;">
+        <div style="position:fixed; top:20px; left:20px; z-index:101; color:#fff;" onclick="hideShorts()">
+            <i class="fas fa-arrow-left" style="background:rgba(0,0,0,0.5); padding:10px; border-radius:50%;"></i>
+        </div>
+        <div id="shorts-container"></div>
+    </div>
+
+    <div id="player-view">
+        <div class="video-wrapper">
+            <div style="position:absolute; top:15px; left:15px; z-index:10;" onclick="closePlayer()">
+                <i class="fas fa-arrow-left" style="font-size:18px; color:#fff; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%;"></i>
+            </div>
+            <video id="main-video" controls playsinline></video>
+        </div>
+
+        <div class="social-bar">
+            <div class="social-action" id="like-btn" onclick="toggleLike()">
+                <i class="fas fa-heart"></i>
+                <span id="like-count">0</span>
+            </div>
+            <div class="social-action">
+                <i class="fas fa-eye"></i>
+                <span id="view-count">0</span>
+            </div>
+            <div class="social-action" onclick="shareContent()">
+                <i class="fas fa-share-alt"></i>
+                <span>Share</span>
+            </div>
+        </div>
+
+        <div id="ad-banner-player" class="ad-container-center"></div>
+
+        <div style="padding:15px;">
+            <h3 id="player-title" style="font-family:'Orbitron'; font-size:16px; color:var(--gold); margin-bottom:5px;">Episode Title</h3>
+            <p style="font-size:11px; color:#666;">Real-time comments</p>
+        </div>
+
+        <div class="comment-section">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" id="comment-input" placeholder="Add a comment..." style="margin-bottom:0;">
+                <button class="btn-royal" style="width:60px; margin-top:0;" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div id="comments-list"></div>
+        </div>
+    </div>
+
+    <div id="profile-view" class="app-view" style="background:#050505; height:100vh; overflow-y:auto;">
+        <div style="height:150px; background:url('https://c4.wallpaperflare.com/wallpaper/295/163/719/anime-anime-boys-picture-in-picture-kimetsu-no-yaiba-kamado-tanjir%C5%8D-hd-wallpaper-preview.jpg') center/cover; position:relative;">
+            <div style="position:absolute; bottom:-40px; left:50%; transform:translateX(-50%); width:100px; height:100px; border-radius:50%; border:3px solid var(--gold); background:#000; overflow:hidden;">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width:100%; height:100%;">
+            </div>
+        </div>
+        
+        <div style="text-align:center; margin-top:50px;">
+            <h2 id="profile-name" style="font-family:'Orbitron';">USER</h2>
+            <div id="vip-badge" style="display:inline-block; padding:5px 15px; border:1px solid #333; border-radius:20px; font-size:10px; margin-top:5px; color:#666;">FREE ACCOUNT</div>
+        </div>
+
+        <div style="padding:20px;">
+            <button class="btn-royal" style="background:linear-gradient(45deg, #ff3b3b, #800000); color:#fff; margin-bottom:15px;" onclick="switchInterface('movie')">
+                <i class="fas fa-film"></i> MOVIE BOX SWITCH
+            </button>
+
+            <div style="background:#111; padding:15px; border-radius:10px; border:1px solid #222; margin-bottom:15px;">
+                <h4 style="color:var(--gold); font-family:'Orbitron'; font-size:12px; margin-bottom:10px;"><i class="fas fa-lock"></i> VIP LOCKER</h4>
+                <input type="password" id="locker-pin" placeholder="Set/Enter PIN" style="margin-bottom:5px;">
+                <button style="width:100%; background:#222; border:none; color:#fff; padding:8px; border-radius:5px;" onclick="alert('Locker Feature Coming Soon!')">ACCESS</button>
+            </div>
+
+            <h3 style="font-family:'Orbitron'; font-size:14px; margin-bottom:10px;">HISTORY</h3>
+            <div id="watchlist-container" style="max-height:150px; overflow-y:auto; margin-bottom:20px;"></div>
+
+            <div style="background:linear-gradient(45deg, #111, #220000); padding:15px; border-radius:10px; border:1px solid var(--gold);">
+                <h4 style="color:var(--gold); font-family:'Orbitron'; margin-bottom:10px;">PREMIUM ACCESS</h4>
+                <input type="text" id="prem-code" placeholder="Enter License Code">
+                <button class="btn-royal" onclick="redeemCode()">REDEEM CODE</button>
+                <button class="btn-royal" style="background:#0088cc; color:#fff; margin-top:5px;" onclick="buyPremium()">
+                    <i class="fab fa-telegram"></i> BUY PREMIUM
+                </button>
+            </div>
+
+            <button onclick="auth.signOut()" style="width:100%; background:#333; border:none; color:#fff; padding:15px; margin-top:20px; border-radius:10px;">LOGOUT</button>
+        </div>
+    </div>
+
+    <div id="ep-view" style="display:none; position:fixed; inset:0; background:#000; z-index:3000; overflow-y:auto;">
+        <div style="padding:15px; border-bottom:1px solid #333; position:sticky; top:0; background:#000;">
+            <i class="fas fa-arrow-left" onclick="document.getElementById('ep-view').style.display='none'" style="font-size:20px;"></i>
+            <span id="folder-title-header" style="margin-left:15px; font-family:'Orbitron'; color:var(--gold);">SERIES</span>
+        </div>
+        <div id="ep-list" style="padding:15px;"></div>
+    </div>
+
+    <nav id="main-nav">
+        <i class="fas fa-home active" onclick="switchTab('home')"></i>
+        <i class="fas fa-play-circle" onclick="showShorts()"></i>
+        <i class="fas fa-user" onclick="switchTab('profile')"></i>
+    </nav>
 
     <script>
-        // --- CONFIGURATION ---
-        const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
-        firebase.initializeApp(firebaseConfig);
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI",
+            authDomain: "myanimeapp-8d079.firebaseapp.com",
+            databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com",
+            projectId: "myanimeapp-8d079",
+            storageBucket: "myanimeapp-8d079.firebasestorage.app",
+            messagingSenderId: "37482342893",
+            appId: "1:37482342893:web:bebc7352e4bc102b725fe4"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
-        
-        let currentUser = null, isVip = false, currentVideoId = null;
-        let groupedAnime = {};
 
-        // --- AUTH LOGIC ---
-        auth.onAuthStateChanged(user => {
-            if(user) {
-                currentUser = user;
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                document.getElementById('u-id').innerText = user.email.split('@')[0].toUpperCase();
-                checkVip(); loadHomeData(); loadShorts();
-            } else {
-                document.getElementById('auth-screen').style.display = 'flex';
-                document.getElementById('main-app').style.display = 'none';
-            }
-        });
+        let currentUser = null, isPremium = false, currentVideoId = null;
+        let adSessionClick = false; // Track Smartlink clicks
+        let adsLoaded = false; // Prevent double loading of script ads
 
-        // --- HOME DATA LOADING ---
-        function loadHomeData() {
-            // Banners
-            db.ref('banners').on('value', s => {
-                const c = document.getElementById('banner-slider'); c.innerHTML = "";
-                let i=0; s.forEach(b => {
-                    c.innerHTML += `<div class="slide ${i===0?'active':''}" style="background-image:url('${b.val().image}')"></div>`;
-                    i++;
-                });
-                // Auto Scroll
-                if(!window.bannerInterval) window.bannerInterval = setInterval(() => {
-                    let a = c.querySelector('.active');
-                    if(a) { a.classList.remove('active'); (a.nextElementSibling||c.querySelector('.slide')).classList.add('active'); }
-                }, 4000);
-            });
+        // --- AD SYSTEM (DYNAMIC) ---
+        function loadFreeUserAds() {
+            if(adsLoaded) return; // Prevent multiple injections
+            adsLoaded = true;
+            console.log("Loading Free User Ads...");
 
-            // Folders
-            db.ref('anime').on('value', s => {
-                groupedAnime = {};
-                const g = document.getElementById('folder-grid'); g.innerHTML = "";
-                s.forEach(child => {
-                    let d = child.val(); d.id = child.key;
-                    let f = d.folder || "Uncategorized";
-                    if(!groupedAnime[f]) groupedAnime[f] = []; groupedAnime[f].push(d);
-                });
-                Object.keys(groupedAnime).forEach(name => {
-                    g.innerHTML += `
-                    <div class="folder-card" onclick="openFolder('${name.replace(/'/g,"\\'")}')">
-                        <img src="${groupedAnime[name][0].thumbnail}">
-                        <div class="folder-overlay">${name}</div>
-                    </div>`;
-                });
-            });
-        }
+            // 1. Social Bar Script
+            let s1 = document.createElement('script');
+            s1.src = "https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js";
+            document.body.appendChild(s1);
 
-        // --- SHORTS LOGIC (TikTok Style) ---
-        function loadShorts() {
-            db.ref('shorts').on('value', s => {
-                const c = document.getElementById('shorts-view'); c.innerHTML = "";
-                s.forEach(snap => {
-                    let d = snap.val(); let key = snap.key;
-                    c.innerHTML += `
-                    <div class="short-container">
-                        <video class="short-video" src="${d.url}" loop onclick="this.paused?this.play():this.pause()"></video>
-                        <div class="short-overlay">
-                            <h3 style="font-size:14px;">@Admin</h3>
-                            <p style="font-size:12px;">${d.title}</p>
-                        </div>
-                        <div class="short-actions">
-                            <div class="action-btn" onclick="likeShort('${key}', this)">
-                                <i class="fas fa-heart"></i> <span>${d.likes||0}</span>
-                            </div>
-                            <div class="action-btn" onclick="window.open('https://t.me/aminezone09')">
-                                <i class="fab fa-telegram-plane"></i> <span>Join</span>
-                            </div>
-                        </div>
-                    </div>`;
-                });
-                // Auto Play on Scroll (Intersection Observer)
-                const videos = document.querySelectorAll('.short-video');
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if(entry.isIntersecting) entry.target.play();
-                        else { entry.target.pause(); entry.target.currentTime = 0; }
-                    });
-                }, { threshold: 0.6 });
-                videos.forEach(v => observer.observe(v));
-            });
-        }
+            // 2. Popunder Script
+            let s2 = document.createElement('script');
+            s2.src = "https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js";
+            document.body.appendChild(s2);
 
-        function likeShort(key, btn) {
-            // Simple visual feedback + DB update
-            btn.style.color = 'red';
-            db.ref(`shorts/${key}/likes`).transaction(l => (l||0)+1);
-        }
-
-        // --- EPISODES & PLAYER ---
-        function openFolder(name) {
-            document.getElementById('ep-list-view').style.display = 'block';
-            document.getElementById('ser-title').innerText = name;
-            document.getElementById('ser-banner').style.backgroundImage = `url('${groupedAnime[name][0].thumbnail}')`;
-            
-            const c = document.getElementById('episodes-container'); c.innerHTML = "";
-            groupedAnime[name].forEach((ep, i) => {
-                const isPrem = ep.type === 'premium';
-                c.innerHTML += `
-                <div onclick="setupPlayer('${ep.id}', '${ep.title.replace(/'/g,"\\'")}', '${ep.url}', ${isPrem})" 
-                     style="display:flex; align-items:center; background:#111; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #222;">
-                    <span style="color:var(--gold); font-family:'Orbitron'; width:30px;">${i+1}</span>
-                    <div style="flex:1;">
-                        <div style="font-size:13px; font-weight:600;">${ep.title}</div>
-                        ${isPrem ? '<span style="font-size:9px; background:var(--gold); color:#000; padding:2px 5px; border-radius:4px; font-weight:bold;">PREMIUM</span>' : ''}
-                    </div>
-                    <i class="fas ${isPrem?'fa-lock':'fa-play-circle'}" style="color:${isPrem?'#555':'var(--gold)'}; font-size:20px;"></i>
-                </div>`;
-            });
-        }
-
-        function setupPlayer(id, title, url, isPrem) {
-            currentVideoId = id;
-            document.getElementById('play-title').innerText = title;
-            const v = document.getElementById('main-video');
-            const overlay = document.getElementById('ad-lock-overlay');
-            
-            v.src = url;
-            document.getElementById('player-view').style.display = 'block';
-            
-            // Increment Views
-            db.ref(`anime/${id}/views`).transaction(v => (v||0)+1);
-            db.ref(`anime/${id}/views`).on('value', s => document.getElementById('view-count').innerText = s.val()||0);
-
-            // Check Premium
-            if(isPrem && !isVip) {
-                overlay.style.display = 'flex';
-                v.pause();
-            } else {
-                overlay.style.display = 'none';
-                v.play();
+            // 3. Banner 320x50 (Home Page)
+            const bannerTop = document.getElementById('ad-banner-top');
+            if(bannerTop) {
+                bannerTop.innerHTML = `
+                    <iframe src="javascript:false" title="" scrolling="no" frameborder="0" 
+                    style="border:none; width:320px; height:50px; overflow:hidden;" 
+                    srcdoc='<script>atOptions = { "key" : "9f634c6894bc13ff8f0f19de1fcac9f3", "format" : "iframe", "height" : 50, "width" : 320, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"><\/script>'></iframe>
+                `;
             }
 
-            // Load Likes & Comments
-            checkLikeStatus();
-            loadComments();
+            // 4. Banner 468x60 (Player Page)
+            const bannerPlayer = document.getElementById('ad-banner-player');
+            if(bannerPlayer) {
+                bannerPlayer.innerHTML = `
+                    <iframe src="javascript:false" title="" scrolling="no" frameborder="0" 
+                    style="border:none; width:468px; height:60px; overflow:hidden;" 
+                    srcdoc='<script>atOptions = { "key" : "3c0655cdf72da98fdd68dcdd704f9766", "format" : "iframe", "height" : 60, "width" : 468, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"><\/script>'></iframe>
+                `;
+            }
         }
 
-        // --- INTERACTION LOGIC (YOUTUBE STYLE) ---
-        function checkLikeStatus() {
-            const uid = auth.currentUser.uid;
-            db.ref(`likes/${currentVideoId}/${uid}`).once('value', s => {
-                const btn = document.getElementById('like-btn');
-                if(s.exists()) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-            db.ref(`anime/${currentVideoId}/likes`).on('value', s => document.getElementById('like-count').innerText = s.val()||0);
+        function triggerSmartLink() {
+            // ONLY trigger if User is NOT Premium
+            if(isPremium) return;
+
+            if(!adSessionClick) {
+                window.open("https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871", "_blank");
+                adSessionClick = true; 
+            }
         }
 
-        function toggleLike() {
-            const uid = auth.currentUser.uid;
-            const ref = db.ref(`likes/${currentVideoId}/${uid}`);
-            const countRef = db.ref(`anime/${currentVideoId}/likes`);
-            
-            ref.once('value', s => {
-                if(s.exists()) {
-                    ref.remove();
-                    countRef.transaction(c => (c||0)-1);
-                    document.getElementById('like-btn').classList.remove('active');
+        // --- PREMIUM CHECKER ---
+        function checkPremium(uid) {
+            db.ref(`users/${uid}`).on('value', s => {
+                const d = s.val();
+                if(d && d.premiumExpiry > Date.now()) {
+                    // USER IS PREMIUM
+                    isPremium = true;
+                    document.getElementById('vip-badge').innerText = "ROYAL VIP MEMBER 👑";
+                    document.getElementById('vip-badge').style.borderColor = "var(--gold)";
+                    document.getElementById('vip-badge').style.color = "var(--gold)";
+                    
+                    // Hide Ad Containers just in case
+                    document.getElementById('ad-banner-top').style.display = 'none';
+                    document.getElementById('ad-banner-player').style.display = 'none';
+                    
                 } else {
-                    ref.set(true);
-                    countRef.transaction(c => (c||0)+1);
-                    document.getElementById('like-btn').classList.add('active');
+                    // USER IS FREE
+                    isPremium = false;
+                    document.getElementById('vip-badge').innerText = "FREE ACCOUNT";
+                    document.getElementById('vip-badge').style.borderColor = "#333";
+                    document.getElementById('vip-badge').style.color = "#666";
+                    
+                    // Show Ad Containers and Load Scripts
+                    document.getElementById('ad-banner-top').style.display = 'flex';
+                    document.getElementById('ad-banner-player').style.display = 'flex';
+                    loadFreeUserAds();
                 }
             });
         }
 
-        function loadComments() {
-            db.ref(`comments/${currentVideoId}`).limitToLast(20).on('value', s => {
-                const c = document.getElementById('comments-list'); c.innerHTML = "";
-                s.forEach(snap => {
-                    const d = snap.val();
-                    c.innerHTML += `
-                    <div class="single-comment">
-                        <div class="c-avatar">${d.user[0]}</div>
-                        <div>
-                            <div style="font-size:10px; color:#888;">${d.user}</div>
-                            <div style="font-size:12px;">${d.text}</div>
-                        </div>
-                    </div>`;
+        function handleAuth(type) {
+            const e = document.getElementById(type === 'login' ? 'email-in' : 'remail-in').value;
+            const p = document.getElementById(type === 'login' ? 'pass-in' : 'rpass-in').value;
+            if (type === 'login') auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
+            else auth.createUserWithEmailAndPassword(e, p).catch(err => alert(err.message));
+        }
+        function toggleAuth() {
+            const l = document.getElementById('login-form'), r = document.getElementById('reg-form');
+            l.style.display = l.style.display === 'none' ? 'block' : 'none';
+            r.style.display = r.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // --- NAVIGATION & UI ---
+        function switchTab(tab) {
+            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
+            if (tab === 'home') document.getElementById('main-app').style.display = 'block';
+            if (tab === 'profile') document.getElementById('profile-view').style.display = 'block';
+            
+            document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
+            if(tab === 'home') document.querySelector('.fa-home').classList.add('active');
+            if(tab === 'profile') document.querySelector('.fa-user').classList.add('active');
+        }
+
+        function switchInterface(to) {
+            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
+            if(to === 'movie') {
+                document.getElementById('movie-box-view').style.display = 'block';
+                document.getElementById('main-nav').style.display = 'none';
+                loadMovies();
+            } else {
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('main-nav').style.display = 'flex';
+            }
+        }
+
+        // --- DATA LOADING ---
+        function loadContent() {
+            db.ref('banners').on('value', s => {
+                const c = document.getElementById('banner-slider'); c.innerHTML = "";
+                let i=0; s.forEach(b => { c.innerHTML += `<div class="slide ${i++===0?'active':''}" style="background-image:url('${b.val().image}')"></div>`; });
+                startSlider('banner-slider');
+            });
+
+            db.ref('anime').on('value', snap => {
+                const grid = document.getElementById('anime-grid'); grid.innerHTML = "";
+                let folders = {};
+                snap.forEach(c => {
+                    let d = c.val(), f = d.folder || 'Misc';
+                    if(!folders[f]) folders[f] = [];
+                    folders[f].push(d);
+                });
+                
+                Object.keys(folders).forEach(name => {
+                    let thumb = folders[name][0].thumbnail;
+                    grid.innerHTML += `
+                        <div class="folder-card" onclick="openFolder('${name.replace(/'/g, "\\'")}')">
+                            <img src="${thumb}">
+                            <div class="folder-info"><div class="folder-title">${name}</div></div>
+                        </div>`;
+                });
+                window.animeData = folders;
+            });
+        }
+
+        function loadMovies() {
+            db.ref('movies').on('value', snap => {
+                const grid = document.getElementById('movie-grid'); grid.innerHTML = "";
+                snap.forEach(c => {
+                    let d = c.val();
+                    grid.innerHTML += `
+                        <div class="folder-card" onclick="playVideo('${d.title}', '${d.url}', '${d.id}', true)">
+                            <img src="${d.thumbnail}">
+                            <div class="folder-info"><div class="folder-title">${d.title}</div></div>
+                        </div>`;
                 });
             });
         }
 
-        function postComment() {
-            const inp = document.getElementById('c-input');
-            const txt = inp.value.trim();
-            if(!txt) return;
+        function openFolder(name) {
+            document.getElementById('folder-title-header').innerText = name;
+            const list = document.getElementById('ep-list'); list.innerHTML = "";
+            document.getElementById('ep-view').style.display = 'block';
             
-            db.ref(`comments/${currentVideoId}`).push({
-                text: txt,
-                user: auth.currentUser.email.split('@')[0],
-                time: firebase.database.ServerValue.TIMESTAMP
-            });
-            inp.value = "";
-        }
-
-        // --- INCOME & ADS ---
-        function simulateAd() {
-            // আপনার Adsterra Direct Link
-            const adUrl = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871'; 
-            const btn = document.querySelector('#ad-lock-overlay button');
-            
-            btn.innerText = "OPENING AD...";
-            const w = window.open(adUrl, '_blank');
-            
-            if(w) {
-                setTimeout(() => {
-                    alert("Video Unlocked!");
-                    document.getElementById('ad-lock-overlay').style.display = 'none';
-                    document.getElementById('main-video').play();
-                    btn.innerText = "WATCH AD TO PLAY";
-                }, 10000); // 10s wait logic
-            } else {
-                window.location.href = adUrl;
-            }
-        }
-
-        // --- PROFILE & VIP ---
-        function checkVip() {
-            db.ref('users/'+auth.currentUser.uid).on('value', s => {
-                const d = s.val() || {};
-                isVip = d.isPremium && d.premiumUntil > Date.now();
-                document.getElementById('u-badge').innerText = isVip ? "ROYAL VIP" : "FREE MEMBER";
-                document.getElementById('u-badge').style.background = isVip ? "var(--gold)" : "#333";
+            window.animeData[name].forEach(ep => {
+                list.innerHTML += `
+                <div style="background:#111; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;"
+                     onclick="playVideo('${ep.title}', '${ep.url}', '${ep.id || Date.now()}', ${ep.type === 'premium'})">
+                    <span style="font-size:12px;">${ep.title}</span>
+                    <i class="fas ${ep.type==='premium'?'fa-crown':'fa-play'}" style="color:${ep.type==='premium'?'var(--gold)':'#fff'}"></i>
+                </div>`;
             });
         }
 
-        function redeemVip() {
-            const key = document.getElementById('license-key').value.trim();
-            if(!key) return;
-            db.ref('premium_codes/'+key).once('value', s => {
-                if(s.exists() && s.val().status === 'unused') {
-                    db.ref('premium_codes/'+key).update({status:'used'});
-                    const days = s.val().days || 30;
-                    db.ref('users/'+auth.currentUser.uid).update({
-                        isPremium: true,
-                        premiumUntil: Date.now() + (days*86400000)
-                    });
-                    alert("Welcome to VIP Club!");
-                } else alert("Invalid Code");
-            });
+        function startSlider(id) {
+            setInterval(() => {
+                let p = document.getElementById(id), a = p.querySelector('.active');
+                if(a) { a.classList.remove('active'); (a.nextElementSibling || p.querySelector('.slide')).classList.add('active'); }
+            }, 4000);
         }
 
-        // --- UTILS ---
-        function showTab(t, el) {
-            ['home','shorts','profile'].forEach(id => document.getElementById(id+'-view').style.display = 'none');
-            document.getElementById(t+'-view').style.display = 'block';
-            document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
+        // --- PLAYER & SOCIAL ---
+        function playVideo(title, url, id, isPrem) {
+            if(isPrem && !isPremium) { alert("ROYAL VIP REQUIRED!"); switchTab('profile'); return; }
             
-            // Stop videos when leaving tabs
-            if(t !== 'shorts') document.querySelectorAll('video').forEach(v => v.pause());
-        }
+            // SMARTLINK TRIGGER (Only for Free Users)
+            triggerSmartLink();
 
-        function handleAuth(t) {
-            const e = document.getElementById(t==='login'?'email-in':'remail-in').value;
-            const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value;
-            if(t==='login') auth.signInWithEmailAndPassword(e,p).catch(e=>alert(e.message));
-            else auth.createUserWithEmailAndPassword(e,p).catch(e=>alert(e.message));
-        }
+            currentVideoId = id;
+            document.getElementById('player-title').innerText = title;
+            const v = document.getElementById('main-video'); v.src = url; v.play();
+            document.getElementById('player-view').style.display = 'block';
+            
+            db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: title, date: Date.now()});
+            
+            db.ref(`views/${id}/${currentUser.uid}`).once('value', s => {
+                if(!s.exists()) {
+                    db.ref(`views/${id}/${currentUser.uid}`).set(true);
+                    db.ref(`views/${id}/count`).transaction(c => (c || 0) + 1);
+                }
+            });
 
-        function toggleAuth() {
-            const l = document.getElementById('login-form');
-            l.style.display = l.style.display==='none'?'block':'none';
-            document.getElementById('reg-form').style.display = l.style.display==='none'?'block':'none';
+            loadSocialData(id);
         }
 
         function closePlayer() {
             document.getElementById('main-video').pause();
             document.getElementById('player-view').style.display = 'none';
+        }
+
+        function loadSocialData(id) {
+            db.ref(`likes/${id}`).on('value', s => {
+                const count = s.child('count').val() || 0;
+                document.getElementById('like-count').innerText = count;
+                const userLiked = s.child(currentUser.uid).exists();
+                document.querySelector('#like-btn i').style.color = userLiked ? 'var(--red)' : '#888';
+            });
+            db.ref(`views/${id}/count`).on('value', s => document.getElementById('view-count').innerText = s.val() || 0);
+            
+            const list = document.getElementById('comments-list');
+            db.ref(`comments/${id}`).on('child_added', s => {
+                const c = s.val();
+                list.innerHTML = `
+                    <div class="comment-box">
+                        <div class="c-avatar">${c.user[0]}</div>
+                        <div class="c-body"><h4>${c.user}</h4><p>${c.text}</p></div>
+                    </div>` + list.innerHTML;
+            });
+        }
+
+        function toggleLike() {
+            const ref = db.ref(`likes/${currentVideoId}`);
+            ref.child(currentUser.uid).once('value', s => {
+                if(s.exists()) {
+                    ref.child(currentUser.uid).remove();
+                    ref.child('count').transaction(c => c - 1);
+                } else {
+                    ref.child(currentUser.uid).set(true);
+                    ref.child('count').transaction(c => (c || 0) + 1);
+                }
+            });
+        }
+
+        function postComment() {
+            const txt = document.getElementById('comment-input').value;
+            if(!txt) return;
+            db.ref(`comments/${currentVideoId}`).push({
+                user: currentUser.email.split('@')[0],
+                text: txt,
+                time: Date.now()
+            });
+            document.getElementById('comment-input').value = "";
+        }
+
+        function shareContent() {
+            const link = `https://t.me/aminezone09`;
+            navigator.clipboard.writeText(link).then(() => alert("Link Copied! Share on Telegram."));
+        }
+
+        // --- SHORTS ---
+        function showShorts() {
+            document.getElementById('shorts-view').style.display = 'block';
+            const con = document.getElementById('shorts-container');
+            if(con.children.length === 0) {
+                db.ref('shorts').once('value', s => {
+                    s.forEach(c => {
+                        let d = c.val();
+                        con.innerHTML += `
+                        <div class="short-item">
+                            <video src="${d.url}" loop onclick="this.paused?this.play():this.pause()"></video>
+                            <div class="short-overlay">
+                                <div class="short-btn" onclick="toggleLike('${d.id}')"><i class="fas fa-heart"></i><span>Like</span></div>
+                                <div class="short-btn"><i class="fas fa-comment"></i><span>Comment</span></div>
+                            </div>
+                        </div>`;
+                    });
+                });
+            }
+        }
+        function hideShorts() { document.getElementById('shorts-view').style.display = 'none'; }
+
+        // --- PREMIUM SYSTEM & PROFILE ---
+        function redeemCode() {
+            const code = document.getElementById('prem-code').value.trim();
+            db.ref(`premium_codes/${code}`).once('value', s => {
+                if(s.exists() && s.val().status === 'unused') {
+                    const days = s.val().days || 30;
+                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+                    
+                    db.ref(`premium_codes/${code}`).update({status: 'used', usedBy: currentUser.email});
+                    db.ref(`users/${currentUser.uid}`).update({premiumExpiry: expiry});
+                    alert(`SUCCESS! ${days} Days VIP Added.`);
+                    location.reload();
+                } else alert("Invalid or Used Code.");
+            });
+        }
+
+        function buyPremium() {
+            const msg = `Hi Admin, I want to buy Premium.\nUID: ${currentUser.uid}\nEmail: ${currentUser.email}`;
+            window.open(`https://t.me/aminezone09?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function loadWatchlist() {
+            db.ref(`users/${currentUser.uid}/watchlist`).limitToLast(10).on('value', s => {
+                const c = document.getElementById('watchlist-container'); c.innerHTML = "";
+                if(!s.exists()) { c.innerHTML = "<p style='color:#444; font-size:10px;'>No history yet.</p>"; return; }
+                s.forEach(i => {
+                    c.innerHTML += `<div class="watch-item" onclick="alert('Play feature from history coming soon!')">
+                        <div style="font-size:12px; color:#ccc;">${i.val().title}</div>
+                    </div>`;
+                });
+            });
         }
     </script>
 </body>
