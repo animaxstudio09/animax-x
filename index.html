@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANIMAX PREMIUM </title>
+    <title>ANIMAX PREMIUM</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="logo.png">
@@ -133,8 +133,18 @@
         .short-overlay {
             position: absolute; bottom: 80px; right: 10px; display: flex; flex-direction: column; gap: 20px; z-index: 10;
         }
-        .short-btn { color: #fff; text-align: center; font-size: 24px; text-shadow: 0 2px 5px #000; }
+        .short-btn { color: #fff; text-align: center; font-size: 24px; text-shadow: 0 2px 5px #000; cursor: pointer; }
+        .short-btn.liked { color: var(--red); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
+
+        /* Shorts Comment Modal */
+        #shorts-comments-modal {
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%;
+            background: #111; border-top-left-radius: 20px; border-top-right-radius: 20px;
+            z-index: 250; padding: 15px; border-top: 2px solid var(--gold);
+            animation: slideUp 0.3s ease-out; box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         /* --- Player & Social --- */
         #player-view { 
@@ -241,6 +251,18 @@
             <i class="fas fa-arrow-left" style="background:rgba(0,0,0,0.5); padding:10px; border-radius:50%;"></i>
         </div>
         <div id="shorts-container"></div>
+        
+        <div id="shorts-comments-modal">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                <span style="font-family:'Orbitron'; color:var(--gold);">COMMENTS</span>
+                <i class="fas fa-times" onclick="document.getElementById('shorts-comments-modal').style.display='none'"></i>
+            </div>
+            <div id="shorts-comments-list" style="height: calc(100% - 100px); overflow-y:auto; margin-bottom:10px;"></div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="short-comment-in" placeholder="Write a comment..." style="margin-bottom:0;">
+                <button class="btn-royal" style="width:50px; margin-top:0;" onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
     </div>
 
     <div id="player-view">
@@ -456,6 +478,9 @@
         // --- NAVIGATION & UI ---
         function switchTab(tab) {
             document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
+            // Hide Shorts Properly
+            hideShorts();
+            
             if (tab === 'home') document.getElementById('main-app').style.display = 'block';
             if (tab === 'profile') document.getElementById('profile-view').style.display = 'block';
             
@@ -541,11 +566,10 @@
             }, 4000);
         }
 
-        // --- PLAYER & SOCIAL (FIXED) ---
+        // --- PLAYER & SOCIAL ---
         function playVideo(title, url, id, isPrem) {
             if(isPrem && !isPremium) { alert("ROYAL VIP REQUIRED!"); switchTab('profile'); return; }
             
-            // Clean up previous listeners
             if(currentLikesRef) currentLikesRef.off();
             if(currentViewsRef) currentViewsRef.off();
             if(currentCommentsRef) currentCommentsRef.off();
@@ -561,28 +585,23 @@
             v.play();
             document.getElementById('player-view').style.display = 'block';
             
-            // Add to Watchlist
             db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: title, date: Date.now()});
             
-            // --- FIX: VIEW COUNT (Global Counter) ---
             const viewRef = db.ref(`views/${id}/count`);
             viewRef.transaction(currentCount => {
                 return (currentCount || 0) + 1;
             });
 
-            // Load Social Data (Real-time Listener)
             loadSocialData(id);
         }
 
         function loadSocialData(id) {
-            // --- FIX: LIKES LISTENER ---
             currentLikesRef = db.ref(`likes/${id}`);
             currentLikesRef.on('value', snapshot => {
                 const data = snapshot.val() || {};
                 const count = data.count || 0;
                 document.getElementById('like-count').innerText = count;
 
-                // Check if User Liked
                 if (data[currentUser.uid]) {
                     document.querySelector('#like-btn i').classList.add('liked');
                     document.querySelector('#like-btn i').style.color = 'var(--red)';
@@ -592,13 +611,11 @@
                 }
             });
 
-            // --- FIX: VIEWS LISTENER ---
             currentViewsRef = db.ref(`views/${id}/count`);
             currentViewsRef.on('value', snapshot => {
                 document.getElementById('view-count').innerText = snapshot.val() || 0;
             });
 
-            // Comments
             const list = document.getElementById('comments-list');
             list.innerHTML = "";
             currentCommentsRef = db.ref(`comments/${id}`);
@@ -614,17 +631,12 @@
 
         function toggleLike() {
             if(!currentVideoId || !currentUser) return;
-
             const likeRef = db.ref(`likes/${currentVideoId}`);
-            
-            // --- FIX: LIKE TOGGLE LOGIC ---
             likeRef.child(currentUser.uid).once('value', snapshot => {
                 if (snapshot.exists()) {
-                    // Unlike
                     likeRef.child(currentUser.uid).remove();
                     likeRef.child('count').transaction(cnt => (cnt || 0) - 1);
                 } else {
-                    // Like
                     likeRef.child(currentUser.uid).set(true);
                     likeRef.child('count').transaction(cnt => (cnt || 0) + 1);
                 }
@@ -637,7 +649,6 @@
             v.src = "";
             document.getElementById('player-view').style.display = 'none';
 
-            // Detach listeners to prevent memory leaks
             if(currentLikesRef) currentLikesRef.off();
             if(currentViewsRef) currentViewsRef.off();
             if(currentCommentsRef) currentCommentsRef.off();
@@ -659,29 +670,148 @@
             navigator.clipboard.writeText(link).then(() => alert("Link Copied! Share on Telegram."));
         }
 
-        // --- SHORTS ---
+        // --- FIXED SHORTS SYSTEM ---
+        let shortsObserver = null;
+        let activeShortId = null;
+
         function showShorts() {
             document.getElementById('shorts-view').style.display = 'block';
             const con = document.getElementById('shorts-container');
+            
+            // Only load if empty to prevent duplication
             if(con.children.length === 0) {
                 db.ref('shorts').once('value', s => {
                     s.forEach(c => {
                         let d = c.val();
+                        let key = c.key;
+                        // Added IDs and event handlers
                         con.innerHTML += `
-                        <div class="short-item">
-                            <video src="${d.url}" loop onclick="this.paused?this.play():this.pause()"></video>
+                        <div class="short-item" data-id="${key}">
+                            <video src="${d.url}" loop onclick="togglePlay(this)"></video>
                             <div class="short-overlay">
-                                <div class="short-btn"><i class="fas fa-heart"></i><span>Like</span></div>
-                                <div class="short-btn"><i class="fas fa-comment"></i><span>Comment</span></div>
+                                <div class="short-btn" id="s-like-${key}" onclick="toggleShortLike('${key}')">
+                                    <i class="fas fa-heart"></i>
+                                    <span id="s-like-cnt-${key}">0</span>
+                                </div>
+                                <div class="short-btn" onclick="openShortComments('${key}')">
+                                    <i class="fas fa-comment"></i>
+                                    <span>Comment</span>
+                                </div>
                             </div>
                         </div>`;
+                        
+                        // Load Initial Likes for this short
+                        loadShortLikes(key);
                     });
+                    
+                    // Initialize Intersection Observer for Auto Play/Pause
+                    initShortsObserver();
                 });
+            } else {
+                 // Re-init observer if returning
+                 initShortsObserver();
             }
         }
-        function hideShorts() { document.getElementById('shorts-view').style.display = 'none'; }
 
-        // --- PREMIUM SYSTEM & PROFILE ---
+        function hideShorts() { 
+            document.getElementById('shorts-view').style.display = 'none'; 
+            // Fix 1: Pause all videos when exiting
+            document.querySelectorAll('#shorts-container video').forEach(v => {
+                v.pause();
+            });
+        }
+        
+        function togglePlay(vid) {
+            if(vid.paused) vid.play();
+            else vid.pause();
+        }
+
+        function initShortsObserver() {
+            let options = { root: document.getElementById('shorts-view'), threshold: 0.7 };
+            
+            shortsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    let vid = entry.target.querySelector('video');
+                    if(entry.isIntersecting) {
+                        // Play current
+                        vid.play();
+                    } else {
+                        // Pause others (Fix 2)
+                        vid.pause();
+                        vid.currentTime = 0; // Reset
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.short-item').forEach(el => {
+                shortsObserver.observe(el);
+            });
+        }
+
+        // Fix 3: Real-time Like System for Shorts
+        function loadShortLikes(key) {
+            db.ref(`shorts_likes/${key}`).on('value', s => {
+                const d = s.val() || {};
+                const cnt = d.count || 0;
+                const btn = document.getElementById(`s-like-${key}`);
+                const txt = document.getElementById(`s-like-cnt-${key}`);
+                
+                if(btn && txt) {
+                    txt.innerText = cnt;
+                    if(d[currentUser.uid]) {
+                        btn.classList.add('liked');
+                    } else {
+                        btn.classList.remove('liked');
+                    }
+                }
+            });
+        }
+
+        function toggleShortLike(key) {
+            if(!currentUser) return;
+            const ref = db.ref(`shorts_likes/${key}`);
+            ref.child(currentUser.uid).once('value', s => {
+                if(s.exists()) {
+                    ref.child(currentUser.uid).remove();
+                    ref.child('count').transaction(c => (c||0)-1);
+                } else {
+                    ref.child(currentUser.uid).set(true);
+                    ref.child('count').transaction(c => (c||0)+1);
+                }
+            });
+        }
+
+        // Fix 3: Real-time Comment System for Shorts
+        function openShortComments(key) {
+            activeShortId = key;
+            document.getElementById('shorts-comments-modal').style.display = 'block';
+            const list = document.getElementById('shorts-comments-list');
+            list.innerHTML = "";
+            
+            db.ref(`shorts_comments/${key}`).on('child_added', s => {
+                const c = s.val();
+                 list.innerHTML = `
+                    <div class="comment-box" style="padding:5px;">
+                        <div class="c-avatar" style="width:25px;height:25px;font-size:10px;">${c.user[0]}</div>
+                        <div class="c-body"><h4 style="font-size:11px;">${c.user}</h4><p style="font-size:10px;">${c.text}</p></div>
+                    </div>` + list.innerHTML;
+            });
+        }
+
+        function postShortComment() {
+            if(!activeShortId) return;
+            const txt = document.getElementById('short-comment-in').value;
+            if(!txt) return;
+            
+            db.ref(`shorts_comments/${activeShortId}`).push({
+                user: currentUser.email.split('@')[0],
+                text: txt,
+                time: Date.now()
+            });
+            document.getElementById('short-comment-in').value = "";
+        }
+
+        // l--- PREMIUM SYSTEM & PROFILE ---
         function redeemCode() {
             const code = document.getElementById('prem-code').value.trim();
             db.ref(`premium_codes/${code}`).once('value', s => {
