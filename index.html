@@ -548,6 +548,14 @@
         }
 
         function loadMovies() {
+            // --- FIX: ADDED BANNER LOADER HERE ---
+            db.ref('movie_banners').on('value', s => {
+                const c = document.getElementById('movie-banner-slider'); c.innerHTML = "";
+                let i=0; s.forEach(b => { c.innerHTML += `<div class="slide ${i++===0?'active':''}" style="background-image:url('${b.val().image}')"></div>`; });
+                startSlider('movie-banner-slider');
+            });
+            // -------------------------------------
+
             db.ref('movies').on('value', snap => {
                 const grid = document.getElementById('movie-grid'); grid.innerHTML = "";
                 snap.forEach(c => {
