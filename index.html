@@ -404,302 +404,6 @@
             <i class="fas fa-sign-out-alt" style="color:#fff;" onclick="switchInterface('main')"></i>
         </header>
 
-        <div id="movie-banner-slider"></d        .folder-card img { width: 100%; height: 100%; object-fit: cover; }
-        .folder-info { 
-            position: absolute; bottom: 0; width: 100%; padding: 5px; 
-            background: linear-gradient(to top, #000 10%, transparent); text-align: center; 
-        }
-        .folder-title { font-size: 9px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* --- Movie Box Specifics --- */
-        #movie-box-view { background: #0a0a0a; min-height: 100vh; }
-        .movie-header { background: #1a0505; border-bottom: 1px solid #ff3b3b; }
-        .movie-header .logo span { color: #ff3b3b; }
-        
-        /* --- Shorts --- */
-        #shorts-view { 
-            position: fixed; inset: 0; background: #000; z-index: 200; 
-            padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; 
-        }
-        .short-item {
-            width: 100%; height: 100vh; scroll-snap-align: start; position: relative;
-            background: #111; display: flex; align-items: center; justify-content: center;
-        }
-        .short-item video { width: 100%; height: 100%; object-fit: cover; }
-        .short-overlay {
-            position: absolute; bottom: 80px; right: 10px; display: flex; flex-direction: column; gap: 20px; z-index: 10;
-        }
-        .short-btn { color: #fff; text-align: center; font-size: 24px; text-shadow: 0 2px 5px #000; cursor: pointer; }
-        .short-btn.liked { color: var(--red); }
-        .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
-
-        /* Shorts Comment Modal */
-        #shorts-comments-modal {
-            display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60%;
-            background: #111; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            z-index: 250; padding: 15px; border-top: 2px solid var(--gold);
-            animation: slideUp 0.3s ease-out; box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* --- NEW PLAYER UI DESIGN (SCREENSHOT STYLE) --- */
-        #player-view { 
-            position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; display: none; 
-        }
-        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
-        video { width: 100%; height: 100%; }
-
-        /* Meta Container */
-        .player-meta-container { padding: 15px; background: #050505; min-height: 100vh; }
-        
-        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .meta-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px; font-family: 'Outfit', sans-serif; line-height: 1.2; }
-        
-        .meta-info { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .rating-star { color: #ffb400; font-size: 10px; }
-
-        /* Action Buttons */
-        .action-buttons-row { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .action-buttons-row::-webkit-scrollbar { display: none; }
-        
-        .act-btn { 
-            background: #1e1e1e; color: #fff; border: 1px solid #333; 
-            padding: 10px 16px; border-radius: 8px; font-size: 12px; 
-            display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; transition: 0.2s;
-        }
-        .act-btn:active { transform: scale(0.95); background: #333; }
-        .act-btn i { font-size: 14px; }
-        .act-btn.liked { color: var(--red); border-color: var(--red); background: rgba(255, 59, 59, 0.1); }
-
-        /* Resources / Season Dropdowns */
-        .resources-section { margin-bottom: 25px; }
-        .res-title { font-size: 13px; color: #fff; margin-bottom: 12px; font-weight: 600; }
-        .res-title span { color: #888; font-size: 11px; font-weight: 400; margin-left: 5px; }
-        
-        .dropdown-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        
-        /* Styled Select for Season */
-        select.custom-drop {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background: #1e1e1e;
-            color: #ddd;
-            border: 1px solid #333;
-            padding: 8px 14px;
-            padding-right: 30px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            outline: none;
-        }
-        .custom-drop-label {
-            background: #1e1e1e; color: #ddd; border: 1px solid #333; 
-            padding: 8px 14px; border-radius: 6px; font-size: 12px; 
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-        }
-
-        /* Episode Pills */
-        .ep-pill-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
-        .ep-pill-row::-webkit-scrollbar { display: none; }
-        
-        .ep-pill { 
-            min-width: 45px; height: 40px; background: #111; border-radius: 8px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 13px; color: #aaa; border: 1px solid #2a2a2a; flex-shrink: 0; cursor: pointer;
-        }
-        .ep-pill.active { background: var(--green-accent); color: #fff; border-color: var(--green-accent); font-weight: 700; box-shadow: 0 2px 10px rgba(0, 184, 148, 0.3); } 
-
-        /* Tabs (For You / Comments) */
-        .tab-header { display: flex; gap: 25px; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .tab-item { padding-bottom: 10px; font-size: 14px; color: #888; position: relative; cursor: pointer; font-weight: 500; }
-        .tab-item.active { color: #fff; font-weight: 700; }
-        .tab-item.active::after { content:''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: #fff; }
-
-        /* Vertical Recommendation Grid */
-        .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px; }
-        .rec-card { position: relative; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; background: #111; }
-        .rec-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-        .rec-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 4px; }
-        .rec-title { position: absolute; bottom: 0; width: 100%; padding: 8px 5px; background: linear-gradient(to top, #000, transparent); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
-
-        /* BuzzBox Preview at Bottom */
-        .buzz-preview { background: #111; border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid #222; cursor: pointer; }
-        .buzz-header { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; align-items: center; }
-        .buzz-imgs { display: flex; gap: 8px; overflow: hidden; height: 90px; }
-        .buzz-img { width: 32%; border-radius: 6px; object-fit: cover; opacity: 0.7; }
-        .buzz-play { width: 32%; background:#1a1a1a; border-radius:6px; display:flex; align-items:center; justify-content:center; border:1px solid #333; }
-
-        /* Comments in Player */
-        .comment-section { padding: 0; margin-bottom: 50px; }
-        .comment-box { display: flex; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #222; }
-        .c-avatar { width: 30px; height: 30px; background: #333; border-radius: 50%; margin-right: 10px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .c-body h4 { font-size: 12px; color: var(--gold); margin-bottom: 3px; }
-        .c-body p { font-size: 11px; color: #ccc; }
-
-        /* --- Navigation --- */
-        nav { 
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; 
-            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(15px); border-radius: 25px; 
-            padding: 12px; display: flex; justify-content: space-around; border: 1px solid #333; z-index: 1000;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        }
-        nav i { font-size: 20px; color: #555; transition: 0.3s; padding: 10px; border-radius: 50%; }
-        nav i.active { color: #000; background: var(--gold); box-shadow: var(--neon-glow); }
-
-        /* --- Footer --- */
-        .dev-footer {
-            text-align: center; padding: 20px; margin-top: 30px; border-top: 1px solid #222;
-            font-family: 'Orbitron'; font-size: 10px; color: #444;
-        }
-        
-        /* AD Container */
-        .ad-container-center {
-            display: flex; justify-content: center; align-items: center;
-            margin: 15px 0; overflow: hidden; width: 100%; min-height: 1px;
-        }
-
-        /* --- History Modal --- */
-        #history-view {
-            display:none; position:fixed; inset:0; background:#000; z-index:6000; overflow-y:auto; padding:20px;
-            animation: fadeIn 0.3s;
-        }
-        .history-item {
-            background: #111; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #222;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* --- ROYAL PROFILE STYLES (NEW) --- */
-        .profile-bg-header {
-            background: linear-gradient(to bottom, #2c2000, #000);
-            height: 180px;
-            position: relative;
-            border-bottom: 2px solid var(--gold);
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
-        }
-        .royal-avatar-container {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(45deg, var(--gold), #fff, var(--gold));
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-            z-index: 2;
-        }
-        .royal-avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid #000;
-            object-fit: cover;
-            background: #000;
-        }
-        .royal-info-card {
-            margin-top: 50px;
-            text-align: center;
-            padding: 0 20px;
-        }
-        .royal-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            background: linear-gradient(90deg, #000, #1a1a1a);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            border-radius: 20px;
-            font-size: 10px;
-            font-family: 'Orbitron';
-            margin-top: 8px;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-        }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px;
-        }
-        .royal-menu-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 15px;
-            color: #ccc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
-        }
-        .royal-menu-btn:active { transform: scale(0.95); border-color: var(--gold); }
-        .royal-menu-btn i { font-size: 20px; color: var(--gold); margin-bottom: 5px; }
-
-        /* Telegram Button Specific */
-        .telegram-card {
-            background: linear-gradient(45deg, #0088cc, #005580);
-            padding: 15px;
-            margin: 0 20px 20px 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-        }
-        .telegram-card:active { transform: scale(0.98); }
-    </style>
-</head>
-<body>
-
-    <div id="auth-screen">
-        <div class="auth-box" id="login-form">
-            <h2>ANIMAX <span>PREMIUM</span></h2>
-            <input type="email" id="email-in" placeholder="Email Address">
-            <input type="password" id="pass-in" placeholder="Password">
-            <button class="btn-royal" onclick="handleAuth('login')">LOGIN</button>
-            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Create New Account</p>
-        </div>
-        <div class="auth-box" id="reg-form" style="display:none;">
-            <h2>JOIN <span>ROYAL</span></h2>
-            <input type="email" id="remail-in" placeholder="Valid Email">
-            <input type="password" id="rpass-in" placeholder="Strong Password">
-            <button class="btn-royal" onclick="handleAuth('reg')">REGISTER</button>
-            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Back to Login</p>
-        </div>
-    </div>
-
-    <div id="main-app" class="app-view">
-        <header>
-            <div class="logo">ANIMAX <span>PREMIUM</span></div>
-            <i class="fas fa-search" style="color:#fff; font-size:18px;"></i>
-        </header>
-
-        <div id="banner-slider"></div>
-
-        <div id="ad-banner-top" class="ad-container-center"></div>
-        
-        <div class="section-title">
-            <span><i class="fas fa-bolt" style="color:var(--gold)"></i> NEW RELEASE</span>
-            <span style="font-size:10px; color:#666">See All</span>
-        </div>
-
-        <div id="anime-grid" class="grid-container"></div>
-
-        <div class="dev-footer">Developed by RJ Rocky</div>
-    </div>
-
-    <div id="movie-box-view" class="app-view">
-        <header class="movie-header">
-            <div class="logo">MOVIE <span>BOX</span></div>
-            <i class="fas fa-sign-out-alt" style="color:#fff;" onclick="switchInterface('main')"></i>
-        </header>
-
         <div id="movie-banner-slider"></div>
 
         <div class="section-title">
@@ -775,58 +479,47 @@
                     <div class="custom-drop-label">Hindi dub <i class="fas fa-chevron-down"></i></div>
                     
                     <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop">
-                        </select>
+                    </select>
                 </div>
 
                 <div class="ep-pill-row" id="episode-pill-container">
-                    </div>
+                </div>
             </div>
 
             <div class="tab-header">
-                <div class="tab-item active">For you</div>
-                <div class="tab-item" onclick="document.querySelector('.comment-section').scrollIntoView({behavior:'smooth'})">Comments(99+)</div>
+                <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">For you</div>
+                <div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div>
             </div>
 
-            <div class="rec-grid">
-                <div class="rec-card">
-                    <img src="https://c4.wallpaperflare.com/wallpaper/935/563/66/anime-demon-slayer-kimetsu-no-yaiba-tanjirou-kamado-hd-wallpaper-preview.jpg">
-                    <div class="rec-badge">Hindi</div>
-                    <div class="rec-title">Demon Slayer</div>
-                </div>
-                <div class="rec-card">
-                    <img src="https://c4.wallpaperflare.com/wallpaper/237/264/677/solo-leveling-sung-jin-woo-anime-boys-anime-wallpaper-preview.jpg">
-                    <div class="rec-badge">Hindi</div>
-                    <div class="rec-title">Solo Leveling</div>
-                </div>
-                <div class="rec-card">
-                    <img src="https://c4.wallpaperflare.com/wallpaper/52/569/531/anime-spy-x-family-anya-forger-hd-wallpaper-preview.jpg">
-                    <div class="rec-badge">Sub</div>
-                    <div class="rec-title">Spy x Family</div>
-                </div>
-            </div>
-
-            <div class="buzz-preview" onclick="showShorts()">
-                <div class="buzz-header">
-                    <span><b>BuzzBox</b> - Short & Funny</span>
-                    <span style="color:var(--green-accent)">Explore ></span>
-                </div>
-                <div class="buzz-imgs">
-                    <img src="https://via.placeholder.com/150/111/555?text=S1" class="buzz-img">
-                    <img src="https://via.placeholder.com/150/111/555?text=S2" class="buzz-img">
-                    <div class="buzz-play">
-                        <i class="fas fa-play" style="color:#fff"></i>
+            <div id="tab-content-foryou">
+                <div class="rec-grid" id="dynamic-rec-grid">
+                    </div>
+                
+                <div class="buzz-preview" onclick="showShorts()">
+                    <div class="buzz-header">
+                        <span><b>BuzzBox</b> - Short & Funny</span>
+                        <span style="color:var(--green-accent)">Explore ></span>
+                    </div>
+                    <div class="buzz-imgs">
+                        <img src="https://via.placeholder.com/150/111/555?text=S1" class="buzz-img">
+                        <img src="https://via.placeholder.com/150/111/555?text=S2" class="buzz-img">
+                        <div class="buzz-play">
+                            <i class="fas fa-play" style="color:#fff"></i>
+                        </div>
                     </div>
                 </div>
+
+                <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;"></div>
             </div>
 
-            <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;"></div>
-
-            <div class="comment-section">
-                <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:20px;">
-                    <input type="text" id="comment-input" placeholder="Add a comment..." style="margin-bottom:0; background:#1e1e1e; border:none;">
-                    <button class="btn-royal" style="width:60px; margin-top:0;" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+            <div id="tab-content-comments" style="display: none;">
+                <div class="comment-section">
+                    <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:20px;">
+                        <input type="text" id="comment-input" placeholder="Add a comment..." style="margin-bottom:0; background:#1e1e1e; border:none;">
+                        <button class="btn-royal" style="width:60px; margin-top:0;" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div id="comments-list"></div>
                 </div>
-                <div id="comments-list"></div>
             </div>
 
         </div>
@@ -948,7 +641,6 @@
                 
                 checkPremium(user.uid);
                 loadContent();
-                // History is now loaded on click
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('main-app').style.display = 'none';
@@ -1085,39 +777,31 @@
             });
         }
 
-        // --- NEW FOLDER OPEN LOGIC (Direct Play & Player UI) ---
         function openFolder(name) {
-            currentFolder = name; // Save state
+            currentFolder = name;
             const episodes = window.animeData[name];
             
             if(!episodes || episodes.length === 0) return;
 
-            // Auto-play first episode
             const firstEp = episodes[0];
             let epId = firstEp.id ? firstEp.id : firstEp.title.replace(/[^a-zA-Z0-9]/g, '_');
             
-            // Open player at index 0
             playVideo(firstEp.title, firstEp.url, epId, firstEp.type === 'premium', 0);
-            
-            // Load UI elements (Season Dropdown & Episode Pills)
             loadPlayerUI(name);
         }
 
         function loadPlayerUI(folderName) {
-            // A. Populate Season Dropdown
             const seasonSelect = document.getElementById('season-select');
             seasonSelect.innerHTML = "";
             
-            // Populate with all available folders
             Object.keys(window.animeData).forEach(key => {
                 let opt = document.createElement('option');
                 opt.value = key;
-                opt.innerText = key; // e.g. JJK S1
+                opt.innerText = key; 
                 if(key === folderName) opt.selected = true;
                 seasonSelect.appendChild(opt);
             });
 
-            // B. Populate Episode Buttons (1, 2, 3...)
             renderEpisodeButtons(folderName);
         }
 
@@ -1130,7 +814,7 @@
             episodes.forEach((ep, index) => {
                 let btn = document.createElement('div');
                 btn.className = 'ep-pill';
-                btn.innerText = index + 1; // 1, 2, 3...
+                btn.innerText = index + 1;
                 btn.id = `ep-btn-${index}`;
                 
                 btn.onclick = function() {
@@ -1142,7 +826,6 @@
             });
         }
 
-        // Switch Season via Dropdown
         function switchSeason(newFolder) {
             openFolder(newFolder);
         }
@@ -1161,7 +844,6 @@
                     let d = c.val();
                     let safeId = d.id || d.title.replace(/[^a-zA-Z0-9]/g, '_');
                     
-                    // Movies use index -1 (no pills)
                     grid.innerHTML += `
                         <div class="folder-card" onclick="playVideo('${d.title}', '${d.url}', '${safeId}', true, -1)">
                             <img src="${d.thumbnail}">
@@ -1178,11 +860,10 @@
             }, 4000);
         }
 
-        // --- PLAYER & SOCIAL (UPDATED) ---
+        // --- PLAYER & SOCIAL ---
         function playVideo(title, url, id, isPrem, index) {
             if(isPrem && !isPremium) { alert("ROYAL VIP REQUIRED!"); switchTab('profile'); return; }
             
-            // Clean listeners
             if(currentLikesCountRef) currentLikesCountRef.off();
             if(currentUserLikeRef) currentUserLikeRef.off();
             if(currentViewsRef) currentViewsRef.off();
@@ -1194,7 +875,6 @@
             currentVideoId = id;
             document.getElementById('player-title').innerText = title;
             
-            // Update Active Pill State
             if(index !== -1) {
                 document.querySelectorAll('.ep-pill').forEach(b => b.classList.remove('active'));
                 let activeBtn = document.getElementById(`ep-btn-${index}`);
@@ -1205,11 +885,13 @@
             v.src = url; 
             v.play();
             document.getElementById('player-view').style.display = 'block';
+
+            // New Tabs functionality triggers here
+            switchPlayerTab('foryou');
+            loadForYouVideos();
             
-            // Save to Watchlist
             db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: title, date: Date.now()});
             
-            // View Count
             const viewRef = db.ref(`views/${id}`);
             viewRef.transaction(currentCount => {
                 return (currentCount || 0) + 1;
@@ -1219,13 +901,11 @@
         }
 
         function loadSocialData(id) {
-            // 1. Listen for TOTAL LIKES
             currentLikesCountRef = db.ref(`likes/${id}/count`);
             currentLikesCountRef.on('value', snapshot => {
                 document.getElementById('like-count').innerText = snapshot.val() || 0;
             });
 
-            // 2. Listen for MY LIKE STATUS
             currentUserLikeRef = db.ref(`likes/${id}/${currentUser.uid}`);
             currentUserLikeRef.on('value', snapshot => {
                 const btn = document.getElementById('like-btn');
@@ -1238,16 +918,21 @@
                 }
             });
 
-            // 3. Listen for VIEW COUNT
             currentViewsRef = db.ref(`views/${id}`);
             currentViewsRef.on('value', snapshot => {
                 document.getElementById('view-count').innerText = snapshot.val() || 0;
             });
 
-            // 4. Comments
             const list = document.getElementById('comments-list');
             list.innerHTML = "";
             currentCommentsRef = db.ref(`comments/${id}`);
+
+            // Update Comments Count on the Tab button
+            currentCommentsRef.on('value', snap => {
+                let count = snap.numChildren();
+                document.getElementById('tab-btn-comments').innerText = `Comments (${count})`;
+            });
+
             currentCommentsRef.on('child_added', s => {
                 const c = s.val();
                 list.innerHTML = `
@@ -1266,11 +951,9 @@
 
             userLikeRef.once('value', snapshot => {
                 if (snapshot.exists()) {
-                    // Unlike
                     userLikeRef.remove();
                     countRef.transaction(cnt => (cnt || 0) - 1);
                 } else {
-                    // Like
                     userLikeRef.set(true);
                     countRef.transaction(cnt => (cnt || 0) + 1);
                 }
@@ -1303,6 +986,42 @@
         function shareContent() {
             const link = `https://t.me/aminezone09`;
             navigator.clipboard.writeText(link).then(() => alert("Link Copied! Share on Telegram."));
+        }
+
+        // --- NEW TAB SYSTEM FOR PLAYER ---
+        function switchPlayerTab(tab) {
+            if(tab === 'foryou') {
+                document.getElementById('tab-btn-foryou').classList.add('active');
+                document.getElementById('tab-btn-comments').classList.remove('active');
+                document.getElementById('tab-content-foryou').style.display = 'block';
+                document.getElementById('tab-content-comments').style.display = 'none';
+            } else {
+                document.getElementById('tab-btn-comments').classList.add('active');
+                document.getElementById('tab-btn-foryou').classList.remove('active');
+                document.getElementById('tab-content-comments').style.display = 'block';
+                document.getElementById('tab-content-foryou').style.display = 'none';
+            }
+        }
+
+        // --- DYNAMIC 'FOR YOU' VIDEOS ---
+        function loadForYouVideos() {
+            const grid = document.getElementById('dynamic-rec-grid');
+            grid.innerHTML = "";
+            
+            if(!window.animeData) return;
+
+            Object.keys(window.animeData).forEach(folderName => {
+                let firstEp = window.animeData[folderName][0]; 
+                let safeName = folderName.replace(/'/g, "\\'");
+                
+                grid.innerHTML += `
+                    <div class="rec-card" onclick="openFolder('${safeName}')">
+                        <img src="${firstEp.thumbnail}">
+                        <div class="rec-badge">${firstEp.type === 'premium' ? 'VIP' : 'Free'}</div>
+                        <div class="rec-title">${folderName}</div>
+                    </div>
+                `;
+            });
         }
 
         // --- SHORTS SYSTEM ---
@@ -1428,7 +1147,7 @@
         // --- HISTORY FUNCTIONS ---
         function openHistory() {
             document.getElementById('history-view').style.display = 'block';
-            loadWatchlist(); // Load when opened
+            loadWatchlist();
         }
 
         function closeHistory() {
@@ -1443,7 +1162,6 @@
                     return; 
                 }
                 
-                // Show latest first
                 let items = [];
                 s.forEach(i => items.push(i));
                 items.reverse().forEach(i => {
