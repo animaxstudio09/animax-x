@@ -21,7 +21,7 @@
       });
     </script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -38,6 +38,7 @@
             --neon-glow: 0 0 12px rgba(212, 175, 55, 0.4);
             --red: #ff3b3b;
             --green-accent: #00b894;
+            --blue-btn: #1a1a1a; 
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -45,38 +46,91 @@
 
         /* --- Animations --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* --- Auth Screen --- */
+        /* --- NEW AUTH SCREEN DESIGN (Anime Style + MotherPanel Layout) --- */
         #auth-screen {
             position: fixed; inset: 0; z-index: 10000;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), #000), url('https://w.wallhaven.cc/full/wq/wallhaven-wqve6r.jpg');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; 
+            padding: 20px;
+            overflow-y: auto;
         }
-        .auth-box {
-            background: rgba(255, 255, 255, 0.03); padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 350px;
-            text-align: center; backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 0 40px rgba(0,0,0,0.8); animation: fadeIn 0.6s ease-out;
+
+        .auth-navbar {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
         }
-        .auth-box h2 { font-family: 'Orbitron'; font-size: 28px; color: #fff; margin-bottom: 30px; letter-spacing: 2px; }
-        .auth-box h2 span { color: var(--gold); text-shadow: var(--neon-glow); }
+        .auth-brand { font-family: 'Orbitron'; font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 1px; }
+        .auth-brand span { color: var(--gold); }
+
+        .auth-content {
+            flex: 1;
+            display: flex; flex-direction: column; justify-content: center;
+            max-width: 450px; margin: 0 auto; width: 100%;
+        }
+
+        .auth-headline {
+            font-size: 38px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; color: #fff;
+            font-family: 'Outfit', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .auth-headline span { color: var(--gold); }
         
-        input { 
-            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; 
+        .auth-subhead {
+            font-size: 14px; color: #ccc; margin-bottom: 30px; font-weight: 300;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+        }
+
+        .auth-card {
+            background: rgba(20, 20, 20, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 16px;
+            padding: 25px; 
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { 
+            display: block; font-size: 12px; color: var(--gold); margin-bottom: 8px; font-weight: 600; 
+            font-family: 'Orbitron'; letter-spacing: 0.5px;
+        }
+        
+        .custom-input { 
+            width: 100%; padding: 14px 15px; border-radius: 8px; 
             border: 1px solid #333; background: rgba(0,0,0,0.5); color: #fff; 
-            font-family: 'Outfit'; text-align: center; transition: 0.3s;
+            font-family: 'Outfit'; font-size: 14px; transition: 0.3s;
+            text-align: left; 
         }
-        input:focus { border-color: var(--gold); box-shadow: var(--neon-glow); }
+        .custom-input:focus { border-color: var(--gold); background: #000; box-shadow: var(--neon-glow); }
 
-        .btn-royal {
-            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700;
-            background: linear-gradient(45deg, var(--dark-gold), var(--gold)); color: #000;
-            font-family: 'Orbitron'; cursor: pointer; letter-spacing: 1px; margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        .forgot-link {
+            display: block; text-align: right; font-size: 11px; color: #888; 
+            margin-top: 8px; cursor: pointer; font-weight: 400; transition: 0.2s;
         }
-        .btn-royal:active { transform: scale(0.98); }
+        .forgot-link:hover { color: #fff; }
 
-        /* --- Main UI Structure --- */
+        .btn-signin {
+            width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: 700;
+            background: linear-gradient(45deg, var(--dark-gold), var(--gold)); 
+            color: #000; font-size: 15px; letter-spacing: 1px;
+            font-family: 'Orbitron'; cursor: pointer; margin-top: 10px; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        .btn-signin:active { transform: scale(0.98); opacity: 0.9; }
+
+        .auth-footer {
+            margin-top: 25px; text-align: center; font-size: 13px; color: #888;
+        }
+        .auth-footer span { color: var(--gold); cursor: pointer; font-weight: 700; text-decoration: underline; }
+
+        .floating-chat {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 50px; height: 50px; background: linear-gradient(45deg, #0088cc, #005580); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #fff;
+            font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* --- Main UI Structure (Existing) --- */
         .app-view { display: none; padding-top: 60px; animation: fadeIn 0.4s; }
         
         header { 
@@ -183,20 +237,11 @@
         
         .dropdown-row { display: flex; gap: 10px; margin-bottom: 15px; }
         
-        /* Styled Select for Season */
         select.custom-drop {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background: #1e1e1e;
-            color: #ddd;
-            border: 1px solid #333;
-            padding: 8px 14px;
-            padding-right: 30px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            outline: none;
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background: #1e1e1e; color: #ddd; border: 1px solid #333;
+            padding: 8px 14px; padding-right: 30px; border-radius: 6px;
+            font-size: 12px; cursor: pointer; outline: none;
         }
         .custom-drop-label {
             background: #1e1e1e; color: #ddd; border: 1px solid #333; 
@@ -297,84 +342,91 @@
             z-index: 2;
         }
         .royal-avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid #000;
-            object-fit: cover;
-            background: #000;
+            width: 100%; height: 100%; border-radius: 50%; border: 3px solid #000; object-fit: cover; background: #000;
         }
-        .royal-info-card {
-            margin-top: 50px;
-            text-align: center;
-            padding: 0 20px;
-        }
+        .royal-info-card { margin-top: 50px; text-align: center; padding: 0 20px; }
         .royal-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            background: linear-gradient(90deg, #000, #1a1a1a);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            border-radius: 20px;
-            font-size: 10px;
-            font-family: 'Orbitron';
-            margin-top: 8px;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+            display: inline-block; padding: 5px 15px; background: linear-gradient(90deg, #000, #1a1a1a);
+            border: 1px solid var(--gold); color: var(--gold); border-radius: 20px; font-size: 10px;
+            font-family: 'Orbitron'; margin-top: 8px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
         }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px;
-        }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .royal-menu-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 15px;
-            color: #ccc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.05); border: 1px solid #333; padding: 15px;
+            border-radius: 15px; color: #ccc; display: flex; flex-direction: column;
+            align-items: center; gap: 8px; font-size: 11px; transition: 0.3s; backdrop-filter: blur(5px);
         }
         .royal-menu-btn:active { transform: scale(0.95); border-color: var(--gold); }
         .royal-menu-btn i { font-size: 20px; color: var(--gold); margin-bottom: 5px; }
 
         .telegram-card {
-            background: linear-gradient(45deg, #0088cc, #005580);
-            padding: 15px;
-            margin: 0 20px 20px 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
+            background: linear-gradient(45deg, #0088cc, #005580); padding: 15px; margin: 0 20px 20px 20px;
+            border-radius: 15px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4); border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
         }
         .telegram-card:active { transform: scale(0.98); }
+        
+        /* Premium Area */
+        .btn-royal {
+            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700;
+            background: linear-gradient(45deg, var(--dark-gold), var(--gold)); color: #000;
+            font-family: 'Orbitron'; cursor: pointer; letter-spacing: 1px; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .btn-royal:active { transform: scale(0.98); }
+
     </style>
 </head>
 <body>
 
+    <!-- NEW LOGIN INTERFACE (Anime Styled) -->
     <div id="auth-screen">
-        <div class="auth-box" id="login-form">
-            <h2>ANIMAX <span>PREMIUM</span></h2>
-            <input type="email" id="email-in" placeholder="Email Address">
-            <input type="password" id="pass-in" placeholder="Password">
-            <button class="btn-royal" onclick="handleAuth('login')">LOGIN</button>
-            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Create New Account</p>
+        <div class="auth-navbar">
+            <div class="auth-brand">ANIMAX <span>PREMIUM</span></div>
         </div>
-        <div class="auth-box" id="reg-form" style="display:none;">
-            <h2>JOIN <span>ROYAL</span></h2>
-            <input type="email" id="remail-in" placeholder="Valid Email">
-            <input type="password" id="rpass-in" placeholder="Strong Password">
-            <button class="btn-royal" onclick="handleAuth('reg')">REGISTER</button>
-            <p style="margin-top:20px; font-size:11px; color:#888; cursor: pointer;" onclick="toggleAuth()">Back to Login</p>
+
+        <div class="auth-content">
+            <h1 class="auth-headline">Stream Your<br>Favorite <span>Anime</span><br>Anywhere</h1>
+            <p class="auth-subhead">Join the world's largest anime community for free.</p>
+
+            <div class="auth-card" id="login-form">
+                <div class="input-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input type="email" id="email-in" class="custom-input" placeholder="otaku@example.com">
+                </div>
+                <div class="input-group">
+                    <label>PASSWORD</label>
+                    <input type="password" id="pass-in" class="custom-input" placeholder="••••••••">
+                    <span class="forgot-link" onclick="alert('Contact Admin on Telegram')">Forgot password?</span>
+                </div>
+
+                <button class="btn-signin" onclick="handleAuth('login')">ENTER WORLD</button>
+
+                <div class="auth-footer">
+                    New here? <span onclick="toggleAuth()">Create Account</span>
+                </div>
+            </div>
+
+            <div class="auth-card" id="reg-form" style="display:none;">
+                <div class="input-group">
+                    <label>VALID EMAIL</label>
+                    <input type="email" id="remail-in" class="custom-input" placeholder="email@domain.com">
+                </div>
+                <div class="input-group">
+                    <label>STRONG PASSWORD</label>
+                    <input type="password" id="rpass-in" class="custom-input" placeholder="••••••••">
+                </div>
+
+                <button class="btn-signin" onclick="handleAuth('reg')">REGISTER NOW</button>
+
+                <div class="auth-footer">
+                    Already a member? <span onclick="toggleAuth()">Login Now</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="floating-chat" onclick="window.open('https://t.me/animax090', '_blank')">
+            <i class="fab fa-telegram-plane"></i>
         </div>
     </div>
 
@@ -410,6 +462,7 @@
             <span style="color:#ff3b3b"><i class="fas fa-film"></i> TRENDING MOVIES</span>
         </div>
 
+        <!-- This grid will only show movies -->
         <div id="movie-grid" class="grid-container"></div>
     </div>
 
@@ -450,7 +503,7 @@
                         <span><i class="fas fa-star rating-star"></i> 8.5</span>
                         <span>| 2024</span>
                         <span>| Japan</span>
-                        <span>| Anime</span>
+                        <span>| <span id="content-type-badge">Anime</span></span>
                         <span id="view-count" style="display:none">0</span>
                         <span id="like-count" style="display:none">0</span>
                     </div>
@@ -623,7 +676,10 @@
 
         let currentUser = null, isPremium = false, currentVideoId = null;
         let adSessionClick = false; 
-        let adsLoaded = false; 
+        let adsLoaded = false;
+        
+        // Track if we are watching a movie or anime to show correct recommendations
+        let isMovieContent = false; 
 
         // Listener References
         let currentLikesCountRef = null;
@@ -748,7 +804,7 @@
             }
         }
 
-        // --- DATA LOADING ---
+        // --- DATA LOADING (ANIME - MERGING SAME NAMES) ---
         function loadContent() {
             db.ref('banners').on('value', s => {
                 const c = document.getElementById('banner-slider'); c.innerHTML = "";
@@ -760,7 +816,11 @@
                 const grid = document.getElementById('anime-grid'); grid.innerHTML = "";
                 let folders = {};
                 snap.forEach(c => {
-                    let d = c.val(), f = d.folder || 'Misc';
+                    let d = c.val();
+                    let rawFolder = d.folder || 'Misc';
+                    // FIX: .trim() removes extra spaces, merging "Name " and "Name" into one
+                    let f = rawFolder.trim(); 
+                    
                     if(!folders[f]) folders[f] = [];
                     folders[f].push(d);
                 });
@@ -838,11 +898,16 @@
                 startSlider('movie-banner-slider');
             });
 
+            // Added window.movieData to store movies for recommendations
             db.ref('movies').on('value', snap => {
                 const grid = document.getElementById('movie-grid'); grid.innerHTML = "";
+                window.movieData = []; // Clear previous data
+                
                 snap.forEach(c => {
                     let d = c.val();
                     let safeId = d.id || d.title.replace(/[^a-zA-Z0-9]/g, '_');
+                    
+                    window.movieData.push(d); // Store for recommendation use
                     
                     grid.innerHTML += `
                         <div class="folder-card" onclick="playVideo('${d.title}', '${d.url}', '${safeId}', true, -1)">
@@ -875,7 +940,20 @@
             currentVideoId = id;
             document.getElementById('player-title').innerText = title;
             
-            if(index !== -1) {
+            // Determine content type for UI and Recommendations
+            if(index === -1) {
+                // It is a movie
+                isMovieContent = true;
+                document.getElementById('content-type-badge').innerText = "Movie";
+                document.getElementById('episode-pill-container').style.display = 'none'; // Hide episode pills for movie
+                document.querySelector('.dropdown-row').style.display = 'none'; // Hide season dropdown for movie
+            } else {
+                // It is anime
+                isMovieContent = false;
+                document.getElementById('content-type-badge').innerText = "Anime";
+                document.getElementById('episode-pill-container').style.display = 'flex';
+                document.querySelector('.dropdown-row').style.display = 'flex';
+                
                 document.querySelectorAll('.ep-pill').forEach(b => b.classList.remove('active'));
                 let activeBtn = document.getElementById(`ep-btn-${index}`);
                 if(activeBtn) activeBtn.classList.add('active');
@@ -1008,20 +1086,36 @@
             const grid = document.getElementById('dynamic-rec-grid');
             grid.innerHTML = "";
             
-            if(!window.animeData) return;
-
-            Object.keys(window.animeData).forEach(folderName => {
-                let firstEp = window.animeData[folderName][0]; 
-                let safeName = folderName.replace(/'/g, "\\'");
-                
-                grid.innerHTML += `
-                    <div class="rec-card" onclick="openFolder('${safeName}')">
-                        <img src="${firstEp.thumbnail}">
-                        <div class="rec-badge">${firstEp.type === 'premium' ? 'VIP' : 'Free'}</div>
-                        <div class="rec-title">${folderName}</div>
-                    </div>
-                `;
-            });
+            // STRICT SEPARATION: If watching a movie, show movies. If anime, show anime.
+            if(isMovieContent) {
+                // Load MOVIE recommendations
+                if(!window.movieData) return;
+                window.movieData.forEach(m => {
+                    let safeId = m.id || m.title.replace(/[^a-zA-Z0-9]/g, '_');
+                    grid.innerHTML += `
+                        <div class="rec-card" onclick="playVideo('${m.title}', '${m.url}', '${safeId}', true, -1)">
+                            <img src="${m.thumbnail}">
+                            <div class="rec-badge">Movie</div>
+                            <div class="rec-title">${m.title}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                // Load ANIME recommendations (Existing Logic)
+                if(!window.animeData) return;
+                Object.keys(window.animeData).forEach(folderName => {
+                    let firstEp = window.animeData[folderName][0]; 
+                    let safeName = folderName.replace(/'/g, "\\'");
+                    
+                    grid.innerHTML += `
+                        <div class="rec-card" onclick="openFolder('${safeName}')">
+                            <img src="${firstEp.thumbnail}">
+                            <div class="rec-badge">${firstEp.type === 'premium' ? 'VIP' : 'Free'}</div>
+                            <div class="rec-title">${folderName}</div>
+                        </div>
+                    `;
+                });
+            }
         }
 
         // --- SHORTS SYSTEM ---
