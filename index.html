@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANIMAX PREMIUM</title>
+    <title>ANIMAX PRO</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
-    <meta name="theme-color" content="#050507">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <!-- Push Notification -->
+    <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -20,11 +20,12 @@
       });
     </script>
     
-    <!-- Modern Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Modern Fonts (Outfit & Orbitron) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Advanced Video Player (Plyr & HLS.js) -->
+    <!-- Plyr Video Player -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -34,119 +35,105 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    <!-- External CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- AUTH INTERFACE -->
-    <div id="auth-screen" style="display: none;">
-        <div class="auth-navbar">
-            <div class="auth-brand">ANIMAX <span>PREMIUM</span></div>
+    <!-- FULLSCREEN SEARCH OVERLAY (FIXED & MODERN) -->
+    <div id="search-overlay">
+        <div class="search-header-box">
+            <i class="fas fa-search search-icon-left"></i>
+            <input type="text" id="search-input" placeholder="Search anime, movies..." autocomplete="off">
+            <i class="fas fa-times search-close-btn" onclick="closeSearch()"></i>
         </div>
+        <div class="search-results-title">Search Results</div>
+        <div id="search-results" class="search-grid">
+            <div class="empty-search">Type something to search...</div>
+        </div>
+    </div>
 
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen" style="display: none;">
+        <div class="auth-brand">ANIMAX <span>PRO</span></div>
         <div class="auth-content">
-            <h1 class="auth-headline">Stream Your<br>Favorite <span>Anime</span><br>Anywhere</h1>
-            <p class="auth-subhead">Join the world's largest anime community for free.</p>
+            <h1 class="auth-headline">Unlimited<br><span>Anime & Movies</span></h1>
+            <p class="auth-subhead">Watch anywhere. Cancel anytime.</p>
 
             <div class="auth-card" id="login-form">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" id="email-in" class="custom-input" placeholder="otaku@example.com">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="pass-in" class="custom-input" placeholder="••••••••">
-                    <span class="forgot-link" onclick="alert('Contact Admin on Telegram')">Forgot password?</span>
-                </div>
-                <button class="btn-signin" onclick="handleAuth('login')">ENTER WORLD</button>
-                <div class="auth-footer">New here? <span onclick="toggleAuth()">Create Account</span></div>
+                <input type="email" id="email-in" class="custom-input" placeholder="Email Address">
+                <input type="password" id="pass-in" class="custom-input" placeholder="Password">
+                <button class="btn-primary" onclick="handleAuth('login')">Sign In</button>
+                <div class="auth-footer">New to Animax? <span onclick="toggleAuth()">Sign up now</span></div>
             </div>
 
             <div class="auth-card" id="reg-form" style="display:none;">
-                <div class="input-group">
-                    <label>Valid Email</label>
-                    <input type="email" id="remail-in" class="custom-input" placeholder="email@domain.com">
-                </div>
-                <div class="input-group">
-                    <label>Strong Password</label>
-                    <input type="password" id="rpass-in" class="custom-input" placeholder="••••••••">
-                </div>
-                <button class="btn-signin" onclick="handleAuth('reg')">REGISTER NOW</button>
-                <div class="auth-footer">Already a member? <span onclick="toggleAuth()">Login Now</span></div>
+                <input type="email" id="remail-in" class="custom-input" placeholder="Email Address">
+                <input type="password" id="rpass-in" class="custom-input" placeholder="Create Password">
+                <button class="btn-primary" onclick="handleAuth('reg')">Register</button>
+                <div class="auth-footer">Already a user? <span onclick="toggleAuth()">Sign In</span></div>
             </div>
-        </div>
-        <div class="floating-chat" onclick="window.open('https://t.me/animax090', '_blank')"><i class="fab fa-telegram-plane"></i></div>
-    </div>
-
-    <!-- LIVE SEARCH OVERLAY -->
-    <div id="search-overlay">
-        <div class="search-header">
-            <div class="search-bar">
-                <i class="fas fa-search search-icon-inner"></i>
-                <input type="text" id="search-input" placeholder="Search anime or movies..." onkeyup="performSearch()">
-            </div>
-            <span class="search-close" onclick="closeSearch()"><i class="fas fa-times"></i></span>
-        </div>
-        <div id="search-results" class="grid-container" style="padding-top:20px;">
-            <p style="text-align:center; width:100%; color:var(--text-muted); grid-column: 1 / -1; margin-top: 50px;">Type something to search...</p>
         </div>
     </div>
 
     <!-- MAIN HOME APP -->
-    <div id="main-app" class="app-view" style="display: block;">
-        <header>
+    <div id="main-app" class="app-view" style="display: block; padding-top: 0;">
+        <!-- Transparent Glass Header -->
+        <header class="glass-header">
             <div class="logo">ANIMAX <span>PRO</span></div>
             <div class="header-icon" onclick="openSearch()"><i class="fas fa-search"></i></div>
         </header>
 
-        <div id="banner-slider"></div>
-        <div id="ad-banner-top" class="ad-container-center"></div>
-        
-        <div class="section-title">
-            <div class="section-title-text"><i class="fas fa-bolt"></i> New Releases</div>
-            <span class="section-link">See All</span>
+        <!-- Cinematic Hero Banner -->
+        <div id="hero-banner" class="hero-container">
+            <div class="hero-overlay"></div>
+            <div class="hero-content" id="hero-content">
+                <!-- Dynamically loaded -->
+            </div>
         </div>
-        <div id="anime-grid" class="grid-container"></div>
+
+        <div id="ad-banner-top" class="ad-container-center" style="margin-top: 20px;"></div>
+        
+        <!-- Horizontal Scroll Rows (Netflix Style) -->
+        <div class="row-container">
+            <div class="row-header">
+                <h3><i class="fas fa-fire" style="color:#ff4757;"></i> Trending Now</h3>
+                <span>See All</span>
+            </div>
+            <div class="horizontal-scroll" id="trending-row"></div>
+        </div>
+
+        <div class="row-container">
+            <div class="row-header">
+                <h3><i class="fas fa-bolt" style="color:var(--gold);"></i> New Releases</h3>
+            </div>
+            <div class="horizontal-scroll" id="new-row"></div>
+        </div>
+
         <div class="dev-footer">CRAFTED BY RJ ROCKY</div>
     </div>
 
-    <!-- MOVIE BOX -->
-    <div id="movie-box-view" class="app-view">
-        <header class="movie-header">
+    <!-- MOVIE BOX VIEW -->
+    <div id="movie-box-view" class="app-view" style="padding-top: 0;">
+        <header class="glass-header">
             <div class="logo">MOVIE <span>BOX</span></div>
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:15px;">
                 <div class="header-icon" onclick="openSearch()"><i class="fas fa-search"></i></div>
-                <div class="header-icon" onclick="switchInterface('main')" style="background: rgba(255, 71, 87, 0.1); border-color: rgba(255, 71, 87, 0.3); color: #ff4757;"><i class="fas fa-times"></i></div>
+                <div class="header-icon" onclick="switchInterface('main')" style="color: #ff4757;"><i class="fas fa-times"></i></div>
             </div>
         </header>
-        <div id="movie-banner-slider"></div>
-        <div class="section-title">
-            <div class="section-title-text" style="color:#ff4757;"><i class="fas fa-film" style="color:#ff4757;"></i> Trending Movies</div>
-        </div>
-        <div id="movie-grid" class="grid-container"></div>
-    </div>
-
-    <!-- SHORTS VIEW -->
-    <div id="shorts-view" style="display:none;">
-        <div style="position:fixed; top:25px; left:20px; z-index:101; color:#fff;" onclick="hideShorts()">
-            <div style="width:40px; height:40px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-radius:50%; display:flex; justify-content:center; align-items:center;">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-        </div>
-        <div id="shorts-container"></div>
         
-        <!-- Shorts Comment Modal -->
-        <div id="shorts-comments-modal" class="modal-design">
-            <div class="modal-header">
-                <span>Comments</span>
-                <i class="fas fa-times" onclick="document.getElementById('shorts-comments-modal').style.display='none'"></i>
+        <div id="movie-hero" class="hero-container">
+            <div class="hero-overlay"></div>
+            <div class="hero-content" id="movie-hero-content"></div>
+        </div>
+
+        <div class="row-container">
+            <div class="row-header">
+                <h3><i class="fas fa-film" style="color:#ff4757;"></i> Blockbuster Movies</h3>
             </div>
-            <div id="shorts-comments-list" class="modal-body"></div>
-            <div class="modal-footer">
-                <input type="text" id="short-comment-in" placeholder="Write a comment...">
-                <button onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
-            </div>
+            <!-- Grid for movies (since it's a dedicated movie page) -->
+            <div class="movie-grid" id="movie-grid"></div>
         </div>
     </div>
 
@@ -154,164 +141,134 @@
     <div id="player-view">
         <div class="video-wrapper">
             <div class="back-btn-player" onclick="closePlayer()">
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-left"></i>
             </div>
-            <!-- Plyr Video Element -->
             <video id="main-video" controls playsinline></video>
         </div>
 
         <div class="player-meta-container">
-            <div class="meta-header">
-                <div>
-                    <div class="meta-title" id="player-title">Episode Title</div>
-                    <div class="meta-info">
-                        <span style="background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:6px; color:#fff;"><i class="fas fa-tv"></i> <span id="content-type-badge">Anime</span></span>
-                        <span><i class="fas fa-star rating-star"></i> 8.9</span>
-                        <span>2024</span>
-                        <span>Japan</span>
-                        <span id="view-count" style="display:none">0</span>
-                        <span id="like-count" style="display:none">0</span>
-                    </div>
-                </div>
+            <div class="meta-title" id="player-title">Episode Title</div>
+            <div class="meta-tags">
+                <span class="tag-match">98% Match</span>
+                <span class="tag-year">2024</span>
+                <span class="tag-hd">HD</span>
+                <span id="content-type-badge">Anime</span>
             </div>
 
             <div class="action-buttons-row">
-                <div class="act-btn" id="like-btn" onclick="toggleLike()">
-                    <i class="fas fa-plus"></i> My List
+                <div class="act-btn-large" id="like-btn" onclick="toggleLike()">
+                    <i class="fas fa-plus"></i>
+                    <span>My List</span>
                 </div>
-                <div class="act-btn" onclick="shareContent()">
-                    <i class="fas fa-share"></i> Share
+                <div class="act-btn-large" onclick="shareContent()">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Share</span>
                 </div>
-                <div class="act-btn">
-                    <i class="fas fa-download"></i> Download
+                <div class="act-btn-large">
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
                 </div>
             </div>
 
             <div class="resources-section">
-                <div class="res-title">Servers & Seasons <i class="fas fa-sliders-h" style="color:var(--text-muted); font-size:14px;"></i></div>
-                <div class="dropdown-row">
-                    <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="width:100%;"></select>
-                </div>
-                <div class="ep-pill-row" id="episode-pill-container"></div>
+                <select id="season-select" onchange="switchSeason(this.value)" class="season-dropdown"></select>
+                <div class="ep-grid" id="episode-pill-container"></div>
             </div>
 
             <div class="tab-header">
-                <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">Up Next</div>
+                <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">More Like This</div>
                 <div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div>
             </div>
 
             <div id="tab-content-foryou">
-                <div class="rec-grid" id="dynamic-rec-grid"></div>
-                <div class="buzz-preview" onclick="showShorts()">
-                    <div class="buzz-header">
-                        <span>BuzzBox Shorts</span>
-                        <span>Explore <i class="fas fa-chevron-right" style="font-size:10px; margin-left:3px;"></i></span>
-                    </div>
-                    <div class="buzz-imgs">
-                        <img src="https://via.placeholder.com/150/111/555?text=S1" class="buzz-img">
-                        <img src="https://via.placeholder.com/150/111/555?text=S2" class="buzz-img">
-                        <div class="buzz-play"><i class="fas fa-play"></i></div>
-                    </div>
-                </div>
+                <div class="movie-grid" id="dynamic-rec-grid" style="margin-top: 15px;"></div>
                 <div id="ad-banner-player" class="ad-container-center"></div>
             </div>
 
-            <div id="tab-content-comments" style="display: none;">
-                <div class="comment-section">
-                    <div style="display:flex; gap:10px; margin-bottom:25px;">
-                        <input type="text" id="comment-input" placeholder="Add a comment..." style="flex:1; padding:15px; border-radius:12px; border:none; background:rgba(255,255,255,0.05); color:#fff; outline:none; font-family:'Outfit';">
-                        <button style="width:50px; border-radius:12px; border:none; background:var(--gold-gradient); color:#000; font-size:16px; cursor:pointer;" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <div id="comments-list"></div>
+            <div id="tab-content-comments" style="display: none; padding-top:15px;">
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <input type="text" id="comment-input" class="comment-input" placeholder="Add a comment...">
+                    <button class="comment-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
                 </div>
+                <div id="comments-list"></div>
             </div>
         </div>
     </div>
 
+    <!-- SHORTS VIEW -->
+    <div id="shorts-view" style="display:none;">
+        <div class="back-btn-player" style="position:fixed; top:20px; left:20px; z-index:101;" onclick="hideShorts()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        <div id="shorts-container"></div>
+    </div>
+
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="padding-top:0;">
-        <div class="profile-bg-header">
-            <div style="position:absolute; top:25px; right:25px; width:40px; height:40px; background:rgba(0,0,0,0.3); border-radius:50%; display:flex; justify-content:center; align-items:center; color:var(--text-muted); border:var(--glass-border); cursor:pointer;" onclick="auth.signOut()">
-                <i class="fas fa-sign-out-alt"></i>
+        <div class="profile-header-modern">
+            <i class="fas fa-cog settings-icon" onclick="auth.signOut()"></i>
+            <div class="avatar-modern">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
             </div>
-            <div class="royal-avatar-container">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="royal-avatar-img">
-            </div>
+            <h2 id="profile-name">USER</h2>
+            <div id="vip-badge" class="vip-badge-modern">FREE PLAN</div>
         </div>
 
-        <div class="royal-info-card">
-            <h2 id="profile-name" style="font-family:'Outfit'; font-weight:800; font-size:24px; color:#fff;">USER</h2>
-            <div id="vip-badge" class="royal-badge">FREE ACCOUNT</div>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <div class="telegram-card" onclick="window.open('https://t.me/animax090', '_blank')">
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div style="width:45px; height:45px; background:rgba(255,255,255,0.2); border-radius:12px; display:flex; justify-content:center; align-items:center;">
-                        <i class="fab fa-telegram-plane" style="font-size:24px; color:#fff;"></i>
-                    </div>
-                    <div style="text-align:left;">
-                        <h4 style="font-family:'Outfit'; font-weight:700; color:#fff; font-size:15px; margin-bottom:2px;">Join Community</h4>
-                        <p style="color:rgba(255,255,255,0.8); font-size:12px; font-weight:400;">Official Updates & Requests</p>
-                    </div>
+        <div class="profile-body">
+            <div class="menu-list">
+                <div class="menu-list-item" onclick="switchInterface('movie')">
+                    <div class="icon-box" style="background: rgba(255,71,87,0.1); color:#ff4757;"><i class="fas fa-film"></i></div>
+                    <span>Movie Box</span>
+                    <i class="fas fa-chevron-right arrow"></i>
                 </div>
-                <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.6);"></i>
+                <div class="menu-list-item" onclick="openHistory()">
+                    <div class="icon-box" style="background: rgba(46,213,115,0.1); color:#2ed573;"><i class="fas fa-history"></i></div>
+                    <span>Watch History</span>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
+                <div class="menu-list-item" onclick="window.open('https://t.me/animax090', '_blank')">
+                    <div class="icon-box" style="background: rgba(0,168,232,0.1); color:#00A8E8;"><i class="fab fa-telegram-plane"></i></div>
+                    <span>Join Telegram</span>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </div>
             </div>
-        </div>
 
-        <div class="menu-grid">
-            <div class="royal-menu-btn" onclick="switchInterface('movie')">
-                <i class="fas fa-ticket-alt" style="color:#ff4757; text-shadow: 0 0 10px rgba(255,71,87,0.4);"></i>
-                <span>Movie Box</span>
-            </div>
-            <div class="royal-menu-btn" onclick="openHistory()">
-                <i class="fas fa-history" style="color:#70a1ff;"></i>
-                <span>Watch History</span>
-            </div>
-            <div class="royal-menu-btn" onclick="alert('Locker Coming Soon!')">
-                <i class="fas fa-lock" style="color:#2ed573;"></i>
-                <span>VIP Locker</span>
-            </div>
-            <div class="royal-menu-btn" onclick="document.querySelector('.premium-area').scrollIntoView({behavior:'smooth'})">
-                <i class="fas fa-crown" style="color:var(--gold); text-shadow: 0 0 10px rgba(245,208,97,0.4);"></i>
-                <span>Get Premium</span>
-            </div>
-        </div>
-
-        <div class="premium-area">
-            <div class="prem-box">
-                <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity:0.15;"></div>
-                <h4 style="color:var(--gold); font-family:'Outfit'; font-weight:700; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:8px;">
-                    <i class="fas fa-gem"></i> Redeem Code
-                </h4>
-                <input type="text" id="prem-code" placeholder="Enter License Key" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#fff; width:100%; padding:15px; border-radius:12px; margin-bottom:15px; font-family:'Outfit'; font-size:14px; outline:none;">
-                <button class="btn-signin" onclick="redeemCode()" style="margin-top:0; padding:14px; font-size:13px; border-radius:12px;">ACTIVATE VIP</button>
-                <button onclick="buyPremium()" style="width:100%; background:transparent; border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); padding:14px; margin-top:12px; border-radius:12px; font-size:13px; font-family:'Outfit'; font-weight:600; cursor:pointer;">
-                    Purchase Subscription
-                </button>
+            <div class="premium-box-modern">
+                <h3>Upgrade to Premium <i class="fas fa-crown"></i></h3>
+                <p>Enjoy ad-free streaming & exclusive VIP servers.</p>
+                <input type="text" id="prem-code" placeholder="Enter VIP Code">
+                <button onclick="redeemCode()">Redeem Now</button>
+                <div class="buy-link" onclick="buyPremium()">Don't have a code? Buy here.</div>
             </div>
         </div>
     </div>
 
     <!-- HISTORY VIEW -->
-    <div id="history-view" style="display:none; position:fixed; inset:0; background:var(--bg-dark); z-index:6000; overflow-y:auto; padding:25px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; padding-bottom:15px; border-bottom:var(--glass-border);">
-            <h2 style="font-family:'Outfit'; font-weight:700; font-size:20px; color:#fff;">Watch History</h2>
-            <div style="width:35px; height:35px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer;" onclick="closeHistory()">
-                <i class="fas fa-times" style="color:var(--text-muted);"></i>
-            </div>
+    <div id="history-view">
+        <div class="history-header">
+            <h2>My List & History</h2>
+            <i class="fas fa-times" onclick="closeHistory()"></i>
         </div>
-        <div id="history-list-container"></div>
+        <div id="history-list-container" style="padding: 20px;"></div>
     </div>
 
-    <!-- BOTTOM NAVBAR -->
+    <!-- BOTTOM FLOATING NAVBAR (APPLE/NETFLIX STYLE) -->
     <nav id="main-nav">
-        <i class="fas fa-home active" onclick="switchTab('home')"></i>
-        <i class="fas fa-play" onclick="showShorts()"></i>
-        <i class="fas fa-user" onclick="switchTab('profile')"></i>
+        <div class="nav-item active" onclick="switchTab('home')" data-tab="home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="showShorts()" data-tab="shorts">
+            <i class="fas fa-play"></i>
+            <span>Shorts</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile')" data-tab="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
     </nav>
 
     <!-- External JavaScript -->
     <script src="app.js"></script>
 </body>
-</html>
+    </html>
