@@ -11,287 +11,31 @@
     <meta name="theme-color" content="#050507">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
+    <!-- Push Notification -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409",
-        });
+        await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
       });
     </script>
     
-    <!-- Modern Fonts -->
+    <!-- Modern Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Advanced Video Player (Plyr & HLS.js) -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    <style>
-        :root { 
-            --gold: #F5D061; 
-            --dark-gold: #C5A03A;
-            --gold-gradient: linear-gradient(135deg, #F5D061, #C5A03A);
-            --bg-dark: #050507;
-            --card-bg: rgba(25, 25, 30, 0.6);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-            --neon-glow: 0 0 20px rgba(245, 208, 97, 0.3);
-            --red: #ff4757;
-            --green-accent: #2ed573;
-            --text-main: #f1f2f6;
-            --text-muted: #a4b0be;
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg-dark); color: var(--text-main); overflow-x: hidden; padding-bottom: 90px; }
-
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-
-        /* --- Animations --- */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(245,208,97,0.2); } 50% { box-shadow: var(--neon-glow); } 100% { box-shadow: 0 0 10px rgba(245,208,97,0.2); } }
-
-        /* --- AUTH SCREEN (Modern Glassmorphism) --- */
-        #auth-screen {
-            position: fixed; inset: 0; z-index: 900; 
-            background: linear-gradient(to bottom, rgba(5,5,7,0.6), rgba(5,5,7,1)), url('https://w.wallhaven.cc/full/wq/wallhaven-wqve6r.jpg');
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; 
-            padding: 25px; padding-bottom: 100px; overflow-y: auto;
-        }
-
-        .auth-navbar { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
-        .auth-brand { font-family: 'Orbitron'; font-size: 26px; font-weight: 900; color: #fff; letter-spacing: 1px; }
-        .auth-brand span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .auth-content { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 400px; margin: 0 auto; width: 100%; }
-
-        .auth-headline { font-size: 42px; font-weight: 800; line-height: 1.1; margin-bottom: 12px; color: #fff; letter-spacing: -0.5px; }
-        .auth-headline span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .auth-subhead { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 35px; font-weight: 400; }
-
-        .auth-card {
-            background: rgba(15, 15, 20, 0.6); 
-            border: var(--glass-border); 
-            border-radius: 24px;
-            padding: 30px 25px; 
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .input-group { margin-bottom: 22px; text-align: left; }
-        .input-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 8px; font-weight: 700; font-family: 'Orbitron'; letter-spacing: 1px; text-transform: uppercase; }
-        
-        .custom-input { 
-            width: 100%; padding: 16px; border-radius: 14px; 
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; 
-            font-family: 'Outfit'; font-size: 15px; transition: all 0.3s ease;
-        }
-        .custom-input:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(245, 208, 97, 0.15); }
-
-        .forgot-link { display: block; text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 10px; cursor: pointer; transition: 0.2s; }
-        .forgot-link:hover { color: var(--gold); }
-
-        .btn-signin {
-            width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 800;
-            background: var(--gold-gradient); color: #000; font-size: 15px; letter-spacing: 1px;
-            font-family: 'Orbitron'; cursor: pointer; margin-top: 15px; transition: 0.3s;
-            box-shadow: 0 8px 25px rgba(245, 208, 97, 0.3);
-        }
-        .btn-signin:active { transform: scale(0.96); box-shadow: 0 4px 15px rgba(245, 208, 97, 0.2); }
-
-        .auth-footer { margin-top: 25px; text-align: center; font-size: 14px; color: var(--text-muted); }
-        .auth-footer span { color: var(--gold); cursor: pointer; font-weight: 600; text-decoration: none; transition: 0.2s; }
-
-        .floating-chat {
-            position: fixed; bottom: 100px; right: 25px; width: 55px; height: 55px; 
-            background: linear-gradient(135deg, #00A8E8, #0077B6); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: #fff;
-            font-size: 24px; box-shadow: 0 8px 20px rgba(0, 168, 232, 0.4); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-            transition: 0.3s;
-        }
-        .floating-chat:active { transform: scale(0.9); }
-
-        /* --- MAIN UI STRUCTURE --- */
-        .app-view { display: none; padding-top: 75px; animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        
-        header { 
-            padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(5, 5, 7, 0.8); position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-            border-bottom: var(--glass-border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        }
-        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; letter-spacing: 1px; }
-        .logo span { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--card-bg); display: flex; justify-content: center; align-items: center; border: var(--glass-border); color: #fff; font-size: 16px; }
-
-        /* Slider */
-        #banner-slider, #movie-banner-slider { 
-            width: calc(100% - 40px); height: 190px; margin: 5px auto 25px; border-radius: 20px; 
-            overflow: hidden; position: relative; border: var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-        }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; background-size: cover; background-position: center; }
-        .slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%); }
-        .slide.active { opacity: 1; }
-
-        /* Section Title */
-        .section-title { padding: 0 25px; margin-bottom: 18px; display:flex; align-items:center; justify-content: space-between; }
-        .section-title-text { font-family: 'Outfit'; color: #fff; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-        .section-title-text i { color: var(--gold); font-size: 16px; }
-        .section-link { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-
-        /* GRID SYSTEM (Modern Soft Cards) */
-        .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 20px 20px; }
-        .folder-card { 
-            position: relative; border-radius: 14px; overflow: hidden; background: #111; 
-            border: var(--glass-border); aspect-ratio: 2/3; transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .folder-card:active { transform: scale(0.94); box-shadow: 0 0 15px rgba(255,255,255,0.1); }
-        .folder-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .folder-card:hover img { transform: scale(1.05); }
-        .folder-info { 
-            position: absolute; bottom: 0; left: 0; right: 0; padding: 25px 10px 10px; 
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 100%); 
-            text-align: center; 
-        }
-        .folder-title { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* --- Movie Box Specifics --- */
-        #movie-box-view { background: #080505; min-height: 100vh; }
-        .movie-header { background: rgba(15, 5, 5, 0.8); border-bottom: 1px solid rgba(255, 71, 87, 0.3); }
-        .movie-header .logo span { background: linear-gradient(135deg, #ff4757, #ff6b81); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* --- Player UI (Premium Feel) --- */
-        #player-view { position: fixed; inset: 0; background: var(--bg-dark); z-index: 5000; overflow-y: auto; display: none; }
-        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .back-btn-player { position:absolute; top:20px; left:20px; z-index:10; width:40px; height:40px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); border-radius:50%; display:flex; justify-content:center; align-items:center; border:var(--glass-border); color:#fff; cursor:pointer; }
-
-        .player-meta-container { padding: 25px 20px; background: var(--bg-dark); min-height: 100vh; border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: -15px; position: relative; z-index: 5002; }
-        
-        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .meta-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.3; }
-        .meta-info { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-weight: 500; }
-        .rating-star { color: var(--gold); font-size: 12px; margin-right: 3px; }
-
-        .action-buttons-row { display: flex; gap: 12px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .act-btn { 
-            background: rgba(255,255,255,0.05); color: #fff; border: var(--glass-border); 
-            padding: 12px 20px; border-radius: 30px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer; transition: 0.3s;
-        }
-        .act-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-        .act-btn.liked { color: var(--red); border-color: rgba(255, 71, 87, 0.5); background: rgba(255, 71, 87, 0.1); }
-
-        .resources-section { margin-bottom: 30px; }
-        .res-title { font-size: 15px; color: #fff; margin-bottom: 15px; font-weight: 700; display:flex; justify-content:space-between; align-items:center;}
-        
-        .dropdown-row { display: flex; gap: 12px; margin-bottom: 20px; }
-        select.custom-drop {
-            -webkit-appearance: none; appearance: none;
-            background: rgba(255,255,255,0.05); color: #fff; border: var(--glass-border);
-            padding: 12px 18px; padding-right: 35px; border-radius: 12px; font-weight: 500;
-            font-size: 13px; cursor: pointer; outline: none; font-family: 'Outfit';
-        }
-        
-        .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
-        .ep-pill { 
-            min-width: 50px; height: 50px; background: rgba(255,255,255,0.03); border-radius: 14px; 
-            display: flex; align-items: center; justify-content: center; font-weight: 600;
-            font-size: 15px; color: var(--text-muted); border: var(--glass-border); flex-shrink: 0; cursor: pointer; transition: 0.3s;
-        }
-        .ep-pill.active { background: var(--gold-gradient); color: #000; border: none; box-shadow: 0 5px 15px rgba(245, 208, 97, 0.3); } 
-
-        .tab-header { display: flex; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
-        .tab-item { padding-bottom: 12px; font-size: 15px; color: var(--text-muted); position: relative; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .tab-item.active { color: #fff; }
-        .tab-item.active::after { content:''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: var(--gold); border-radius: 3px 3px 0 0; }
-
-        .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
-        .rec-card { position: relative; aspect-ratio: 2/3; border-radius: 12px; overflow: hidden; background: #111; border: var(--glass-border); }
-        .rec-card img { width: 100%; height: 100%; object-fit: cover; }
-        .rec-title { position: absolute; bottom: 0; width: 100%; padding: 15px 8px 8px; background: linear-gradient(to top, #000, transparent); font-size: 11px; font-weight: 600; text-align: center; }
-
-        .buzz-preview { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; border: var(--glass-border); }
-        .buzz-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; font-weight: 600; }
-        .buzz-header span:last-child { color: var(--gold); font-size: 12px; }
-        .buzz-imgs { display: flex; gap: 10px; height: 100px; }
-        .buzz-img, .buzz-play { width: calc(33.33% - 6px); border-radius: 10px; object-fit: cover; }
-        .buzz-play { background: rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; border:var(--glass-border); font-size: 20px; color: var(--gold); }
-
-        .comment-box { display: flex; margin-bottom: 18px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 14px; border: var(--glass-border); }
-        .c-avatar { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; margin-right: 12px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .c-body h4 { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
-        .c-body p { font-size: 12px; color: var(--text-main); line-height: 1.4; }
-
-        /* --- NAVIGATION (Modern Floating Apple-Style) --- */
-        nav { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 400px;
-            background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px; padding: 12px 25px; display: flex; justify-content: space-between; 
-            border: 1px solid rgba(255,255,255,0.1); z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-        }
-        nav i { font-size: 22px; color: var(--text-muted); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; padding: 10px; }
-        nav i.active { color: var(--gold); transform: translateY(-4px); }
-        nav i.active::after { content: ''; position: absolute; bottom: 0px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); }
-
-        /* --- ROYAL PROFILE --- */
-        .profile-bg-header {
-            background: linear-gradient(to bottom, rgba(197, 160, 58, 0.15), var(--bg-dark));
-            height: 200px; position: relative; border-radius: 0 0 40px 40px;
-            border-bottom: 1px solid rgba(197, 160, 58, 0.2);
-        }
-        .royal-avatar-container {
-            position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
-            width: 120px; height: 120px; border-radius: 50%; padding: 4px;
-            background: var(--gold-gradient); box-shadow: 0 10px 30px rgba(245, 208, 97, 0.3); z-index: 2;
-        }
-        .royal-avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--bg-dark); object-fit: cover; background: #000; }
-        .royal-info-card { margin-top: 65px; text-align: center; padding: 0 20px; }
-        .royal-badge {
-            display: inline-block; padding: 8px 20px; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); border-radius: 30px; font-size: 11px;
-            font-family: 'Orbitron'; font-weight: 700; letter-spacing: 1px; margin-top: 12px;
-        }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 25px; }
-        .royal-menu-btn {
-            background: rgba(255, 255, 255, 0.03); border: var(--glass-border); padding: 20px;
-            border-radius: 18px; color: #fff; display: flex; flex-direction: column;
-            align-items: center; gap: 12px; font-size: 13px; font-weight: 500; transition: 0.3s;
-        }
-        .royal-menu-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
-        .royal-menu-btn i { font-size: 24px; color: var(--gold); }
-
-        .telegram-card {
-            background: linear-gradient(135deg, #00A8E8, #0077B6); padding: 18px 20px; margin: 10px 25px 0;
-            border-radius: 20px; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0, 168, 232, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
-        }
-        .premium-area { padding: 0 25px 100px; margin-top: 10px; }
-        .prem-box {
-            background: rgba(197, 160, 58, 0.05); border: 1px solid rgba(197, 160, 58, 0.3); 
-            padding: 25px; border-radius: 20px; position: relative; overflow: hidden;
-        }
-
-        /* --- Footer & Misc --- */
-        .dev-footer { text-align: center; padding: 30px 20px; font-family: 'Orbitron'; font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
-        .ad-container-center { display: flex; justify-content: center; align-items: center; margin: 20px 0; overflow: hidden; width: 100%; min-height: 1px; }
-
-        /* --- Shorts --- */
-        #shorts-view { position: fixed; inset: 0; background: #000; z-index: 200; padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .short-item { width: 100%; height: 100vh; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-        .short-item video { width: 100%; height: 100%; object-fit: cover; }
-        .short-overlay { position: absolute; bottom: 90px; right: 15px; display: flex; flex-direction: column; gap: 25px; z-index: 10; }
-        .short-btn { color: #fff; text-align: center; font-size: 28px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); cursor: pointer; transition: 0.2s; }
-        .short-btn:active { transform: scale(0.8); }
-        .short-btn.liked { color: var(--red); }
-        .short-btn span { display: block; font-size: 11px; font-family: 'Outfit'; font-weight: 600; margin-top: 6px; }
-
-    </style>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -315,12 +59,8 @@
                     <input type="password" id="pass-in" class="custom-input" placeholder="••••••••">
                     <span class="forgot-link" onclick="alert('Contact Admin on Telegram')">Forgot password?</span>
                 </div>
-
                 <button class="btn-signin" onclick="handleAuth('login')">ENTER WORLD</button>
-
-                <div class="auth-footer">
-                    New here? <span onclick="toggleAuth()">Create Account</span>
-                </div>
+                <div class="auth-footer">New here? <span onclick="toggleAuth()">Create Account</span></div>
             </div>
 
             <div class="auth-card" id="reg-form" style="display:none;">
@@ -332,17 +72,24 @@
                     <label>Strong Password</label>
                     <input type="password" id="rpass-in" class="custom-input" placeholder="••••••••">
                 </div>
-
                 <button class="btn-signin" onclick="handleAuth('reg')">REGISTER NOW</button>
-
-                <div class="auth-footer">
-                    Already a member? <span onclick="toggleAuth()">Login Now</span>
-                </div>
+                <div class="auth-footer">Already a member? <span onclick="toggleAuth()">Login Now</span></div>
             </div>
         </div>
+        <div class="floating-chat" onclick="window.open('https://t.me/animax090', '_blank')"><i class="fab fa-telegram-plane"></i></div>
+    </div>
 
-        <div class="floating-chat" onclick="window.open('https://t.me/animax090', '_blank')">
-            <i class="fab fa-telegram-plane"></i>
+    <!-- LIVE SEARCH OVERLAY -->
+    <div id="search-overlay">
+        <div class="search-header">
+            <div class="search-bar">
+                <i class="fas fa-search search-icon-inner"></i>
+                <input type="text" id="search-input" placeholder="Search anime or movies..." onkeyup="performSearch()">
+            </div>
+            <span class="search-close" onclick="closeSearch()"><i class="fas fa-times"></i></span>
+        </div>
+        <div id="search-results" class="grid-container" style="padding-top:20px;">
+            <p style="text-align:center; width:100%; color:var(--text-muted); grid-column: 1 / -1; margin-top: 50px;">Type something to search...</p>
         </div>
     </div>
 
@@ -350,20 +97,17 @@
     <div id="main-app" class="app-view" style="display: block;">
         <header>
             <div class="logo">ANIMAX <span>PRO</span></div>
-            <div class="header-icon"><i class="fas fa-search"></i></div>
+            <div class="header-icon" onclick="openSearch()"><i class="fas fa-search"></i></div>
         </header>
 
         <div id="banner-slider"></div>
-
         <div id="ad-banner-top" class="ad-container-center"></div>
         
         <div class="section-title">
             <div class="section-title-text"><i class="fas fa-bolt"></i> New Releases</div>
             <span class="section-link">See All</span>
         </div>
-
         <div id="anime-grid" class="grid-container"></div>
-
         <div class="dev-footer">CRAFTED BY RJ ROCKY</div>
     </div>
 
@@ -371,15 +115,15 @@
     <div id="movie-box-view" class="app-view">
         <header class="movie-header">
             <div class="logo">MOVIE <span>BOX</span></div>
-            <div class="header-icon" onclick="switchInterface('main')" style="background: rgba(255, 71, 87, 0.1); border-color: rgba(255, 71, 87, 0.3); color: #ff4757;"><i class="fas fa-times"></i></div>
+            <div style="display:flex; gap:10px;">
+                <div class="header-icon" onclick="openSearch()"><i class="fas fa-search"></i></div>
+                <div class="header-icon" onclick="switchInterface('main')" style="background: rgba(255, 71, 87, 0.1); border-color: rgba(255, 71, 87, 0.3); color: #ff4757;"><i class="fas fa-times"></i></div>
+            </div>
         </header>
-
         <div id="movie-banner-slider"></div>
-
         <div class="section-title">
             <div class="section-title-text" style="color:#ff4757;"><i class="fas fa-film" style="color:#ff4757;"></i> Trending Movies</div>
         </div>
-
         <div id="movie-grid" class="grid-container"></div>
     </div>
 
@@ -392,25 +136,27 @@
         </div>
         <div id="shorts-container"></div>
         
-        <div id="shorts-comments-modal" style="display:none; position:fixed; bottom:0; left:0; width:100%; height:65%; background:var(--bg-dark); border-radius:24px 24px 0 0; z-index:250; padding:20px; border-top:1px solid rgba(255,255,255,0.1); box-shadow:0 -10px 40px rgba(0,0,0,0.8);">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05);">
-                <span style="font-family:'Outfit'; font-weight:700; color:var(--text-main); font-size:16px;">Comments</span>
-                <i class="fas fa-times" onclick="document.getElementById('shorts-comments-modal').style.display='none'" style="color:var(--text-muted); font-size:18px;"></i>
+        <!-- Shorts Comment Modal -->
+        <div id="shorts-comments-modal" class="modal-design">
+            <div class="modal-header">
+                <span>Comments</span>
+                <i class="fas fa-times" onclick="document.getElementById('shorts-comments-modal').style.display='none'"></i>
             </div>
-            <div id="shorts-comments-list" style="height: calc(100% - 110px); overflow-y:auto; margin-bottom:15px;"></div>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="short-comment-in" placeholder="Write a comment..." style="flex:1; padding:15px; border-radius:12px; border:none; background:rgba(255,255,255,0.05); color:#fff; outline:none; font-family:'Outfit';">
-                <button style="width:50px; border-radius:12px; border:none; background:var(--gold-gradient); color:#000; font-size:16px; cursor:pointer;" onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
+            <div id="shorts-comments-list" class="modal-body"></div>
+            <div class="modal-footer">
+                <input type="text" id="short-comment-in" placeholder="Write a comment...">
+                <button onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- PLAYER VIEW -->
+    <!-- PLAYER VIEW (ADVANCED) -->
     <div id="player-view">
         <div class="video-wrapper">
             <div class="back-btn-player" onclick="closePlayer()">
                 <i class="fas fa-chevron-down"></i>
             </div>
+            <!-- Plyr Video Element -->
             <video id="main-video" controls playsinline></video>
         </div>
 
@@ -444,8 +190,7 @@
             <div class="resources-section">
                 <div class="res-title">Servers & Seasons <i class="fas fa-sliders-h" style="color:var(--text-muted); font-size:14px;"></i></div>
                 <div class="dropdown-row">
-                    <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="width:100%;">
-                    </select>
+                    <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="width:100%;"></select>
                 </div>
                 <div class="ep-pill-row" id="episode-pill-container"></div>
             </div>
@@ -457,7 +202,6 @@
 
             <div id="tab-content-foryou">
                 <div class="rec-grid" id="dynamic-rec-grid"></div>
-                
                 <div class="buzz-preview" onclick="showShorts()">
                     <div class="buzz-header">
                         <span>BuzzBox Shorts</span>
@@ -487,7 +231,7 @@
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="padding-top:0;">
         <div class="profile-bg-header">
-            <div style="position:absolute; top:25px; right:25px; width:40px; height:40px; background:rgba(0,0,0,0.3); border-radius:50%; display:flex; justify-content:center; align-items:center; color:var(--text-muted); font-size:16px; border:var(--glass-border); cursor:pointer;" onclick="auth.signOut()">
+            <div style="position:absolute; top:25px; right:25px; width:40px; height:40px; background:rgba(0,0,0,0.3); border-radius:50%; display:flex; justify-content:center; align-items:center; color:var(--text-muted); border:var(--glass-border); cursor:pointer;" onclick="auth.signOut()">
                 <i class="fas fa-sign-out-alt"></i>
             </div>
             <div class="royal-avatar-container">
@@ -537,16 +281,11 @@
         <div class="premium-area">
             <div class="prem-box">
                 <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity:0.15;"></div>
-                
                 <h4 style="color:var(--gold); font-family:'Outfit'; font-weight:700; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:8px;">
                     <i class="fas fa-gem"></i> Redeem Code
                 </h4>
-                
-                <input type="text" id="prem-code" placeholder="Enter License Key" 
-                       style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#fff; width:100%; padding:15px; border-radius:12px; margin-bottom:15px; font-family:'Outfit'; font-size:14px; outline:none;">
-                
+                <input type="text" id="prem-code" placeholder="Enter License Key" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#fff; width:100%; padding:15px; border-radius:12px; margin-bottom:15px; font-family:'Outfit'; font-size:14px; outline:none;">
                 <button class="btn-signin" onclick="redeemCode()" style="margin-top:0; padding:14px; font-size:13px; border-radius:12px;">ACTIVATE VIP</button>
-                
                 <button onclick="buyPremium()" style="width:100%; background:transparent; border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); padding:14px; margin-top:12px; border-radius:12px; font-size:13px; font-family:'Outfit'; font-weight:600; cursor:pointer;">
                     Purchase Subscription
                 </button>
@@ -572,663 +311,7 @@
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
 
-    <!-- JS LOGIC EXACTLY UNTOUCHED -->
-    <script>
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI",
-            authDomain: "myanimeapp-8d079.firebaseapp.com",
-            databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com",
-            projectId: "myanimeapp-8d079",
-            storageBucket: "myanimeapp-8d079.firebasestorage.app",
-            messagingSenderId: "37482342893",
-            appId: "1:37482342893:web:bebc7352e4bc102b725fe4"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), db = firebase.database();
-
-        let currentUser = null, isPremium = false, currentVideoId = null;
-        let adSessionClick = false; 
-        let adsLoaded = false;
-        
-        // Track if we are watching a movie or anime to show correct recommendations
-        let isMovieContent = false; 
-
-        // Listener References
-        let currentLikesCountRef = null;
-        let currentUserLikeRef = null;
-        let currentViewsRef = null;
-        let currentCommentsRef = null;
-
-        // --- AUTH SYSTEM ---
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('profile-name').innerText = user.email.split('@')[0].toUpperCase();
-                checkPremium(user.uid);
-                
-                // If the user just logged in from the auth screen, redirect to profile
-                if (document.getElementById('auth-screen').style.display === 'flex' || document.getElementById('auth-screen').style.display === 'block') {
-                    document.getElementById('auth-screen').style.display = 'none';
-                    switchTab('profile'); 
-                }
-            } else {
-                currentUser = null;
-                isPremium = false;
-                document.getElementById('vip-badge').innerText = "FREE ACCOUNT";
-                document.getElementById('vip-badge').style.borderColor = "rgba(255,255,255,0.1)";
-                document.getElementById('vip-badge').style.color = "var(--text-muted)";
-                document.getElementById('vip-badge').style.background = "rgba(255,255,255,0.05)";
-                document.getElementById('ad-banner-top').style.display = 'flex';
-                document.getElementById('ad-banner-player').style.display = 'flex';
-                loadFreeUserAds();
-                
-                // If they sign out from profile, send to home
-                if(document.getElementById('profile-view').style.display === 'block') {
-                    switchTab('home');
-                }
-            }
-        });
-
-        // --- AD SYSTEM ---
-        function loadFreeUserAds() {
-            if(adsLoaded) return; 
-            adsLoaded = true;
-
-            let s1 = document.createElement('script');
-            s1.src = "https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js";
-            document.body.appendChild(s1);
-
-            let s2 = document.createElement('script');
-            s2.src = "https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js";
-            document.body.appendChild(s2);
-
-            const bannerTop = document.getElementById('ad-banner-top');
-            if(bannerTop) {
-                bannerTop.innerHTML = `
-                    <iframe src="javascript:false" title="" scrolling="no" frameborder="0" 
-                    style="border:none; width:320px; height:50px; overflow:hidden;" 
-                    srcdoc='<script>atOptions = { "key" : "9f634c6894bc13ff8f0f19de1fcac9f3", "format" : "iframe", "height" : 50, "width" : 320, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"><\/script>'></iframe>
-                `;
-            }
-
-            const bannerPlayer = document.getElementById('ad-banner-player');
-            if(bannerPlayer) {
-                bannerPlayer.innerHTML = `
-                    <iframe src="javascript:false" title="" scrolling="no" frameborder="0" 
-                    style="border:none; width:468px; height:60px; overflow:hidden;" 
-                    srcdoc='<script>atOptions = { "key" : "3c0655cdf72da98fdd68dcdd704f9766", "format" : "iframe", "height" : 60, "width" : 468, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"><\/script>'></iframe>
-                `;
-            }
-        }
-
-        function triggerSmartLink() {
-            if(isPremium) return;
-            if(!adSessionClick) {
-                window.open("https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871", "_blank");
-                adSessionClick = true; 
-            }
-        }
-
-        // --- PREMIUM CHECKER ---
-        function checkPremium(uid) {
-            db.ref(`users/${uid}`).on('value', s => {
-                const d = s.val();
-                if(d && d.premiumExpiry > Date.now()) {
-                    isPremium = true;
-                    document.getElementById('vip-badge').innerText = "ROYAL VIP MEMBER 👑";
-                    document.getElementById('vip-badge').style.borderColor = "var(--gold)";
-                    document.getElementById('vip-badge').style.color = "#000";
-                    document.getElementById('vip-badge').style.background = "var(--gold-gradient)";
-                    document.getElementById('ad-banner-top').style.display = 'none';
-                    document.getElementById('ad-banner-player').style.display = 'none';
-                } else {
-                    isPremium = false;
-                    document.getElementById('vip-badge').innerText = "FREE ACCOUNT";
-                    document.getElementById('vip-badge').style.borderColor = "rgba(255,255,255,0.1)";
-                    document.getElementById('vip-badge').style.color = "var(--text-muted)";
-                    document.getElementById('vip-badge').style.background = "rgba(255,255,255,0.05)";
-                    document.getElementById('ad-banner-top').style.display = 'flex';
-                    document.getElementById('ad-banner-player').style.display = 'flex';
-                    loadFreeUserAds();
-                }
-            });
-        }
-
-        function handleAuth(type) {
-            const e = document.getElementById(type === 'login' ? 'email-in' : 'remail-in').value;
-            const p = document.getElementById(type === 'login' ? 'pass-in' : 'rpass-in').value;
-            if (type === 'login') auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
-            else auth.createUserWithEmailAndPassword(e, p).catch(err => alert(err.message));
-        }
-        function toggleAuth() {
-            const l = document.getElementById('login-form'), r = document.getElementById('reg-form');
-            l.style.display = l.style.display === 'none' ? 'block' : 'none';
-            r.style.display = r.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // --- NAVIGATION & UI ---
-        function switchTab(tab) {
-            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
-            hideShorts();
-            document.getElementById('auth-screen').style.display = 'none'; 
-            
-            if (tab === 'home') document.getElementById('main-app').style.display = 'block';
-            if (tab === 'profile') {
-                if (currentUser) {
-                    document.getElementById('profile-view').style.display = 'block';
-                } else {
-                    document.getElementById('auth-screen').style.display = 'flex';
-                }
-            }
-            
-            document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
-            if(tab === 'home') document.querySelector('.fa-home').classList.add('active');
-            if(tab === 'profile') document.querySelector('.fa-user').classList.add('active');
-        }
-
-        function switchInterface(to) {
-            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
-            if(to === 'movie') {
-                document.getElementById('movie-box-view').style.display = 'block';
-                document.getElementById('main-nav').style.display = 'none';
-                loadMovies();
-            } else {
-                document.getElementById('main-app').style.display = 'block';
-                document.getElementById('main-nav').style.display = 'flex';
-            }
-        }
-
-        // --- DATA LOADING (ANIME) ---
-        function loadContent() {
-            db.ref('banners').on('value', s => {
-                const c = document.getElementById('banner-slider'); c.innerHTML = "";
-                let i=0; s.forEach(b => { c.innerHTML += `<div class="slide ${i++===0?'active':''}" style="background-image:url('${b.val().image}')"></div>`; });
-                startSlider('banner-slider');
-            });
-
-            db.ref('anime').on('value', snap => {
-                const grid = document.getElementById('anime-grid'); grid.innerHTML = "";
-                let folders = {};
-                snap.forEach(c => {
-                    let d = c.val();
-                    let rawFolder = d.folder || 'Misc';
-                    let f = rawFolder.trim(); 
-                    
-                    if(!folders[f]) folders[f] = [];
-                    folders[f].push(d);
-                });
-                
-                Object.keys(folders).forEach(name => {
-                    let thumb = folders[name][0].thumbnail;
-                    grid.innerHTML += `
-                        <div class="folder-card" onclick="openFolder('${name.replace(/'/g, "\\'")}')">
-                            <img src="${thumb}">
-                            <div class="folder-info"><div class="folder-title">${name}</div></div>
-                        </div>`;
-                });
-                window.animeData = folders;
-            });
-        }
-
-        function openFolder(name) {
-            currentFolder = name;
-            const episodes = window.animeData[name];
-            
-            if(!episodes || episodes.length === 0) return;
-
-            const firstEp = episodes[0];
-            let epId = firstEp.id ? firstEp.id : firstEp.title.replace(/[^a-zA-Z0-9]/g, '_');
-            
-            playVideo(firstEp.title, firstEp.url, epId, firstEp.type === 'premium', 0);
-            loadPlayerUI(name);
-        }
-
-        function loadPlayerUI(folderName) {
-            const seasonSelect = document.getElementById('season-select');
-            seasonSelect.innerHTML = "";
-            
-            Object.keys(window.animeData).forEach(key => {
-                let opt = document.createElement('option');
-                opt.value = key;
-                opt.innerText = key; 
-                if(key === folderName) opt.selected = true;
-                seasonSelect.appendChild(opt);
-            });
-
-            renderEpisodeButtons(folderName);
-        }
-
-        function renderEpisodeButtons(folderName) {
-            const container = document.getElementById('episode-pill-container');
-            container.innerHTML = "";
-            
-            const episodes = window.animeData[folderName];
-            
-            episodes.forEach((ep, index) => {
-                let btn = document.createElement('div');
-                btn.className = 'ep-pill';
-                btn.innerText = index + 1;
-                btn.id = `ep-btn-${index}`;
-                
-                btn.onclick = function() {
-                    let epId = ep.id ? ep.id : ep.title.replace(/[^a-zA-Z0-9]/g, '_');
-                    playVideo(ep.title, ep.url, epId, ep.type === 'premium', index);
-                };
-                
-                container.appendChild(btn);
-            });
-        }
-
-        function switchSeason(newFolder) {
-            openFolder(newFolder);
-        }
-
-        // --- MOVIE LOADING ---
-        function loadMovies() {
-            db.ref('movie_banners').on('value', s => {
-                const c = document.getElementById('movie-banner-slider'); c.innerHTML = "";
-                let i=0; s.forEach(b => { c.innerHTML += `<div class="slide ${i++===0?'active':''}" style="background-image:url('${b.val().image}')"></div>`; });
-                startSlider('movie-banner-slider');
-            });
-
-            db.ref('movies').on('value', snap => {
-                const grid = document.getElementById('movie-grid'); grid.innerHTML = "";
-                window.movieData = []; 
-                
-                snap.forEach(c => {
-                    let d = c.val();
-                    let safeId = d.id || d.title.replace(/[^a-zA-Z0-9]/g, '_');
-                    
-                    window.movieData.push(d); 
-                    
-                    grid.innerHTML += `
-                        <div class="folder-card" onclick="playVideo('${d.title}', '${d.url}', '${safeId}', true, -1)">
-                            <img src="${d.thumbnail}">
-                            <div class="folder-info"><div class="folder-title">${d.title}</div></div>
-                        </div>`;
-                });
-            });
-        }
-
-        function startSlider(id) {
-            setInterval(() => {
-                let p = document.getElementById(id), a = p.querySelector('.active');
-                if(a) { a.classList.remove('active'); (a.nextElementSibling || p.querySelector('.slide')).classList.add('active'); }
-            }, 4000);
-        }
-
-        // --- PLAYER & SOCIAL ---
-        function playVideo(title, url, id, isPrem, index) {
-            if(isPrem && !isPremium) { alert("ROYAL VIP REQUIRED! Please Login/Upgrade."); switchTab('profile'); return; }
-            
-            if(currentLikesCountRef) currentLikesCountRef.off();
-            if(currentUserLikeRef) currentUserLikeRef.off();
-            if(currentViewsRef) currentViewsRef.off();
-            if(currentCommentsRef) currentCommentsRef.off();
-
-            if(!id) id = title.replace(/[^a-zA-Z0-9]/g, '_');
-            triggerSmartLink();
-
-            currentVideoId = id;
-            document.getElementById('player-title').innerText = title;
-            
-            if(index === -1) {
-                isMovieContent = true;
-                document.getElementById('content-type-badge').innerText = "Movie";
-                document.getElementById('episode-pill-container').style.display = 'none'; 
-                document.querySelector('.dropdown-row').style.display = 'none'; 
-            } else {
-                isMovieContent = false;
-                document.getElementById('content-type-badge').innerText = "Anime";
-                document.getElementById('episode-pill-container').style.display = 'flex';
-                document.querySelector('.dropdown-row').style.display = 'flex';
-                
-                document.querySelectorAll('.ep-pill').forEach(b => b.classList.remove('active'));
-                let activeBtn = document.getElementById(`ep-btn-${index}`);
-                if(activeBtn) activeBtn.classList.add('active');
-            }
-
-            const v = document.getElementById('main-video'); 
-            v.src = url; 
-            v.play();
-            document.getElementById('player-view').style.display = 'block';
-
-            switchPlayerTab('foryou');
-            loadForYouVideos();
-            
-            if(currentUser) {
-                db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: title, date: Date.now()});
-            }
-            
-            const viewRef = db.ref(`views/${id}`);
-            viewRef.transaction(currentCount => {
-                return (currentCount || 0) + 1;
-            });
-
-            loadSocialData(id);
-        }
-
-        function loadSocialData(id) {
-            currentLikesCountRef = db.ref(`likes/${id}/count`);
-            currentLikesCountRef.on('value', snapshot => {
-                document.getElementById('like-count').innerText = snapshot.val() || 0;
-            });
-
-            if(currentUser) {
-                currentUserLikeRef = db.ref(`likes/${id}/${currentUser.uid}`);
-                currentUserLikeRef.on('value', snapshot => {
-                    const btn = document.getElementById('like-btn');
-                    if (snapshot.exists()) {
-                        btn.classList.add('liked');
-                        btn.innerHTML = `<i class="fas fa-check"></i> Added`;
-                    } else {
-                        btn.classList.remove('liked');
-                        btn.innerHTML = `<i class="fas fa-plus"></i> My List`;
-                    }
-                });
-            } else {
-                const btn = document.getElementById('like-btn');
-                btn.classList.remove('liked');
-                btn.innerHTML = `<i class="fas fa-plus"></i> My List`;
-            }
-
-            currentViewsRef = db.ref(`views/${id}`);
-            currentViewsRef.on('value', snapshot => {
-                document.getElementById('view-count').innerText = snapshot.val() || 0;
-            });
-
-            const list = document.getElementById('comments-list');
-            list.innerHTML = "";
-            currentCommentsRef = db.ref(`comments/${id}`);
-
-            currentCommentsRef.on('value', snap => {
-                let count = snap.numChildren();
-                document.getElementById('tab-btn-comments').innerText = `Comments (${count})`;
-            });
-
-            currentCommentsRef.on('child_added', s => {
-                const c = s.val();
-                list.innerHTML = `
-                    <div class="comment-box">
-                        <div class="c-avatar">${c.user[0]}</div>
-                        <div class="c-body"><h4>${c.user}</h4><p>${c.text}</p></div>
-                    </div>` + list.innerHTML;
-            });
-        }
-
-        function toggleLike() {
-            if(!currentUser) { alert("Please login from Profile to add to list!"); switchTab('profile'); return; }
-            if(!currentVideoId) return;
-            
-            const userLikeRef = db.ref(`likes/${currentVideoId}/${currentUser.uid}`);
-            const countRef = db.ref(`likes/${currentVideoId}/count`);
-
-            userLikeRef.once('value', snapshot => {
-                if (snapshot.exists()) {
-                    userLikeRef.remove();
-                    countRef.transaction(cnt => (cnt || 0) - 1);
-                } else {
-                    userLikeRef.set(true);
-                    countRef.transaction(cnt => (cnt || 0) + 1);
-                }
-            });
-        }
-
-        function closePlayer() {
-            const v = document.getElementById('main-video');
-            v.pause();
-            v.src = "";
-            document.getElementById('player-view').style.display = 'none';
-
-            if(currentLikesCountRef) currentLikesCountRef.off();
-            if(currentUserLikeRef) currentUserLikeRef.off();
-            if(currentViewsRef) currentViewsRef.off();
-            if(currentCommentsRef) currentCommentsRef.off();
-        }
-
-        function postComment() {
-            if(!currentUser) { alert("Please login to comment!"); switchTab('profile'); return; }
-            const txt = document.getElementById('comment-input').value;
-            if(!txt) return;
-            db.ref(`comments/${currentVideoId}`).push({
-                user: currentUser.email.split('@')[0],
-                text: txt,
-                time: Date.now()
-            });
-            document.getElementById('comment-input').value = "";
-        }
-
-        function shareContent() {
-            const link = `https://t.me/aminezone09`;
-            navigator.clipboard.writeText(link).then(() => alert("Link Copied! Share on Telegram."));
-        }
-
-        // --- NEW TAB SYSTEM FOR PLAYER ---
-        function switchPlayerTab(tab) {
-            if(tab === 'foryou') {
-                document.getElementById('tab-btn-foryou').classList.add('active');
-                document.getElementById('tab-btn-comments').classList.remove('active');
-                document.getElementById('tab-content-foryou').style.display = 'block';
-                document.getElementById('tab-content-comments').style.display = 'none';
-            } else {
-                document.getElementById('tab-btn-comments').classList.add('active');
-                document.getElementById('tab-btn-foryou').classList.remove('active');
-                document.getElementById('tab-content-comments').style.display = 'block';
-                document.getElementById('tab-content-foryou').style.display = 'none';
-            }
-        }
-
-        // --- DYNAMIC 'FOR YOU' VIDEOS ---
-        function loadForYouVideos() {
-            const grid = document.getElementById('dynamic-rec-grid');
-            grid.innerHTML = "";
-            
-            if(isMovieContent) {
-                if(!window.movieData) return;
-                window.movieData.forEach(m => {
-                    let safeId = m.id || m.title.replace(/[^a-zA-Z0-9]/g, '_');
-                    grid.innerHTML += `
-                        <div class="rec-card" onclick="playVideo('${m.title}', '${m.url}', '${safeId}', true, -1)">
-                            <img src="${m.thumbnail}">
-                            <div class="rec-title">${m.title}</div>
-                        </div>
-                    `;
-                });
-            } else {
-                if(!window.animeData) return;
-                Object.keys(window.animeData).forEach(folderName => {
-                    let firstEp = window.animeData[folderName][0]; 
-                    let safeName = folderName.replace(/'/g, "\\'");
-                    
-                    grid.innerHTML += `
-                        <div class="rec-card" onclick="openFolder('${safeName}')">
-                            <img src="${firstEp.thumbnail}">
-                            <div class="rec-title">${folderName}</div>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        // --- SHORTS SYSTEM ---
-        let shortsObserver = null;
-        let activeShortId = null;
-
-        function showShorts() {
-            document.getElementById('shorts-view').style.display = 'block';
-            const con = document.getElementById('shorts-container');
-            
-            if(con.children.length === 0) {
-                db.ref('shorts').once('value', s => {
-                    s.forEach(c => {
-                        let d = c.val();
-                        let key = c.key;
-                        con.innerHTML += `
-                        <div class="short-item" data-id="${key}">
-                            <video src="${d.url}" loop onclick="togglePlay(this)"></video>
-                            <div class="short-overlay">
-                                <div class="short-btn" id="s-like-${key}" onclick="toggleShortLike('${key}')">
-                                    <i class="fas fa-heart"></i>
-                                    <span id="s-like-cnt-${key}">0</span>
-                                </div>
-                                <div class="short-btn" onclick="openShortComments('${key}')">
-                                    <i class="fas fa-comment"></i>
-                                    <span>Comment</span>
-                                </div>
-                            </div>
-                        </div>`;
-                        loadShortLikes(key);
-                    });
-                    initShortsObserver();
-                });
-            } else {
-                 initShortsObserver();
-            }
-        }
-
-        function hideShorts() { 
-            document.getElementById('shorts-view').style.display = 'none'; 
-            document.querySelectorAll('#shorts-container video').forEach(v => {
-                v.pause();
-            });
-        }
-        
-        function togglePlay(vid) {
-            if(vid.paused) vid.play();
-            else vid.pause();
-        }
-
-        function initShortsObserver() {
-            let options = { root: document.getElementById('shorts-view'), threshold: 0.7 };
-            shortsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    let vid = entry.target.querySelector('video');
-                    if(entry.isIntersecting) {
-                        vid.play();
-                    } else {
-                        vid.pause();
-                        vid.currentTime = 0;
-                    }
-                });
-            }, options);
-
-            document.querySelectorAll('.short-item').forEach(el => {
-                shortsObserver.observe(el);
-            });
-        }
-
-        function loadShortLikes(key) {
-            db.ref(`shorts_likes/${key}`).on('value', s => {
-                const d = s.val() || {};
-                const cnt = d.count || 0;
-                const btn = document.getElementById(`s-like-${key}`);
-                const txt = document.getElementById(`s-like-cnt-${key}`);
-                if(btn && txt) {
-                    txt.innerText = cnt;
-                    if(currentUser && d[currentUser.uid]) btn.classList.add('liked');
-                    else btn.classList.remove('liked');
-                }
-            });
-        }
-
-        function toggleShortLike(key) {
-            if(!currentUser) { alert("Please login to like shorts!"); switchTab('profile'); return; }
-            const ref = db.ref(`shorts_likes/${key}`);
-            ref.child(currentUser.uid).once('value', s => {
-                if(s.exists()) {
-                    ref.child(currentUser.uid).remove();
-                    ref.child('count').transaction(c => (c||0)-1);
-                } else {
-                    ref.child(currentUser.uid).set(true);
-                    ref.child('count').transaction(c => (c||0)+1);
-                }
-            });
-        }
-
-        function openShortComments(key) {
-            activeShortId = key;
-            document.getElementById('shorts-comments-modal').style.display = 'block';
-            const list = document.getElementById('shorts-comments-list');
-            list.innerHTML = "";
-            db.ref(`shorts_comments/${key}`).on('child_added', s => {
-                const c = s.val();
-                 list.innerHTML = `
-                    <div class="comment-box" style="padding:10px; border-radius:10px;">
-                        <div class="c-avatar" style="width:30px;height:30px;font-size:12px;">${c.user[0]}</div>
-                        <div class="c-body"><h4 style="font-size:12px; margin-bottom:2px;">${c.user}</h4><p style="font-size:11px; color:#ddd;">${c.text}</p></div>
-                    </div>` + list.innerHTML;
-            });
-        }
-
-        function postShortComment() {
-            if(!currentUser) { alert("Please login to comment!"); switchTab('profile'); return; }
-            if(!activeShortId) return;
-            const txt = document.getElementById('short-comment-in').value;
-            if(!txt) return;
-            db.ref(`shorts_comments/${activeShortId}`).push({
-                user: currentUser.email.split('@')[0], text: txt, time: Date.now()
-            });
-            document.getElementById('short-comment-in').value = "";
-        }
-
-        // --- HISTORY FUNCTIONS ---
-        function openHistory() {
-            document.getElementById('history-view').style.display = 'block';
-            loadWatchlist();
-        }
-
-        function closeHistory() {
-            document.getElementById('history-view').style.display = 'none';
-        }
-
-        function loadWatchlist() {
-            db.ref(`users/${currentUser.uid}/watchlist`).limitToLast(20).on('value', s => {
-                const c = document.getElementById('history-list-container'); c.innerHTML = "";
-                if(!s.exists()) { 
-                    c.innerHTML = "<p style='color:var(--text-muted); text-align:center; margin-top:30px; font-family:Outfit;'>No history found.</p>"; 
-                    return; 
-                }
-                
-                let items = [];
-                s.forEach(i => items.push(i));
-                items.reverse().forEach(i => {
-                    const data = i.val();
-                    c.innerHTML += `
-                    <div style="background:rgba(255,255,255,0.03); padding:18px; margin-bottom:12px; border-radius:14px; border:var(--glass-border); display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:#fff; font-size:14px; font-weight:500;">${data.title}</span>
-                        <span style="color:var(--text-muted); font-size:11px; font-weight:600; background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:20px;">Watched</span>
-                    </div>`;
-                });
-            });
-        }
-
-        // --- PREMIUM SYSTEM ---
-        function redeemCode() {
-            const code = document.getElementById('prem-code').value.trim();
-            db.ref(`premium_codes/${code}`).once('value', s => {
-                if(s.exists() && s.val().status === 'unused') {
-                    const days = s.val().days || 30;
-                    const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-                    db.ref(`premium_codes/${code}`).update({status: 'used', usedBy: currentUser.email});
-                    db.ref(`users/${currentUser.uid}`).update({premiumExpiry: expiry});
-                    alert(`SUCCESS! ${days} Days VIP Added.`);
-                    location.reload();
-                } else alert("Invalid or Used Code.");
-            });
-        }
-
-        function buyPremium() {
-            const msg = `Hi Admin, I want to buy Premium.\nUID: ${currentUser.uid}\nEmail: ${currentUser.email}`;
-            window.open(`https://t.me/aminezone09?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        // Initialize Global App state on load
-        loadContent();
-        loadMovies();
-        loadFreeUserAds();
-        switchTab('home');
-
-    </script>
+    <!-- External JavaScript -->
+    <script src="app.js"></script>
 </body>
 </html>
