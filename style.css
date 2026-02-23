@@ -27,7 +27,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg-dark); color: var
 .logo span { color: var(--red); }
 .header-icon { font-size: 22px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); cursor: pointer; }
 
-/* Cinematic Hero Banner Fixed & Mobile Optimized */
+/* Cinematic Hero Banner Fixed */
 .hero-container { position: relative; width: 100%; height: 35vh; min-height: 220px; max-height: 280px; background-color: #000; }
 .hero-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.9; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 0%, transparent 50%, rgba(0,0,0,0.4) 100%); z-index: 1; }
@@ -49,19 +49,26 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg-dark); color: var
 .poster-card:active img { transform: scale(0.95); }
 .poster-title { font-size: 12px; font-weight: 600; margin-top: 8px; color: #e5e5e5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
 
-/* 3-Column Grid for 'For You' - (FIXED) */
+/* --- 3-COLUMN GRID FIX (FOR YOU) --- */
 .grid-3-col { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); /* ফিক্সড ৩ কলাম */
-    gap: 12px; 
+    display: grid !important; 
+    grid-template-columns: repeat(3, 1fr) !important; 
+    gap: 10px !important; 
     margin-top: 15px; 
 }
 .grid-3-col .poster-card { 
-    max-width: 100%; /* আগের সাইজের লিমিট রিমুভ করা হয়েছে */
-    width: 100%; 
-    flex: none; 
+    max-width: 100% !important; 
+    width: 100% !important; 
+    flex: unset !important; /* এটি স্লাইডারের CSS কে ওভাররাইড করবে */
+    margin: 0 !important;
 }
-.grid-3-col img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; }
+.grid-3-col img { 
+    width: 100% !important; 
+    height: auto !important;
+    aspect-ratio: 2/3 !important; 
+    object-fit: cover !important; 
+    border-radius: 8px !important; 
+}
 
 /* Movie Box Dedicated Grid */
 .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; padding: 0 20px 20px; }
@@ -76,21 +83,31 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg-dark); color: var
 .search-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; overflow-y: auto; padding-bottom: 100px; }
 .empty-search { grid-column: 1 / -1; text-align: center; color: #666; font-size: 16px; margin-top: 50px; }
 
-/* Advanced Player View (FIXED LAYOUT) */
+/* --- ADVANCED PLAYER VIEW (OVERLAP FIX) --- */
 #player-view { position: fixed; inset: 0; background: var(--bg-dark); z-index: 5000; overflow-y: auto; display: none; }
 
-/* ভিডিও প্লেয়ারের ওভারল্যাপ ফিক্স করা হয়েছে */
 .video-wrapper { 
-    position: sticky; top: 0; z-index: 5001; background: #000; 
-    width: 100%; aspect-ratio: 16/9; /* নির্দিষ্ট সাইজ */
-    display: flex; align-items: center; justify-content: center;
+    position: relative; /* Sticky রিমুভ করা হয়েছে যাতে ওভারল্যাপ না হয় */
+    width: 100%; 
+    background: #000; 
+    z-index: 5001; 
+    display: block; /* Flex রিমুভ করা হয়েছে */
 }
-.plyr { width: 100%; height: 100%; --plyr-color-main: var(--red); }
+.plyr { 
+    width: 100%; 
+    aspect-ratio: 16/9; /* ফিক্সড 16:9 রেশিও */
+    --plyr-color-main: var(--red); 
+}
 
 .back-btn-player { position:absolute; top:20px; left:20px; z-index:10; width:40px; height:40px; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); border-radius:50%; display:flex; justify-content:center; align-items:center; color:#fff; cursor:pointer; }
 
-/* প্লেয়ারের নিচের মেটা অংশ সুন্দরভাবে সাজানো হয়েছে */
-.player-meta-container { padding: 20px; display: flex; flex-direction: column; }
+/* Player Meta (Title, Tags, Buttons) */
+.player-meta-container { 
+    padding: 20px; 
+    display: block; 
+    position: relative;
+    z-index: 10;
+}
 .meta-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; color: #fff; }
 .meta-tags { display: flex; gap: 10px; align-items: center; font-size: 13px; font-weight: 600; margin-bottom: 25px; }
 .tag-match { color: #46d369; }
@@ -129,7 +146,7 @@ nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 15,
 .nav-item span { font-size: 10px; font-weight: 600; }
 .nav-item.active { color: #fff; }
 
-/* RESTORED ROYAL PROFILE STYLES */
+/* ROYAL PROFILE STYLES */
 .profile-bg-header { background: linear-gradient(to bottom, #2c2000, #000); height: 180px; position: relative; border-bottom: 2px solid var(--gold); border-radius: 0 0 40px 40px; box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3); }
 .royal-avatar-container { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 110px; height: 110px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--gold), #fff, var(--gold)); box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); z-index: 2; }
 .royal-avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #000; object-fit: cover; background: #000; }
