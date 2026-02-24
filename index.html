@@ -289,6 +289,7 @@
 
         <div id="banner-slider"></div>
 
+        <!-- Banner Adsterra Top -->
         <div id="ad-banner-top" class="ad-container-center"></div>
         
         <div class="section-header">
@@ -311,7 +312,7 @@
         <div id="movie-grid" class="grid-container"></div>
     </div>
 
-    <!-- PROFILE VIEW (MATCHING YOUR IMAGE) -->
+    <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="background:#000; height:100vh; overflow-y:auto; padding-top:0;">
         
         <!-- LOGIN -->
@@ -346,11 +347,10 @@
             </div>
         </div>
 
-        <!-- NEW PROFILE UI (EXACT MATCH) -->
+        <!-- USER PROFILE CONTENT -->
         <div id="user-profile-content" style="display:none;">
             <div class="profile-container">
                 
-                <!-- Anime Banner & Logout -->
                 <div class="prof-cover-area">
                     <div class="prof-cover-overlay"></div>
                     <div class="logout-btn-top" onclick="auth.signOut()">
@@ -358,7 +358,6 @@
                     </div>
                 </div>
 
-                <!-- Avatar & Name -->
                 <div class="prof-avatar-section">
                     <div class="avatar-circle-glow">
                         <img src="https://wallpapers.com/images/hd/cool-anime-girl-pfp-v2h1y9x9y9x9y9x9.jpg" class="avatar-img-real">
@@ -368,7 +367,6 @@
                     <div class="prof-rank-pill" id="vip-badge">NOVICE</div>
                 </div>
 
-                <!-- Stats 3 Boxes -->
                 <div class="prof-stats-row">
                     <div class="stat-box-modern">
                         <div class="stat-val-m" id="profile-watch-count">0</div>
@@ -384,7 +382,6 @@
                     </div>
                 </div>
 
-                <!-- Menu List (Image Match) -->
                 <div class="prof-menu-list">
                     <div class="menu-btn-modern" onclick="openHistory()">
                         <div class="menu-left-content">
@@ -411,7 +408,6 @@
                     </div>
                 </div>
 
-                <!-- PREMIUM CARD -->
                 <div class="premium-card-gold">
                     <div class="gold-shine"></div>
                     <h3 class="prem-title"><i class="fas fa-crown"></i> VIP STATUS</h3>
@@ -435,6 +431,7 @@
         </div>
     </div>
 
+    <!-- PLAYER VIEW -->
     <div id="player-view">
         <div class="video-wrapper">
             <div style="position:absolute; top:15px; left:15px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="font-size:18px; color:#fff; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%;"></i></div>
@@ -454,7 +451,15 @@
             </div>
             <div class="resources-section">
                 <div class="res-title">Resources</div>
-                <div class="dropdown-row"><select id="season-select" onchange="switchSeason(this.value)" class="custom-drop"></select></div>
+                <div class="dropdown-row">
+                    <!-- Season Select Updated -->
+                    <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="flex: 1;"></select>
+                    <!-- Language Select Added -->
+                    <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="width: 100px;">
+                        <option value="hindi">Hindi</option>
+                        <option value="english">English</option>
+                    </select>
+                </div>
                 <div class="ep-pill-row" id="episode-pill-container"></div>
             </div>
             <div class="tab-header">
@@ -463,6 +468,7 @@
             </div>
             <div id="tab-content-foryou">
                 <div class="rec-grid" id="dynamic-rec-grid"></div>
+                <!-- Banner Adsterra Player -->
                 <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;"></div>
             </div>
             <div id="tab-content-comments" style="display: none;">
@@ -499,8 +505,9 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
 
-        let currentUser = null, isPremium = false, currentVideoId = null, adSessionClick = false, adsLoaded = false, isMovieContent = false;
+        let currentUser = null, isPremium = false, currentVideoId = null, adsLoaded = false, isMovieContent = false;
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
+        let currentFolder = null, currentPlayingEpisodeData = null; 
 
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -526,47 +533,59 @@
             });
         }
 
-        // --- ADSTERRA ADS ---
+        // --- Adsterra Logic 1: Load Banners & Social Bar for Free Users ---
         function loadFreeUserAds() {
-            if(adsLoaded) return; 
+            if(adsLoaded || isPremium) return; 
             adsLoaded = true;
+            
+            // Top Banner Ad
             const bt = document.getElementById('ad-banner-top'); 
             if(bt) {
                 bt.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:320px; height:50px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "9f634c6894bc13ff8f0f19de1fcac9f3", "format" : "iframe", "height" : 50, "width" : 320, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"><\/script>'></iframe>`;
             }
+            
+            // Player View Banner Ad
             const bp = document.getElementById('ad-banner-player'); 
             if(bp) {
                 bp.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:468px; height:60px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "3c0655cdf72da98fdd68dcdd704f9766", "format" : "iframe", "height" : 60, "width" : 468, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"><\/script>'></iframe>`;
             }
+            
+            // Adsterra Social Bar Script (Loads only for Free Users)
             let s1 = document.createElement('script'); 
-            s1.src = "https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"; 
+            s1.type = "text/javascript";
+            s1.src = "//pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"; 
             document.body.appendChild(s1);
         }
 
+        // --- Adsterra Logic 2: Smart Direct Link with 3.5m Cooldown & LocalStorage ---
         function triggerSmartLink() { 
-            if(!isPremium && !adSessionClick) { 
+            if (isPremium) return; 
+
+            const adCooldown = 210000; // 3.5 minutes in ms
+            const now = Date.now();
+            const lastAdTimestamp = localStorage.getItem('lastAdTimestamp');
+
+            if (!lastAdTimestamp || (now - parseInt(lastAdTimestamp)) >= adCooldown) {
                 window.open("https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871", "_blank"); 
-                adSessionClick = true; 
+                localStorage.setItem('lastAdTimestamp', now.toString()); 
             } 
         }
 
-        // --- RANK & PREMIUM LOGIC ---
+        // --- Premium Check Logic ---
         function checkPremium(uid) {
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val() || {};
-                
-                // Set Rank ID
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
-
-                // Watchlist count logic
                 db.ref(`users/${uid}/watchlist`).once('value', w => {
                     document.getElementById('profile-watch-count').innerText = w.numChildren() || "0";
                 });
-
+                
                 if(d.premiumExpiry && d.premiumExpiry > Date.now()) {
                     isPremium = true;
                     document.getElementById('vip-badge').innerText = "ELITE MEMBER";
-                    document.getElementById('ad-banner-top').style.display = 'none'; document.getElementById('ad-banner-player').style.display = 'none';
+                    // Hide Banners for Premium User
+                    document.getElementById('ad-banner-top').style.display = 'none'; 
+                    document.getElementById('ad-banner-player').style.display = 'none';
                 } else {
                     isPremium = false;
                     document.getElementById('vip-badge').innerText = "NOVICE";
@@ -575,20 +594,15 @@
             });
         }
 
-        // AUTH & RANK GENERATION FIX
         function handleAuth(t) { 
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value;
             const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
-            
             if(t==='login') {
                 auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
             } else { 
                 auth.createUserWithEmailAndPassword(e,p).then((cred) => {
-                    // Generate Sequential Rank Number
                     db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => {
-                        if(committed) {
-                            db.ref(`users/${cred.user.uid}`).update({ rank: snap.val() });
-                        }
+                        if(committed) { db.ref(`users/${cred.user.uid}`).update({ rank: snap.val() }); }
                     });
                 }).catch(err=>alert(err.message)); 
             }
@@ -604,7 +618,6 @@
         }
         function switchInterface(to) { document.querySelectorAll('.app-view').forEach(d=>d.style.display='none'); if(to==='movie'){ document.getElementById('movie-box-view').style.display='block'; document.getElementById('main-nav').style.display='none'; loadMovies(); } else { document.getElementById('main-app').style.display='block'; document.getElementById('main-nav').style.display='flex'; } }
 
-        // --- BANNERS WATCH NOW FIX ---
         function loadContent() {
             db.ref('anime').on('value', snap => {
                 const grid = document.getElementById('anime-grid'); grid.innerHTML = ""; let folders = {};
@@ -633,15 +646,37 @@
         function playBannerAnime(event, f) { 
             if(event) event.stopPropagation();
             if(!f) { alert("Admin Error: No folderName added to this banner database."); return; }
-            if(window.animeData && window.animeData[f]) {
-                openFolder(f); 
-            } else { 
-                alert("Folder not found! Admin must ensure banner 'folderName' matches exactly."); 
-            }
+            if(window.animeData && window.animeData[f]) { openFolder(f); } else { alert("Folder not found!"); }
         }
 
-        function openFolder(n) { const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title.replace(/[^a-zA-Z0-9]/g, '_'); playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 0); loadPlayerUI(n); }
-        function loadPlayerUI(f) { const s = document.getElementById('season-select'); s.innerHTML=""; Object.keys(window.animeData).forEach(k=>{ let o=document.createElement('option'); o.value=k; o.innerText=k; if(k===f) o.selected=true; s.appendChild(o); }); renderEpisodeButtons(f); }
+        function openFolder(n) { 
+            currentFolder = n; 
+            const episodes = window.animeData[n]; 
+            if(!episodes||episodes.length===0)return; 
+            const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title.replace(/[^a-zA-Z0-9]/g, '_'); 
+            playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 0); 
+            loadPlayerUI(n); 
+        }
+
+        function loadPlayerUI(f) { 
+            const s = document.getElementById('season-select'); 
+            s.innerHTML=""; 
+            let baseName = f.split(/ season/i)[0].trim();
+
+            Object.keys(window.animeData).forEach(k => { 
+                if(k.toLowerCase().startsWith(baseName.toLowerCase())) {
+                    let o = document.createElement('option'); 
+                    o.value = k; 
+                    let match = k.match(/season\s*(\d+)/i);
+                    if(match) { o.innerText = "Season " + match[1]; } 
+                    else { o.innerText = k === baseName ? "Season 1" : k.replace(baseName, '').trim() || "Season 1"; }
+                    if(k === f) o.selected = true; 
+                    s.appendChild(o); 
+                }
+            }); 
+            renderEpisodeButtons(f); 
+        }
+
         function renderEpisodeButtons(f) { const c = document.getElementById('episode-pill-container'); c.innerHTML=""; window.animeData[f].forEach((ep,i)=>{ let b=document.createElement('div'); b.className='ep-pill'; b.innerText=i+1; b.id=`ep-btn-${i}`; b.onclick=()=>{let eid=ep.id?ep.id:ep.title.replace(/[^a-zA-Z0-9]/g,'_'); playVideo(ep.title,ep.url,eid,ep.type==='premium',i);}; c.appendChild(b); }); }
         function switchSeason(n) { openFolder(n); }
         function loadMovies() {
@@ -650,20 +685,78 @@
         }
         function startSlider(id) { setInterval(() => { let p=document.getElementById(id), a=p.querySelector('.active'); if(a) { a.classList.remove('active'); (a.nextElementSibling||p.querySelector('.slide')).classList.add('active'); } }, 4000); }
 
+        // --- UPDATED VIDEO PLAYER WITH LANGUAGE SUPPORT (FIXED) ---
         function playVideo(t, u, id, ip, idx) {
             if(ip && !isPremium) { alert("ROYAL VIP REQUIRED! Please Login/Upgrade."); switchTab('profile'); return; }
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             if(!id) id = t.replace(/[^a-zA-Z0-9]/g, '_'); 
             
-            triggerSmartLink(); 
-
+            triggerSmartLink(); // Adsterra direct link trigger
+            
             currentVideoId = id; document.getElementById('player-title').innerText = t;
-            if(idx === -1) { isMovieContent = true; document.getElementById('content-type-badge').innerText="Movie"; document.getElementById('episode-pill-container').style.display='none'; document.querySelector('.dropdown-row').style.display='none'; }
-            else { isMovieContent = false; document.getElementById('content-type-badge').innerText="Anime"; document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); }
-            const v = document.getElementById('main-video'); v.src = u; v.play(); document.getElementById('player-view').style.display='block'; switchPlayerTab('foryou'); loadForYouVideos();
+            
+            if (idx !== -1 && currentFolder && window.animeData[currentFolder]) {
+                currentPlayingEpisodeData = window.animeData[currentFolder][idx];
+            } else { currentPlayingEpisodeData = null; }
+
+            if(idx === -1) { 
+                isMovieContent = true; document.getElementById('content-type-badge').innerText="Movie"; document.getElementById('episode-pill-container').style.display='none'; document.querySelector('.dropdown-row').style.display='none'; 
+            } else { 
+                isMovieContent = false; document.getElementById('content-type-badge').innerText="Anime"; document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
+            }
+            
+            const langSelect = document.getElementById('language-select');
+            let initialLang = langSelect ? langSelect.value : 'hindi';
+            let finalUrl = u; 
+            if (currentPlayingEpisodeData) {
+                if (initialLang === 'english' && currentPlayingEpisodeData.url_eng) finalUrl = currentPlayingEpisodeData.url_eng;
+                else if (initialLang === 'hindi' && currentPlayingEpisodeData.url_hin) finalUrl = currentPlayingEpisodeData.url_hin;
+            }
+
+            const v = document.getElementById('main-video'); 
+            let prevTime = 0;
+            if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
+
+            v.src = finalUrl; 
+            v.dataset.currentId = id; 
+            
+            if(prevTime > 0) {
+                v.onloadedmetadata = function() {
+                    v.currentTime = prevTime;
+                    v.play();
+                    v.onloadedmetadata = null;
+                };
+            } else {
+                v.play(); 
+            }
+
+            document.getElementById('player-view').style.display='block'; switchPlayerTab('foryou'); loadForYouVideos();
             if(currentUser) db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: t, date: Date.now()});
             db.ref(`views/${id}`).transaction(c => (c||0)+1); loadSocialData(id);
         }
+
+        // --- LANGUAGE CHANGER (FIXED) ---
+        function changeLanguage(lang) {
+            const v = document.getElementById('main-video');
+            if(!currentPlayingEpisodeData) return; 
+            
+            let newUrl = currentPlayingEpisodeData.url; 
+            if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng;
+            else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
+            
+            if (newUrl) {
+                let currentTime = v.currentTime;
+                let isPaused = v.paused;
+                
+                v.src = newUrl;
+                v.onloadedmetadata = function() {
+                    v.currentTime = currentTime; 
+                    if(!isPaused) v.play();
+                    v.onloadedmetadata = null; 
+                };
+            }
+        }
+
         function loadSocialData(id) {
             currentLikesCountRef = db.ref(`likes/${id}/count`); currentLikesCountRef.on('value', s => document.getElementById('like-count').innerText=s.val()||0);
             if(currentUser) { currentUserLikeRef=db.ref(`likes/${id}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Add to list`; } }); }
@@ -679,7 +772,6 @@
         function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; if(currentLikesCountRef)currentLikesCountRef.off(); if(currentUserLikeRef)currentUserLikeRef.off(); if(currentViewsRef)currentViewsRef.off(); if(currentCommentsRef)currentCommentsRef.off(); }
         function loadForYouVideos() { const g=document.getElementById('dynamic-rec-grid'); g.innerHTML=""; if(isMovieContent){ if(!window.movieData)return; window.movieData.forEach(m=>{ let sid=m.id||m.title.replace(/[^a-zA-Z0-9]/g,'_'); g.innerHTML+=`<div class="rec-card" onclick="playVideo('${m.title}','${m.url}','${sid}',true,-1)"><img src="${m.thumbnail}"><div class="rec-badge">Movie</div><div class="rec-title">${m.title}</div></div>`; }); } else { if(!window.animeData)return; Object.keys(window.animeData).forEach(n=>{ let f=window.animeData[n][0]; g.innerHTML+=`<div class="rec-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><img src="${f.thumbnail}"><div class="rec-badge">${f.type==='premium'?'VIP':'Free'}</div><div class="rec-title">${n}</div></div>`; }); } }
 
-        // Shorts Logic
         let shortsObserver=null, activeShortId=null;
         function showShorts() { document.getElementById('shorts-view').style.display='block'; const c=document.getElementById('shorts-container'); if(c.children.length===0){ db.ref('shorts').once('value', s=>{ s.forEach(i=>{ let d=i.val(), k=i.key; c.innerHTML+=`<div class="short-item" data-id="${k}"><video src="${d.url}" loop onclick="this.paused?this.play():this.pause()"></video><div class="short-overlay"><div class="short-btn" id="s-like-${k}" onclick="toggleShortLike('${k}')"><i class="fas fa-heart"></i><span id="s-like-cnt-${k}">0</span></div><div class="short-btn" onclick="openShortComments('${k}')"><i class="fas fa-comment"></i><span>Comment</span></div></div></div>`; loadShortLikes(k); }); initShortsObserver(); }); } else initShortsObserver(); }
         function hideShorts() { document.getElementById('shorts-view').style.display='none'; document.querySelectorAll('#shorts-container video').forEach(v=>v.pause()); }
@@ -689,7 +781,6 @@
         function openShortComments(k) { activeShortId=k; document.getElementById('shorts-comments-modal').style.display='block'; const l=document.getElementById('shorts-comments-list'); l.innerHTML=""; db.ref(`shorts_comments/${k}`).on('child_added', s=>{ const c=s.val(); l.innerHTML=`<div class="comment-box" style="padding:5px;"><div class="c-avatar" style="width:25px;height:25px;font-size:10px;">${c.user[0]}</div><div class="c-body"><h4 style="font-size:11px;">${c.user}</h4><p style="font-size:10px;">${c.text}</p></div></div>`+l.innerHTML; }); }
         function postShortComment() { if(!currentUser){alert("Login required");return;} if(!activeShortId)return; const t=document.getElementById('short-comment-in').value; if(!t)return; db.ref(`shorts_comments/${activeShortId}`).push({user:currentUser.email.split('@')[0], text:t, time:Date.now()}); document.getElementById('short-comment-in').value=""; }
 
-        // --- FIXED HISTORY ---
         function openHistory() { 
             if(!currentUser) { alert("Please login first."); return; }
             document.getElementById('history-view').style.display='block'; 
