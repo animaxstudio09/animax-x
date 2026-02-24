@@ -203,7 +203,6 @@
         .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 10px; color: #fff; border-radius: 6px; margin: 10px 0; }
         .prem-act-btn { width: 100%; background: var(--gold); color: #000; font-weight: bold; padding: 10px; border-radius: 6px; border: none; font-family: 'Orbitron'; cursor: pointer; }
 
-
         /* --- Login Styles --- */
         .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 85vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), url('https://images.alphacoders.com/132/1322502.jpeg'); background-size: cover; background-position: center; position: relative; }
         .login-container { position: relative; width: 850px; max-width: 90vw; height: 500px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 0 40px rgba(255, 0, 85, 0.15); overflow: hidden; }
@@ -253,9 +252,7 @@
         .ep-pill-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
         .ep-pill { min-width: 45px; height: 40px; background: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #aaa; border: 1px solid #2a2a2a; flex-shrink: 0; cursor: pointer; }
         .ep-pill.active { background: var(--green-accent); color: #fff; border-color: var(--green-accent); font-weight: 700; }
-        .comment-section { padding: 0; margin-bottom: 50px; }
-        .comment-box { display: flex; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #222; }
-        .c-avatar { width: 30px; height: 30px; background: #333; border-radius: 50%; margin-right: 10px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        
         .tab-header { display: flex; gap: 25px; border-bottom: 1px solid #222; margin-bottom: 20px; }
         .tab-item { padding-bottom: 10px; font-size: 14px; color: #888; position: relative; cursor: pointer; font-weight: 500; }
         .tab-item.active { color: #fff; font-weight: 700; }
@@ -266,6 +263,57 @@
         .rec-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 4px; }
         .rec-title { position: absolute; bottom: 0; width: 100%; padding: 8px 5px; background: linear-gradient(to top, #000, transparent); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
         
+        /* Shorts specific comments */
+        .comment-box { display: flex; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #222; }
+        .c-avatar { width: 30px; height: 30px; background: #333; border-radius: 50%; margin-right: 10px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+
+        /* --- UNIQUE PLAYER COMMENT SECTION --- */
+        .comment-section-wrapper { padding: 5px 0; margin-bottom: 50px; }
+        
+        .comment-input-container {
+            display: flex; gap: 10px; align-items: center;
+            background: #151515; padding: 8px 12px; border-radius: 30px;
+            border: 1px solid #2a2a2a; margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .comment-input-container input {
+            flex: 1; background: transparent; border: none; color: #fff;
+            padding: 8px; font-size: 13px; font-family: 'Outfit', sans-serif;
+        }
+        .comment-input-container input:focus { outline: none; }
+        
+        .comment-send-btn {
+            background: linear-gradient(45deg, var(--neon-pink), #ff5e00);
+            border: none; width: 40px; height: 40px; border-radius: 50%;
+            color: #fff; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+            transition: transform 0.2s;
+        }
+        .comment-send-btn:active { transform: scale(0.9); }
+
+        .comment-box-unique {
+            display: flex; gap: 12px; margin-bottom: 15px; 
+            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(5px);
+            padding: 12px 15px; border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--gold);
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .c-avatar-unique {
+            width: 35px; height: 35px; border-radius: 50%;
+            background: linear-gradient(135deg, #222, #000);
+            border: 1px solid #444; color: var(--gold);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron'; font-weight: 700; font-size: 14px;
+            flex-shrink: 0; box-shadow: inset 0 0 10px rgba(255,215,0,0.1);
+        }
+        .c-body-unique { flex: 1; }
+        .c-user-name { font-size: 11px; color: var(--gold); font-family: 'Orbitron'; font-weight: 600; margin-bottom: 3px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
+        .c-time-stamp { font-size: 9px; color: #666; font-family: 'Outfit'; font-weight: 400; }
+        .c-text-content { font-size: 13px; color: #ddd; line-height: 1.4; word-break: break-word; }
+
         nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(15px); border-radius: 25px; padding: 12px; display: flex; justify-content: space-around; border: 1px solid #333; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
         nav i { font-size: 20px; color: #555; transition: 0.3s; padding: 10px; border-radius: 50%; }
         nav i.active { color: #000; background: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
@@ -435,7 +483,8 @@
     <div id="player-view">
         <div class="video-wrapper">
             <div style="position:absolute; top:15px; left:15px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="font-size:18px; color:#fff; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%;"></i></div>
-            <video id="main-video" controls playsinline></video>
+            <!-- FIX: Added controlsList="nodownload" and oncontextmenu="return false;" to prevent video download -->
+            <video id="main-video" controls playsinline controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
             <div class="meta-header">
@@ -452,10 +501,10 @@
             <div class="resources-section">
                 <div class="res-title">Resources</div>
                 <div class="dropdown-row">
-                    <!-- Season Select Updated -->
                     <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="flex: 1;"></select>
-                    <!-- Language Select Added -->
+                    <!-- FIX: 3 Language Options (Original, Hindi, English) -->
                     <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="width: 100px;">
+                        <option value="original">Original</option>
                         <option value="hindi">Hindi</option>
                         <option value="english">English</option>
                     </select>
@@ -471,12 +520,18 @@
                 <!-- Banner Adsterra Player -->
                 <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;"></div>
             </div>
+            
+            <!-- UNIQUE PLAYER COMMENTS VIEW -->
             <div id="tab-content-comments" style="display: none;">
-                <div class="comment-section">
-                    <div style="display:flex; gap:10px; margin-bottom:20px; margin-top:20px;"><input type="text" id="comment-input" placeholder="Add a comment..." style="margin-bottom:0; background:#1e1e1e; border:none;"><button class="btn-royal" style="width:60px; margin-top:0;" onclick="postComment()"><i class="fas fa-paper-plane"></i></button></div>
+                <div class="comment-section-wrapper">
+                    <div class="comment-input-container">
+                        <input type="text" id="comment-input" placeholder="Write your thoughts...">
+                        <button class="comment-send-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                     <div id="comments-list"></div>
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -520,7 +575,7 @@
                 currentUser = null; isPremium = false;
                 document.getElementById('guest-login-content').style.display = 'block';
                 document.getElementById('user-profile-content').style.display = 'none';
-                loadFreeUserAds();
+                loadAds(false); // Free user ads load
             }
             loadContent();
         });
@@ -533,35 +588,37 @@
             });
         }
 
-        // --- Adsterra Logic 1: Load Banners & Social Bar for Free Users ---
-        function loadFreeUserAds() {
-            if(adsLoaded || isPremium) return; 
+        // --- FIX: Adsterra Logic (Banner for all, Social Bar for Free only) ---
+        function loadAds(isPremiumUser) {
+            if(adsLoaded) return; 
             adsLoaded = true;
             
-            // Top Banner Ad
+            // Top Banner Ad (Loaded for both Premium & Free)
             const bt = document.getElementById('ad-banner-top'); 
             if(bt) {
                 bt.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:320px; height:50px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "9f634c6894bc13ff8f0f19de1fcac9f3", "format" : "iframe", "height" : 50, "width" : 320, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"><\/script>'></iframe>`;
             }
             
-            // Player View Banner Ad
+            // Player View Banner Ad (Loaded for both Premium & Free)
             const bp = document.getElementById('ad-banner-player'); 
             if(bp) {
                 bp.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:468px; height:60px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "3c0655cdf72da98fdd68dcdd704f9766", "format" : "iframe", "height" : 60, "width" : 468, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"><\/script>'></iframe>`;
             }
             
-            // Adsterra Social Bar Script (Loads only for Free Users)
-            let s1 = document.createElement('script'); 
-            s1.type = "text/javascript";
-            s1.src = "//pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"; 
-            document.body.appendChild(s1);
+            // Adsterra Social Bar Script (Loads ONLY for Free Users)
+            if(!isPremiumUser) {
+                let s1 = document.createElement('script'); 
+                s1.type = "text/javascript";
+                s1.src = "//pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"; 
+                document.body.appendChild(s1);
+            }
         }
 
-        // --- Adsterra Logic 2: Smart Direct Link with 3.5m Cooldown & LocalStorage ---
+        // --- Adsterra Logic 2: Smart Direct Link with 3.5m Cooldown ---
         function triggerSmartLink() { 
-            if (isPremium) return; 
+            if (isPremium) return; // Smart link disabled for Premium
 
-            const adCooldown = 210000; // 3.5 minutes in ms
+            const adCooldown = 210000; // 3.5 minutes
             const now = Date.now();
             const lastAdTimestamp = localStorage.getItem('lastAdTimestamp');
 
@@ -583,13 +640,14 @@
                 if(d.premiumExpiry && d.premiumExpiry > Date.now()) {
                     isPremium = true;
                     document.getElementById('vip-badge').innerText = "ELITE MEMBER";
-                    // Hide Banners for Premium User
-                    document.getElementById('ad-banner-top').style.display = 'none'; 
-                    document.getElementById('ad-banner-player').style.display = 'none';
+                    // FIX: Banners remain visible, but Social bar will not load
+                    document.getElementById('ad-banner-top').style.display = 'flex'; 
+                    document.getElementById('ad-banner-player').style.display = 'flex';
+                    loadAds(true); 
                 } else {
                     isPremium = false;
                     document.getElementById('vip-badge').innerText = "NOVICE";
-                    loadFreeUserAds();
+                    loadAds(false);
                 }
             });
         }
@@ -685,7 +743,6 @@
         }
         function startSlider(id) { setInterval(() => { let p=document.getElementById(id), a=p.querySelector('.active'); if(a) { a.classList.remove('active'); (a.nextElementSibling||p.querySelector('.slide')).classList.add('active'); } }, 4000); }
 
-        // --- UPDATED VIDEO PLAYER WITH LANGUAGE SUPPORT (FIXED) ---
         function playVideo(t, u, id, ip, idx) {
             if(ip && !isPremium) { alert("ROYAL VIP REQUIRED! Please Login/Upgrade."); switchTab('profile'); return; }
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
@@ -705,12 +762,14 @@
                 isMovieContent = false; document.getElementById('content-type-badge').innerText="Anime"; document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
             }
             
+            // FIX: 3 Language Selection Logic
             const langSelect = document.getElementById('language-select');
-            let initialLang = langSelect ? langSelect.value : 'hindi';
-            let finalUrl = u; 
+            let initialLang = langSelect ? langSelect.value : 'original';
+            let finalUrl = u; // Default Original
             if (currentPlayingEpisodeData) {
                 if (initialLang === 'english' && currentPlayingEpisodeData.url_eng) finalUrl = currentPlayingEpisodeData.url_eng;
                 else if (initialLang === 'hindi' && currentPlayingEpisodeData.url_hin) finalUrl = currentPlayingEpisodeData.url_hin;
+                // If "original" or requested language link is missing, finalUrl stays 'u'
             }
 
             const v = document.getElementById('main-video'); 
@@ -735,14 +794,15 @@
             db.ref(`views/${id}`).transaction(c => (c||0)+1); loadSocialData(id);
         }
 
-        // --- LANGUAGE CHANGER (FIXED) ---
+        // FIX: 3 Language Changing Logic
         function changeLanguage(lang) {
             const v = document.getElementById('main-video');
             if(!currentPlayingEpisodeData) return; 
             
-            let newUrl = currentPlayingEpisodeData.url; 
+            let newUrl = currentPlayingEpisodeData.url; // Default Original URL
             if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng;
             else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
+            // If lang === 'original', newUrl stays as currentPlayingEpisodeData.url
             
             if (newUrl) {
                 let currentTime = v.currentTime;
@@ -762,9 +822,27 @@
             if(currentUser) { currentUserLikeRef=db.ref(`likes/${id}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Add to list`; } }); }
             else { document.getElementById('like-btn').classList.remove('liked'); document.getElementById('like-btn').innerHTML=`<i class="fas fa-plus"></i> Add to list`; }
             currentViewsRef=db.ref(`views/${id}`); currentViewsRef.on('value', s=>document.getElementById('view-count').innerText=s.val()||0);
-            const l=document.getElementById('comments-list'); l.innerHTML=""; currentCommentsRef=db.ref(`comments/${id}`); currentCommentsRef.on('value', s=>document.getElementById('tab-btn-comments').innerText=`Comments (${s.numChildren()})`);
-            currentCommentsRef.on('child_added', s=>{ const c=s.val(); l.innerHTML=`<div class="comment-box"><div class="c-avatar">${c.user[0]}</div><div class="c-body"><h4>${c.user}</h4><p>${c.text}</p></div></div>`+l.innerHTML; });
+            
+            const l = document.getElementById('comments-list'); 
+            l.innerHTML = ""; 
+            currentCommentsRef = db.ref(`comments/${id}`); 
+            currentCommentsRef.on('value', s=>document.getElementById('tab-btn-comments').innerText=`Comments (${s.numChildren()})`);
+            
+            currentCommentsRef.on('child_added', s=>{ 
+                const c = s.val(); 
+                let d = c.time ? new Date(c.time) : new Date();
+                let ts = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+                l.innerHTML = `
+                <div class="comment-box-unique">
+                    <div class="c-avatar-unique">${c.user[0].toUpperCase()}</div>
+                    <div class="c-body-unique">
+                        <div class="c-user-name">${c.user.toUpperCase()} <span class="c-time-stamp">${ts}</span></div>
+                        <div class="c-text-content">${c.text}</div>
+                    </div>
+                </div>` + l.innerHTML; 
+            });
         }
+
         function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentVideoId)return; const r=db.ref(`likes/${currentVideoId}/${currentUser.uid}`), c=db.ref(`likes/${currentVideoId}/count`); r.once('value', s=>{ if(s.exists()){ r.remove(); c.transaction(v=>(v||0)-1); } else { r.set(true); c.transaction(v=>(v||0)+1); } }); }
         function postComment() { if(!currentUser){alert("Please Login");return;} const t=document.getElementById('comment-input').value; if(!t)return; db.ref(`comments/${currentVideoId}`).push({user:currentUser.email.split('@')[0], text:t, time:Date.now()}); document.getElementById('comment-input').value=""; }
         function shareContent() { navigator.clipboard.writeText(`https://t.me/aminezone09`).then(()=>alert("Link Copied!")); }
