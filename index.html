@@ -643,7 +643,6 @@
                 if(d.premiumExpiry && d.premiumExpiry > Date.now()) {
                     isPremium = true;
                     document.getElementById('vip-badge').innerText = "ELITE MEMBER";
-                    // FIX: Banners remain visible, but Social bar will not load
                     document.getElementById('ad-banner-top').style.display = 'flex'; 
                     document.getElementById('ad-banner-player').style.display = 'flex';
                     loadAds(true); 
@@ -747,11 +746,11 @@
         function startSlider(id) { setInterval(() => { let p=document.getElementById(id), a=p.querySelector('.active'); if(a) { a.classList.remove('active'); (a.nextElementSibling||p.querySelector('.slide')).classList.add('active'); } }, 4000); }
 
         function playVideo(t, u, id, ip, idx) {
-            if(ip && !isPremium) { alert("ROYAL VIP REQUIRED! Please Login/Upgrade."); switchTab('profile'); return; }
+            if(ip && !isPremium) { alert("ROYAL VIP REQUIRED!"); switchTab('profile'); return; }
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             if(!id) id = t.replace(/[^a-zA-Z0-9]/g, '_'); 
             
-            triggerSmartLink(); // Adsterra direct link trigger
+            triggerSmartLink(); 
             
             currentVideoId = id; document.getElementById('player-title').innerText = t;
             
@@ -765,16 +764,14 @@
                 isMovieContent = false; document.getElementById('content-type-badge').innerText="Anime"; document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
             }
             
-            // FIX: 3 Language Selection Logic
             const langSelect = document.getElementById('language-select');
             let initialLang = langSelect ? langSelect.value : 'original';
-            let finalUrl = u; // Default Original
+            let finalUrl = u; 
             if (currentPlayingEpisodeData) {
                 if (initialLang === 'english' && currentPlayingEpisodeData.url_eng) finalUrl = currentPlayingEpisodeData.url_eng;
                 else if (initialLang === 'hindi' && currentPlayingEpisodeData.url_hin) finalUrl = currentPlayingEpisodeData.url_hin;
             }
 
-            // FIX: Adapted for iframe (removed .play(), .paused, .currentTime logic)
             const v = document.getElementById('main-video'); 
             v.src = finalUrl; 
             v.dataset.currentId = id; 
@@ -784,19 +781,13 @@
             db.ref(`views/${id}`).transaction(c => (c||0)+1); loadSocialData(id);
         }
 
-        // FIX: 3 Language Changing Logic
         function changeLanguage(lang) {
             const v = document.getElementById('main-video');
             if(!currentPlayingEpisodeData) return; 
-            
-            let newUrl = currentPlayingEpisodeData.url; // Default Original URL
+            let newUrl = currentPlayingEpisodeData.url; 
             if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng;
             else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
-            
-            if (newUrl) {
-                // FIX: Adapted for iframe
-                v.src = newUrl;
-            }
+            if (newUrl) v.src = newUrl;
         }
 
         function loadSocialData(id) {
@@ -829,10 +820,7 @@
         function postComment() { if(!currentUser){alert("Please Login");return;} const t=document.getElementById('comment-input').value; if(!t)return; db.ref(`comments/${currentVideoId}`).push({user:currentUser.email.split('@')[0], text:t, time:Date.now()}); document.getElementById('comment-input').value=""; }
         function shareContent() { navigator.clipboard.writeText(`https://t.me/aminezone09`).then(()=>alert("Link Copied!")); }
         function switchPlayerTab(t) { if(t==='foryou'){ document.getElementById('tab-btn-foryou').classList.add('active'); document.getElementById('tab-btn-comments').classList.remove('active'); document.getElementById('tab-content-foryou').style.display='block'; document.getElementById('tab-content-comments').style.display='none'; } else { document.getElementById('tab-btn-comments').classList.add('active'); document.getElementById('tab-btn-foryou').classList.remove('active'); document.getElementById('tab-content-comments').style.display='block'; document.getElementById('tab-content-foryou').style.display='none'; } }
-        
-        // FIX: Adapted for iframe (removed v.pause())
         function closePlayer() { const v=document.getElementById('main-video'); v.src=""; document.getElementById('player-view').style.display='none'; if(currentLikesCountRef)currentLikesCountRef.off(); if(currentUserLikeRef)currentUserLikeRef.off(); if(currentViewsRef)currentViewsRef.off(); if(currentCommentsRef)currentCommentsRef.off(); }
-        
         function loadForYouVideos() { const g=document.getElementById('dynamic-rec-grid'); g.innerHTML=""; if(isMovieContent){ if(!window.movieData)return; window.movieData.forEach(m=>{ let sid=m.id||m.title.replace(/[^a-zA-Z0-9]/g,'_'); g.innerHTML+=`<div class="rec-card" onclick="playVideo('${m.title}','${m.url}','${sid}',true,-1)"><img src="${m.thumbnail}"><div class="rec-badge">Movie</div><div class="rec-title">${m.title}</div></div>`; }); } else { if(!window.animeData)return; Object.keys(window.animeData).forEach(n=>{ let f=window.animeData[n][0]; g.innerHTML+=`<div class="rec-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><img src="${f.thumbnail}"><div class="rec-badge">${f.type==='premium'?'VIP':'Free'}</div><div class="rec-title">${n}</div></div>`; }); } }
 
         let shortsObserver=null, activeShortId=null;
