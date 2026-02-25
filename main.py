@@ -1,12 +1,11 @@
 import os
 import json
+import requests
 import firebase_admin
 from firebase_admin import credentials, db
 import re
-import feedparser
-import requests
 
-# ১. ফায়ারবেস সেটআপ
+# ফায়ারবেস সেটআপ
 secret_val = os.environ.get("FIREBASE_CREDENTIALS")
 
 if not firebase_admin._apps:
@@ -21,97 +20,103 @@ if not firebase_admin._apps:
         exit(1)
 
 def clean_id(text):
-    return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "-").lower()
-
-def get_rss_data(url):
-    """ব্রাউজার সেজে RSS ফিড ডাউনলোড করার ফাংশন"""
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            return feedparser.parse(response.content)
-    except Exception:
-        pass
-    return None
+    return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Final Fix) ---")
+    print("--- অটোমেটিক আপডেট শুরু (AniList Advanced Mode) ---")
     
-    # দুটি সোর্স (যাতে একটি ব্লক হলে অন্যটি কাজ করে)
-    rss_sources = [
-        "https://subsplease.org/rss/?t&r=1080",  # Source 1 (খুবই ফাস্ট)
-        "https://nyaa.si/?page=rss&c=1_2&f=0"     # Source 2 (ব্যাকআপ)
-    ]
+    # AniList API Query (নতুন রিলিজ হওয়া এনিমি খোঁজার জন্য)
+    query = '''
+    query {
+      Page(page: 1, perPage: 10) {
+        media(sort: UPDATED_AT_DESC, type: ANIME, isAdult: false) {
+          id
+          title {
+            romaji
+            english
+          }
+          coverImage {
+            large
+            extraLarge
+          }
+          bannerImage
+          status
+          episodes
+          nextAiringEpisode {
+            episode
+          }
+        }
+      }
+    }
+    '''
     
-    entries = []
-    
-    # সোর্স চেক করা
-    for url in rss_sources:
-        print(f"চেক করা হচ্ছে: {url} ...")
-        feed = get_rss_data(url)
-        if feed and feed.entries:
-            entries = feed.entries
-            print(f"✓ ডেটা পাওয়া গেছে! ({len(entries)} টি আইটেম)")
-            break
-        else:
-            print("✗ এই সোর্স কাজ করেনি, পরেরটায় যাচ্ছি...")
+    url = 'https://graphql.anilist.co'
 
-    if entries:
-        # লক্ষ্য করুন: আপনার ওয়েবসাইটের ফোল্ডার নাম 'anime' (s ছাড়া)
-        ref = db.reference('anime') 
-        count = 0
+    try:
+        print(f"AniList ডাটাবেস চেক করা হচ্ছে...")
+        response = requests.post(url, json={'query': query}, timeout=10)
         
-        for entry in entries:
-            try:
-                full_title = entry.title
+        if response.status_code == 200:
+            data = response.json()
+            anime_list = data['data']['Page']['media']
+            
+            if anime_list:
+                print(f"✓ সফল! {len(anime_list)} টি ট্রেন্ডিং এনিমি পাওয়া গেছে।")
                 
-                # টাইটেল ক্লিন করা
-                # SubsPlease ফরম্যাট: [SubsPlease] Title - 01 (1080p) [Hash]
-                clean_title = re.sub(r'\[.*?\]', '', full_title) # ব্র্যাকেট রিমুভ
-                clean_title = re.sub(r'\(.*?\)', '', clean_title) # প্যারেন্থেসিস রিমুভ
-                clean_title = clean_title.replace('.mkv', '').strip()
+                # আপনার ওয়েবসাইটের ফোল্ডার স্ট্রাকচার: 'anime'
+                ref = db.reference('anime') 
+                count = 0
                 
-                # নাম এবং এপিসোড আলাদা করা
-                if ' - ' in clean_title:
-                    parts = clean_title.split(' - ')
-                    title = parts[0].strip()
-                    episode_num = parts[-1].strip()
-                else:
-                    title = clean_title
-                    episode_num = "New"
-                
-                anime_id = clean_id(f"{title}-{episode_num}")
-                
-                # ডাটাবেসে চেক করা
-                if not ref.child(anime_id).get():
-                    # Gogoanime এর ডাইরেক্ট সার্চ লিংক তৈরি করা (যাতে ইউজার ভিডিও পায়)
-                    search_slug = title.lower().replace(' ', '-')
-                    watch_link = f"https://anitaku.pe/category/{search_slug}"
-                    
-                    # ডিফল্ট থাম্বনেইল (যেহেতু RSS এ ছবি থাকে না)
-                    default_img = "https://wallpapers.com/images/hd/cool-anime-girl-pfp-v2h1y9x9y9x9y9x9.jpg"
-                    
-                    # আপনার অ্যাপের 'folder-card' ডিজাইনের সাথে মিল রেখে ডেটা
-                    ref.child(anime_id).set({
-                        'title': title,
-                        'thumbnail': default_img, # আপনার কোডে 'thumbnail' খোঁজে
-                        'folder': "New Releases", # হোমপেজে শো করার জন্য
-                        'url': watch_link,
-                        'episode': f"Ep {episode_num}",
-                        'type': 'free',
-                        'id': anime_id,
-                        'date': 2024 # সর্টিং এর জন্য
-                    })
-                    print(f"✓ ওয়েবসাইটের জন্য রেডি: {title}")
-                    count += 1
-            except Exception:
-                continue
-        
-        print(f"\nকাজ শেষ! {count}টি নতুন এনিমি 'New Releases' ফোল্ডারে পাঠানো হয়েছে।")
-    else:
-        print("দুঃখিত, কোনো সোর্স থেকেই ডেটা আসেনি।")
+                for anime in anime_list:
+                    try:
+                        # নাম ঠিক করা (ইংরেজি থাকলে ইংরেজি, না হলে রোমানজি)
+                        title = anime['title']['english'] if anime['title']['english'] else anime['title']['romaji']
+                        
+                        # এপিসোড নম্বর বের করা
+                        current_ep = anime['nextAiringEpisode']['episode'] - 1 if anime['nextAiringEpisode'] else (anime['episodes'] if anime['status'] == 'FINISHED' else 1)
+                        
+                        # ফোল্ডারের নাম তৈরি করা (যেমন: Solo Leveling Season 1)
+                        folder_name = f"{title}"
+                        
+                        # থাম্বনেইল (HD কোয়ালিটি)
+                        thumbnail = anime['coverImage']['extraLarge']
+                        
+                        # Gogoanime এর ভিডিও লিংক তৈরি করা (অনুমান করে)
+                        slug = title.lower().replace(' ', '-').replace(':', '').replace('!', '')
+                        video_url = f"https://anitaku.pe/{slug}-episode-{current_ep}"
+                        
+                        # ডাটাবেসে সেভ করা
+                        anime_id = clean_id(f"{title}_ep_{current_ep}")
+                        
+                        if not ref.child(anime_id).get():
+                            # আপনার ওয়েবসাইটের ডিজাইনের জন্য ডেটা স্ট্রাকচার
+                            anime_data = {
+                                'title': title,
+                                'thumbnail': thumbnail,
+                                'folder': folder_name, # ফোল্ডার নাম হিসেবে টাইটেল ব্যবহার করছি
+                                'url': video_url,
+                                'episode': f"Episode {current_ep}",
+                                'type': 'free',
+                                'id': anime_id,
+                                'status': anime['status'],
+                                'description': f"Watch {title} Episode {current_ep} in HD quality.",
+                                'date': 2024
+                            }
+                            
+                            ref.child(anime_id).set(anime_data)
+                            print(f"✓ আপলোড সফল: {folder_name} - Ep {current_ep}")
+                            count += 1
+                    except Exception:
+                        continue
+                        
+                print(f"\nকাজ শেষ! মোট {count}টি নতুন এপিসোড আপনার ওয়েবসাইটে লাইভ হয়েছে।")
+            else:
+                print("AniList থেকে কোনো ডেটা আসেনি।")
+        else:
+            print(f"AniList সার্ভার এরর! Status Code: {response.status_code}")
+            
+    except Exception as e:
+        print(f"সমস্যা: {e}")
 
 if __name__ == "__main__":
     start_auto_upload()
