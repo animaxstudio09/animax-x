@@ -1,10 +1,9 @@
 import os
 import json
-from bs4 import BeautifulSoup
+import requests
 import firebase_admin
 from firebase_admin import credentials, db
 import re
-from curl_cffi import requests as c_requests
 
 # ফায়ারবেস সেটআপ
 secret_val = os.environ.get("FIREBASE_CREDENTIALS")
@@ -21,72 +20,64 @@ if not firebase_admin._apps:
         exit(1)
 
 def clean_id(text):
-    return re.sub(r'[.#$\[\]]', '', text).replace(" ", "-").lower()
+    return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "-").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Anti-Cloudflare Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (Final API Mode) ---")
     
-    # GogoAnime এর বর্তমান ডোমেইন
-    domain = "https://anitaku.pe"
-    
+    # এটি বর্তমানে সচল থাকা সবচেয়ে নির্ভরযোগ্য Consumet API
+    api_url = "https://consumet-api-shastra-shastra-shastras-projects.vercel.app/anime/gogoanime/recent-episodes"
+    base_url = "https://anitaku.pe"
+
     try:
-        print(f"ওয়েবসাইটে প্রবেশ করা হচ্ছে: {domain} ...")
+        print(f"সবচেয়ে নির্ভরযোগ্য সার্ভার থেকে ডেটা আনা হচ্ছে...")
         
-        # এখানেই ম্যাজিক! impersonate="chrome110" গিটহাবকে আসল ক্রোম ব্রাউজার বানিয়ে দেবে
-        response = c_requests.get(domain, impersonate="chrome110", timeout=30)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        response = requests.get(api_url, headers=headers, timeout=30)
         
         if response.status_code == 200:
-            # lxml পার্সার ব্যবহার করছি যা অনেক দ্রুত এবং নির্ভুল
-            soup = BeautifulSoup(response.text, 'lxml')
-            items_container = soup.find('ul', class_='items')
+            data = response.json()
+            results = data.get('results', [])
             
-            if items_container:
-                anime_items = items_container.find_all('li')
-                print(f"✓ Cloudflare বাইপাস সফল! {len(anime_items)} টি আইটেম পাওয়া গেছে।")
+            if results:
+                print(f"✓ সফল! {len(results)} টি নতুন এনিমি পাওয়া গেছে।")
                 
                 ref = db.reference('animes')
                 count = 0
                 
-                for item in anime_items:
+                for item in results:
                     try:
-                        name_tag = item.find('p', class_='name')
-                        if not name_tag: continue
-                        
-                        title = name_tag.text.strip()
+                        title = item.get('title')
                         anime_id = clean_id(title)
                         
-                        # ডাটাবেসে না থাকলে তবেই সেভ করবে
+                        # ডাটাবেসে না থাকলে সেভ করা
                         if not ref.child(anime_id).get():
-                            img_tag = item.find('img')
-                            episode_tag = item.find('p', class_='episode')
-                            link_tag = item.find('a')
-
-                            img_url = img_tag['src'] if img_tag else "No Image"
-                            episode = episode_tag.text.strip() if episode_tag else "Unknown"
-                            watch_link = link_tag['href'] if link_tag else ""
-
-                            full_link = f"{domain}{watch_link}" if watch_link.startswith('/') else watch_link
+                            ep_num = item.get('episodeNumber')
+                            img_url = item.get('image', 'No Image')
+                            watch_link = item.get('url', '')
+                            
+                            full_link = f"{base_url}{watch_link}" if watch_link.startswith('/') else watch_link
 
                             ref.child(anime_id).set({
                                 'title': title,
                                 'image': img_url,
-                                'episode': episode,
+                                'episode': f"Episode {ep_num}",
                                 'link': full_link,
                                 'type': 'Auto-Update'
                             })
-                            print(f"নতুন আপলোড: {title}")
+                            print(f"✓ আপলোড সফল: {title}")
                             count += 1
-                    except Exception as inner_e:
+                    except Exception:
                         continue
-                
-                print(f"\nকাজ শেষ! মোট {count}টি নতুন এনিমি যুক্ত হয়েছে।")
+                        
+                print(f"\nকাজ শেষ! মোট {count}টি নতুন এনিমি ডাটাবেজে যুক্ত হয়েছে।")
             else:
-                print("✗ ওয়েবসাইট লোড হয়েছে কিন্তু Cloudflare ব্লক করেছে (Empty List)।")
+                print("সার্ভার থেকে খালি লিস্ট এসেছে। কোনো নতুন আপডেট নেই।")
         else:
-            print(f"✗ সার্ভার এরর: {response.status_code}")
+            print(f"API সার্ভার এরর! Status Code: {response.status_code}")
             
     except Exception as e:
-        print(f"সমস্যা: {e}")
+        print(f"মারাত্মক সমস্যা: {e}")
 
 if __name__ == "__main__":
     start_auto_upload()
