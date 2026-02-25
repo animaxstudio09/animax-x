@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials, db
 import re
@@ -23,97 +24,75 @@ def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (AniList Advanced Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (Direct Link Grabber Mode) ---")
     
-    # AniList API Query (নতুন রিলিজ হওয়া এনিমি খোঁজার জন্য)
-    query = '''
-    query {
-      Page(page: 1, perPage: 10) {
-        media(sort: UPDATED_AT_DESC, type: ANIME, isAdult: false) {
-          id
-          title {
-            romaji
-            english
-          }
-          coverImage {
-            large
-            extraLarge
-          }
-          bannerImage
-          status
-          episodes
-          nextAiringEpisode {
-            episode
-          }
-        }
-      }
-    }
-    '''
-    
-    url = 'https://graphql.anilist.co'
+    # Gogoanime এর লেটেস্ট আপডেট পেজ (AJAX Endpoint)
+    # এটি থেকে সরাসরি সঠিক ID পাওয়া যায়
+    ajax_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page=1&type=1"
+    base_embed = "https://anitaku.pe/embed-episode/" # নতুন এবং স্টেবল প্লেয়ার লিঙ্ক
 
     try:
-        print(f"AniList ডাটাবেস চেক করা হচ্ছে...")
-        response = requests.post(url, json={'query': query}, timeout=10)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36'
+        }
+        print("সার্ভার থেকে আসল ডেটা আনা হচ্ছে...")
+        response = requests.get(ajax_url, headers=headers, timeout=20)
         
         if response.status_code == 200:
-            data = response.json()
-            anime_list = data['data']['Page']['media']
+            soup = BeautifulSoup(response.text, 'html.parser')
+            items = soup.find_all('li')
             
-            if anime_list:
-                print(f"✓ সফল! {len(anime_list)} টি ট্রেন্ডিং এনিমি পাওয়া গেছে।")
-                
-                # আপনার ওয়েবসাইটের ফোল্ডার স্ট্রাকচার: 'anime'
-                ref = db.reference('anime') 
-                count = 0
-                
-                for anime in anime_list:
-                    try:
-                        # নাম ঠিক করা (ইংরেজি থাকলে ইংরেজি, না হলে রোমানজি)
-                        title = anime['title']['english'] if anime['title']['english'] else anime['title']['romaji']
-                        
-                        # এপিসোড নম্বর বের করা
-                        current_ep = anime['nextAiringEpisode']['episode'] - 1 if anime['nextAiringEpisode'] else (anime['episodes'] if anime['status'] == 'FINISHED' else 1)
-                        
-                        # ফোল্ডারের নাম তৈরি করা (যেমন: Solo Leveling Season 1)
-                        folder_name = f"{title}"
-                        
-                        # থাম্বনেইল (HD কোয়ালিটি)
-                        thumbnail = anime['coverImage']['extraLarge']
-                        
-                        # Gogoanime এর ভিডিও লিংক তৈরি করা (অনুমান করে)
-                        slug = title.lower().replace(' ', '-').replace(':', '').replace('!', '')
-                        video_url = f"https://anitaku.pe/{slug}-episode-{current_ep}"
-                        
-                        # ডাটাবেসে সেভ করা
-                        anime_id = clean_id(f"{title}_ep_{current_ep}")
-                        
-                        if not ref.child(anime_id).get():
-                            # আপনার ওয়েবসাইটের ডিজাইনের জন্য ডেটা স্ট্রাকচার
-                            anime_data = {
-                                'title': title,
-                                'thumbnail': thumbnail,
-                                'folder': folder_name, # ফোল্ডার নাম হিসেবে টাইটেল ব্যবহার করছি
-                                'url': video_url,
-                                'episode': f"Episode {current_ep}",
-                                'type': 'free',
-                                'id': anime_id,
-                                'status': anime['status'],
-                                'description': f"Watch {title} Episode {current_ep} in HD quality.",
-                                'date': 2024
-                            }
-                            
-                            ref.child(anime_id).set(anime_data)
-                            print(f"✓ আপলোড সফল: {folder_name} - Ep {current_ep}")
-                            count += 1
-                    except Exception:
-                        continue
-                        
-                print(f"\nকাজ শেষ! মোট {count}টি নতুন এপিসোড আপনার ওয়েবসাইটে লাইভ হয়েছে।")
-            else:
-                print("AniList থেকে কোনো ডেটা আসেনি।")
+            ref = db.reference('anime') 
+            count = 0
+            
+            for item in items:
+                try:
+                    # ১. সঠিক টাইটেল বের করা
+                    name_tag = item.find('p', class_='name')
+                    title = name_tag.text.strip()
+                    
+                    # ২. সিজন ডিটেকশন (Solo Leveling Season 1 ফরম্যাট)
+                    display_title = title
+                    if "Season" not in title and "Part" not in title:
+                        display_title = f"{title} (Season 1)"
+                    
+                    # ৩. আসল ভিডিও আইডি বের করা (যাতে ৪-০-৪ এরর না আসে)
+                    link_tag = item.find('a')
+                    # এটি /title-episode-1 ফরম্যাটে থাকে
+                    raw_id = link_tag['href'].replace("/", "") 
+                    
+                    # ৪. ভিডিও প্লেয়ার লিঙ্ক (সরাসরি embed লিঙ্ক)
+                    video_url = f"{base_embed}{raw_id}"
+                    
+                    # ৫. থাম্বনেইল লিঙ্ক
+                    img_tag = item.find('img')
+                    thumbnail = img_tag['src']
+                    
+                    # ৬. এপিসোড নম্বর
+                    episode_tag = item.find('p', class_='episode')
+                    ep_text = episode_tag.text.strip()
+                    
+                    anime_id = clean_id(raw_id)
+                    
+                    if not ref.child(anime_id).get():
+                        ref.child(anime_id).set({
+                            'title': title,
+                            'thumbnail': thumbnail,
+                            'folder': display_title,
+                            'url': video_url,
+                            'episode': ep_text,
+                            'type': 'free',
+                            'id': anime_id,
+                            'date': 2024
+                        })
+                        print(f"✓ সফল: {display_title} - {ep_text}")
+                        count += 1
+                except Exception:
+                    continue
+                    
+            print(f"\nকাজ শেষ! {count}টি নতুন এনিমি ভিডিওসহ যুক্ত হয়েছে।")
         else:
-            print(f"AniList সার্ভার এরর! Status Code: {response.status_code}")
+            print(f"সার্ভার কানেকশন এরর: {response.status_code}")
             
     except Exception as e:
         print(f"সমস্যা: {e}")
