@@ -23,64 +23,63 @@ def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "-").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Unbreakable RSS Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (Website Fix Mode) ---")
     
-    # এটি একটি নির্ভরযোগ্য RSS Feed যা নিয়মিত আপডেট হয়
+    # Nyaa RSS Feed (সবচেয়ে নির্ভরযোগ্য সোর্স)
     rss_url = "https://nyaa.si/?page=rss&c=1_2&f=0"
     
     try:
         print(f"RSS Feed থেকে ডেটা আনা হচ্ছে...")
-        
-        # ফিড পার্স করা হচ্ছে
         feed = feedparser.parse(rss_url)
         
         if feed.entries:
-            print(f"✓ সফল! {len(feed.entries)} টি আইটেম পাওয়া গেছে।")
+            print(f"✓ ডেটা পাওয়া গেছে! এখন ওয়েবসাইটে পাঠানো হচ্ছে...")
             
-            ref = db.reference('animes')
+            # লক্ষ্য করুন: এখানে 'animes' এর বদলে 'anime' করা হয়েছে যাতে ওয়েবসাইটে শো করে
+            ref = db.reference('anime') 
             count = 0
             
             for entry in feed.entries:
                 try:
                     full_title = entry.title
                     
-                    # টাইটেল থেকে এনিমি নাম এবং এপিসোড নম্বর আলাদা করা
-                    # উদাহরণ: [SubsPlease] Boku no Hero Academia S07 - 05 (1080p) [F214A5A0].mkv
+                    # টাইটেল থেকে নাম বের করা
                     match = re.search(r'\] (.*?) - (\d+)', full_title)
                     if not match:
-                        continue
-                        
-                    title = match.group(1).strip()
-                    episode_num = match.group(2).strip()
+                        title = full_title[:30] # যদি ম্যাচ না করে, সাধারণ টাইটেল
+                        episode_num = "New"
+                    else:
+                        title = match.group(1).strip()
+                        episode_num = match.group(2).strip()
                     
-                    anime_id = clean_id(f"{title}-episode-{episode_num}")
+                    anime_id = clean_id(f"{title}-{episode_num}")
                     
-                    # ফায়ারবেসে চেক করা
+                    # ডাটাবেসে চেক করা
                     if not ref.child(anime_id).get():
-                        watch_link = entry.link
+                        # আপনার ওয়েবসাইটের কোড অনুযায়ী ফিল্ডগুলো ঠিক করা হলো:
+                        # 1. thumbnail (আপনার সাইট 'image' এর বদলে 'thumbnail' খোঁজে)
+                        # 2. folder (আপনার সাইট ফোল্ডার ছাড়া শো করে না)
                         
-                        # RSS ফিডে ছবি থাকে না, তাই একটি ডিফল্ট ছবি ব্যবহার করছি
-                        default_image = "https://i.ibb.co/6nB0Y58/placeholder.png"
-                        
-                        # ফায়ারবেসে আপলোড
                         ref.child(anime_id).set({
                             'title': title,
-                            'image': default_image,
-                            'episode': f"Episode {episode_num}",
-                            'link': watch_link,
-                            'type': 'RSS-Update'
+                            'thumbnail': "https://i.ibb.co/6nB0Y58/placeholder.png", # অটোমেটিক ইমেজের জন্য ডিফল্ট
+                            'folder': "New Releases", # যাতে হোমপেজে শো করে
+                            'url': entry.link,
+                            'episode': f"Ep {episode_num}",
+                            'type': 'free',
+                            'id': anime_id
                         })
-                        print(f"✓ নতুন এনিমি যুক্ত হয়েছে: {title} - Episode {episode_num}")
+                        print(f"✓ ওয়েবসাইটে যুক্ত হয়েছে: {title}")
                         count += 1
-                except Exception as inner_e:
+                except Exception:
                     continue
             
-            print(f"\nকাজ শেষ! মোট {count}টি নতুন এনিমি ডাটাবেজে আপডেট হয়েছে।")
+            print(f"\nকাজ শেষ! মোট {count}টি নতুন এনিমি ওয়েবসাইটে দেখা যাচ্ছে।")
         else:
-            print("RSS Feed খালি পাওয়া গেছে বা লোড হয়নি।")
+            print("RSS Feed লোড হয়নি।")
             
     except Exception as e:
-        print(f"মারাত্মক সমস্যা: {e}")
+        print(f"সমস্যা: {e}")
 
 if __name__ == "__main__":
     start_auto_upload()
