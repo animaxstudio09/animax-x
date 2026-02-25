@@ -23,49 +23,52 @@ def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "-").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Final API Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (Enime Master Source) ---")
     
-    # এটি বর্তমানে সচল থাকা সবচেয়ে নির্ভরযোগ্য Consumet API
-    api_url = "https://consumet-api-shastra-shastra-shastras-projects.vercel.app/anime/gogoanime/recent-episodes"
-    base_url = "https://anitaku.pe"
-
+    # Enime API - সবচেয়ে নির্ভরযোগ্য সোর্স
+    api_url = "https://api.enime.moe/recent?perPage=30" # একসাথে ৩০টি নতুন এপিসোড আনবে
+    
     try:
-        print(f"সবচেয়ে নির্ভরযোগ্য সার্ভার থেকে ডেটা আনা হচ্ছে...")
+        print(f"মাস্টার সোর্স থেকে ডেটা আনা হচ্ছে...")
         
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         response = requests.get(api_url, headers=headers, timeout=30)
         
         if response.status_code == 200:
             data = response.json()
-            results = data.get('results', [])
+            # Enime API তে ডেটা 'data' নামের লিস্টে থাকে
+            results = data.get('data', [])
             
             if results:
-                print(f"✓ সফল! {len(results)} টি নতুন এনিমি পাওয়া গেছে।")
+                print(f"✓ সফল! {len(results)} টি নতুন এপিসোড পাওয়া গেছে।")
                 
                 ref = db.reference('animes')
                 count = 0
                 
                 for item in results:
                     try:
-                        title = item.get('title')
+                        # Enime API থেকে ডেটা বের করার নিয়ম
+                        anime_info = item.get('anime', {})
+                        title = anime_info.get('title', {}).get('romaji', 'Unknown Title')
                         anime_id = clean_id(title)
                         
                         # ডাটাবেসে না থাকলে সেভ করা
                         if not ref.child(anime_id).get():
-                            ep_num = item.get('episodeNumber')
-                            img_url = item.get('image', 'No Image')
-                            watch_link = item.get('url', '')
+                            episode_num = item.get('number')
+                            img_url = anime_info.get('coverImage', 'No Image')
+                            anime_slug = anime_info.get('slug')
                             
-                            full_link = f"{base_url}{watch_link}" if watch_link.startswith('/') else watch_link
+                            # সরাসরি দেখার জন্য লিংক তৈরি করা
+                            full_link = f"https://anitaku.pe/{anime_slug}-episode-{episode_num}"
 
                             ref.child(anime_id).set({
                                 'title': title,
                                 'image': img_url,
-                                'episode': f"Episode {ep_num}",
+                                'episode': f"Episode {episode_num}",
                                 'link': full_link,
                                 'type': 'Auto-Update'
                             })
-                            print(f"✓ আপলোড সফল: {title}")
+                            print(f"✓ আপলোড সফল: {title} - Episode {episode_num}")
                             count += 1
                     except Exception:
                         continue
