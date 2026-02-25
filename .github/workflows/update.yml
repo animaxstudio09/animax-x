@@ -1,0 +1,29 @@
+name: Auto Anime Update
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # প্রতি ১ ঘণ্টা পর পর রান হবে
+  workflow_dispatch:      # ম্যানুয়ালি টেস্ট করার জন্য
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Update Script
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+        run: python main.py
