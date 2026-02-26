@@ -6,9 +6,8 @@ from firebase_admin import credentials, db
 import re
 import time
 
-# ফায়ারবেস সেটআপ
+# ফায়ারবেস কানেকশন
 secret_val = os.environ.get("FIREBASE_CREDENTIALS")
-
 if not firebase_admin._apps:
     if secret_val:
         cred_dict = json.loads(secret_val)
@@ -16,81 +15,71 @@ if not firebase_admin._apps:
         firebase_admin.initialize_app(cred, {
             'databaseURL': 'https://myanimeapp-8d079-default-rtdb.firebaseio.com'
         })
-    else:
-        print("Error: FIREBASE_CREDENTIALS not found!")
-        exit(1)
 
 def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Multi-Server Sync Mode) ---")
+    print("--- হারানো ডেটা পুনরুদ্ধারের চেষ্টা শুরু ---")
     
-    # ৩টি আলাদা ব্যাকআপ API সার্ভার
-    mirrors = [
-        "https://consumet-api-shastra.vercel.app/anime/gogoanime/recent-episodes",
-        "https://api.consumet.org/anime/gogoanime/recent-episodes",
-        "https://c-api-xi.vercel.app/anime/gogoanime/recent-episodes"
-    ]
-
-    results = []
-    for url in mirrors:
-        try:
-            print(f"চেক করা হচ্ছে সার্ভার: {url.split('/')[2]}")
-            response = requests.get(url, timeout=20)
-            if response.status_code == 200:
-                data = response.json()
-                results = data.get('results', [])
-                if results:
-                    print(f"✓ সফল! {len(results)}টি এনিমি পাওয়া গেছে।")
-                    break
-            time.sleep(2)
-        except Exception:
-            continue
-
-    if results:
-        ref = db.reference('anime') 
-        count = 0
-        
-        for item in results:
-            try:
-                title = item.get('title')
-                # ভিডিওর আসল ID বের করা (এটিই ভিডিও চালানোর চাবিকাঠি)
-                raw_id = item.get('id') 
-                
-                anime_id = clean_id(raw_id)
-                
-                # যদি এনিমিটা আগে থেকে না থাকে
-                if not ref.child(anime_id).get():
-                    episode_num = item.get('episodeNumber')
-                    thumbnail = item.get('image')
+    # এটি বর্তমানে সবচেয়ে স্টেবল এনিমি ডাটাবেস (AniList)
+    query = '''
+    query {
+      Page(page: 1, perPage: 25) { # একসাথে ২৫টি এনিমি চেক করবে
+        media(sort: UPDATED_AT_DESC, type: ANIME, isAdult: false) {
+          title { english romaji }
+          coverImage { extraLarge }
+          id
+          nextAiringEpisode { episode }
+          episodes
+        }
+      }
+    }
+    '''
+    
+    try:
+        response = requests.post('https://graphql.anilist.co', json={'query': query}, timeout=15)
+        if response.status_code == 200:
+            anime_list = response.json()['data']['Page']['media']
+            ref = db.reference('anime') 
+            count = 0
+            
+            for anime in anime_list:
+                try:
+                    title = anime['title']['english'] or anime['title']['romaji']
+                    # Gogoanime এর জন্য লিঙ্ক তৈরি (ID ভিত্তিক)
+                    raw_slug = title.lower().replace(":", "").replace("!", "").replace(" ", "-")
                     
-                    # সিজন সাজানো (Solo Leveling Season 1 ফরম্যাট)
-                    display_folder = title
-                    if "Season" not in title and "Part" not in title:
-                        display_folder = f"{title} (Season 1)"
+                    # এপিসোড নম্বর
+                    ep_num = anime['nextAiringEpisode']['episode'] - 1 if anime['nextAiringEpisode'] else (anime['episodes'] or 1)
                     
-                    # আপনার HTML এর iframe এ চলার জন্য একদম সঠিক Embed লিংক
-                    # Gogoanime এর সবচেয়ে স্টেবল এমবেড সার্ভার
-                    video_url = f"https://embtaku.pro/streaming.php?id={raw_id}"
-
-                    ref.child(anime_id).set({
-                        'title': title,
-                        'thumbnail': thumbnail,
-                        'folder': display_folder,
-                        'url': video_url, # ১০০% কাজ করবে এই লিংক
-                        'episode': f"Episode {episode_num}",
-                        'type': 'free',
-                        'id': anime_id,
-                        'date': int(time.time())
-                    })
-                    print(f"✓ আপলোড সম্পন্ন: {title}")
-                    count += 1
-            except Exception:
-                continue
-        print(f"\nমোট {count}টি এনিমি আপনার সাইটে ফিরে এসেছে!")
-    else:
-        print("দুঃখিত, এই মুহূর্তে সব সার্ভার বিজি। ১ ঘণ্টা পর আবার চেষ্টা করা হবে।")
+                    # আপনার সাইটের iframe এ চলার জন্য একদম সঠিক এমবেড লিঙ্ক
+                    video_url = f"https://embtaku.pro/streaming.php?id={raw_slug}-episode-{ep_num}"
+                    
+                    anime_id = clean_id(f"{raw_slug}_{ep_num}")
+                    
+                    # এখানে আমরা চেক করছি, যদি আগে থেকে না থাকে তবেই অ্যাড করবে (কিছুই ডিলিট করবে না)
+                    if not ref.child(anime_id).get():
+                        display_folder = title if "Season" in title else f"{title} (Season 1)"
+                        
+                        ref.child(anime_id).set({
+                            'title': title,
+                            'thumbnail': anime['coverImage']['extraLarge'],
+                            'folder': display_folder,
+                            'url': video_url,
+                            'episode': f"Episode {ep_num}",
+                            'type': 'free',
+                            'id': anime_id,
+                            'date': int(time.time())
+                        })
+                        print(f"✓ ডেটা রিকভারি সফল: {title}")
+                        count += 1
+                except Exception: continue
+            print(f"\nকাজ শেষ! {count}টি এনিমি আপনার সাইটে আবার ফিরে এসেছে।")
+        else:
+            print("সার্ভার ওভারলোডেড। গিটহাব ১ ঘণ্টা পর আবার চেষ্টা করবে।")
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     start_auto_upload()
