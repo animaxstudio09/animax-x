@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials, db
 import re
@@ -24,75 +23,81 @@ def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Direct Link Grabber Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (AniList + Embed Video Mode) ---")
     
-    # Gogoanime এর লেটেস্ট আপডেট পেজ (AJAX Endpoint)
-    # এটি থেকে সরাসরি সঠিক ID পাওয়া যায়
-    ajax_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page=1&type=1"
-    base_embed = "https://anitaku.pe/embed-episode/" # নতুন এবং স্টেবল প্লেয়ার লিঙ্ক
+    # AniList API (এটি গিটহাবে কখনো ব্লক হয় না)
+    query = '''
+    query {
+      Page(page: 1, perPage: 15) {
+        media(sort: UPDATED_AT_DESC, type: ANIME, isAdult: false) {
+          title { romaji english }
+          coverImage { extraLarge }
+          episodes
+          nextAiringEpisode { episode }
+          season
+        }
+      }
+    }
+    '''
+    url = 'https://graphql.anilist.co'
 
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 10; SM-G960F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36'
-        }
-        print("সার্ভার থেকে আসল ডেটা আনা হচ্ছে...")
-        response = requests.get(ajax_url, headers=headers, timeout=20)
+        print("AniList থেকে ডেটা আনা হচ্ছে...")
+        response = requests.post(url, json={'query': query}, timeout=15)
         
         if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            items = soup.find_all('li')
+            anime_list = response.json()['data']['Page']['media']
             
+            # আপনার ওয়েবসাইটের সঠিক ফোল্ডার
             ref = db.reference('anime') 
             count = 0
             
-            for item in items:
+            for anime in anime_list:
                 try:
-                    # ১. সঠিক টাইটেল বের করা
-                    name_tag = item.find('p', class_='name')
-                    title = name_tag.text.strip()
+                    # টাইটেল বের করা
+                    title = anime['title']['english'] if anime['title']['english'] else anime['title']['romaji']
                     
-                    # ২. সিজন ডিটেকশন (Solo Leveling Season 1 ফরম্যাট)
-                    display_title = title
+                    # সিজন নম্বর বের করা (যাতে ফোল্ডারে Season 1 লেখা থাকে)
+                    season_text = ""
                     if "Season" not in title and "Part" not in title:
-                        display_title = f"{title} (Season 1)"
+                        season_text = " (Season 1)"
                     
-                    # ৩. আসল ভিডিও আইডি বের করা (যাতে ৪-০-৪ এরর না আসে)
-                    link_tag = item.find('a')
-                    # এটি /title-episode-1 ফরম্যাটে থাকে
-                    raw_id = link_tag['href'].replace("/", "") 
+                    folder_name = f"{title}{season_text}"
                     
-                    # ৪. ভিডিও প্লেয়ার লিঙ্ক (সরাসরি embed লিঙ্ক)
-                    video_url = f"{base_embed}{raw_id}"
+                    # এপিসোড নম্বর
+                    current_ep = anime['nextAiringEpisode']['episode'] - 1 if anime['nextAiringEpisode'] else (anime['episodes'] if anime['episodes'] else 1)
                     
-                    # ৫. থাম্বনেইল লিঙ্ক
-                    img_tag = item.find('img')
-                    thumbnail = img_tag['src']
+                    # Gogoanime এর ডাইরেক্ট ভিডিও প্লেয়ার লিংক (Embed Link) তৈরি করা
+                    slug = title.lower()
+                    slug = re.sub(r'[^a-z0-9 ]', '', slug) # স্পেশাল ক্যারেক্টার রিমুভ
+                    slug = slug.replace(' ', '-')
+                    slug = re.sub(r'-+', '-', slug) # ডবল ড্যাশ রিমুভ
                     
-                    # ৬. এপিসোড নম্বর
-                    episode_tag = item.find('p', class_='episode')
-                    ep_text = episode_tag.text.strip()
+                    # এটি হলো আসল প্লেয়ার লিংক যা আপনার iframe এ সরাসরি চলবে
+                    video_url = f"https://embtaku.pro/streaming.php?id={slug}-episode-{current_ep}"
                     
-                    anime_id = clean_id(raw_id)
+                    anime_id = clean_id(f"{title}_ep_{current_ep}")
                     
+                    # ডাটাবেসে চেক করা
                     if not ref.child(anime_id).get():
                         ref.child(anime_id).set({
                             'title': title,
-                            'thumbnail': thumbnail,
-                            'folder': display_title,
-                            'url': video_url,
-                            'episode': ep_text,
+                            'thumbnail': anime['coverImage']['extraLarge'], # আপনার সাইটের জন্য thumbnail
+                            'folder': folder_name, 
+                            'url': video_url,      # ভিডিও প্লেয়ারের লিংক
+                            'episode': f"Episode {current_ep}",
                             'type': 'free',
                             'id': anime_id,
                             'date': 2024
                         })
-                        print(f"✓ সফল: {display_title} - {ep_text}")
+                        print(f"✓ সফলভাবে আপলোড হয়েছে: {folder_name} - Ep {current_ep}")
                         count += 1
                 except Exception:
                     continue
                     
-            print(f"\nকাজ শেষ! {count}টি নতুন এনিমি ভিডিওসহ যুক্ত হয়েছে।")
+            print(f"\nকাজ শেষ! {count}টি নতুন ভিডিও আপনার সাইটে লাইভ হয়েছে।")
         else:
-            print(f"সার্ভার কানেকশন এরর: {response.status_code}")
+            print(f"সার্ভার এরর: {response.status_code}")
             
     except Exception as e:
         print(f"সমস্যা: {e}")
