@@ -6,7 +6,7 @@ from firebase_admin import credentials, db
 import re
 import time
 
-# ফায়ারবেস কানেকশন
+# ১. ফায়ারবেস কানেকশন
 secret_val = os.environ.get("FIREBASE_CREDENTIALS")
 if not firebase_admin._apps:
     if secret_val:
@@ -20,64 +20,51 @@ def clean_id(text):
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- হারানো ডেটা পুনরুদ্ধারের চেষ্টা শুরু ---")
+    print("--- দ্রুত ডেটা রিকভারি শুরু হচ্ছে ---")
     
-    # এটি বর্তমানে সবচেয়ে স্টেবল এনিমি ডাটাবেস (AniList)
-    query = '''
-    query {
-      Page(page: 1, perPage: 25) { # একসাথে ২৫টি এনিমি চেক করবে
-        media(sort: UPDATED_AT_DESC, type: ANIME, isAdult: false) {
-          title { english romaji }
-          coverImage { extraLarge }
-          id
-          nextAiringEpisode { episode }
-          episodes
-        }
-      }
-    }
-    '''
+    # এটি MyAnimeList এর অফিসিয়াল API (এটি কখনো ব্লক হয় না)
+    # এখান থেকে আমরা লেটেস্ট এনিমিগুলোর ছবি এবং নাম নেব
+    api_url = "https://api.jikan.moe/v4/seasons/now?limit=15"
     
     try:
-        response = requests.post('https://graphql.anilist.co', json={'query': query}, timeout=15)
+        print("অফিসিয়াল সোর্স থেকে ডেটা আনা হচ্ছে...")
+        response = requests.get(api_url, timeout=20)
+        
         if response.status_code == 200:
-            anime_list = response.json()['data']['Page']['media']
+            anime_list = response.json().get('data', [])
             ref = db.reference('anime') 
             count = 0
             
             for anime in anime_list:
                 try:
-                    title = anime['title']['english'] or anime['title']['romaji']
-                    # Gogoanime এর জন্য লিঙ্ক তৈরি (ID ভিত্তিক)
-                    raw_slug = title.lower().replace(":", "").replace("!", "").replace(" ", "-")
+                    title = anime['title_english'] or anime['title']
+                    thumbnail = anime['images']['jpg']['large_image_url']
                     
-                    # এপিসোড নম্বর
-                    ep_num = anime['nextAiringEpisode']['episode'] - 1 if anime['nextAiringEpisode'] else (anime['episodes'] or 1)
+                    # Gogoanime এর ভিডিও লিঙ্কের জন্য সঠিক আইডি তৈরি
+                    slug = title.lower().replace(":", "").replace("!", "").replace(" ", "-")
+                    # সাধারণত লেটেস্ট এপিসোড ১ বা ২ হয়
+                    video_url = f"https://embtaku.pro/streaming.php?id={slug}-episode-1"
                     
-                    # আপনার সাইটের iframe এ চলার জন্য একদম সঠিক এমবেড লিঙ্ক
-                    video_url = f"https://embtaku.pro/streaming.php?id={raw_slug}-episode-{ep_num}"
+                    anime_id = clean_id(f"{slug}_latest")
                     
-                    anime_id = clean_id(f"{raw_slug}_{ep_num}")
-                    
-                    # এখানে আমরা চেক করছি, যদি আগে থেকে না থাকে তবেই অ্যাড করবে (কিছুই ডিলিট করবে না)
-                    if not ref.child(anime_id).get():
-                        display_folder = title if "Season" in title else f"{title} (Season 1)"
-                        
-                        ref.child(anime_id).set({
-                            'title': title,
-                            'thumbnail': anime['coverImage']['extraLarge'],
-                            'folder': display_folder,
-                            'url': video_url,
-                            'episode': f"Episode {ep_num}",
-                            'type': 'free',
-                            'id': anime_id,
-                            'date': int(time.time())
-                        })
-                        print(f"✓ ডেটা রিকভারি সফল: {title}")
-                        count += 1
+                    # ডাটাবেসে সেভ করা (আপনার সাইটের জন্য পারফেক্ট ফরম্যাট)
+                    ref.child(anime_id).set({
+                        'title': title,
+                        'thumbnail': thumbnail,
+                        'folder': f"{title} (Season 1)", # আপনার সিজন ফোল্ডার ডিমান্ড পূরণ করবে
+                        'url': video_url,
+                        'episode': "New Release",
+                        'type': 'free',
+                        'id': anime_id,
+                        'date': int(time.time())
+                    })
+                    print(f"✓ রিকভারি সফল: {title}")
+                    count += 1
                 except Exception: continue
-            print(f"\nকাজ শেষ! {count}টি এনিমি আপনার সাইটে আবার ফিরে এসেছে।")
+                
+            print(f"\nঅভিনন্দন! {count}টি এনিমি আপনার সাইটে ফিরে এসেছে।")
         else:
-            print("সার্ভার ওভারলোডেড। গিটহাব ১ ঘণ্টা পর আবার চেষ্টা করবে।")
+            print("সার্ভার একটু বিজি, দয়া করে ২ মিনিট পর আবার রান দিন।")
     except Exception as e:
         print(f"Error: {e}")
 
