@@ -1,6 +1,6 @@
 import os
 import json
-import cloudscraper
+import requests
 from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials, db
@@ -21,84 +21,78 @@ if not firebase_admin._apps:
         exit(1)
 
 def clean_id(text):
+    # ডাটাবেসের কি (Key) ক্লিন করা
     return re.sub(r'[.#$\[\]]', '', str(text)).replace(" ", "_").lower()
 
 def start_auto_upload():
-    print("--- অটোমেটিক আপডেট শুরু (Direct Embed Link Mode) ---")
+    print("--- অটোমেটিক আপডেট শুরু (Direct Source Mode) ---")
     
-    # এটি Gogoanime এর অফিসিয়াল আপডেট পেজ (এখান থেকে সঠিক ID পাওয়া যায়)
+    # Gogoanime এর লেটেস্ট আপডেট পেজ (AJAX)
+    # এই লিংকটি সাধারণত ব্লক হয় না
     ajax_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page=1&type=1"
-    
-    # এটি হলো ভিডিও প্লেয়ারের বেস লিংক (Embed Server)
     base_embed = "https://embtaku.pro/streaming.php?id="
 
-    # Cloudscraper ব্যবহার করছি যাতে সার্ভার ব্লক না করে
-    scraper = cloudscraper.create_scraper()
-
     try:
-        print(f"Gogoanime সার্ভার থেকে সঠিক ভিডিও লিংক আনা হচ্ছে...")
-        response = scraper.get(ajax_url, timeout=20)
+        # ব্রাউজার সেজে রিকোয়েস্ট পাঠানো
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+        
+        response = requests.get(ajax_url, headers=headers, timeout=30)
         
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             items = soup.find_all('li')
             
-            if items:
-                ref = db.reference('anime') 
-                count = 0
-                
-                for item in items:
-                    try:
-                        # ১. নাম বের করা
-                        name_tag = item.find('p', class_='name')
-                        title = name_tag.text.strip()
-                        
-                        # ২. এপিসোড নম্বর
-                        episode_tag = item.find('p', class_='episode')
-                        ep_text = episode_tag.text.strip()
-                        
-                        # ৩. সঠিক ভিডিও ID বের করা (সবচেয়ে গুরুত্বপূর্ণ ধাপ)
-                        link_tag = item.find('a')
-                        # লিংকটি দেখতে এমন হয়: /one-piece-episode-1100
-                        raw_id = link_tag['href'].strip('/') 
-                        
-                        # ৪. ১০০% কাজ করবে এমন Embed লিংক তৈরি করা
-                        final_video_url = f"{base_embed}{raw_id}"
-                        
-                        # ৫. থাম্বনেইল
-                        img_tag = item.find('img')
-                        thumbnail = img_tag['src']
-                        
-                        # ৬. ফোল্ডার নাম (Season 1 যুক্ত করা, যদি না থাকে)
-                        folder_name = title
-                        if "Season" not in title and "Part" not in title:
-                            folder_name = f"{title} (Season 1)"
-                        
-                        anime_id = clean_id(raw_id)
-                        
-                        # ডাটাবেসে সেভ করা
-                        if not ref.child(anime_id).get():
-                            ref.child(anime_id).set({
-                                'title': title,
-                                'thumbnail': thumbnail,
-                                'folder': folder_name,
-                                'url': final_video_url, # এটিই সেই জাদুকরী লিংক
-                                'episode': ep_text,
-                                'type': 'free',
-                                'id': anime_id,
-                                'date': 2024
-                            })
-                            print(f"✓ ভিডিও রেডি: {title} - {ep_text}")
-                            count += 1
-                    except Exception as inner_e:
-                        print(f"আইটেম স্কিপড: {inner_e}")
-                        continue
-                
-                print(f"\nকাজ শেষ! {count}টি নতুন ভিডিও (সঠিক লিংকসহ) আপলোড হয়েছে।")
-            else:
-                print("লিস্ট খালি এসেছে।")
+            ref = db.reference('anime') 
+            count = 0
+            
+            for item in items:
+                try:
+                    # ১. এনিমির আসল নাম
+                    name_tag = item.find('p', class_='name')
+                    title = name_tag.text.strip()
+                    
+                    # ২. ভিডিও আইডি বের করা (যাতে ভিডিও মিস না হয়)
+                    link_tag = item.find('a')
+                    raw_id = link_tag['href'].strip('/') 
+                    
+                    # ৩. আসল ভিডিও লিংক (iframe এ চলার জন্য)
+                    video_url = f"{base_embed}{raw_id}"
+                    
+                    # ৪. থাম্বনেইল
+                    thumbnail = item.find('img')['src']
+                    
+                    # ৫. এপিসোড নম্বর
+                    episode = item.find('p', class_='episode').text.strip()
+                    
+                    # ৬. ফোল্ডার নাম সাজানো (যেমন: One Piece Season 1)
+                    folder_name = title
+                    if "Season" not in title and "Part" not in title:
+                        folder_name = f"{title} (Season 1)"
+                    
+                    anime_id = clean_id(raw_id)
+                    
+                    # ডাটাবেসে সেভ করা
+                    if not ref.child(anime_id).get():
+                        ref.child(anime_id).set({
+                            'title': title,
+                            'thumbnail': thumbnail,
+                            'folder': folder_name,
+                            'url': video_url,
+                            'episode': episode,
+                            'type': 'free',
+                            'id': anime_id,
+                            'date': 2024
+                        })
+                        print(f"✓ আপলোড হয়েছে: {title}")
+                        count += 1
+                except Exception:
+                    continue
+                    
+            print(f"\nমোট {count}টি নতুন ভিডিও আপনার ওয়েবসাইটে যুক্ত হয়েছে।")
         else:
-            print(f"সার্ভার এরর: {response.status_code}")
+            print(f"সার্ভার এরর {response.status_code}। দয়া করে ১০ মিনিট পর আবার চেষ্টা করুন।")
             
     except Exception as e:
         print(f"সমস্যা: {e}")
