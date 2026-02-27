@@ -21,7 +21,7 @@
     </script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -35,6 +35,7 @@
             --glass: rgba(255, 255, 255, 0.05);
             --neon-pink: #ff0055;
             --card-bg: #121212;
+            --active-teal: #00e5ff;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -130,7 +131,6 @@
         .folder-title { font-size: 9px; font-weight: 600; color: #fff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .folder-ep { font-size: 8px; color: var(--gold); margin-top: 2px; font-family: 'Orbitron'; }
         
-        /* VIP Badge for Cards */
         .card-vip-badge {
             position: absolute; top: 5px; right: 5px; background: var(--gold); color: #000;
             font-size: 8px; padding: 2px 6px; border-radius: 4px; z-index: 2; font-family: 'Orbitron'; font-weight: bold;
@@ -142,7 +142,6 @@
         .prof-cover-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 0%, #050505 100%); }
         .prof-avatar-section { margin-top: -60px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2; }
         
-        /* Avatar Edit Style */
         .avatar-circle-glow { 
             width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; 
             position: relative; box-shadow: 0 0 30px rgba(255, 0, 85, 0.6); cursor: pointer; 
@@ -151,7 +150,6 @@
         .status-dot-green { position: absolute; bottom: 8px; right: 8px; width: 22px; height: 22px; background: #00ff00; border: 3px solid #000; border-radius: 50%; }
         .camera-icon-overlay { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: var(--neon-pink); border-radius: 20px; padding: 4px 10px; font-size: 10px; color: #fff; border: 2px solid #000; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         
-        /* Username Edit Style */
         .prof-username { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: #fff; margin-top: 15px; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 8px;}
         .prof-username i { font-size: 14px; color: var(--gold); }
         
@@ -193,10 +191,8 @@
         .login-container.active .toggle-panel { left: 0; border-left: none; border-right: 1px solid rgba(255, 255, 255, 0.2); }
         @media (max-width: 768px) { .login-container { height: 550px; width: 90%; } .toggle-panel { display: none; } .form-box { width: 100%; padding: 30px; } .register-box { right: -100%; } .login-container.active .login-box { left: -100%; } }
 
-        /* Ad Containers */
         .ad-container-center { display: flex; justify-content: center; align-items: center; margin: 15px 0; overflow: hidden; width: 100%; min-height: 50px; }
         
-        /* Other views */
         #shorts-view { position: fixed; inset: 0; background: #000; z-index: 200; padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; }
         .short-item { width: 100%; height: 100vh; scroll-snap-align: start; position: relative; background: #111; display: flex; align-items: center; justify-content: center; }
         .short-item video { width: 100%; height: 100%; object-fit: cover; }
@@ -205,31 +201,72 @@
         .short-btn.liked { color: var(--red); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
         
-        #player-view { position: fixed; inset: 0; background: #000; z-index: 5000; overflow-y: auto; display: none; }
+        /* --- NEW: PLAYER VIEW DESIGN (Based on Screenshot) --- */
+        #player-view { position: fixed; inset: 0; background: #0a0a0a; z-index: 5000; overflow-y: auto; display: none; }
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
         video { width: 100%; height: 100%; }
-        .player-meta-container { padding: 15px; background: #050505; min-height: 100vh; }
-        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        
+        .player-meta-container { padding: 15px; background: #0a0a0a; min-height: 100vh; }
+        
+        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
         .meta-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px; font-family: 'Outfit', sans-serif; line-height: 1.2; }
-        .meta-info { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .rating-star { color: #ffb400; font-size: 10px; }
-        .action-buttons-row { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .act-btn { background: #1e1e1e; color: #fff; border: 1px solid #333; padding: 10px 16px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; transition: 0.2s; }
-        .act-btn.liked { color: var(--red); border-color: var(--red); background: rgba(255, 59, 59, 0.1); }
+        .meta-info { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .rating-star { color: #ffb400; font-size: 11px; }
+        
+        /* Pill shaped Action Buttons */
+        .action-buttons-row { 
+            display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; 
+            padding-bottom: 5px; scrollbar-width: none; 
+        }
+        .act-btn { 
+            background: #1e1e1e; color: #ddd; border: none; padding: 10px 20px; 
+            border-radius: 30px; font-size: 13px; font-family: 'Outfit', sans-serif; font-weight: 500;
+            display: flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer; transition: 0.2s; 
+        }
+        .act-btn i { font-size: 15px; color: #bbb; }
+        .act-btn:active { transform: scale(0.95); }
+        .act-btn.liked { color: var(--red); background: rgba(255, 59, 59, 0.1); }
+        .act-btn.liked i { color: var(--red); }
+        
+        /* Resources Section */
         .resources-section { margin-bottom: 25px; }
-        .res-title { font-size: 13px; color: #fff; margin-bottom: 12px; font-weight: 600; }
-        .dropdown-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        select.custom-drop { background: #1e1e1e; color: #ddd; border: 1px solid #333; padding: 8px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; outline: none; }
-        .ep-pill-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
-        .ep-pill { min-width: 45px; height: 40px; background: #111; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #aaa; border: 1px solid #2a2a2a; flex-shrink: 0; cursor: pointer; }
-        .ep-pill.active { background: var(--green-accent); color: #fff; border-color: var(--green-accent); font-weight: 700; }
+        .res-title { 
+            font-size: 18px; color: #fff; margin-bottom: 15px; font-weight: 700; 
+            font-family: 'Outfit', sans-serif; display: flex; align-items: baseline; gap: 10px;
+        }
+        
+        /* Rounded Dropdowns */
+        .dropdown-row { display: flex; gap: 12px; margin-bottom: 20px; }
+        select.custom-drop { 
+            background: #151515; color: #ddd; border: 1px solid #333; 
+            padding: 10px 15px; border-radius: 8px; font-size: 13px; cursor: pointer; outline: none; 
+            font-family: 'Outfit', sans-serif; font-weight: 400;
+        }
+        
+        /* Square Episode Pills */
+        .ep-pill-row { 
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; 
+            margin-bottom: 20px; scrollbar-width: none; 
+        }
+        .ep-pill { 
+            min-width: 55px; height: 55px; background: #1e1e1e; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; font-size: 14px; 
+            color: #ddd; border: none; flex-shrink: 0; cursor: pointer; font-weight: 500; font-family: 'Outfit';
+        }
+        /* Active Episode Pill (Dark Teal) */
+        .ep-pill.active { 
+            background: linear-gradient(135deg, #0f2c2b, #0b1a1c); 
+            color: var(--active-teal); 
+            border: 1px solid rgba(0, 229, 255, 0.3); 
+            font-weight: 700; 
+        }
         
         .tab-header { display: flex; gap: 25px; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .tab-item { padding-bottom: 10px; font-size: 14px; color: #888; position: relative; cursor: pointer; font-weight: 500; }
+        .tab-item { padding-bottom: 10px; font-size: 15px; color: #888; position: relative; cursor: pointer; font-weight: 500; }
         .tab-item.active { color: #fff; font-weight: 700; }
-        .tab-item.active::after { content:''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: #fff; }
+        .tab-item.active::after { content:''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: #fff; border-radius: 3px; }
         
-        /* Player For You Grid (3 Items per row) */
+        /* Player For You Grid */
         .rec-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; margin-bottom: 25px; }
         .rec-card { position: relative; width: 100%; padding-top: 150%; border-radius: 8px; overflow: hidden; background: #111; cursor: pointer; border: 1px solid #222; }
         .rec-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
@@ -281,7 +318,7 @@
             <div class="slider-arrow slider-next" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i></div>
         </div>
 
-        <!-- 1. Category Tabs at Top (ALL removed, Trending is default) -->
+        <!-- 1. Category Tabs at Top -->
         <div class="category-tabs">
             <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">Trending</div>
             <div class="cat-tab" onclick="filterHomeCategory('anime', this)">Anime</div>
@@ -331,7 +368,6 @@
         <div style="height:50px;"></div>
     </div>
 
-
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="background:#000; height:100vh; overflow-y:auto; padding-top:0;">
         
@@ -379,7 +415,6 @@
                 </div>
 
                 <div class="prof-avatar-section">
-                    <!-- Custom Profile Picture Upload -->
                     <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()">
                         <img src="https://wallpapers.com/images/hd/cool-anime-girl-pfp-v2h1y9x9y9x9y9x9.jpg" id="profile-img" class="avatar-img-real">
                         <div class="status-dot-green"></div>
@@ -387,9 +422,7 @@
                     </div>
                     <input type="file" id="avatar-upload" style="display:none;" accept="image/*" onchange="uploadCustomAvatar(event)">
                     
-                    <!-- Custom Username Edit -->
                     <h2 class="prof-username" id="profile-name" onclick="editUsername()">USER <i class="fas fa-edit"></i></h2>
-                    
                     <div class="prof-rank-pill" id="vip-badge">NOVICE</div>
                 </div>
 
@@ -449,7 +482,7 @@
         </div>
     </div>
 
-    <!-- PLAYER VIEW -->
+    <!-- PLAYER VIEW (UPDATED DESIGN) -->
     <div id="player-view">
         <div class="video-wrapper">
             <div style="position:absolute; top:15px; left:15px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="font-size:18px; color:#fff; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%;"></i></div>
@@ -462,23 +495,32 @@
                     <div class="meta-info"><i class="fas fa-tv"></i><span><i class="fas fa-star rating-star"></i> 8.5</span><span>| <span id="content-type-badge">Anime</span></span><span id="view-count" style="display:none">0</span><span id="like-count" style="display:none">0</span></div>
                 </div>
             </div>
+            
+            <!-- Pill Action Buttons -->
             <div class="action-buttons-row">
-                <div class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Add to list</div>
-                <div class="act-btn" onclick="shareContent()"><i class="fas fa-share-alt"></i> Share</div>
-                <div class="act-btn"><i class="fas fa-download"></i> Download</div>
+                <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Add to list</button>
+                <button class="act-btn" onclick="shareContent()"><i class="fas fa-share-alt"></i> Share</button>
+                <button class="act-btn"><i class="fas fa-download"></i> Download</button>
             </div>
+            
             <div class="resources-section">
-                <div class="res-title">Resources</div>
+                <!-- Styled Resources Title -->
+                <div class="res-title">Resources <span style="font-size:11px; color:#888; font-weight:400;">Uploaded by Animax ⚡</span></div>
+                
+                <!-- Rounded Dropdowns -->
                 <div class="dropdown-row">
                     <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop" style="flex: 1;"></select>
-                    <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="width: 100px;">
+                    <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="width: 110px;">
                         <option value="original">Original</option>
-                        <option value="hindi">Hindi</option>
+                        <option value="hindi">Hindi Dub</option>
                         <option value="english">English</option>
                     </select>
                 </div>
+                
+                <!-- Square Episode Pills -->
                 <div class="ep-pill-row" id="episode-pill-container"></div>
             </div>
+            
             <div class="tab-header">
                 <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">For you</div>
                 <div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div>
@@ -640,7 +682,6 @@
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val() || {};
                 
-                // FIXED: Persistent Profile loading
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase() + ' <i class="fas fa-edit"></i>';
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase() + ' <i class="fas fa-edit"></i>';
                 
@@ -792,7 +833,6 @@
                 }); 
             });
 
-            // FIXED: Fetch Cartoons from the new Node
             db.ref('cartoons').on('value', snap => { 
                 const grid = document.getElementById('cartoon-grid'); 
                 grid.innerHTML = ""; window.cartoonData=[]; 
@@ -842,11 +882,23 @@
             renderEpisodeButtons(f); 
         }
 
-        function renderEpisodeButtons(f) { const c = document.getElementById('episode-pill-container'); c.innerHTML=""; window.animeData[f].forEach((ep,i)=>{ let b=document.createElement('div'); b.className='ep-pill'; b.innerText=i+1; b.id=`ep-btn-${i}`; b.onclick=()=>{let eid=ep.id?ep.id:ep.title.replace(/[^a-zA-Z0-9]/g,'_'); playVideo(ep.title,ep.url,eid,ep.type==='premium',i);}; c.appendChild(b); }); }
+        function renderEpisodeButtons(f) { 
+            const c = document.getElementById('episode-pill-container'); 
+            c.innerHTML=""; 
+            window.animeData[f].forEach((ep,i)=>{ 
+                let b=document.createElement('button'); 
+                b.className='ep-pill'; 
+                // Pad numbers with 0 (e.g. 01, 02) like screenshot
+                b.innerText = (i + 1).toString().padStart(2, '0'); 
+                b.id=`ep-btn-${i}`; 
+                b.onclick=()=>{let eid=ep.id?ep.id:ep.title.replace(/[^a-zA-Z0-9]/g,'_'); playVideo(ep.title,ep.url,eid,ep.type==='premium',i);}; 
+                c.appendChild(b); 
+            }); 
+        }
+        
         function switchSeason(n) { openFolder(n); }
 
         function playVideo(t, u, id, ip, idx) {
-            // FIXED: Premium logic fully applied to Movies and Cartoons too
             if(ip && !isPremium) { alert("ROYAL VIP REQUIRED! Please Login/Upgrade."); switchTab('profile'); return; }
             
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
@@ -940,7 +992,6 @@
                         g.innerHTML+=`<div class="rec-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${isPrem},-1)"><img src="${m.thumbnail}">${premBadge}<div class="rec-title">${m.title}</div></div>`; 
                     }); 
                 }
-                // Also append cartoons in For You section if watching movies/cartoons
                 if(window.cartoonData) {
                     window.cartoonData.forEach(m=>{ 
                         let sid=m.id||m.title.replace(/[^a-zA-Z0-9]/g,'_'); 
