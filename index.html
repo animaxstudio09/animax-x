@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <!-- OneSignal & Firebase -->
+    <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -19,6 +19,9 @@
         await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
       });
     </script>
+    
+    <!-- Adsterra Social Bar (High Income - Non Intrusive) -->
+    <script src="//pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -201,7 +204,7 @@
         .short-btn.liked { color: var(--red); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
         
-        /* --- NEW: PLAYER VIEW DESIGN --- */
+        /* --- PLAYER VIEW DESIGN --- */
         #player-view { position: fixed; inset: 0; background: #0a0a0a; z-index: 5000; overflow-y: auto; display: none; }
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
         video { width: 100%; height: 100%; }
@@ -316,10 +319,10 @@
         #history-view { display:none; position:fixed; inset:0; background:#000; z-index:6000; overflow-y:auto; padding:20px; animation: fadeIn 0.3s; }
         .history-item { background: #111; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
 
-        /* --- PRE-ROLL AD OVERLAY (Video Ad) --- */
+        /* --- PRE-ROLL AD OVERLAY (Video Ad Style + Direct Link) --- */
         #mid-roll-overlay { 
             display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:9999; 
-            flex-direction:column; align-items:center; justify-content:center; animation: fadeIn 0.3s;
+            flex-direction:column; align-items:center; justify-content:center; animation: fadeIn 0.3s; cursor: pointer;
         }
         .ad-timer-text { font-family: 'Orbitron'; font-size: 20px; color: #fff; margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-pink); }
         .ad-timer-val { font-size: 40px; color: var(--gold); font-weight: 900; }
@@ -329,28 +332,40 @@
 </head>
 <body>
 
-    <!-- Pre-roll Ad Overlay (Direct Link / Video Ad) -->
-    <div id="mid-roll-overlay">
-        <div class="ad-timer-text">VIDEO AD <span style="color:var(--neon-pink)">•</span></div>
-        <!-- High Paying VAST Video Ad Container -->
-        <div style="width:100%; max-width:400px; height:300px; background:#000; display:flex; justify-content:center; align-items:center; border:1px solid #333; border-radius:10px; overflow:hidden;">
-             <script type="text/javascript">
-                atOptions = {
-                    'key' : '2723dc497461b7507ba151e88ee0e871',
-                    'format' : 'iframe',
-                    'height' : 300,
-                    'width' : 400,
-                    'params' : {}
-                };
-                document.write('<scr' + 'ipt type="text/javascript" src="//www.highperformanceformat.com/2723dc497461b7507ba151e88ee0e871/invoke.js"></scr' + 'ipt>');
-            </script>
+    <!-- Pre-roll Ad Overlay (Fake Video Ad Player + Smart Link) -->
+    <div id="mid-roll-overlay" onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');">
+        <div class="ad-timer-text">SPONSOR AD <span style="color:var(--neon-pink)">•</span></div>
+        
+        <!-- FAKE VIDEO PLAYER CONTAINER (Looks like real ad) -->
+        <div style="width:100%; max-width:400px; height:250px; background:#000; display:flex; justify-content:center; align-items:center; border:1px solid #333; border-radius:10px; overflow:hidden; position:relative;">
+             <!-- Using a high quality animated GIF/Video to simulate Video Ad -->
+             <video src="https://media.istockphoto.com/id/1322205588/video/cyberpunk-city-at-night-with-neon-lights.mp4?s=mp4-640x640-is&k=20&c=XGvK_q-qQz-q-q-q-q-q-q-q-q-q-q-q-q-q-q-q-q-q" 
+                    autoplay muted loop style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
+             </video>
+             
+             <!-- Fake Controls Overlay -->
+             <div style="position:absolute; bottom:10px; left:10px; right:10px; display:flex; justify-content:space-between; align-items:center;">
+                 <div style="background:rgba(0,0,0,0.5); padding:2px 5px; border-radius:3px; font-size:10px; color:#fff;">Ad · 0:07</div>
+                 <i class="fas fa-volume-mute" style="color:#fff; font-size:12px;"></i>
+             </div>
+             
+             <!-- Click to Play Overlay -->
+             <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
+                 <div style="width:50px; height:50px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px);">
+                     <i class="fas fa-play" style="color:#fff; margin-left:3px;"></i>
+                 </div>
+             </div>
         </div>
+        
         <div style="text-align:center; margin-top:20px;">
             <div style="color:#fff; font-family:'Orbitron';">Starting video in</div>
             <div class="ad-timer-val" id="ad-timer-val">7</div>
         </div>
-        <div class="ad-message">Please wait...</div>
+        <div class="ad-message">Click video to skip or wait...</div>
     </div>
+
+    <!-- Adsterra Popunder Script (Placed Invisibly) -->
+    <script src="//pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js"></script>
 
     <!-- ALL IN ONE HOME PAGE -->
     <div id="main-app" class="app-view" style="display:block;">
@@ -377,8 +392,19 @@
             <div class="cat-tab" onclick="filterHomeCategory('movie', this)">Movies</div>
         </div>
 
-        <!-- Banner Adsterra Top -->
-        <div id="ad-banner-top" class="ad-container-center"></div>
+        <!-- Banner Adsterra Top (320x50) -->
+        <div id="ad-banner-top" class="ad-container-center">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '9f634c6894bc13ff8f0f19de1fcac9f3',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+                document.write('<scr' + 'ipt type="text/javascript" src="//www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr' + 'ipt>');
+            </script>
+        </div>
         
         <!-- Trending Section -->
         <div id="section-trending" style="display:block;">
@@ -574,8 +600,19 @@
             </div>
             <div id="tab-content-foryou">
                 <div class="rec-grid" id="dynamic-rec-grid"></div>
-                <!-- Banner Adsterra Player -->
-                <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;"></div>
+                <!-- Banner Adsterra Player (468x60) -->
+                <div id="ad-banner-player" class="ad-container-center" style="margin-top:20px;">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '3c0655cdf72da98fdd68dcdd704f9766',
+                            'format' : 'iframe',
+                            'height' : 60,
+                            'width' : 468,
+                            'params' : {}
+                        };
+                        document.write('<scr' + 'ipt type="text/javascript" src="//www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></scr' + 'ipt>');
+                    </script>
+                </div>
             </div>
             
             <!-- UNIQUE PLAYER COMMENTS VIEW -->
@@ -698,18 +735,7 @@
         function loadAds(isPremiumUser) {
             if(adsLoaded) return; 
             adsLoaded = true;
-            const bt = document.getElementById('ad-banner-top'); 
-            if(bt) bt.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:320px; height:50px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "9f634c6894bc13ff8f0f19de1fcac9f3", "format" : "iframe", "height" : 50, "width" : 320, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"><\/script>'></iframe>`;
-            
-            const bp = document.getElementById('ad-banner-player'); 
-            if(bp) bp.innerHTML = `<iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:468px; height:60px; overflow:hidden;" srcdoc='<script>atOptions = { "key" : "3c0655cdf72da98fdd68dcdd704f9766", "format" : "iframe", "height" : 60, "width" : 468, "params" : {} };<\/script><script src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"><\/script>'></iframe>`;
-            
-            if(!isPremiumUser) {
-                let s1 = document.createElement('script'); 
-                s1.type = "text/javascript";
-                s1.src = "//pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js"; 
-                document.body.appendChild(s1);
-            }
+            // Banners are auto-loaded in HTML
         }
 
         function checkPremium(uid) {
@@ -730,13 +756,9 @@
                 if(d.premiumExpiry && d.premiumExpiry > Date.now()) {
                     isPremium = true;
                     document.getElementById('vip-badge').innerText = "ELITE MEMBER";
-                    document.getElementById('ad-banner-top').style.display = 'flex'; 
-                    document.getElementById('ad-banner-player').style.display = 'flex';
-                    loadAds(true); 
                 } else {
                     isPremium = false;
                     document.getElementById('vip-badge').innerText = "NOVICE";
-                    loadAds(false);
                 }
             });
         }
@@ -983,7 +1005,7 @@
             if(!isPremium) {
                 v.pause(); 
                 document.getElementById('mid-roll-overlay').style.display = 'flex';
-                let timeLeft = 7; // Changed to 7 seconds for better UX
+                let timeLeft = 7; 
                 const timerEl = document.getElementById('ad-timer-val');
                 timerEl.innerText = timeLeft;
                 
@@ -1025,18 +1047,16 @@
             else { document.getElementById('like-btn').classList.remove('liked'); document.getElementById('like-btn').innerHTML=`<i class="fas fa-plus"></i> Add to list`; }
             currentViewsRef=db.ref(`views/${id}`); currentViewsRef.on('value', s=>document.getElementById('view-count').innerText=s.val()||0);
             
-            // Comment System Fixed - Correct realtime loading
             const l = document.getElementById('comments-list'); 
             l.innerHTML = ""; 
             currentCommentsRef = db.ref(`comments/${id}`); 
             currentCommentsRef.on('value', s => {
                 document.getElementById('tab-btn-comments').innerText = `Comments (${s.numChildren()})`;
-                l.innerHTML = ""; // Clear before re-render
+                l.innerHTML = ""; 
                 s.forEach(child => {
                     const c = child.val(); 
                     let d = c.time ? new Date(c.time) : new Date();
                     let ts = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-                    // Prepend so newest is on top
                     l.innerHTML = `<div class="comment-box-unique"><div class="c-avatar-unique">${c.user[0].toUpperCase()}</div><div class="c-body-unique"><div class="c-user-name">${c.user.toUpperCase()} <span class="c-time-stamp">${ts}</span></div><div class="c-text-content">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
