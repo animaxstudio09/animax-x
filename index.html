@@ -21,7 +21,7 @@
     </script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -131,7 +131,6 @@
         .folder-title { font-size: 9px; font-weight: 600; color: #fff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .folder-ep { font-size: 8px; color: var(--gold); margin-top: 2px; font-family: 'Orbitron'; }
         
-        /* CARD VIP BADGE (Movies/Cartoons) */
         .card-vip-badge {
             position: absolute; top: 5px; right: 5px; background: var(--gold); color: #000;
             font-size: 8px; padding: 2px 6px; border-radius: 4px; z-index: 2; font-family: 'Orbitron'; font-weight: bold;
@@ -245,11 +244,11 @@
             margin-bottom: 20px; scrollbar-width: none; 
         }
         .ep-pill { 
-            position: relative; /* Essential for VIP badge positioning */
+            position: relative; 
             min-width: 55px; height: 55px; background: #1e1e1e; border-radius: 10px; 
             display: flex; align-items: center; justify-content: center; font-size: 14px; 
             color: #ddd; border: none; flex-shrink: 0; cursor: pointer; font-weight: 500; font-family: 'Outfit';
-            overflow: visible; /* Allows badge to overlap */
+            overflow: visible; 
         }
         .ep-pill.active { 
             background: linear-gradient(135deg, #0f2c2b, #0b1a1c); 
@@ -258,7 +257,6 @@
             font-weight: 700; 
         }
         
-        /* NEW: Episode VIP Badge Style */
         .ep-vip-badge-small {
             position: absolute; top: -5px; right: -5px;
             background: var(--gold); color: #000;
@@ -272,14 +270,12 @@
         .tab-item.active { color: #fff; font-weight: 700; }
         .tab-item.active::after { content:''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: #fff; border-radius: 3px; }
         
-        /* Player For You Grid */
         .rec-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; margin-bottom: 25px; }
         .rec-card { position: relative; width: 100%; padding-top: 150%; border-radius: 8px; overflow: hidden; background: #111; cursor: pointer; border: 1px solid #222; }
         .rec-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
         .rec-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 4px; z-index: 2; }
         .rec-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 8px 5px; background: linear-gradient(to top, #000, transparent); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; z-index: 2; }
 
-        /* Comments specific */
         .comment-box { display: flex; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 8px; border: 1px solid #222; }
         .c-avatar { width: 30px; height: 30px; background: #333; border-radius: 50%; margin-right: 10px; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 12px; }
         .comment-section-wrapper { padding: 5px 0; margin-bottom: 50px; }
@@ -303,9 +299,41 @@
         #history-view { display:none; position:fixed; inset:0; background:#000; z-index:6000; overflow-y:auto; padding:20px; animation: fadeIn 0.3s; }
         .history-item { background: #111; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
 
+        /* --- NEW: Mid-roll Ad Overlay --- */
+        #mid-roll-overlay { 
+            display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:9999; 
+            flex-direction:column; align-items:center; justify-content:center; animation: fadeIn 0.3s;
+        }
+        .ad-timer-text { font-family: 'Orbitron'; font-size: 20px; color: #fff; margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-pink); }
+        .ad-timer-val { font-size: 40px; color: var(--gold); font-weight: 900; }
+        .ad-message { color: #aaa; font-size: 12px; margin-top: 10px; }
+
     </style>
 </head>
 <body>
+
+    <!-- Mid-roll Ad Overlay -->
+    <div id="mid-roll-overlay">
+        <div class="ad-timer-text">ADVERTISEMENT <span style="color:var(--neon-pink)">•</span></div>
+        <!-- Adsterra Banner Container -->
+        <div style="width:300px; height:250px; background:#111; display:flex; justify-content:center; align-items:center; border:1px solid #333; border-radius:10px; overflow:hidden;">
+             <iframe src="javascript:false" scrolling="no" frameborder="0" style="border:none; width:300px; height:250px; overflow:hidden;" srcdoc='<script type="text/javascript">
+                atOptions = {
+                    "key" : "3c0655cdf72da98fdd68dcdd704f9766",
+                    "format" : "iframe",
+                    "height" : 250,
+                    "width" : 300,
+                    "params" : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></script>'></iframe>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+            <div style="color:#fff; font-family:'Orbitron';">Resuming in</div>
+            <div class="ad-timer-val" id="ad-timer-val">10</div>
+        </div>
+        <div class="ad-message">Please wait...</div>
+    </div>
 
     <!-- ALL IN ONE HOME PAGE -->
     <div id="main-app" class="app-view" style="display:block;">
@@ -736,9 +764,11 @@
             if(t==='profile') document.querySelector('.fa-user').classList.add('active');
         }
 
+        // --- NEW: MID-ROLL AD LOGIC ---
         let sliderInterval;
         let touchStartX = 0;
         let touchEndX = 0;
+        let midRollShown = false; // Flag to track if ad shown
 
         function initSlider() {
             clearInterval(sliderInterval);
@@ -897,7 +927,6 @@
                 b.innerText = (i + 1).toString().padStart(2, '0'); 
                 b.id=`ep-btn-${i}`; 
                 
-                // VIP Badge Logic
                 let isPremEp = ep.type === 'premium';
                 if(isPremEp) {
                     b.innerHTML += '<div class="ep-vip-badge-small">VIP</div>';
@@ -946,6 +975,34 @@
             v.src = finalUrl; 
             v.dataset.currentId = id; 
             
+            // --- MID-ROLL AD LOGIC SETUP ---
+            midRollShown = false; // Reset flag for new video
+            v.ontimeupdate = () => {
+                // If User NOT Premium AND Ad not shown AND Video > 50%
+                if(!isPremium && !midRollShown && v.duration > 0 && v.currentTime > v.duration / 2) {
+                    midRollShown = true; // Mark as shown
+                    v.pause();
+                    
+                    // Show Overlay
+                    document.getElementById('mid-roll-overlay').style.display = 'flex';
+                    
+                    // Start Countdown
+                    let timeLeft = 10;
+                    const timerEl = document.getElementById('ad-timer-val');
+                    timerEl.innerText = timeLeft;
+                    
+                    const adInterval = setInterval(() => {
+                        timeLeft--;
+                        timerEl.innerText = timeLeft;
+                        if(timeLeft <= 0) {
+                            clearInterval(adInterval);
+                            document.getElementById('mid-roll-overlay').style.display = 'none';
+                            v.play(); // Auto Resume
+                        }
+                    }, 1000);
+                }
+            };
+
             if(prevTime > 0) {
                 v.onloadedmetadata = function() { v.currentTime = prevTime; v.play(); v.onloadedmetadata = null; };
             } else { v.play(); }
