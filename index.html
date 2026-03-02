@@ -406,12 +406,13 @@
             </script>
         </div>
         
-        <!-- Trending Section -->
+        <!-- Trending Section (API WILL POPULATE THIS) -->
         <div id="section-trending" style="display:block;">
             <div class="section-header">
                 <div class="sec-title-text"><i class="fas fa-fire" style="color:#ff5e00;"></i> TRENDING NOW</div>
                 <div class="see-all">See All</div>
             </div>
+            <!-- Your API will target this ID -->
             <div id="trending-grid" class="grid-container"></div>
         </div>
 
@@ -847,7 +848,6 @@
             });
 
             db.ref('anime').on('value', snap => {
-                const trendGrid = document.getElementById('trending-grid'); trendGrid.innerHTML = "";
                 const animeGrid = document.getElementById('anime-grid'); animeGrid.innerHTML = "";
                 
                 let folders = {};
@@ -870,7 +870,7 @@
 
                     let cardHTML = `<div class="folder-card" onclick="openFolder('${name.replace(/'/g, "\\'")}')"><img src="${thumb}">${premBadge}<div class="folder-overlay"><div class="folder-title">${name}</div><div class="folder-ep">${epCount} EPISODES</div></div></div>`;
                     
-                    if(category.includes('trending')) trendGrid.innerHTML += cardHTML;
+                    // NOTE: Removed trendGrid appending from Firebase so your API takes full control of "Trending Now"
                     if(category.includes('anime')) animeGrid.innerHTML += cardHTML;
                 });
             });
@@ -1135,5 +1135,44 @@
         function redeemCode() { if(!currentUser)return; const c=document.getElementById('prem-code').value.trim(); db.ref(`premium_codes/${c}`).once('value', s=>{ if(s.exists()&&s.val().status==='unused'){ const d=s.val().days||30; db.ref(`premium_codes/${c}`).update({status:'used',usedBy:currentUser.email}); db.ref(`users/${currentUser.uid}`).update({premiumExpiry:Date.now()+(d*24*60*60*1000)}); alert("VIP ACTIVATED!"); location.reload(); } else alert("Invalid Code"); }); }
         function buyPremium() { if(!currentUser){alert("Login First");return;} window.open(`https://t.me/aminezone09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); }
     </script>
+    
+    <!-- Consumet API Integration (ADDED HERE) -->
+    <script>
+        const API_BASE_URL = "https://my-consumet-api-nine.vercel.app/anime/gogoanime/recent-episodes";
+
+        async function fetchLatestAnime() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                const data = await response.json();
+                
+                // আপনার ওয়েবসাইটের 'Trending Now' গ্রিড সিলেক্ট করা হলো
+                const movieGrid = document.getElementById('trending-grid');
+
+                if (data.results && data.results.length > 0 && movieGrid) {
+                    movieGrid.innerHTML = ""; // আগের ডামি কন্টেন্ট মুছে ফেলা
+
+                    data.results.forEach(anime => {
+                        // আপনার ওয়েবসাইটের বর্তমান ডিজাইনের (folder-card) সাথে মিল রেখে কার্ড ডিজাইন করা হলো
+                        const animeCard = `
+                            <div class="folder-card" onclick="window.location.href='player.html?id=${anime.id}'">
+                                <img src="${anime.image}" alt="${anime.title}">
+                                <div class="folder-overlay">
+                                    <div class="folder-title">${anime.title}</div>
+                                    <div class="folder-ep" style="color: var(--neon-pink);">EPISODE ${anime.episodeNumber}</div>
+                                </div>
+                            </div>
+                        `;
+                        movieGrid.innerHTML += animeCard;
+                    });
+                }
+            } catch (error) {
+                console.error("API থেকে মুভি লোড করতে সমস্যা হয়েছে:", error);
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে ফাংশনটি চালু হবে
+        document.addEventListener('DOMContentLoaded', fetchLatestAnime);
+    </script>
+
 </body>
 </html>
