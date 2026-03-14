@@ -17,9 +17,6 @@
       });
     </script>
     
-    <!-- FREE USERS ONLY: Adsterra Social Bar -->
-    <div id="social-bar-container"></div>
-    
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -180,10 +177,7 @@
 </head>
 <body>
 
-    <!-- FREE USERS ONLY: Adsterra Popunder Script -->
-    <div id="popunder-container"></div>
-
-    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE (FREE USERS ONLY) -->
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE -->
     <div id="mid-roll-overlay">
         <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
         <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
@@ -234,7 +228,7 @@
         </div>
 
         <div id="ad-banner-top" class="ad-container-center">
-            <!-- Banner Ad always shows for both VIP and Free Users -->
+            <!-- BANNER AD (SHOWS FOR BOTH VIP AND FREE) -->
             <script type="text/javascript">
                 atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
                 document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr' + 'ipt>');
@@ -420,15 +414,32 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
+        // CRITICAL BUG FIX FOR FIREBASE VIEWS/LIKES/COMMENTS
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
         auth.onAuthStateChanged(user => {
             if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
-            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; disableAdsForFreeUsers(); }
+            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; injectFreeAds(); }
             loadContent();
         });
 
-        // VIP SYSTEM IMPLEMENTATION FOR ADS
+        // ADS LOGIC FOR VIP/FREE MEMBERS
+        let adsInjected = false;
+        function injectFreeAds() {
+            if(adsInjected) return;
+            adsInjected = true;
+            
+            let socialBar = document.createElement('script');
+            socialBar.type = 'text/javascript';
+            socialBar.src = 'https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
+            document.body.appendChild(socialBar);
+
+            let popunder = document.createElement('script');
+            popunder.type = 'text/javascript';
+            popunder.src = 'https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+            document.body.appendChild(popunder);
+        }
+
         function checkPremium(uid) {
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val() || {};
@@ -442,27 +453,12 @@
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
                 
                 if(d.premiumExpiry && d.premiumExpiry > Date.now()) { 
-                    isPremium = true; 
-                    document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
-                    disableAdsForVIP(); // Function to disable annoying ads
+                    isPremium = true; document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
                 } else { 
-                    isPremium = false; 
-                    document.getElementById('vip-badge').innerText = "FREE USER"; 
-                    disableAdsForFreeUsers(); 
+                    isPremium = false; document.getElementById('vip-badge').innerText = "FREE USER"; 
+                    injectFreeAds(); // Free users get ads
                 }
             });
-        }
-
-        function disableAdsForVIP() {
-            // Remove popunder and social bar for VIP
-            document.getElementById('popunder-container').innerHTML = '';
-            document.getElementById('social-bar-container').innerHTML = '';
-        }
-
-        function disableAdsForFreeUsers() {
-            // Add back popunder and social bar scripts for Free users
-            document.getElementById('social-bar-container').innerHTML = `<script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'><\/script>`;
-            document.getElementById('popunder-container').innerHTML = `<script type='text/javascript' src='https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js'><\/script>`;
         }
 
         function handleAuth(t) { 
@@ -604,6 +600,7 @@
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
             
+            // SMARTLINK AD FOR FREE USERS ONLY
             if(!isPremium) {
                 const randomAdImage = adMediaArray[Math.floor(Math.random() * adMediaArray.length)];
                 document.getElementById('dynamic-ad-image').src = randomAdImage;
@@ -631,7 +628,7 @@
             loadSocialData(currentSafeVideoId);
         }
 
-        function skipAdBtnClicked() { document.getElementById('mid-roll-overlay').style.display = 'none'; if(window.startVideoPlayback) window.startVideoPlayback(); }
+        function skipAdBtnClicked(event) { if(event) event.stopPropagation(); document.getElementById('mid-roll-overlay').style.display = 'none'; if(window.startVideoPlayback) window.startVideoPlayback(); }
 
         function changeLanguage(lang) {
             const v = document.getElementById('main-video'); if(!currentPlayingEpisodeData) return; 
@@ -756,7 +753,6 @@
             }).catch(err => alert("Error: " + err.message));
         }
 
-        // VIP ADMIN LINK JS
         function redeemCode() { 
             if(!currentUser) return; 
             const c = document.getElementById('prem-code').value.trim(); 
