@@ -110,14 +110,13 @@
         .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
         .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        /* PROFILE DESIGN (GOKU/NARUTO BANNER) */
+        /* --- PROFILE DESIGN (FIXED HOPWEB IMAGES - GOKU/NARUTO/LUFFY BANNER) --- */
         .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
-        
-        /* NEW EPIC GOKU/NARUTO BANNER */
-        .prof-cover-area { height: 160px; width: 100%; background: url('https://images5.alphacoders.com/830/830704.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
-        
+        /* Ultra Reliable Anime Epic Crossover Banner (PostImage CDN - Never blocks CORS) */
+        .prof-cover-area { height: 160px; width: 100%; background: url('https://i.postimg.cc/D0Z1fPnM/epic-anime-crossover.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
         .prof-avatar-section { margin-top: -55px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; border: 2px solid var(--yellow); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        /* Ultra Reliable Anime Avatar (PostImage CDN) */
         .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .prof-username { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: var(--yellow); margin-top: 12px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);}
         .prof-rank-pill { background: #222; padding: 4px 15px; border-radius: 20px; font-size: 11px; color: #fff; margin-top: 5px; border: 1px solid var(--yellow); font-family: 'Orbitron'; font-weight: bold;}
@@ -161,7 +160,7 @@
         .comment-send-btn { background: var(--yellow); border: none; width: 40px; height: 40px; color: #000; border-radius: 4px; cursor: pointer; }
         .comment-box-unique { display: flex; gap: 12px; margin-bottom: 15px; background: var(--dark-gray); padding: 12px; border-radius: 4px; border-left: 3px solid var(--yellow); }
 
-        /* --- SHORTS VIEW --- */
+        /* --- SHORTS VIEW (FIXED FOR HOPWEB) --- */
         #shorts-view { 
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: #000; z-index: 9999; overflow-y: scroll; scroll-snap-type: y mandatory; 
@@ -173,7 +172,7 @@
         .short-btn.liked { color: var(--yellow); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- WATCH HISTORY VIEW --- */
+        /* --- WATCH HISTORY VIEW (FIXED FOR HOPWEB) --- */
         #history-view { 
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: var(--primary-bg); z-index: 8000; overflow-y: auto; padding: 20px; 
@@ -186,7 +185,7 @@
     <!-- Adsterra Popunder Script -->
     <script type='text/javascript' src='https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js'></script>
 
-    <!-- PRE-ROLL AD -->
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE -->
     <div id="mid-roll-overlay">
         <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
         <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
@@ -221,6 +220,7 @@
 
     <!-- MAIN HOME PAGE -->
     <div id="main-app" class="app-view" style="display:block;">
+        
         <div id="banner-slider">
             <div id="banner-slides-container"></div>
             <div class="slider-arrow slider-prev" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></div>
@@ -270,7 +270,8 @@
                     <div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div>
                 </div>
                 <div class="prof-avatar-section">
-                    <div class="avatar-circle-glow"><img src="https://i.pinimg.com/736x/84/5e/52/845e52a5dcacb40fcaf88f176c7b9ab3.jpg" id="profile-img" class="avatar-img-real"></div>
+                    <!-- FIXED AVATAR IMAGE URL -->
+                    <div class="avatar-circle-glow"><img src="https://i.postimg.cc/8zM3pXYz/anime-boy-avatar.jpg" id="profile-img" class="avatar-img-real"></div>
                     <h2 class="prof-username" id="profile-name">USER</h2>
                     <div class="prof-rank-pill" id="vip-badge">FREE USER</div>
                 </div>
@@ -336,11 +337,11 @@
                         document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></scr' + 'ipt>');
                     </script>
                 </div>
+                <!-- RELATED VIDEOS GRID -->
                 <div class="grid-container" id="dynamic-rec-grid" style="margin-top:15px;"></div>
             </div>
             <div id="tab-content-comments" style="display:none;">
                 <div class="comment-input-container">
-                    <!-- ENTER KEY FIXED FOR COMMENTS -->
                     <input type="text" id="comment-input" placeholder="Add a public comment..." onkeypress="if(event.key === 'Enter') postComment();">
                     <button class="comment-send-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
                 </div>
@@ -422,10 +423,12 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
 
-        let currentUser = null, isPremium = false, currentVideoId = null;
-        let currentPlayType = 'anime'; // FIX for related videos
+        let currentUser = null, isPremium = false, currentVideoId = null, currentSafeVideoId = null, currentPlayType = 'anime';
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
+
+        // HELPER FUNCTION: Sanitize Video ID for Firebase
+        function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_'); }
 
         auth.onAuthStateChanged(user => {
             if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
@@ -439,7 +442,9 @@
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
                 
+                // Fixed Image loading issue in HopWeb using PostImage CDN
                 if(d.avatar) document.getElementById('profile-img').src = d.avatar;
+                else document.getElementById('profile-img').src = "https://i.postimg.cc/8zM3pXYz/anime-boy-avatar.jpg";
                 
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
@@ -528,7 +533,7 @@
 
         function openFolder(n) { 
             currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
-            const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title.replace(/[^a-zA-Z0-9]/g, '_'); 
+            const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
             playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', 0); 
             loadPlayerUI(n); 
         }
@@ -545,7 +550,7 @@
             window.animeData[f].forEach((ep,i)=>{ 
                 let b=document.createElement('button'); b.className='ep-pill'; b.innerText = (i + 1).toString(); b.id=`ep-btn-${i}`; 
                 if(ep.type === 'premium') { b.innerHTML += '<div class="ep-vip-badge-small">VIP</div>'; }
-                b.onclick=()=>{let eid=ep.id?ep.id:ep.title.replace(/[^a-zA-Z0-9]/g,'_'); playVideo(ep.title,ep.url,eid,ep.type==='premium', 'anime', i);}; c.appendChild(b); 
+                b.onclick=()=>{let eid=ep.id?ep.id:ep.title; playVideo(ep.title,ep.url,eid,ep.type==='premium', 'anime', i);}; c.appendChild(b); 
             }); 
         }
         
@@ -558,23 +563,26 @@
             "https://media.giphy.com/media/26tn33aiTi1jYamPe/giphy.gif"  // Trading
         ];
 
-        // FIXED: ADDED currentPlayType parameter
         function playVideo(t, u, id, ip, type, idx) {
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
             
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
-            if(!id) id = t.replace(/[^a-zA-Z0-9]/g, '_'); currentVideoId = id; document.getElementById('player-title').innerText = t;
             
-            currentPlayType = type; // Fix for related videos
+            // FIREBASE SAFE ID FIX
+            currentSafeVideoId = getSafeId(id || t);
+            currentVideoId = id; 
+            currentPlayType = type; // Set current play type for Related Videos filtering
+            
+            document.getElementById('player-title').innerText = t;
             
             if (idx !== -1 && currentFolder && window.animeData[currentFolder]) { currentPlayingEpisodeData = window.animeData[currentFolder][idx]; } else { currentPlayingEpisodeData = null; }
+            
             if(idx === -1) { 
                 document.getElementById('content-type-badge').innerText = type.toUpperCase(); 
                 document.getElementById('episode-pill-container').style.display='none'; document.querySelector('.dropdown-row').style.display='none'; 
             } else { 
                 document.getElementById('content-type-badge').innerText="ANIME"; 
-                document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; 
-                document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
+                document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
             }
             
             const langSelect = document.getElementById('language-select'); let initialLang = langSelect ? langSelect.value : 'original'; let finalUrl = u; 
@@ -609,8 +617,11 @@
                 }, 1000);
             } else { window.startVideoPlayback(); }
 
-            if(currentUser) db.ref(`users/${currentUser.uid}/watchlist/${id}`).set({title: t, date: Date.now()}); 
-            db.ref(`views/${id}`).transaction(c => (c||0)+1); loadSocialData(id);
+            if(currentUser) db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).set({title: t, date: Date.now()}); 
+            
+            // FIREBASE VIEWS FIX
+            db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); 
+            loadSocialData(currentSafeVideoId);
         }
 
         function skipAdBtnClicked() { document.getElementById('mid-roll-overlay').style.display = 'none'; if(window.startVideoPlayback) window.startVideoPlayback(); }
@@ -622,39 +633,41 @@
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
-        function loadSocialData(id) {
-            currentLikesCountRef = db.ref(`likes/${id}/count`); currentLikesCountRef.on('value', s => document.getElementById('like-count').innerText=s.val()||0);
-            currentViewsRef=db.ref(`views/${id}`); currentViewsRef.on('value', s=>document.getElementById('view-count').innerText=s.val()||0);
+        // FIREBASE LIFETIME COMMENTS & LIKES FIX
+        function loadSocialData(safeId) {
+            currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=s.val()||0; });
+            currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=s.val()||0; });
 
-            if(currentUser) { currentUserLikeRef=db.ref(`likes/${id}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
+            if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
             
-            const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${id}`); 
+            const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
             currentCommentsRef.on('value', s => {
                 document.getElementById('tab-btn-comments').innerText = `Comments (${s.numChildren()})`; l.innerHTML = ""; 
                 s.forEach(child => {
                     const c = child.val(); let d = c.time ? new Date(c.time) : new Date(); 
                     let ts = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+                    // Prepend makes newest comments appear at the top
                     l.innerHTML = `<div class="comment-box-unique"><div class="c-avatar-unique">${c.user[0].toUpperCase()}</div><div class="c-body-unique"><div class="c-user-name">${c.user.toUpperCase()} <span style="font-size:9px;color:#888;font-weight:normal;">${ts}</span></div><div class="c-text-content">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
         }
 
-        function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentVideoId)return; const r=db.ref(`likes/${currentVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); } else { r.set(true); } }); }
+        function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentSafeVideoId)return; const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); } else { r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); } }); }
         
-        // FIXED LIFETIME COMMENTS
+        // COMMENTS PUSH FIX
         function postComment() { 
             if(!currentUser){alert("Please Login to comment.");return;} 
             const t = document.getElementById('comment-input').value; if(!t.trim()) return; 
             
             let userName = document.getElementById('profile-name').innerText || currentUser.email.split('@')[0];
             
-            db.ref(`comments/${currentVideoId}`).push({
+            db.ref(`comments/${currentSafeVideoId}`).push({
                 user: userName, 
                 text: t, 
                 time: Date.now()
             }).then(() => {
                 document.getElementById('comment-input').value = ""; 
-            }).catch(err => alert("Error: " + err.message));
+            }).catch(err => alert("Failed to post: " + err.message));
         }
 
         function shareContent() { navigator.clipboard.writeText(`https://t.me/aminezone09`).then(()=>alert("Link Copied!")); }
@@ -666,7 +679,7 @@
         
         function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; if(currentLikesCountRef)currentLikesCountRef.off(); if(currentUserLikeRef)currentUserLikeRef.off(); if(currentViewsRef)currentViewsRef.off(); if(currentCommentsRef)currentCommentsRef.off(); }
         
-        // FIXED RELATED VIDEOS (Matching category only)
+        // RELATED VIDEOS CATEGORY FIX
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
             if(currentPlayType === 'movie'){ 
@@ -679,7 +692,7 @@
             } 
         }
 
-        // --- SHORTS VIDEO LOGIC ---
+        // --- SHORTS VIDEO LOGIC (HOPWEB FIXED) ---
         let shortsObserver = null, activeShortId = null;
         function toggleShortsVideo(videoElement) { if(videoElement.paused) videoElement.play().catch(e => console.log(e)); else videoElement.pause(); }
 
@@ -737,7 +750,7 @@
                 time: Date.now()
             }).then(() => {
                 document.getElementById('short-comment-in').value=""; 
-            });
+            }).catch(err => alert("Error: " + err.message));
         }
 
         // VIP ADMIN LINK JS
