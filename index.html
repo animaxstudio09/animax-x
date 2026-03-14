@@ -17,8 +17,8 @@
       });
     </script>
     
-    <!-- Adsterra Social Bar -->
-    <script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'></script>
+    <!-- FREE USERS ONLY: Adsterra Social Bar -->
+    <div id="social-bar-container"></div>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -110,9 +110,8 @@
         .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
         .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        /* --- PROFILE DESIGN (USER PROVIDED GITHUB LINKS) --- */
+        /* PROFILE DESIGN */
         .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
-        /* Custom User Github Banner */
         .prof-cover-area { height: 160px; width: 100%; background: url('https://github.com/animaxstudio09/anime-world/releases/download/1/c7a40af73711b79dc78bcfbd86de1e4e.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
         .prof-avatar-section { margin-top: -55px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; border: 2px solid var(--yellow); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
@@ -181,10 +180,10 @@
 </head>
 <body>
 
-    <!-- Adsterra Popunder Script -->
-    <script type='text/javascript' src='https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js'></script>
+    <!-- FREE USERS ONLY: Adsterra Popunder Script -->
+    <div id="popunder-container"></div>
 
-    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE -->
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE (FREE USERS ONLY) -->
     <div id="mid-roll-overlay">
         <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
         <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
@@ -235,6 +234,7 @@
         </div>
 
         <div id="ad-banner-top" class="ad-container-center">
+            <!-- Banner Ad always shows for both VIP and Free Users -->
             <script type="text/javascript">
                 atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
                 document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr' + 'ipt>');
@@ -269,7 +269,6 @@
                     <div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div>
                 </div>
                 <div class="prof-avatar-section">
-                    <!-- Custom GitHub Profile Pic -->
                     <div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div>
                     <h2 class="prof-username" id="profile-name">USER</h2>
                     <div class="prof-rank-pill" id="vip-badge">FREE USER</div>
@@ -413,7 +412,6 @@
             });
         }
 
-        // FIREBASE SETUP
         const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
@@ -422,31 +420,49 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
-        // CRITICAL BUG FIX FOR FIREBASE VIEWS/LIKES/COMMENTS
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
         auth.onAuthStateChanged(user => {
             if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
-            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; }
+            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; disableAdsForFreeUsers(); }
             loadContent();
         });
 
+        // VIP SYSTEM IMPLEMENTATION FOR ADS
         function checkPremium(uid) {
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val() || {};
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
                 
-                // Custom GitHub Avatar Fallback
                 if(d.avatar) document.getElementById('profile-img').src = d.avatar;
                 else document.getElementById('profile-img').src = "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
                 
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
                 
-                if(d.premiumExpiry && d.premiumExpiry > Date.now()) { isPremium = true; document.getElementById('vip-badge').innerText = "VIP MEMBER"; } 
-                else { isPremium = false; document.getElementById('vip-badge').innerText = "FREE USER"; }
+                if(d.premiumExpiry && d.premiumExpiry > Date.now()) { 
+                    isPremium = true; 
+                    document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
+                    disableAdsForVIP(); // Function to disable annoying ads
+                } else { 
+                    isPremium = false; 
+                    document.getElementById('vip-badge').innerText = "FREE USER"; 
+                    disableAdsForFreeUsers(); 
+                }
             });
+        }
+
+        function disableAdsForVIP() {
+            // Remove popunder and social bar for VIP
+            document.getElementById('popunder-container').innerHTML = '';
+            document.getElementById('social-bar-container').innerHTML = '';
+        }
+
+        function disableAdsForFreeUsers() {
+            // Add back popunder and social bar scripts for Free users
+            document.getElementById('social-bar-container').innerHTML = `<script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'><\/script>`;
+            document.getElementById('popunder-container').innerHTML = `<script type='text/javascript' src='https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js'><\/script>`;
         }
 
         function handleAuth(t) { 
@@ -561,7 +577,6 @@
             
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
-            // FIREBASE SAFE ID BUG FIXED
             currentSafeVideoId = getSafeId(id || t);
             currentVideoId = id; 
             currentPlayType = type; 
@@ -587,7 +602,7 @@
             v.src = finalUrl; v.dataset.currentId = id; v.load(); 
             document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
 
-            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
+            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
             
             if(!isPremium) {
                 const randomAdImage = adMediaArray[Math.floor(Math.random() * adMediaArray.length)];
@@ -612,7 +627,6 @@
 
             if(currentUser) db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).set({title: t, date: Date.now()}); 
             
-            // FIREBASE LIFETIME VIEWS
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); 
             loadSocialData(currentSafeVideoId);
         }
@@ -626,7 +640,6 @@
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
-        // FIREBASE LIFETIME COMMENTS & LIKES FIX
         function loadSocialData(safeId) {
             currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=s.val()||0; });
             currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=s.val()||0; });
@@ -646,7 +659,6 @@
 
         function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentSafeVideoId)return; const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); } else { r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); } }); }
         
-        // COMMENTS PUSH FIX
         function postComment() { 
             if(!currentUser){alert("Please Login to comment.");return;} 
             const t = document.getElementById('comment-input').value; if(!t.trim()) return; 
@@ -671,7 +683,6 @@
         
         function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; if(currentLikesCountRef)currentLikesCountRef.off(); if(currentUserLikeRef)currentUserLikeRef.off(); if(currentViewsRef)currentViewsRef.off(); if(currentCommentsRef)currentCommentsRef.off(); }
         
-        // RELATED VIDEOS CATEGORY FIX
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
             if(currentPlayType === 'movie'){ 
@@ -684,7 +695,7 @@
             } 
         }
 
-        // --- SHORTS VIDEO LOGIC (HOPWEB FIXED) ---
+        // --- SHORTS VIDEO LOGIC ---
         let shortsObserver = null, activeShortId = null;
         function toggleShortsVideo(videoElement) { if(videoElement.paused) videoElement.play().catch(e => console.log(e)); else videoElement.pause(); }
 
