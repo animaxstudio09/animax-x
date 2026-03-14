@@ -49,7 +49,7 @@
         .logo { font-size: 22px; font-weight: 900; color: var(--yellow); cursor: pointer; font-family: 'Orbitron'; letter-spacing: 1px;}
         .logo span { color: #fff; font-size: 14px; background: #333; padding: 2px 6px; border-radius: 4px; font-family: 'Roboto';}
         
-        .search-wrapper { position: relative; width: 100%; max-width: 100%; }
+        .search-wrapper { position: relative; width: 100%; max-width: 100%; transition: 0.3s; }
         .search-glow { width: 100%; padding: 8px 15px; padding-right: 35px; background: #222; border: 1px solid #444; color: #fff; font-size: 13px; border-radius: 4px;}
         .search-icon-pos { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--yellow); }
 
@@ -133,10 +133,10 @@
         .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
         .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        /* --- BEAUTIFUL LUXURY PROFILE DESIGN (FIXED IMAGES) --- */
+        /* --- LUXURY PROFILE DESIGN (FIXED IMAGES) --- */
         .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
-        /* FIXED: Anime Scenery Banner Hosted on reliable server */
-        .prof-cover-area { height: 160px; width: 100%; background: url('https://i.imgur.com/1G09p3i.jpeg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
+        /* FIXED: Reliable Anime Scenery Banner */
+        .prof-cover-area { height: 160px; width: 100%; background: url('https://images5.alphacoders.com/133/1338694.png'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
         .prof-avatar-section { margin-top: -55px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; border: 2px solid var(--yellow); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
         /* FIXED: Reliable Anime Boy Profile Picture */
@@ -156,17 +156,6 @@
         .premium-card-gold { margin: 0 15px 20px 15px; padding: 20px; border-radius: 8px; background: #111; border: 1px dashed var(--yellow); text-align: center; }
         .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; margin: 10px 0; outline:none; border-radius: 4px; text-align: center; letter-spacing: 2px;}
         .prem-act-btn { width: 100%; background: var(--yellow); color: #000; font-weight: bold; padding: 12px; border: none; cursor: pointer; font-family:'Orbitron'; border-radius: 4px; font-size: 14px;}
-
-        /* --- SHORTS VIEW (FIXED FOR HOPWEB) --- */
-        #shorts-view { position: fixed; inset: 0; background: #000; z-index: 2000; padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; display: none; }
-        #shorts-container { width: 100%; height: 100%; }
-        .short-item { width: 100%; height: 100%; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000;}
-        .short-item video { width: 100%; height: 100%; object-fit: contain; }
-        .short-overlay { position: absolute; bottom: 80px; right: 15px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
-        .short-btn { color: #fff; text-align: center; font-size: 26px; cursor: pointer; filter: drop-shadow(0 2px 5px #000); }
-        .short-btn.liked { color: var(--yellow); }
-        .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
-
     </style>
 </head>
 <body>
@@ -273,14 +262,14 @@
             </div>
         </div>
 
-        <!-- User Profile (FIXED IMAGES & DEVELOPER CREDIT) -->
+        <!-- User Profile (FIXED IMAGES) -->
         <div id="user-profile-content" style="display:none;">
             <div class="profile-container">
                 <div class="prof-cover-area">
                     <div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div>
                 </div>
                 <div class="prof-avatar-section">
-                    <div class="avatar-circle-glow"><img src="https://i.imgur.com/6XJ8P6g.jpg" id="profile-img" class="avatar-img-real"></div>
+                    <div class="avatar-circle-glow"><img src="https://i.pinimg.com/736x/84/5e/52/845e52a5dcacb40fcaf88f176c7b9ab3.jpg" id="profile-img" class="avatar-img-real"></div>
                     <h2 class="prof-username" id="profile-name">USER</h2>
                     <div class="prof-rank-pill" id="vip-badge">FREE USER</div>
                 </div>
@@ -300,7 +289,7 @@
                     <p style="font-size:11px; margin-top:15px; color:#aaa; cursor:pointer;" onclick="buyPremium()">Don't have a key? <u style="color:var(--yellow);">Get from Admin</u></p>
                 </div>
                 
-                <!-- DEVELOPER CREDIT RESTORED -->
+                <!-- DEVELOPER CREDIT -->
                 <div style="text-align: center; color: #666; font-size: 11px; margin-top: 30px; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
                     DEVELOPER BY RONI VAI
                 </div>
@@ -397,6 +386,27 @@
     </nav>
 
     <script>
+        // HIDE SEARCH ON PROFILE FIX
+        function switchTab(t) { 
+            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts();
+            
+            const searchBox = document.querySelector('.search-wrapper');
+            
+            if(t==='home') { 
+                document.getElementById('main-app').style.display='block'; 
+                if(searchBox) searchBox.style.display = 'block';
+            }
+            if(t==='profile') { 
+                document.getElementById('profile-view').style.display='block'; 
+                if(searchBox) searchBox.style.display = 'none';
+            }
+            
+            document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
+            if(t==='home') document.querySelector('.fa-home').classList.add('active');
+            if(t==='profile') document.querySelector('.fa-user').classList.add('active');
+            window.scrollTo(0,0);
+        }
+
         // TABS LOGIC
         function filterHomeCategory(cat, element) {
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
@@ -408,7 +418,6 @@
             });
         }
 
-        // SEARCH FIX
         function filterAnime(query) {
             let filter = query.toUpperCase();
             document.querySelectorAll('.folder-card').forEach(card => {
@@ -441,9 +450,9 @@
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
                 
-                // Set Profile Image (Use DB avatar or default working image)
+                // FIXED AVATAR IMAGE
                 if(d.avatar) document.getElementById('profile-img').src = d.avatar;
-                else document.getElementById('profile-img').src = "https://i.imgur.com/6XJ8P6g.jpg";
+                else document.getElementById('profile-img').src = "https://i.pinimg.com/736x/84/5e/52/845e52a5dcacb40fcaf88f176c7b9ab3.jpg";
                 
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
@@ -459,16 +468,6 @@
             if(!e || !p) return alert("Please fill details.");
             if(t==='login') { auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); } 
             else { auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) { db.ref(`users/${cred.user.uid}`).update({ rank: snap.val() }); } }); }).catch(err=>alert(err.message)); }
-        }
-
-        function switchTab(t) { 
-            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts();
-            if(t==='home') document.getElementById('main-app').style.display='block';
-            if(t==='profile') document.getElementById('profile-view').style.display='block';
-            document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
-            if(t==='home') document.querySelector('.fa-home').classList.add('active');
-            if(t==='profile') document.querySelector('.fa-user').classList.add('active');
-            window.scrollTo(0,0);
         }
 
         // BANNERS
@@ -565,7 +564,6 @@
         
         function switchSeason(n) { openFolder(n); }
 
-        // --- DYNAMIC AD IMAGE SYSTEM ---
         const adMediaArray = [
             "https://media.giphy.com/media/3o7TKSz1HGEkXE0ZzO/giphy.gif", // Game
             "https://media.giphy.com/media/l41YkxvU8c7J7Bba0/giphy.gif", // Casino
@@ -644,7 +642,7 @@
             });
         }
 
-        function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentVideoId)return; const r=db.ref(`likes/${currentVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); } else { r.set(true); } }); }
+        function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentVideoId)return; const r=db.ref(`likes/${currentVideoId}/${currentUser.uid}`), c=db.ref(`likes/${currentVideoId}/count`); r.once('value', s=>{ if(s.exists()){ r.remove(); c.transaction(v=>(v||0)-1); } else { r.set(true); c.transaction(v=>(v||0)+1); } }); }
         
         function postComment() { 
             if(!currentUser){alert("Please Login to comment.");return;} 
@@ -718,7 +716,6 @@
         function closeShortComments() { document.getElementById('shorts-comments-modal').style.display = 'none'; if(currentShortsCommentsRef) { currentShortsCommentsRef.off(); currentShortsCommentsRef = null; } }
         function postShortComment() { if(!currentUser){alert("Login required");return;} if(!activeShortId)return; const t=document.getElementById('short-comment-in').value; if(!t.trim())return; db.ref(`shorts_comments/${activeShortId}`).push({user:currentUser.email.split('@')[0], text:t, time:Date.now()}); document.getElementById('short-comment-in').value=""; }
 
-        // VIP ADMIN LINK JS
         function redeemCode() { 
             if(!currentUser) return; 
             const c = document.getElementById('prem-code').value.trim(); 
@@ -737,7 +734,6 @@
             window.open(`https://t.me/aminezone09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); 
         }
 
-        // WATCH HISTORY
         function openHistory() { 
             if(!currentUser) { alert("Please login first to view history."); return; }
             document.getElementById('history-view').style.display='block'; 
@@ -753,6 +749,23 @@
         }
         function closeHistory() { document.getElementById('history-view').style.display='none'; }
 
+        // Consumet API Integration
+        const API_BASE_URL = "https://my-consumet-api-nine.vercel.app/anime/gogoanime/recent-episodes";
+        async function fetchLatestAnime() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                const data = await response.json();
+                const animeGrid = document.getElementById('anime-grid'); 
+
+                if (data.results && data.results.length > 0 && animeGrid) {
+                    data.results.forEach(anime => {
+                        const animeCard = `<div class="folder-card" onclick="window.location.href='player.html?id=${anime.id}'"><div class="img-wrapper"><img src="${anime.image}" alt="${anime.title}"><div class="card-vip-badge">SUB</div></div><div class="folder-title">${anime.title}</div><div class="folder-ep">Episode ${anime.episodeNumber}</div></div>`;
+                        animeGrid.innerHTML += animeCard;
+                    });
+                }
+            } catch (error) { console.error("API Error:", error); }
+        }
+        document.addEventListener('DOMContentLoaded', fetchLatestAnime);
     </script>
 </body>
 </html>
