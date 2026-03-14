@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANIMAX WORLD - GogoAnime Style</title>
+    <title>ANIMAX TV</title>
     
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#1b1b1b">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -42,174 +39,135 @@
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Roboto', sans-serif; background: var(--primary-bg); color: #fff; overflow-x: hidden; padding-bottom: 80px; }
+        body { font-family: 'Roboto', sans-serif; background: var(--primary-bg); color: #fff; overflow-x: hidden; padding-bottom: 70px; }
 
-        /* --- HEADER & SEARCH --- */
+        /* HEADER */
         header { 
-            background: var(--header-bg); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; 
+            background: var(--header-bg); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; 
             border-bottom: 2px solid var(--yellow); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px;
         }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: var(--yellow); cursor: pointer; letter-spacing: 1px;}
+        .logo { font-size: 22px; font-weight: 900; color: var(--yellow); cursor: pointer; font-family: 'Orbitron'; letter-spacing: 1px;}
         .logo span { color: #fff; font-size: 14px; background: #333; padding: 2px 6px; border-radius: 4px; font-family: 'Roboto';}
         
-        .search-wrapper { position: relative; width: 100%; max-width: 300px; }
+        .search-wrapper { position: relative; width: 100%; max-width: 100%; }
         .search-glow { width: 100%; padding: 8px 15px; padding-right: 35px; background: #222; border: 1px solid #444; color: #fff; font-size: 13px; border-radius: 4px;}
-        .search-glow:focus { border-color: var(--yellow); background: #000; }
         .search-icon-pos { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--yellow); }
 
-        /* --- APP VIEW --- */
-        .app-view { display: none; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- BANNER SLIDER --- */
-        #banner-slider { width: 95%; height: 190px; margin: 15px auto; position: relative; overflow: hidden; border: 1px solid var(--yellow); border-radius: 4px;}
-        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.8s; background-size: cover; background-position: center; cursor: pointer; }
-        .slide.active { opacity: 1; z-index: 2; }
-        .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--yellow); color: #000; padding: 8px 20px; font-weight: bold; font-size: 12px; z-index: 10; border-radius: 2px; font-family: 'Orbitron';}
-        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: var(--yellow); width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 20; }
-        .slider-prev { left: 0; } .slider-next { right: 0; }
-
-        /* --- CATEGORY TABS --- */
-        .category-tabs { background: var(--yellow); padding: 10px 15px; display: flex; align-items: center; gap: 15px; margin: 0 10px 15px 10px; border-radius: 2px; overflow-x: auto; scrollbar-width: none; white-space: nowrap;}
+        /* TABS */
+        .category-tabs { background: var(--yellow); padding: 10px; display: flex; align-items: center; gap: 12px; margin: 10px 10px 15px 10px; border-radius: 2px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;}
         .category-tabs::-webkit-scrollbar { display: none; }
-        .cat-tab { color: #222; font-size: 13px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; }
-        .cat-tab.active { color: #fff; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 4px; }
+        .cat-tab { color: #222; font-size: 13px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron'; }
+        .cat-tab.active { color: #fff; background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px; }
 
-        /* --- SECTION HEADER --- */
-        .section-header { padding: 0 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px;}
-        .sec-title-text { font-family: 'Orbitron'; font-size: 15px; font-weight: bold; color: #fff; border-left: 4px solid var(--yellow); padding-left: 8px; }
+        /* GRID (3 ITEMS PER ROW) */
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 10px 20px 10px; }
 
-        /* --- ANIME GRID (FIXED: 3 ITEMS PER ROW) --- */
-        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 10px 20px 10px; }
-
-        /* --- CARD STYLE (GOGO DESIGN, FIXED DOUBLE CLICK) --- */
+        /* CARD (HOVER COMPLETELY REMOVED FOR MOBILE) */
         .folder-card { background: transparent; cursor: pointer; display: flex; flex-direction: column; }
-        .img-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; overflow: hidden; border: 1px solid #333; border-radius: 2px; background: #111;}
+        .img-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; border: 1px solid #333; border-radius: 2px; overflow: hidden; background:#111;}
         .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
-        /* HOVER ONLY FOR PC (Solves Double Click on HopWeb/Mobile) */
         @media (hover: hover) and (pointer: fine) {
             .folder-card:hover .folder-title { color: #fff; }
             .folder-card:hover .img-wrapper img { transform: scale(1.05); }
         }
-
-        .card-vip-badge { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: var(--yellow); font-size: 10px; font-weight: bold; padding: 3px 12px; border-radius: 4px 4px 0 0; border: 1px solid var(--yellow); border-bottom: none; white-space: nowrap;}
-        .folder-title { color: var(--yellow); text-align: center; margin-top: 8px; font-size: 11px; font-weight: 500; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .folder-ep { color: var(--light-gray); text-align: center; font-size: 10px; margin-top: 4px; }
-
-        /* --- ANIMATED LOGIN PAGE (RESTORED) --- */
-        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.alphacoders.com/132/1322502.jpeg'); background-size: cover; background-position: center; position: relative; padding: 20px;}
-        .login-container { position: relative; width: 850px; max-width: 100%; height: 450px; background: var(--dark-gray); border: 1px solid var(--yellow); border-radius: 10px; box-shadow: 0 0 20px rgba(255, 193, 7, 0.2); overflow: hidden; }
-        .form-box { position: absolute; top: 0; width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 40px; transition: 0.6s ease-in-out; z-index: 1; }
-        .login-box { left: 0; } .register-box { right: -50%; opacity: 0; pointer-events: none; }
-        .login-container.active .login-box { left: -50%; opacity: 0; pointer-events: none; }
-        .login-container.active .register-box { right: 0; opacity: 1; pointer-events: auto; }
-        .animation { transform: translateX(50px); opacity: 0; filter: blur(10px); transition: 0.7s ease; transition-delay: calc(0.1s * var(--li)); }
-        .login-container:not(.active) .login-box .animation, .login-container.active .register-box .animation { transform: translateX(0); opacity: 1; filter: blur(0); }
-        .login-title { font-family: 'Orbitron', sans-serif; color: var(--yellow); font-size: 1.8rem; margin-bottom: 20px; }
-        .input-box { position: relative; margin: 15px 0; border-bottom: 2px solid #444; }
-        .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; outline: none; color: #fff; font-size: 1rem; }
-        .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-        .toggle-text { color: #ccc; margin-top: 15px; text-align: center; font-size: 0.9rem; }
-        .toggle-text a { color: var(--yellow); font-weight: bold; cursor: pointer; text-decoration: none;}
-        .toggle-panel { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; background: rgba(255, 193, 7, 0.1); display: flex; align-items: center; justify-content: center; transition: 0.6s ease-in-out; z-index: 2; border-left: 2px solid var(--yellow); }
-        .login-container.active .toggle-panel { left: 0; border-left: none; border-right: 2px solid var(--yellow); }
-        @media (max-width: 768px) { .toggle-panel { display: none; } .form-box { width: 100%; padding: 25px; } .register-box { right: -100%; } .login-container.active .login-box { left: -100%; } .login-container { height: 500px; } }
-
-        /* --- LUXURY PROFILE --- */
-        .profile-container { width: 100%; }
-        .prof-cover-area { height: 150px; width: 100%; background: url('https://w.wallhaven.cc/full/ex/wallhaven-ex9gwo.jpg'); background-size: cover; background-position: center; position: relative; }
-        .prof-avatar-section { margin-top: -50px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
-        .avatar-circle-glow { width: 100px; height: 100px; border-radius: 50%; padding: 3px; background: #000; border: 2px solid var(--yellow); }
-        .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .prof-username { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: var(--yellow); margin-top: 10px; }
-        .prof-rank-pill { background: #222; padding: 4px 15px; border-radius: 20px; font-size: 10px; color: #fff; margin-top: 5px; border: 1px solid var(--yellow); }
-        .prof-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px; }
-        .stat-box-modern { background: var(--dark-gray); border-radius: 6px; padding: 12px 5px; text-align: center; border: 1px solid #333; }
-        .stat-val-m { font-family: 'Orbitron'; font-size: 18px; font-weight: 700; color: var(--yellow); }
-        .stat-lbl-m { font-size: 10px; color: #aaa; margin-top: 4px;}
-        .prof-menu-list { padding: 0 20px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
-        .menu-btn-modern { background: var(--dark-gray); border: 1px solid #333; border-radius: 6px; padding: 15px; display: flex; align-items: center; gap: 15px; color: #fff; cursor: pointer; }
-        .menu-btn-modern i { color: var(--yellow); font-size: 18px; }
-        .premium-card-gold { margin: 0 20px 20px 20px; padding: 20px; border-radius: 8px; background: #111; border: 2px dashed var(--yellow); text-align: center; }
-        .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 10px; color: #fff; margin: 10px 0; outline:none;}
-        .prem-act-btn { width: 100%; background: var(--yellow); color: #000; font-weight: bold; padding: 10px; border: none; cursor: pointer; font-family:'Orbitron';}
-
-        /* --- PRE-ROLL AD OVERLAY (DYNAMIC IMAGE) --- */
-        #mid-roll-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
-        .ad-timer-val { font-size: 40px; color: var(--yellow); font-weight: 900; }
-
-        /* --- SHORTS VIEW (RESTORED COMPLETELY) --- */
-        #shorts-view { position: fixed; inset: 0; background: #000; z-index: 2000; padding: 0; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100dvh; display: none; }
-        .short-item { width: 100%; height: 100dvh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #050505;}
-        .short-item video { width: 100%; height: 100%; object-fit: cover; }
-        .short-overlay { position: absolute; bottom: 80px; right: 15px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
-        .short-btn { color: #fff; text-align: center; font-size: 26px; cursor: pointer; filter: drop-shadow(0 2px 5px #000); }
-        .short-btn.liked { color: var(--yellow); }
-        .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
-
-        /* --- PLAYER VIEW (RICH TEXT RESTORED) --- */
-        #player-view { display: none; position: fixed; inset: 0; background: var(--primary-bg); z-index: 5000; overflow-y: auto; }
-        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
-        video { width: 100%; height: 100%; }
         
-        .player-meta-container { padding: 15px; }
-        .meta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .meta-title { font-size: 18px; font-weight: 700; color: var(--yellow); margin-bottom: 5px; font-family: 'Outfit', sans-serif; line-height: 1.2; }
+        .card-vip-badge { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: var(--yellow); font-size: 10px; font-weight: bold; padding: 2px 10px; border-radius: 4px 4px 0 0; border: 1px solid var(--yellow); border-bottom: none; }
         
-        /* RESTORED RICH INFO */
-        .meta-info { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .rating-star { color: #ffb400; font-size: 11px; }
+        .folder-title { color: var(--yellow); text-align: center; margin-top: 6px; font-size: 11px; font-weight: 500; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .folder-ep { color: var(--light-gray); text-align: center; font-size: 10px; margin-top: 3px; }
 
-        .action-buttons-row { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; scrollbar-width: none; }
-        .act-btn { background: #333; color: #ddd; border: none; padding: 10px 20px; border-radius: 4px; font-size: 13px; font-family: 'Outfit'; font-weight: 500; display: flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer; }
-        .act-btn.liked { color: var(--yellow); border: 1px solid var(--yellow); background: rgba(255, 193, 7, 0.1); }
-        
-        .res-title { font-size: 16px; color: #fff; margin-bottom: 15px; font-weight: bold; font-family: 'Outfit'; display: flex; align-items: baseline; gap: 10px; }
-        .dropdown-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        select.custom-drop { background: #222; color: #fff; border: 1px solid #444; padding: 10px; border-radius: 4px; font-size: 13px; outline: none; }
-        
-        .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
-        .ep-pill { min-width: 55px; height: 45px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; position: relative;}
-        .ep-pill.active { background: var(--yellow); color: #000; }
-        .ep-vip-badge-small { position: absolute; top: -5px; right: -5px; background: #ff0000; color: #fff; font-size: 8px; padding: 2px 4px; border-radius: 2px; }
+        .section-header { padding: 0 10px; margin-bottom: 10px; display: flex; justify-content: space-between; margin-top: 15px;}
+        .sec-title-text { font-size: 15px; font-weight: bold; color: #fff; border-left: 3px solid var(--yellow); padding-left: 8px; font-family: 'Orbitron'; }
 
-        .tab-header { display: flex; gap: 25px; border-bottom: 2px solid #333; margin-bottom: 20px; }
-        .tab-item { padding-bottom: 10px; font-size: 15px; color: #888; font-weight: bold; cursor: pointer; }
-        .tab-item.active { color: var(--yellow); border-bottom: 2px solid var(--yellow); margin-bottom: -2px; }
-        
-        /* RESTORED REAL-TIME COMMENTS UI */
-        .comment-input-container { display: flex; gap: 10px; align-items: center; background: #111; padding: 8px 12px; border: 1px solid var(--yellow); margin-bottom: 25px; border-radius: 4px;}
-        .comment-input-container input { flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 13px; outline:none; }
-        .comment-send-btn { background: var(--yellow); border: none; width: 40px; height: 40px; color: #000; border-radius: 4px; cursor: pointer; }
-        
-        .comment-box-unique { display: flex; gap: 12px; margin-bottom: 15px; background: var(--dark-gray); padding: 12px; border-radius: 4px; border-left: 3px solid var(--yellow); }
-        .c-avatar-unique { width: 35px; height: 35px; border-radius: 50%; background: #333; border: 1px solid var(--yellow); color: var(--yellow); display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-        .c-user-name { font-size: 12px; color: var(--yellow); font-family: 'Orbitron'; font-weight: bold; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .c-text-content { font-size: 13px; color: #ddd; line-height: 1.4; word-break: break-word; }
+        /* BANNER SLIDER */
+        #banner-slider { width: 95%; height: 180px; margin: 10px auto; position: relative; overflow: hidden; border: 1px solid var(--yellow); border-radius: 4px;}
+        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; background-size: cover; background-position: center; }
+        .slide.active { opacity: 1; z-index: 2; }
+        .banner-watch-btn { position: absolute; bottom: 10px; left: 10px; background: var(--yellow); color: #000; padding: 6px 15px; font-weight: bold; font-size: 12px; border-radius: 2px; font-family: 'Orbitron'; }
 
-        /* ADS CONTAINER */
-        .ad-container-center { display: flex; justify-content: center; align-items: center; margin: 15px auto; overflow: hidden; width: 100%; min-height: 50px; background: #111; max-width: 320px; }
-        
-        /* BOTTOM NAV */
+        /* NAVIGATION BOTTOM */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid var(--yellow); z-index: 1000; }
-        nav i { font-size: 20px; color: #888; padding: 10px; cursor: pointer; }
+        nav i { font-size: 22px; color: #666; padding: 5px 20px; cursor: pointer; }
         nav i.active { color: var(--yellow); }
 
-        #history-view { display:none; position:fixed; inset:0; background: var(--primary-bg); z-index:6000; overflow-y:auto; padding: 20px; }
-        .history-item { background: var(--dark-gray); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--yellow); border-radius: 4px;}
+        /* ADS CONTAINER */
+        .ad-container-center { display: flex; justify-content: center; align-items: center; margin: 10px auto; overflow: hidden; width: 100%; max-width: 320px; min-height: 50px; background: #111; border:1px dashed #333; }
+
+        /* PRE-ROLL AD OVERLAY */
+        #mid-roll-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
+        .ad-timer-val { font-size: 45px; color: var(--yellow); font-weight: 900; margin-top:5px; font-family: 'Orbitron';}
+
+        /* PLAYER VIEW */
+        #player-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
+        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
+        video { width: 100%; height: 100%; }
+        .player-meta-container { padding: 15px; }
+        .meta-title { font-size: 18px; font-weight: 700; color: var(--yellow); line-height: 1.3; font-family: 'Outfit'; margin-bottom: 5px;}
+        .meta-info { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .action-buttons-row { display: flex; gap: 10px; margin: 15px 0; }
+        .act-btn { background: #333; color: #fff; border: none; padding: 8px 15px; font-size: 12px; font-weight: bold; border-radius: 2px; display: flex; align-items: center; gap: 6px; cursor: pointer;}
+        .act-btn.liked { color: var(--yellow); border: 1px solid var(--yellow); background: rgba(255, 193, 7, 0.1); }
+        .dropdown-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        select.custom-drop { background: #222; color: #fff; border: 1px solid #444; padding: 10px; flex: 1; font-size: 13px; outline: none; }
+        .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
+        .ep-pill { min-width: 50px; height: 40px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: none; border-radius: 2px; cursor: pointer; position: relative;}
+        .ep-pill.active { background: var(--yellow); color: #000; }
+        .ep-vip-badge-small { position: absolute; top: -5px; right: -5px; background: #ff0000; color: #fff; font-size: 8px; padding: 2px 4px; border-radius: 2px; }
+        
+        .tab-header { display: flex; gap: 25px; border-bottom: 2px solid #333; margin-bottom: 15px; }
+        .tab-item { padding-bottom: 10px; font-size: 15px; color: #888; font-weight: bold; cursor: pointer; }
+        .tab-item.active { color: var(--yellow); border-bottom: 2px solid var(--yellow); margin-bottom: -2px; }
+
+        .app-view { display: none; }
+        .comment-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
+        .comment-input-container input { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #fff; outline: none; }
+        .comment-send-btn { background: var(--yellow); border: none; padding: 0 15px; font-weight: bold; color: #000; cursor: pointer; }
+        .comment-box-unique { display: flex; gap: 12px; margin-bottom: 15px; background: var(--dark-gray); padding: 12px; border-radius: 4px; border-left: 3px solid var(--yellow); }
+
+        /* --- LOGIN PAGE --- */
+        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.alphacoders.com/132/1322502.jpeg'); background-size: cover; background-position: center; padding: 20px;}
+        .login-container { position: relative; width: 100%; max-width: 400px; background: rgba(30,30,30,0.9); border: 1px solid var(--yellow); border-radius: 8px; box-shadow: 0 0 20px rgba(255, 193, 7, 0.2); padding: 30px; }
+        .login-title { font-family: 'Orbitron', sans-serif; color: var(--yellow); font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
+        .input-box { margin: 15px 0; border-bottom: 2px solid #444; }
+        .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
+        .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
+
+        /* --- BEAUTIFUL LUXURY PROFILE DESIGN --- */
+        .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
+        .prof-cover-area { height: 160px; width: 100%; background: url('https://w.wallhaven.cc/full/ex/wallhaven-ex9gwo.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
+        .prof-avatar-section { margin-top: -55px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+        .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; border: 2px solid var(--yellow); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .prof-username { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: var(--yellow); margin-top: 12px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);}
+        .prof-rank-pill { background: #222; padding: 4px 15px; border-radius: 20px; font-size: 11px; color: #fff; margin-top: 5px; border: 1px solid var(--yellow); font-family: 'Orbitron'; font-weight: bold;}
+        
+        .prof-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 25px 15px 15px 15px; }
+        .stat-box-modern { background: var(--dark-gray); border-radius: 6px; padding: 15px 5px; text-align: center; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.5);}
+        .stat-val-m { font-family: 'Orbitron'; font-size: 20px; font-weight: 700; color: var(--yellow); }
+        .stat-lbl-m { font-size: 11px; color: #aaa; margin-top: 4px; font-weight: bold; text-transform: uppercase;}
+        
+        .prof-menu-list { padding: 0 15px 20px 15px; display: flex; flex-direction: column; gap: 10px; }
+        .menu-btn-modern { background: var(--dark-gray); border: 1px solid #333; border-radius: 6px; padding: 15px; display: flex; align-items: center; gap: 15px; color: #fff; cursor: pointer; font-weight: 500; font-size: 14px;}
+        .menu-btn-modern i { color: var(--yellow); font-size: 18px; width: 25px; text-align: center;}
+        
+        .premium-card-gold { margin: 0 15px 20px 15px; padding: 20px; border-radius: 8px; background: #111; border: 1px dashed var(--yellow); text-align: center; }
+        .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; margin: 10px 0; outline:none; border-radius: 4px; text-align: center; letter-spacing: 2px;}
+        .prem-act-btn { width: 100%; background: var(--yellow); color: #000; font-weight: bold; padding: 12px; border: none; cursor: pointer; font-family:'Orbitron'; border-radius: 4px; font-size: 14px;}
     </style>
 </head>
 <body>
 
-    <!-- 2. Adsterra Popunder Script (Background Click Ad) -->
+    <!-- Adsterra Popunder Script -->
     <script type='text/javascript' src='https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js'></script>
 
-    <!-- 3. PRE-ROLL AD OVERLAY (DYNAMIC IMAGE) -->
-    <div id="mid-roll-overlay" style="display:none;">
-        <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE -->
+    <div id="mid-roll-overlay">
+        <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family: 'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
         
-        <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
+        <!-- SMARTLINK CLICK AREA -->
+        <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden;">
+             <!-- DYNAMIC AD IMAGE -->
              <img id="dynamic-ad-image" src="" style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
              <div style="position:absolute; bottom:8px; left:8px; right:8px; display:flex; justify-content:space-between; align-items:center;">
                  <div style="background:var(--yellow); color:#000; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">Ad · 0:05</div>
@@ -224,10 +182,10 @@
 
         <div id="ad-timer-container" style="text-align:center; margin-top:20px;">
             <div style="color:#aaa; font-size:14px;">Starting video in</div>
-            <div class="ad-timer-val" id="ad-timer-val" style="font-family:'Orbitron';">5</div>
+            <div class="ad-timer-val" id="ad-timer-val">5</div>
         </div>
         
-        <button id="skip-ad-btn" onclick="skipAdBtnClicked()" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; cursor:pointer; font-family:'Orbitron';">
+        <button id="skip-ad-btn" onclick="skipAdBtnClicked()" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; font-family:'Orbitron'; cursor:pointer;">
             SKIP AD <i class="fas fa-step-forward"></i>
         </button>
     </div>
@@ -252,13 +210,14 @@
 
         <!-- CATEGORIES (CARTOON RESTORED) -->
         <div class="category-tabs">
-            <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">RECENT RELEASE</div>
-            <div class="cat-tab" onclick="filterHomeCategory('anime', this)">ANIME SERIES</div>
-            <div class="cat-tab" onclick="filterHomeCategory('cartoon', this)">CARTOONS</div>
-            <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIES</div>
+            <div style="font-weight:900; color:#111; margin-right:5px; font-family:'Orbitron';">MENU</div>
+            <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">LATEST</div>
+            <div class="cat-tab" onclick="filterHomeCategory('anime', this)">ANIME</div>
+            <div class="cat-tab" onclick="filterHomeCategory('cartoon', this)">CARTOON</div>
+            <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIE</div>
         </div>
 
-        <!-- 4. BANNER AD 1 (TOP) -->
+        <!-- BANNER AD 1 (TOP) -->
         <div id="ad-banner-top" class="ad-container-center">
             <script type="text/javascript">
                 atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
@@ -266,7 +225,7 @@
             </script>
         </div>
         
-        <!-- GRIDS -->
+        <!-- Grids (Will hold 3 items per row) -->
         <div id="section-trending" style="display:block;">
             <div class="section-header"><div class="sec-title-text">TRENDING NOW</div></div>
             <div id="trending-grid" class="grid-container"></div>
@@ -275,51 +234,36 @@
             <div class="section-header"><div class="sec-title-text">ANIME SERIES</div></div>
             <div id="anime-grid" class="grid-container"></div>
         </div>
-        <!-- CARTOON RESTORED -->
+        <!-- CARTOON SECTION -->
         <div id="section-cartoon" style="display:none;">
             <div class="section-header"><div class="sec-title-text">CARTOONS</div></div>
             <div id="cartoon-grid" class="grid-container"></div>
         </div>
         <div id="section-movie" style="display:none;">
-            <div class="section-header"><div class="sec-title-text">MOVIES</div></div>
+            <div class="section-header"><div class="sec-title-text">ANIME MOVIES</div></div>
             <div id="movie-grid" class="grid-container"></div>
         </div>
     </div>
 
-    <!-- PROFILE VIEW (ANIMATED LOGIN RESTORED) -->
+    <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="padding-top:0;">
         
+        <!-- Animated Login -->
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
                 <div class="login-container">
-                    <div class="form-box login-box">
-                        <form onsubmit="event.preventDefault(); handleAuth('login');">
-                            <h1 class="login-title animation" style="--li:0">Welcome Back</h1>
-                            <div class="input-box animation" style="--li:1"><input type="email" id="email-in" placeholder="Email" required></div>
-                            <div class="input-box animation" style="--li:2"><input type="password" id="pass-in" placeholder="Password" required></div>
-                            <button class="btn-neon animation" style="--li:3">LOGIN</button>
-                            <p class="toggle-text animation" style="--li:4">No account? <a class="register-link">Sign up</a></p>
-                        </form>
-                    </div>
-                    <div class="form-box register-box">
-                        <form onsubmit="event.preventDefault(); handleAuth('reg');">
-                            <h1 class="login-title animation" style="--li:0">JOIN SQUAD</h1>
-                            <div class="input-box animation" style="--li:1"><input type="email" id="remail-in" placeholder="Email" required></div>
-                            <div class="input-box animation" style="--li:2"><input type="password" id="rpass-in" placeholder="Password" required></div>
-                            <button class="btn-neon animation" style="--li:3">REGISTER</button>
-                            <p class="toggle-text animation" style="--li:4">Member? <a class="login-link">Login</a></p>
-                        </form>
-                    </div>
-                    <div class="toggle-panel">
-                        <div style="text-align:center; color:#fff;">
-                            <h2 style="font-family:'Orbitron'; font-size:1.8rem; margin-bottom:10px;">ANIMAX TV</h2>
-                            <p style="font-size:0.9rem; opacity:0.8;">The ultimate anime destination.</p>
-                        </div>
-                    </div>
+                    <form onsubmit="event.preventDefault(); handleAuth('login');">
+                        <h1 class="login-title">Welcome Back</h1>
+                        <div class="input-box"><input type="email" id="email-in" placeholder="Email" required></div>
+                        <div class="input-box"><input type="password" id="pass-in" placeholder="Password" required></div>
+                        <button class="btn-neon">LOGIN</button>
+                        <p class="toggle-text">No account? <a onclick="handleAuth('reg')">Sign up</a></p>
+                    </form>
                 </div>
             </div>
         </div>
 
+        <!-- Beautiful Profile -->
         <div id="user-profile-content" style="display:none;">
             <div class="profile-container">
                 <div class="prof-cover-area">
@@ -343,12 +287,85 @@
                     <h3 style="color:var(--yellow); font-family:'Orbitron'; margin-bottom:10px;"><i class="fas fa-crown"></i> VIP STATUS</h3>
                     <input type="text" id="prem-code" class="prem-inp" placeholder="PASTE KEY HERE">
                     <button class="prem-act-btn" onclick="redeemCode()">ACTIVATE VIP</button>
+                    <!-- ADMIN LINK RESTORED -->
+                    <p style="font-size:11px; margin-top:15px; color:#aaa; cursor:pointer;" onclick="buyPremium()">Don't have a key? <u style="color:var(--yellow);">Get from Admin</u></p>
+                </div>
+                
+                <!-- DEVELOPER CREDIT -->
+                <div style="text-align: center; color: #666; font-size: 11px; margin-top: 30px; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
+                    DEVELOPER BY RONI VAI
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SHORTS VIEW (RESTORED FULLY) -->
+    <!-- PLAYER VIEW (RICH TEXT RESTORED) -->
+    <div id="player-view">
+        <div class="video-wrapper">
+            <div style="position:absolute; top:10px; left:10px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
+            <video id="main-video" controls playsinline controlsList="nodownload" oncontextmenu="return false;"></video>
+        </div>
+        
+        <div class="player-meta-container">
+            <div class="meta-title" id="player-title">Loading...</div>
+            
+            <!-- BEAUTIFUL TEXT & ICONS RESTORED -->
+            <div class="meta-info">
+                <i class="fas fa-tv" style="color:var(--yellow);"></i>
+                <span><i class="fas fa-star rating-star"></i> 8.5</span>
+                <span style="color:#888;">| <span id="content-type-badge">Anime</span></span>
+                <span style="margin-left:10px;"><i class="fas fa-eye" style="color:#666;"></i> <span id="view-count">0</span></span>
+                <span style="margin-left:10px;"><i class="fas fa-heart" style="color:var(--yellow);"></i> <span id="like-count">0</span></span>
+            </div>
+            
+            <div class="action-buttons-row">
+                <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
+                <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
+                <button class="act-btn"><i class="fas fa-download"></i> Download</button>
+            </div>
+            
+            <div class="res-title">Resources <span style="font-size:10px; color:#888; font-weight:normal; font-family:'Roboto';">Uploaded by Animax ⚡</span></div>
+            
+            <div class="dropdown-row">
+                <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop"></select>
+                <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="flex:none; width:100px;">
+                    <option value="original">SUB</option>
+                    <option value="hindi">HINDI</option>
+                    <option value="english">DUB</option>
+                </select>
+            </div>
+            <div class="ep-pill-row" id="episode-pill-container"></div>
+            
+            <div class="tab-header">
+                <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">Related</div>
+                <div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div>
+            </div>
+
+            <div id="tab-content-foryou">
+                <!-- BANNER AD 2 (PLAYER BOTTOM) -->
+                <div id="ad-banner-player" class="ad-container-center" style="margin-top:5px; margin-bottom:15px; max-width:468px;">
+                    <script type="text/javascript">
+                        atOptions = { 'key' : '3c0655cdf72da98fdd68dcdd704f9766', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
+                        document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></scr' + 'ipt>');
+                    </script>
+                </div>
+                <!-- FOR YOU VIDEOS GRID RESTORED -->
+                <div class="grid-container" id="dynamic-rec-grid"></div>
+            </div>
+
+            <div id="tab-content-comments" style="display:none;">
+                <div class="comment-input-container">
+                    <input type="text" id="comment-input" placeholder="Add a public comment...">
+                    <button class="comment-send-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <!-- REAL-TIME COMMENTS LIST -->
+                <div id="comments-list"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SHORTS VIEW (RESTORED COMPLETELY) -->
     <div id="shorts-view">
         <div style="position:fixed; top:20px; left:20px; z-index:2001; color:#fff;" onclick="hideShorts()"><i class="fas fa-arrow-left" style="background:rgba(0,0,0,0.5); padding:12px; border-radius:50%; cursor:pointer;"></i></div>
         <div id="shorts-container"></div>
@@ -359,86 +376,16 @@
         </div>
     </div>
 
-    <!-- PLAYER VIEW (RICH TEXT RESTORED) -->
-    <div id="player-view">
-        <div class="video-wrapper">
-            <div style="position:absolute; top:15px; left:15px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="font-size:18px; color:#fff; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
-            <video id="main-video" controls playsinline controlsList="nodownload" oncontextmenu="return false;"></video>
-        </div>
-        <div class="player-meta-container">
-            <div class="meta-header">
-                <div>
-                    <div class="meta-title" id="player-title">Episode Title</div>
-                    <!-- RESTORED NICE TEXTS -->
-                    <div class="meta-info">
-                        <i class="fas fa-tv"></i>
-                        <span><i class="fas fa-star rating-star"></i> 8.5</span>
-                        <span>| <span id="content-type-badge">Anime</span></span>
-                        <span style="margin-left:10px;"><i class="fas fa-eye"></i> <span id="view-count">0</span></span>
-                        <span style="margin-left:10px;"><i class="fas fa-heart" style="color:var(--yellow);"></i> <span id="like-count">0</span></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="action-buttons-row">
-                <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Add to list</button>
-                <button class="act-btn" onclick="shareContent()"><i class="fas fa-share-alt"></i> Share</button>
-                <button class="act-btn"><i class="fas fa-download"></i> Download</button>
-            </div>
-            
-            <div class="resources-section">
-                <div class="res-title">Resources <span style="font-size:11px; color:#888; font-weight:400; font-family:'Roboto';">Uploaded by Animax ⚡</span></div>
-                <div class="dropdown-row">
-                    <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop"></select>
-                    <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop" style="flex:none; width:110px;">
-                        <option value="original">SUB</option>
-                        <option value="hindi">HINDI</option>
-                        <option value="english">DUB</option>
-                    </select>
-                </div>
-                <div class="ep-pill-row" id="episode-pill-container"></div>
-            </div>
-            
-            <div class="tab-header">
-                <div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">Related</div>
-                <div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div>
-            </div>
-            
-            <div id="tab-content-foryou">
-                <!-- 5. BANNER AD 2 -->
-                <div id="ad-banner-player" class="ad-container-center" style="max-width:468px;">
-                    <script type="text/javascript">
-                        atOptions = { 'key' : '3c0655cdf72da98fdd68dcdd704f9766', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
-                        document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></scr' + 'ipt>');
-                    </script>
-                </div>
-                
-                <!-- RESTORED FOR YOU VIDEOS -->
-                <div class="grid-container" id="dynamic-rec-grid" style="margin-top:15px;"></div>
-            </div>
-            
-            <div id="tab-content-comments" style="display: none;">
-                <div class="comment-section-wrapper">
-                    <div class="comment-input-container">
-                        <input type="text" id="comment-input" placeholder="Write your thoughts...">
-                        <button class="comment-send-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <!-- REAL-TIME COMMENTS LIST RESTORED -->
-                    <div id="comments-list"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- WATCH HISTORY VIEW -->
-    <div id="history-view">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--yellow); padding-bottom:10px; margin-bottom:20px;">
-            <h2 style="color:var(--yellow); font-family:'Orbitron';">WATCH HISTORY</h2>
-            <i class="fas fa-times" style="font-size:24px; color:#fff; cursor:pointer;" onclick="closeHistory()"></i>
+    <div id="history-view" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--primary-bg); z-index:6000; overflow-y:auto; padding:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--yellow); padding-bottom:10px; margin-bottom:15px;">
+            <h3 style="color:var(--yellow); font-family:'Orbitron';">WATCH HISTORY</h3>
+            <i class="fas fa-times" style="font-size:20px; color:#fff; cursor:pointer;" onclick="closeHistory()"></i>
         </div>
         <div id="history-list-container"></div>
     </div>
 
+    <!-- BOTTOM NAVIGATION -->
     <nav id="main-nav">
         <i class="fas fa-home active" onclick="switchTab('home')"></i>
         <i class="fas fa-play-circle" onclick="showShorts()"></i>
@@ -446,15 +393,6 @@
     </nav>
 
     <script>
-        // LOGIN ANIMATION LOGIC
-        const loginContainer = document.querySelector('.login-container');
-        const registerLink = document.querySelector('.register-link');
-        const loginLink = document.querySelector('.login-link');
-        if(registerLink && loginLink && loginContainer) {
-            registerLink.onclick = () => { loginContainer.classList.add('active'); };
-            loginLink.onclick = () => { loginContainer.classList.remove('active'); };
-        }
-
         // TABS LOGIC
         function filterHomeCategory(cat, element) {
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
@@ -488,16 +426,8 @@
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
         auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('guest-login-content').style.display = 'none';
-                document.getElementById('user-profile-content').style.display = 'block';
-                checkPremium(user.uid);
-            } else {
-                currentUser = null; isPremium = false;
-                document.getElementById('guest-login-content').style.display = 'block';
-                document.getElementById('user-profile-content').style.display = 'none';
-            }
+            if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
+            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; }
             loadContent();
         });
 
@@ -525,7 +455,7 @@
         }
 
         function switchTab(t) { 
-            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); hideShorts(); closePlayer(); closeHistory();
+            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts();
             if(t==='home') document.getElementById('main-app').style.display='block';
             if(t==='profile') document.getElementById('profile-view').style.display='block';
             document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
@@ -552,7 +482,7 @@
             const grid = document.getElementById('trending-grid');
             if(grid) {
                 grid.innerHTML = trendingAnimeHTML + trendingMoviesHTML + trendingCartoonsHTML;
-                if(grid.innerHTML.trim() === "") grid.innerHTML = "<p style='color:#666; font-size:14px; grid-column:1/-1;'>No items right now.</p>";
+                if(grid.innerHTML.trim() === "") grid.innerHTML = "<p style='color:#666; font-size:12px; grid-column:1/-1; text-align:center;'>No items right now.</p>";
             }
         }
 
@@ -589,7 +519,7 @@
                 updateTrendingGrid();
             });
 
-            // RESTORED CARTOON FETCH
+            // CARTOON RESTORED
             db.ref('cartoons').on('value', snap => { 
                 const grid = document.getElementById('cartoon-grid'); grid.innerHTML = ""; trendingCartoonsHTML = ""; window.cartoonData=[]; 
                 snap.forEach(c=>{ 
@@ -621,7 +551,7 @@
         function renderEpisodeButtons(f) { 
             const c = document.getElementById('episode-pill-container'); c.innerHTML=""; 
             window.animeData[f].forEach((ep,i)=>{ 
-                let b=document.createElement('button'); b.className='ep-pill'; b.innerText = (i + 1).toString(); b.id=`ep-btn-${i}`; 
+                let b=document.createElement('button'); b.className='ep-pill'; b.innerText = (i + 1).toString().padStart(2, '0'); b.id=`ep-btn-${i}`; 
                 if(ep.type === 'premium') { b.innerHTML += '<div class="ep-vip-badge-small">VIP</div>'; }
                 b.onclick=()=>{let eid=ep.id?ep.id:ep.title.replace(/[^a-zA-Z0-9]/g,'_'); playVideo(ep.title,ep.url,eid,ep.type==='premium',i);}; c.appendChild(b); 
             }); 
@@ -629,7 +559,7 @@
         
         function switchSeason(n) { openFolder(n); }
 
-        // --- DYNAMIC AD IMAGE SYSTEM ---
+        // --- DYNAMIC AD ARRAY ---
         const adMediaArray = [
             "https://media.giphy.com/media/3o7TKSz1HGEkXE0ZzO/giphy.gif", // Game
             "https://media.giphy.com/media/l41YkxvU8c7J7Bba0/giphy.gif", // Casino
@@ -655,9 +585,10 @@
             v.src = finalUrl; v.dataset.currentId = id; v.load(); 
             document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
 
-            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
+            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.log("Press play manually.")); };
             
             if(!isPremium) {
+                // SET RANDOM AD IMAGE
                 const randomAdImage = adMediaArray[Math.floor(Math.random() * adMediaArray.length)];
                 document.getElementById('dynamic-ad-image').src = randomAdImage;
 
@@ -670,7 +601,11 @@
                 window.currentAdInterval = setInterval(() => {
                     timeLeft--;
                     if(timeLeft > 0) { document.getElementById('ad-timer-val').innerText = timeLeft; } 
-                    else { clearInterval(window.currentAdInterval); document.getElementById('ad-timer-container').style.display = 'none'; document.getElementById('skip-ad-btn').style.display = 'block'; }
+                    else {
+                        clearInterval(window.currentAdInterval);
+                        document.getElementById('ad-timer-container').style.display = 'none';
+                        document.getElementById('skip-ad-btn').style.display = 'block'; 
+                    }
                 }, 1000);
             } else { window.startVideoPlayback(); }
 
@@ -692,7 +627,7 @@
             currentLikesCountRef = db.ref(`likes/${id}/count`); currentLikesCountRef.on('value', s => document.getElementById('like-count').innerText=s.val()||0);
             currentViewsRef=db.ref(`views/${id}`); currentViewsRef.on('value', s=>document.getElementById('view-count').innerText=s.val()||0);
 
-            if(currentUser) { currentUserLikeRef=db.ref(`likes/${id}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Add to list`; } }); }
+            if(currentUser) { currentUserLikeRef=db.ref(`likes/${id}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${id}`); 
             currentCommentsRef.on('value', s => {
@@ -779,6 +714,25 @@
         function closeShortComments() { document.getElementById('shorts-comments-modal').style.display = 'none'; if(currentShortsCommentsRef) { currentShortsCommentsRef.off(); currentShortsCommentsRef = null; } }
         function postShortComment() { if(!currentUser){alert("Login required");return;} if(!activeShortId)return; const t=document.getElementById('short-comment-in').value; if(!t.trim())return; db.ref(`shorts_comments/${activeShortId}`).push({user:currentUser.email.split('@')[0], text:t, time:Date.now()}); document.getElementById('short-comment-in').value=""; }
 
+        // VIP ADMIN LINK JS RESTORED
+        function redeemCode() { 
+            if(!currentUser) return; 
+            const c = document.getElementById('prem-code').value.trim(); 
+            if(!c) return alert("Enter Code!");
+            db.ref(`premium_codes/${c}`).once('value', s=>{ 
+                if(s.exists()&&s.val().status==='unused'){ 
+                    const d=s.val().days||30; 
+                    db.ref(`premium_codes/${c}`).update({status:'used',usedBy:currentUser.email}); 
+                    db.ref(`users/${currentUser.uid}`).update({premiumExpiry:Date.now()+(d*24*60*60*1000)}); 
+                    alert("VIP ACTIVATED!"); location.reload(); 
+                } else alert("Invalid Code"); 
+            }); 
+        }
+        function buyPremium() { 
+            if(!currentUser){alert("Login First");return;} 
+            window.open(`https://t.me/aminezone09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); 
+        }
+
         // WATCH HISTORY
         function openHistory() { 
             if(!currentUser) { alert("Please login first to view history."); return; }
@@ -794,25 +748,7 @@
             }); 
         }
         function closeHistory() { document.getElementById('history-view').style.display='none'; }
-        function redeemCode() { alert("Contact admin on Telegram for VIP"); }
 
-        // Consumet API Integration
-        const API_BASE_URL = "https://my-consumet-api-nine.vercel.app/anime/gogoanime/recent-episodes";
-        async function fetchLatestAnime() {
-            try {
-                const response = await fetch(API_BASE_URL);
-                const data = await response.json();
-                const animeGrid = document.getElementById('anime-grid'); 
-
-                if (data.results && data.results.length > 0 && animeGrid) {
-                    data.results.forEach(anime => {
-                        const animeCard = `<div class="folder-card" onclick="window.location.href='player.html?id=${anime.id}'"><div class="img-wrapper"><img src="${anime.image}" alt="${anime.title}"><div class="card-vip-badge">SUB</div></div><div class="folder-title">${anime.title}</div><div class="folder-ep">Episode ${anime.episodeNumber}</div></div>`;
-                        animeGrid.innerHTML += animeCard;
-                    });
-                }
-            } catch (error) { console.error("API Error:", error); }
-        }
-        document.addEventListener('DOMContentLoaded', fetchLatestAnime);
     </script>
 </body>
 </html>
