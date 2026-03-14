@@ -110,13 +110,12 @@
         .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
         .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        /* --- PROFILE DESIGN (FIXED HOPWEB IMAGES - GOKU/NARUTO/LUFFY BANNER) --- */
+        /* --- PROFILE DESIGN (USER PROVIDED GITHUB LINKS) --- */
         .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
-        /* Ultra Reliable Anime Epic Crossover Banner (PostImage CDN - Never blocks CORS) */
-        .prof-cover-area { height: 160px; width: 100%; background: url('https://i.postimg.cc/D0Z1fPnM/epic-anime-crossover.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
+        /* Custom User Github Banner */
+        .prof-cover-area { height: 160px; width: 100%; background: url('https://github.com/animaxstudio09/anime-world/releases/download/1/c7a40af73711b79dc78bcfbd86de1e4e.jpg'); background-size: cover; background-position: center; position: relative; border-bottom: 2px solid var(--yellow);}
         .prof-avatar-section { margin-top: -55px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: #000; border: 2px solid var(--yellow); box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        /* Ultra Reliable Anime Avatar (PostImage CDN) */
         .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .prof-username { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: var(--yellow); margin-top: 12px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);}
         .prof-rank-pill { background: #222; padding: 4px 15px; border-radius: 20px; font-size: 11px; color: #fff; margin-top: 5px; border: 1px solid var(--yellow); font-family: 'Orbitron'; font-weight: bold;}
@@ -160,7 +159,7 @@
         .comment-send-btn { background: var(--yellow); border: none; width: 40px; height: 40px; color: #000; border-radius: 4px; cursor: pointer; }
         .comment-box-unique { display: flex; gap: 12px; margin-bottom: 15px; background: var(--dark-gray); padding: 12px; border-radius: 4px; border-left: 3px solid var(--yellow); }
 
-        /* --- SHORTS VIEW (FIXED FOR HOPWEB) --- */
+        /* --- SHORTS VIEW --- */
         #shorts-view { 
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: #000; z-index: 9999; overflow-y: scroll; scroll-snap-type: y mandatory; 
@@ -172,7 +171,7 @@
         .short-btn.liked { color: var(--yellow); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- WATCH HISTORY VIEW (FIXED FOR HOPWEB) --- */
+        /* --- WATCH HISTORY VIEW --- */
         #history-view { 
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: var(--primary-bg); z-index: 8000; overflow-y: auto; padding: 20px; 
@@ -204,7 +203,7 @@
             <div style="color:#aaa; font-size:14px;">Starting video in</div>
             <div class="ad-timer-val" id="ad-timer-val" style="font-family:'Orbitron';">5</div>
         </div>
-        <button id="skip-ad-btn" onclick="skipAdBtnClicked()" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; font-family:'Orbitron'; cursor:pointer;">
+        <button id="skip-ad-btn" onclick="skipAdBtnClicked(event)" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; font-family:'Orbitron'; cursor:pointer;">
             SKIP AD <i class="fas fa-step-forward"></i>
         </button>
     </div>
@@ -270,8 +269,8 @@
                     <div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div>
                 </div>
                 <div class="prof-avatar-section">
-                    <!-- FIXED AVATAR IMAGE URL -->
-                    <div class="avatar-circle-glow"><img src="https://i.postimg.cc/8zM3pXYz/anime-boy-avatar.jpg" id="profile-img" class="avatar-img-real"></div>
+                    <!-- Custom GitHub Profile Pic -->
+                    <div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div>
                     <h2 class="prof-username" id="profile-name">USER</h2>
                     <div class="prof-rank-pill" id="vip-badge">FREE USER</div>
                 </div>
@@ -337,7 +336,6 @@
                         document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/3c0655cdf72da98fdd68dcdd704f9766/invoke.js"></scr' + 'ipt>');
                     </script>
                 </div>
-                <!-- RELATED VIDEOS GRID -->
                 <div class="grid-container" id="dynamic-rec-grid" style="margin-top:15px;"></div>
             </div>
             <div id="tab-content-comments" style="display:none;">
@@ -381,7 +379,6 @@
     </nav>
 
     <script>
-        // HIDE SEARCH ON PROFILE FIX
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts();
             
@@ -395,7 +392,6 @@
             window.scrollTo(0,0);
         }
 
-        // TABS LOGIC
         function filterHomeCategory(cat, element) {
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
             if(element) element.classList.add('active');
@@ -406,7 +402,6 @@
             });
         }
 
-        // SEARCH
         function filterAnime(query) {
             let filter = query.toUpperCase();
             document.querySelectorAll('.folder-card').forEach(card => {
@@ -427,8 +422,8 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
-        // HELPER FUNCTION: Sanitize Video ID for Firebase
-        function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_'); }
+        // CRITICAL BUG FIX FOR FIREBASE VIEWS/LIKES/COMMENTS
+        function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
         auth.onAuthStateChanged(user => {
             if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
@@ -442,9 +437,9 @@
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
                 
-                // Fixed Image loading issue in HopWeb using PostImage CDN
+                // Custom GitHub Avatar Fallback
                 if(d.avatar) document.getElementById('profile-img').src = d.avatar;
-                else document.getElementById('profile-img').src = "https://i.postimg.cc/8zM3pXYz/anime-boy-avatar.jpg";
+                else document.getElementById('profile-img').src = "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
                 
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
@@ -462,7 +457,6 @@
             else { auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) { db.ref(`users/${cred.user.uid}`).update({ rank: snap.val() }); } }); }).catch(err=>alert(err.message)); }
         }
 
-        // BANNERS
         let sliderInterval;
         function initSlider() { clearInterval(sliderInterval); sliderInterval = setInterval(() => changeSlide(1), 5000); }
         function changeSlide(direction) {
@@ -474,7 +468,6 @@
             clearInterval(sliderInterval); sliderInterval = setInterval(() => changeSlide(1), 5000);
         }
 
-        // GRIDS
         let trendingAnimeHTML = ""; let trendingMoviesHTML = ""; let trendingCartoonsHTML = "";
         function updateTrendingGrid() {
             const grid = document.getElementById('trending-grid');
@@ -509,7 +502,7 @@
             db.ref('movies').on('value', snap => { 
                 const grid = document.getElementById('movie-grid'); grid.innerHTML = ""; trendingMoviesHTML = ""; window.movieData=[]; 
                 snap.forEach(c=>{ 
-                    let d=c.val(), sid=d.id||d.title.replace(/[^a-zA-Z0-9]/g,'_'); window.movieData.push(d); 
+                    let d=c.val(), sid=d.id||d.title; window.movieData.push(d); 
                     let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
                     let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div><div class="folder-ep">Movie</div></div>`;
                     let category = (d.category || "movie").toLowerCase(); if(category.includes('movie') || category === '') grid.innerHTML += cardHTML; if(category.includes('trending')) trendingMoviesHTML += cardHTML;
@@ -520,7 +513,7 @@
             db.ref('cartoons').on('value', snap => { 
                 const grid = document.getElementById('cartoon-grid'); grid.innerHTML = ""; trendingCartoonsHTML = ""; window.cartoonData=[]; 
                 snap.forEach(c=>{ 
-                    let d=c.val(), sid=d.id||d.title.replace(/[^a-zA-Z0-9]/g,'_'); window.cartoonData.push(d);
+                    let d=c.val(), sid=d.id||d.title; window.cartoonData.push(d);
                     let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>';
                     let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div><div class="folder-ep">Cartoon</div></div>`;
                     let category = (d.category || "cartoon").toLowerCase(); if(category.includes('cartoon') || category === '') grid.innerHTML += cardHTML; if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
@@ -568,10 +561,10 @@
             
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
-            // FIREBASE SAFE ID FIX
+            // FIREBASE SAFE ID BUG FIXED
             currentSafeVideoId = getSafeId(id || t);
             currentVideoId = id; 
-            currentPlayType = type; // Set current play type for Related Videos filtering
+            currentPlayType = type; 
             
             document.getElementById('player-title').innerText = t;
             
@@ -594,7 +587,7 @@
             v.src = finalUrl; v.dataset.currentId = id; v.load(); 
             document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
 
-            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
+            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
             if(!isPremium) {
                 const randomAdImage = adMediaArray[Math.floor(Math.random() * adMediaArray.length)];
@@ -619,7 +612,7 @@
 
             if(currentUser) db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).set({title: t, date: Date.now()}); 
             
-            // FIREBASE VIEWS FIX
+            // FIREBASE LIFETIME VIEWS
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); 
             loadSocialData(currentSafeVideoId);
         }
@@ -646,7 +639,6 @@
                 s.forEach(child => {
                     const c = child.val(); let d = c.time ? new Date(c.time) : new Date(); 
                     let ts = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-                    // Prepend makes newest comments appear at the top
                     l.innerHTML = `<div class="comment-box-unique"><div class="c-avatar-unique">${c.user[0].toUpperCase()}</div><div class="c-body-unique"><div class="c-user-name">${c.user.toUpperCase()} <span style="font-size:9px;color:#888;font-weight:normal;">${ts}</span></div><div class="c-text-content">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
@@ -683,9 +675,9 @@
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
             if(currentPlayType === 'movie'){ 
-                if(window.movieData) { window.movieData.forEach(m=>{ let sid=m.id||m.title.replace(/[^a-zA-Z0-9]/g,'_'); let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
+                if(window.movieData) { window.movieData.forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
             } else if (currentPlayType === 'cartoon'){ 
-                if(window.cartoonData) { window.cartoonData.forEach(m=>{ let sid=m.id||m.title.replace(/[^a-zA-Z0-9]/g,'_'); let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
+                if(window.cartoonData) { window.cartoonData.forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
             } else { 
                 if(!window.animeData)return; 
                 Object.keys(window.animeData).forEach(n=>{ let f=window.animeData[n][0]; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${n}</div></div>`; }); 
