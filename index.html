@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ANIMAX TV</title>
     
+    <!-- PWA & Home Screen Shortcut Fixes -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b1b1b">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ANIMAX TV">
+    <meta name="apple-mobile-web-app-title" content="ANIMAX TV">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+    <link rel="shortcut icon" href="logo.png">
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -16,6 +24,9 @@
         await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
       });
     </script>
+    
+    <!-- Adsterra Social Bar -->
+    <script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -55,6 +66,11 @@
         .category-tabs::-webkit-scrollbar { display: none; }
         .cat-tab { color: #222; font-size: 13px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron'; }
         .cat-tab.active { color: #fff; background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px; }
+
+        /* SUB TABS */
+        .sub-tabs { display: flex; gap: 20px; margin: 0 10px 15px 10px; border-bottom: 2px solid #333; padding-bottom: 8px;}
+        .sub-tab { font-size: 13px; color: #888; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; transition: 0.3s;}
+        .sub-tab.active { color: var(--yellow); border-bottom: 2px solid var(--yellow); margin-bottom: -10px; }
 
         /* GRID (3 ITEMS PER ROW) */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 10px 20px 10px; }
@@ -100,12 +116,24 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* LOGIN PAGE */
-        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800'); background-size: cover; background-position: center; padding: 20px;}
-        .login-container { position: relative; width: 100%; max-width: 400px; background: rgba(30,30,30,0.9); border: 1px solid var(--yellow); border-radius: 8px; box-shadow: 0 0 20px rgba(255, 193, 7, 0.2); padding: 30px; }
-        .login-title { font-family: 'Orbitron', sans-serif; color: var(--yellow); font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
-        .input-box { margin: 15px 0; border-bottom: 2px solid #444; }
-        .input-box input { width: 100%; padding: 10px 0; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; }
-        .btn-neon { width: 100%; padding: 12px; background: var(--yellow); border: none; border-radius: 4px; color: #000; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800'); background-size: cover; background-position: center; padding: 20px; position: relative;}
+        .login-page-wrapper::before { content: ''; position: absolute; inset: 0; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(5px); }
+        
+        .auth-container { position: relative; width: 100%; max-width: 380px; background: rgba(20,20,20,0.9); padding: 40px 30px; border-radius: 12px; border: 1px solid rgba(255, 193, 7, 0.3); box-shadow: 0 15px 35px rgba(0,0,0,0.8); z-index: 2; overflow: hidden; }
+        
+        .auth-form { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
+        .auth-form.hidden { transform: translateX(120%); position: absolute; opacity: 0; pointer-events: none; top: 40px; left: 30px; width: calc(100% - 60px);}
+        .auth-form.active { transform: translateX(0); position: relative; opacity: 1; pointer-events: auto; }
+        
+        .auth-title { color: var(--yellow); font-family: 'Orbitron'; font-size: 24px; text-align: center; margin-bottom: 25px; letter-spacing: 1px;}
+        .auth-input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #444; padding: 14px; border-radius: 6px; color: #fff; margin-bottom: 15px; font-family: 'Outfit'; outline: none; transition: 0.3s; }
+        .auth-input:focus { border-color: var(--yellow); box-shadow: 0 0 10px rgba(255, 193, 7, 0.2); }
+        
+        .auth-btn { width: 100%; background: linear-gradient(45deg, var(--yellow), #ff9800); color: #000; font-weight: bold; font-family: 'Orbitron'; padding: 14px; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; margin-top: 10px; font-size: 15px;}
+        .auth-btn:active { transform: scale(0.97); }
+        
+        .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: #aaa; font-family: 'Outfit'; }
+        .auth-switch span { color: var(--yellow); cursor: pointer; font-weight: bold; text-decoration: underline; }
 
         /* PROFILE DESIGN */
         .profile-container { width: 100%; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
@@ -177,7 +205,7 @@
 </head>
 <body>
 
-    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE -->
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE (FREE USERS ONLY) -->
     <div id="mid-roll-overlay">
         <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
         <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
@@ -228,7 +256,6 @@
         </div>
 
         <div id="ad-banner-top" class="ad-container-center">
-            <!-- BANNER AD (SHOWS FOR BOTH VIP AND FREE) -->
             <script type="text/javascript">
                 atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
                 document.write('<scr' + 'ipt type="text/javascript" src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr' + 'ipt>');
@@ -236,23 +263,64 @@
         </div>
         
         <div id="section-trending" style="display:block;"><div class="section-header"><div class="sec-title-text">TRENDING NOW</div></div><div id="trending-grid" class="grid-container"></div></div>
-        <div id="section-anime" style="display:none;"><div class="section-header"><div class="sec-title-text">ANIME SERIES</div></div><div id="anime-grid" class="grid-container"></div></div>
-        <div id="section-cartoon" style="display:none;"><div class="section-header"><div class="sec-title-text">CARTOONS</div></div><div id="cartoon-grid" class="grid-container"></div></div>
-        <div id="section-movie" style="display:none;"><div class="section-header"><div class="sec-title-text">ANIME MOVIES</div></div><div id="movie-grid" class="grid-container"></div></div>
+        
+        <!-- MODIFIED ANIME SECTION WITH SUB-TABS -->
+        <div id="section-anime" style="display:none;">
+            <div class="sub-tabs">
+                <div class="sub-tab active" onclick="switchSubTab('anime', 'series', this)">ANIME SERIES</div>
+                <div class="sub-tab" onclick="switchSubTab('anime', 'movie', this)">ANIME MOVIES</div>
+            </div>
+            <div id="anime-series-wrapper"><div id="anime-grid" class="grid-container"></div></div>
+            <div id="anime-movie-wrapper" style="display:none;"><div id="anime-movie-grid" class="grid-container"></div></div>
+        </div>
+
+        <!-- MODIFIED CARTOON SECTION WITH SUB-TABS -->
+        <div id="section-cartoon" style="display:none;">
+            <div class="sub-tabs">
+                <div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)">CARTOON SERIES</div>
+                <div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)">CARTOON MOVIES</div>
+            </div>
+            <div id="cartoon-series-wrapper"><div id="cartoon-grid" class="grid-container"></div></div>
+            <div id="cartoon-movie-wrapper" style="display:none;"><div id="cartoon-movie-grid" class="grid-container"></div></div>
+        </div>
+
+        <div id="section-movie" style="display:none;">
+            <div class="section-header"><div class="sec-title-text">ALL MOVIES</div></div>
+            <div id="movie-grid" class="grid-container"></div>
+        </div>
     </div>
 
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view" style="padding-top:0;">
+        
+        <!-- MODERN ANIMATED LOGIN UI -->
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
-                <div class="login-container">
-                    <form onsubmit="event.preventDefault(); handleAuth('login');">
-                        <h1 class="login-title">Welcome Back</h1>
-                        <div class="input-box"><input type="email" id="email-in" placeholder="Email" required></div>
-                        <div class="input-box"><input type="password" id="pass-in" placeholder="Password" required></div>
-                        <button class="btn-neon">LOGIN</button>
-                        <p class="toggle-text">No account? <a onclick="handleAuth('reg')">Sign up</a></p>
-                    </form>
+                <div class="auth-container">
+                    
+                    <!-- Login Form -->
+                    <div class="auth-form active" id="login-form-box">
+                        <h1 class="auth-title">Welcome Back</h1>
+                        <form onsubmit="event.preventDefault(); handleAuth('login');">
+                            <input type="email" id="email-in" class="auth-input" placeholder="Email Address" required>
+                            <input type="password" id="pass-in" class="auth-input" placeholder="Password" required>
+                            <button type="submit" class="auth-btn">LOGIN</button>
+                        </form>
+                        <p class="auth-switch">Don't have an account? <span onclick="toggleAuthForm()">Sign Up</span></p>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="auth-form hidden" id="reg-form-box">
+                        <h1 class="auth-title">Join Animax</h1>
+                        <form onsubmit="event.preventDefault(); handleAuth('reg');">
+                            <input type="text" id="rname-in" class="auth-input" placeholder="Your Full Name" required>
+                            <input type="email" id="remail-in" class="auth-input" placeholder="Email Address" required>
+                            <input type="password" id="rpass-in" class="auth-input" placeholder="Password" required>
+                            <button type="submit" class="auth-btn">REGISTER</button>
+                        </form>
+                        <p class="auth-switch">Already a member? <span onclick="toggleAuthForm()">Login</span></p>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -372,6 +440,25 @@
     </nav>
 
     <script>
+        // LOGIN FORM TOGGLE ANIMATION
+        function toggleAuthForm() {
+            document.getElementById('login-form-box').classList.toggle('hidden');
+            document.getElementById('login-form-box').classList.toggle('active');
+            document.getElementById('reg-form-box').classList.toggle('hidden');
+            document.getElementById('reg-form-box').classList.toggle('active');
+        }
+
+        // SUB-TABS LOGIC (Anime/Cartoon Movies Side-by-side)
+        function switchSubTab(parent, type, el) {
+            let parentDiv = document.getElementById(`section-${parent}`);
+            parentDiv.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            document.getElementById(`${parent}-series-wrapper`).style.display = type === 'series' ? 'block' : 'none';
+            document.getElementById(`${parent}-movie-wrapper`).style.display = type === 'movie' ? 'block' : 'none';
+        }
+
+        // HIDE SEARCH ON PROFILE
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts();
             
@@ -406,6 +493,7 @@
             });
         }
 
+        // FIREBASE SETUP
         const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
@@ -414,35 +502,36 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
-        // CRITICAL BUG FIX FOR FIREBASE VIEWS/LIKES/COMMENTS
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
         auth.onAuthStateChanged(user => {
             if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
             else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; injectFreeAds(); }
             loadContent();
+            
+            // ONLINE USERS TRACKER
+            const connectedRef = db.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true && currentUser) {
+                    const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
+                    mySessionRef.onDisconnect().remove(); 
+                    mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
+                }
+            });
         });
 
-        // ADS LOGIC FOR VIP/FREE MEMBERS
         let adsInjected = false;
         function injectFreeAds() {
-            if(adsInjected) return;
-            adsInjected = true;
-            
-            let socialBar = document.createElement('script');
-            socialBar.type = 'text/javascript';
-            socialBar.src = 'https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
-            document.body.appendChild(socialBar);
-
-            let popunder = document.createElement('script');
-            popunder.type = 'text/javascript';
-            popunder.src = 'https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+            if(adsInjected) return; adsInjected = true;
+            let popunder = document.createElement('script'); popunder.type = 'text/javascript'; popunder.src = 'https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             document.body.appendChild(popunder);
         }
 
         function checkPremium(uid) {
             db.ref(`users/${uid}`).on('value', s => {
                 const d = s.val() || {};
+                
+                // PROFILE NAME FIX
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
                 else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
                 
@@ -456,7 +545,7 @@
                     isPremium = true; document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
                 } else { 
                     isPremium = false; document.getElementById('vip-badge').innerText = "FREE USER"; 
-                    injectFreeAds(); // Free users get ads
+                    injectFreeAds(); 
                 }
             });
         }
@@ -464,9 +553,21 @@
         function handleAuth(t) { 
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value;
             const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
-            if(!e || !p) return alert("Please fill details.");
-            if(t==='login') { auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); } 
-            else { auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) { db.ref(`users/${cred.user.uid}`).update({ rank: snap.val() }); } }); }).catch(err=>alert(err.message)); }
+            
+            if(t === 'reg') {
+                const n = document.getElementById('rname-in').value.trim();
+                if(!n || !e || !p) return alert("Please fill all details including Name.");
+                auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
+                    db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
+                        if(committed) { 
+                            db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); 
+                        } 
+                    }); 
+                }).catch(err=>alert(err.message)); 
+            } else {
+                if(!e || !p) return alert("Please fill details.");
+                auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
+            }
         }
 
         let sliderInterval;
@@ -481,12 +582,22 @@
         }
 
         let trendingAnimeHTML = ""; let trendingMoviesHTML = ""; let trendingCartoonsHTML = "";
+        let htmlAnimeMoviesFromMoviesNode = ""; let htmlCartoonMoviesFromMoviesNode = ""; let htmlCartoonMoviesFromCartoonsNode = "";
+
         function updateTrendingGrid() {
             const grid = document.getElementById('trending-grid');
             if(grid) {
                 grid.innerHTML = trendingAnimeHTML + trendingMoviesHTML + trendingCartoonsHTML;
                 if(grid.innerHTML.trim() === "") grid.innerHTML = "<p style='color:#666; font-size:12px; grid-column:1/-1; text-align:center;'>No items right now.</p>";
             }
+        }
+
+        function updateSubGrids() {
+            let amGrid = document.getElementById('anime-movie-grid');
+            if(amGrid) amGrid.innerHTML = htmlAnimeMoviesFromMoviesNode;
+            
+            let cmGrid = document.getElementById('cartoon-movie-grid');
+            if(cmGrid) cmGrid.innerHTML = htmlCartoonMoviesFromMoviesNode + htmlCartoonMoviesFromCartoonsNode;
         }
 
         function loadContent() {
@@ -512,25 +623,42 @@
             });
 
             db.ref('movies').on('value', snap => { 
-                const grid = document.getElementById('movie-grid'); grid.innerHTML = ""; trendingMoviesHTML = ""; window.movieData=[]; 
+                const grid = document.getElementById('movie-grid'); grid.innerHTML = ""; 
+                trendingMoviesHTML = ""; htmlAnimeMoviesFromMoviesNode = ""; htmlCartoonMoviesFromMoviesNode = ""; window.movieData=[]; 
+                
                 snap.forEach(c=>{ 
                     let d=c.val(), sid=d.id||d.title; window.movieData.push(d); 
                     let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div><div class="folder-ep">Movie</div></div>`;
-                    let category = (d.category || "movie").toLowerCase(); if(category.includes('movie') || category === '') grid.innerHTML += cardHTML; if(category.includes('trending')) trendingMoviesHTML += cardHTML;
+                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
+                    let category = (d.category || "movie").toLowerCase(); 
+                    
+                    grid.innerHTML += cardHTML; 
+                    
+                    if(category.includes('anime')) htmlAnimeMoviesFromMoviesNode += cardHTML;
+                    if(category.includes('cartoon')) htmlCartoonMoviesFromMoviesNode += cardHTML;
+                    if(category.includes('trending')) trendingMoviesHTML += cardHTML;
                 }); 
-                updateTrendingGrid();
+                updateTrendingGrid(); updateSubGrids();
             });
 
             db.ref('cartoons').on('value', snap => { 
-                const grid = document.getElementById('cartoon-grid'); grid.innerHTML = ""; trendingCartoonsHTML = ""; window.cartoonData=[]; 
+                const grid = document.getElementById('cartoon-grid'); grid.innerHTML = ""; 
+                trendingCartoonsHTML = ""; htmlCartoonMoviesFromCartoonsNode = ""; window.cartoonData=[]; 
+                
                 snap.forEach(c=>{ 
                     let d=c.val(), sid=d.id||d.title; window.cartoonData.push(d);
-                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>';
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div><div class="folder-ep">Cartoon</div></div>`;
-                    let category = (d.category || "cartoon").toLowerCase(); if(category.includes('cartoon') || category === '') grid.innerHTML += cardHTML; if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
+                    let category = (d.category || "cartoon").toLowerCase(); 
+                    let isMovie = category.includes('movie');
+                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : (isMovie ? '<div class="card-vip-badge">MOVIE</div>' : '<div class="card-vip-badge">DUB</div>');
+                    
+                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
+                    
+                    if(isMovie) htmlCartoonMoviesFromCartoonsNode += cardHTML;
+                    else grid.innerHTML += cardHTML;
+                    
+                    if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
                 }); 
-                updateTrendingGrid();
+                updateTrendingGrid(); updateSubGrids();
             });
         }
 
@@ -600,7 +728,6 @@
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
             
-            // SMARTLINK AD FOR FREE USERS ONLY
             if(!isPremium) {
                 const randomAdImage = adMediaArray[Math.floor(Math.random() * adMediaArray.length)];
                 document.getElementById('dynamic-ad-image').src = randomAdImage;
@@ -753,6 +880,7 @@
             }).catch(err => alert("Error: " + err.message));
         }
 
+        // VIP ADMIN LINK JS
         function redeemCode() { 
             if(!currentUser) return; 
             const c = document.getElementById('prem-code').value.trim(); 
