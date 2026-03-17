@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ANIMAX TV</title>
     
+    <!-- PWA & Home Screen Shortcut Fixes -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b1b1b">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,6 +24,9 @@
         await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
       });
     </script>
+    
+    <!-- Adsterra Social Bar -->
+    <script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -97,7 +101,7 @@
 
         /* NAVIGATION BOTTOM */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 10px 0; border-top: 2px solid var(--yellow); z-index: 1000; }
-        nav i { font-size: 22px; color: #666; padding: 5px 20px; cursor: pointer; }
+        nav i { font-size: 22px; color: #666; padding: 5px 20px; cursor: pointer; transition: 0.3s; }
         nav i.active { color: var(--yellow); }
 
         /* ADS CONTAINER */
@@ -105,7 +109,8 @@
 
         /* PRE-ROLL AD OVERLAY */
         #mid-roll-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
-        .ad-timer-val { font-size: 45px; color: var(--yellow); font-weight: 900; margin-top:5px; font-family: 'Orbitron';}
+        .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.3); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* APP VIEW */
         .app-view { display: none; animation: fadeIn 0.4s; }
@@ -201,28 +206,10 @@
 </head>
 <body>
 
-    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE (FREE USERS ONLY) -->
+    <!-- PRE-ROLL AD WITH LOADING SPINNER (SMARTLINK FOR FREE USERS) -->
     <div id="mid-roll-overlay">
-        <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
-        <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
-             <img id="dynamic-ad-image" src="" style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
-             <div style="position:absolute; bottom:8px; left:8px; right:8px; display:flex; justify-content:space-between; align-items:center;">
-                 <div style="background:var(--yellow); color:#000; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">Ad · 0:05</div>
-                 <i class="fas fa-volume-up" style="color:#fff; font-size:14px; text-shadow:0 0 5px #000;"></i>
-             </div>
-             <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-                 <div style="width:50px; height:50px; background:rgba(255,193,7,0.8); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                     <i class="fas fa-play" style="color:#000; font-size:20px; margin-left:4px;"></i>
-                 </div>
-             </div>
-        </div>
-        <div id="ad-timer-container" style="text-align:center; margin-top:20px;">
-            <div style="color:#aaa; font-size:14px;">Starting video in</div>
-            <div class="ad-timer-val" id="ad-timer-val" style="font-family:'Orbitron';">5</div>
-        </div>
-        <button id="skip-ad-btn" onclick="skipAdBtnClicked(event)" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; font-family:'Orbitron'; cursor:pointer;">
-            SKIP AD <i class="fas fa-step-forward"></i>
-        </button>
+        <div class="loading-spinner"></div>
+        <div style="color:#fff; font-family:'Orbitron'; letter-spacing:1px; font-size:14px; margin-top:15px;">Loading Stream...</div>
     </div>
 
     <!-- HEADER -->
@@ -502,42 +489,37 @@
         // CRITICAL BUG FIX FOR FIREBASE ID
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
-        // --- FIXED: ONLY RUN LOAD ONCE TO PREVENT MEMORY LEAK CRASH ---
-        let initialLoadDone = false;
+        let userProfileRef = null; // MEMORY LEAK FIX VARIABLE
 
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-            auth.onAuthStateChanged(user => {
-                if (user) { 
-                    currentUser = user; 
-                    document.getElementById('guest-login-content').style.display = 'none'; 
-                    document.getElementById('user-profile-content').style.display = 'block'; 
-                    checkPremium(user.uid); 
-                } 
-                else { 
-                    currentUser = null; 
-                    isPremium = false; 
-                    document.getElementById('guest-login-content').style.display = 'block'; 
-                    document.getElementById('user-profile-content').style.display = 'none'; 
-                    injectFreeAds(); 
-                }
+        auth.onAuthStateChanged(user => {
+            if (user) { 
+                currentUser = user; 
+                document.getElementById('guest-login-content').style.display = 'none'; 
+                document.getElementById('user-profile-content').style.display = 'block'; 
+                checkPremium(user.uid); 
+            } 
+            else { 
+                currentUser = null; 
+                isPremium = false; 
+                document.getElementById('guest-login-content').style.display = 'block'; 
+                document.getElementById('user-profile-content').style.display = 'none'; 
                 
-                // ONLINE USERS TRACKER
-                const connectedRef = db.ref('.info/connected');
-                connectedRef.on('value', (snap) => {
-                    if (snap.val() === true && currentUser) {
-                        const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
-                        mySessionRef.onDisconnect().remove(); 
-                        mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
-                    }
-                });
+                // Clear the Firebase listener so emails don't override on logout
+                if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
+                injectFreeAds(); 
+            }
+            loadContent();
+            
+            // ONLINE USERS TRACKER
+            const connectedRef = db.ref('.info/connected');
+            connectedRef.on('value', (snap) => {
+                if (snap.val() === true && currentUser) {
+                    const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
+                    mySessionRef.onDisconnect().remove(); 
+                    mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
+                }
             });
         });
-
-        // Run loadContent only once at script load, NOT on every auth change
-        if(!initialLoadDone) {
-            loadContent();
-            initialLoadDone = true;
-        }
 
         // AD LOGIC: INJECT SCRIPT ONLY FOR FREE USERS
         let adsInjected = false;
@@ -551,8 +533,14 @@
             document.body.appendChild(socialBar);
         }
 
+        // MEMORY LEAK AND ID SWITCHING FIX
         function checkPremium(uid) {
-            db.ref(`users/${uid}`).on('value', s => {
+            if(userProfileRef) userProfileRef.off(); // Clear previous listener
+            userProfileRef = db.ref(`users/${uid}`);
+            
+            userProfileRef.on('value', s => {
+                if(!currentUser || currentUser.uid !== uid) return; // Prevent Cross-Account overriding
+
                 const d = s.val() || {};
                 
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
@@ -577,22 +565,20 @@
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value;
             const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
             
-            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-                if(t === 'reg') {
-                    const n = document.getElementById('rname-in').value.trim();
-                    if(!n || !e || !p) return alert("Please fill all details including Name.");
-                    auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
-                        db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
-                            if(committed) { 
-                                db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); 
-                            } 
-                        }); 
-                    }).catch(err=>alert(err.message)); 
-                } else {
-                    if(!e || !p) return alert("Please fill details.");
-                    auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
-                }
-            }).catch(console.error);
+            if(t === 'reg') {
+                const n = document.getElementById('rname-in').value.trim();
+                if(!n || !e || !p) return alert("Please fill all details including Name.");
+                auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
+                    db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
+                        if(committed) { 
+                            db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); 
+                        } 
+                    }); 
+                }).catch(err=>alert(err.message)); 
+            } else {
+                if(!e || !p) return alert("Please fill details.");
+                auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
+            }
         }
 
         let sliderInterval;
@@ -625,7 +611,13 @@
             if(cmGrid) cmGrid.innerHTML = htmlCartoonMoviesFromMoviesNode + htmlCartoonMoviesFromCartoonsNode;
         }
 
+        // PREVENT DOUBLE DATA LOADING FIX
+        let isDataLoaded = false;
+
         function loadContent() {
+            if(isDataLoaded) return;
+            isDataLoaded = true;
+
             db.ref('banners').on('value', s => {
                 const c = document.getElementById('banner-slides-container'); if(!c) return; c.innerHTML = ""; let i=0;
                 s.forEach(b => { let data = b.val(); let fName = (data.folderName || "").trim(); c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="playBannerAnime('${fName.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; });
@@ -714,6 +706,7 @@
         
         function switchSeason(n) { openFolder(n); }
 
+        // --- SMARTLINK FIX FOR FREE USERS ONLY ---
         function playVideo(t, u, id, ip, type, idx) {
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
             
@@ -744,14 +737,16 @@
             v.src = finalUrl; v.dataset.currentId = id; v.load(); 
             document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
 
-            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
+            window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
+            // IF FREE USER -> Trigger Smartlink + Play Video Background
             if(!isPremium) {
+                document.getElementById('mid-roll-overlay').style.display = 'flex';
+                
                 // Open Smartlink automatically on click
                 window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
                 
-                // Show a quick loading spinner to cover the gap
-                document.getElementById('mid-roll-overlay').style.display = 'flex';
+                // Wait 1 second then hide loading and play video
                 setTimeout(() => {
                     document.getElementById('mid-roll-overlay').style.display = 'none';
                     window.startVideoPlayback();
@@ -895,7 +890,7 @@
             }).catch(err => alert("Error: " + err.message));
         }
 
-        // VIP ADMIN LINK JS
+        // VIP CODE SYSTEM: PERFECTLY LINKED TO ADMIN PANEL
         function redeemCode() { 
             if(!currentUser) { alert("Please login first!"); return; }
             const c = document.getElementById('prem-code').value.trim().toUpperCase(); 
@@ -907,18 +902,26 @@
                     if(codeData.status === 'unused'){ 
                         let expiryTime = Date.now();
                         
+                        // Admin panel saves it as 'days'
                         if(codeData.days) {
                             expiryTime += (parseInt(codeData.days) * 24 * 60 * 60 * 1000);
-                        } else if(codeData.expiryDate) {
-                            expiryTime = parseInt(codeData.expiryDate);
                         } else {
                             expiryTime += (30 * 24 * 60 * 60 * 1000); // default 30 days
                         }
 
-                        db.ref(`premium_codes/${c}`).update({status:'used', usedBy:currentUser.email, usedAt: Date.now()}); 
-                        db.ref(`users/${currentUser.uid}`).update({premiumExpiry: expiryTime}); 
-                        alert("🎉 VIP ACTIVATED SUCCESSFULLY!"); 
-                        location.reload(); 
+                        // Execute reliable updates
+                        db.ref(`premium_codes/${c}`).update({
+                            status:'used', 
+                            usedBy: currentUser.email || currentUser.uid, 
+                            usedAt: Date.now()
+                        }).then(() => {
+                            db.ref(`users/${currentUser.uid}`).update({
+                                premiumExpiry: expiryTime
+                            }).then(() => {
+                                alert("🎉 VIP ACTIVATED SUCCESSFULLY!"); 
+                                location.reload(); 
+                            });
+                        });
                     } else {
                         alert("❌ This code is already used!");
                     }
@@ -927,10 +930,10 @@
         }
         function buyPremium() { 
             if(!currentUser){alert("Login First");return;} 
-            window.open(`https://t.me/aminezone09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); 
+            window.open(`https://t.me/animax_world09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); 
         }
 
-        // FIXED WATCH HISTORY (ORDERED BY DATE)
+        // WATCH HISTORY (ORDERED BY DATE FIXED)
         function openHistory() { 
             if(!currentUser) { alert("Please login first to view history."); return; }
             document.getElementById('history-view').style.display='block'; 
