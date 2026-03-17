@@ -68,7 +68,7 @@
         .sub-tab { font-size: 13px; color: #888; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; transition: 0.3s;}
         .sub-tab.active { color: var(--yellow); border-bottom: 2px solid var(--yellow); margin-bottom: -10px; }
 
-        /* GRID */
+        /* GRID (3 ITEMS PER ROW) */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 10px 20px 10px; }
 
         /* CARD */
@@ -81,7 +81,7 @@
             .folder-card:hover .img-wrapper img { transform: scale(1.05); }
         }
         
-        .card-vip-badge { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: var(--yellow); font-size: 10px; font-weight: bold; padding: 2px 10px; border-radius: 4px 4px 0 0; border: 1px solid var(--yellow); border-bottom: none; white-space: nowrap; }
+        .card-vip-badge { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: var(--yellow); font-size: 10px; font-weight: bold; padding: 2px 10px; border-radius: 4px 4px 0 0; border: 1px solid var(--yellow); border-bottom: none; white-space: nowrap;}
         
         .folder-title { color: var(--yellow); text-align: center; margin-top: 6px; font-size: 11px; font-weight: 500; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .folder-ep { color: var(--light-gray); text-align: center; font-size: 10px; margin-top: 3px; }
@@ -105,8 +105,7 @@
 
         /* PRE-ROLL AD OVERLAY */
         #mid-roll-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
-        .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.3); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ad-timer-val { font-size: 45px; color: var(--yellow); font-weight: 900; margin-top:5px; font-family: 'Orbitron';}
 
         /* APP VIEW */
         .app-view { display: none; animation: fadeIn 0.4s; }
@@ -202,12 +201,28 @@
 </head>
 <body>
 
-    <!-- FREE USERS ONLY: Adsterra Popunder & Social Bar Logic Injected via JS -->
-
-    <!-- PRE-ROLL AD (SMARTLINK FOR FREE USERS) -->
+    <!-- PRE-ROLL AD WITH DYNAMIC IMAGE (FREE USERS ONLY) -->
     <div id="mid-roll-overlay">
-        <div class="loading-spinner"></div>
-        <div style="color:#fff; font-family:'Orbitron'; letter-spacing:1px; font-size:14px; margin-top:15px;">Loading Stream...</div>
+        <div style="color:#fff; font-size:18px; margin-bottom:15px; font-weight:bold; font-family:'Orbitron';">SPONSOR AD <span style="color:var(--yellow)">•</span></div>
+        <div onclick="window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');" style="width:90%; max-width:350px; height:200px; background:#111; display:flex; justify-content:center; align-items:center; border:2px solid #333; position:relative; border-radius:4px; overflow:hidden; cursor:pointer;">
+             <img id="dynamic-ad-image" src="" style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
+             <div style="position:absolute; bottom:8px; left:8px; right:8px; display:flex; justify-content:space-between; align-items:center;">
+                 <div style="background:var(--yellow); color:#000; padding:2px 6px; border-radius:2px; font-size:10px; font-weight:bold;">Ad · 0:05</div>
+                 <i class="fas fa-volume-up" style="color:#fff; font-size:14px; text-shadow:0 0 5px #000;"></i>
+             </div>
+             <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                 <div style="width:50px; height:50px; background:rgba(255,193,7,0.8); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                     <i class="fas fa-play" style="color:#000; font-size:20px; margin-left:4px;"></i>
+                 </div>
+             </div>
+        </div>
+        <div id="ad-timer-container" style="text-align:center; margin-top:20px;">
+            <div style="color:#aaa; font-size:14px;">Starting video in</div>
+            <div class="ad-timer-val" id="ad-timer-val" style="font-family:'Orbitron';">5</div>
+        </div>
+        <button id="skip-ad-btn" onclick="skipAdBtnClicked(event)" style="display:none; margin-top:20px; background:var(--yellow); color:#000; border:none; padding:12px 30px; font-weight:bold; font-size:16px; border-radius:4px; font-family:'Orbitron'; cursor:pointer;">
+            SKIP AD <i class="fas fa-step-forward"></i>
+        </button>
     </div>
 
     <!-- HEADER -->
@@ -236,7 +251,7 @@
             <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIE</div>
         </div>
 
-        <!-- Banner Ad always shows -->
+        <!-- Banner Ad Top -->
         <div id="ad-banner-top" class="ad-container-center">
             <script type="text/javascript">
                 atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
@@ -475,6 +490,7 @@
             });
         }
 
+        // FIREBASE SETUP
         const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
@@ -483,23 +499,45 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null; 
 
+        // CRITICAL BUG FIX FOR FIREBASE ID
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
-        auth.onAuthStateChanged(user => {
-            if (user) { currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; checkPremium(user.uid); } 
-            else { currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; injectFreeAds(); }
-            loadContent();
-            
-            // ONLINE USERS TRACKER
-            const connectedRef = db.ref('.info/connected');
-            connectedRef.on('value', (snap) => {
-                if (snap.val() === true && currentUser) {
-                    const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
-                    mySessionRef.onDisconnect().remove(); 
-                    mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
+        // --- FIXED: ONLY RUN LOAD ONCE TO PREVENT MEMORY LEAK CRASH ---
+        let initialLoadDone = false;
+
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+            auth.onAuthStateChanged(user => {
+                if (user) { 
+                    currentUser = user; 
+                    document.getElementById('guest-login-content').style.display = 'none'; 
+                    document.getElementById('user-profile-content').style.display = 'block'; 
+                    checkPremium(user.uid); 
+                } 
+                else { 
+                    currentUser = null; 
+                    isPremium = false; 
+                    document.getElementById('guest-login-content').style.display = 'block'; 
+                    document.getElementById('user-profile-content').style.display = 'none'; 
+                    injectFreeAds(); 
                 }
+                
+                // ONLINE USERS TRACKER
+                const connectedRef = db.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    if (snap.val() === true && currentUser) {
+                        const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
+                        mySessionRef.onDisconnect().remove(); 
+                        mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
+                    }
+                });
             });
         });
+
+        // Run loadContent only once at script load, NOT on every auth change
+        if(!initialLoadDone) {
+            loadContent();
+            initialLoadDone = true;
+        }
 
         // AD LOGIC: INJECT SCRIPT ONLY FOR FREE USERS
         let adsInjected = false;
@@ -539,20 +577,22 @@
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value;
             const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
             
-            if(t === 'reg') {
-                const n = document.getElementById('rname-in').value.trim();
-                if(!n || !e || !p) return alert("Please fill all details including Name.");
-                auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
-                    db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
-                        if(committed) { 
-                            db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); 
-                        } 
-                    }); 
-                }).catch(err=>alert(err.message)); 
-            } else {
-                if(!e || !p) return alert("Please fill details.");
-                auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
-            }
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+                if(t === 'reg') {
+                    const n = document.getElementById('rname-in').value.trim();
+                    if(!n || !e || !p) return alert("Please fill all details including Name.");
+                    auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
+                        db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
+                            if(committed) { 
+                                db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); 
+                            } 
+                        }); 
+                    }).catch(err=>alert(err.message)); 
+                } else {
+                    if(!e || !p) return alert("Please fill details.");
+                    auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); 
+                }
+            }).catch(console.error);
         }
 
         let sliderInterval;
@@ -706,9 +746,8 @@
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked. Tap play button.")); };
             
-            // SMARTLINK FORCE OPEN LOGIC
             if(!isPremium) {
-                // Open Smartlink automatically
+                // Open Smartlink automatically on click
                 window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
                 
                 // Show a quick loading spinner to cover the gap
@@ -856,19 +895,34 @@
             }).catch(err => alert("Error: " + err.message));
         }
 
-        // VIP SYSTEM LOGIC (UPPERCASE ENFORCED)
+        // VIP ADMIN LINK JS
         function redeemCode() { 
-            if(!currentUser) return; 
+            if(!currentUser) { alert("Please login first!"); return; }
             const c = document.getElementById('prem-code').value.trim().toUpperCase(); 
             if(!c) return alert("Enter Code!");
             
-            db.ref(`premium_codes/${c}`).once('value', s=>{ 
-                if(s.exists()&&s.val().status==='unused'){ 
-                    const d=s.val().days||30; 
-                    db.ref(`premium_codes/${c}`).update({status:'used',usedBy:currentUser.email}); 
-                    db.ref(`users/${currentUser.uid}`).update({premiumExpiry:Date.now()+(d*24*60*60*1000)}); 
-                    alert("VIP ACTIVATED!"); location.reload(); 
-                } else alert("Invalid Code"); 
+            db.ref(`premium_codes/${c}`).once('value', s => { 
+                if(s.exists()) {
+                    let codeData = s.val();
+                    if(codeData.status === 'unused'){ 
+                        let expiryTime = Date.now();
+                        
+                        if(codeData.days) {
+                            expiryTime += (parseInt(codeData.days) * 24 * 60 * 60 * 1000);
+                        } else if(codeData.expiryDate) {
+                            expiryTime = parseInt(codeData.expiryDate);
+                        } else {
+                            expiryTime += (30 * 24 * 60 * 60 * 1000); // default 30 days
+                        }
+
+                        db.ref(`premium_codes/${c}`).update({status:'used', usedBy:currentUser.email, usedAt: Date.now()}); 
+                        db.ref(`users/${currentUser.uid}`).update({premiumExpiry: expiryTime}); 
+                        alert("🎉 VIP ACTIVATED SUCCESSFULLY!"); 
+                        location.reload(); 
+                    } else {
+                        alert("❌ This code is already used!");
+                    }
+                } else alert("❌ Invalid Code!"); 
             }); 
         }
         function buyPremium() { 
@@ -876,7 +930,7 @@
             window.open(`https://t.me/aminezone09?text=Hi Admin, I need premium for ${currentUser.email}`, '_blank'); 
         }
 
-        // WATCH HISTORY (ORDERED BY DATE FIXED)
+        // FIXED WATCH HISTORY (ORDERED BY DATE)
         function openHistory() { 
             if(!currentUser) { alert("Please login first to view history."); return; }
             document.getElementById('history-view').style.display='block'; 
@@ -885,7 +939,9 @@
                 const c = document.getElementById('history-list-container'); c.innerHTML=""; 
                 if(!s.exists()){ c.innerHTML=`<div style="text-align:center; padding-top:50px; color:#888;">No watch history found.</div>`; return; } 
                 
-                let historyArray = []; s.forEach(i => historyArray.push(i.val())); 
+                let historyArray = []; 
+                s.forEach(i => { historyArray.push(i.val()); }); 
+                
                 historyArray.reverse().forEach(d => { 
                     let dateStr = new Date(d.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
                     c.innerHTML += `<div class="history-item"><div style="color:var(--yellow); font-size:15px; font-weight:bold;">${d.title}</div><div style="color:#888; font-size:11px; margin-top:5px;">WATCHED ON: ${dateStr}</div></div>`; 
