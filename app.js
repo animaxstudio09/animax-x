@@ -306,7 +306,7 @@ function showShorts() {
                         </div>
                     </div>
                 </div>`;
-                loadShortLikes(key);
+                loadShortLikes(key); 
             });
             initShortsObserver();
         });
