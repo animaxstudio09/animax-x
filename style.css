@@ -5,7 +5,7 @@
     --gold-grad: linear-gradient(135deg, #D4AF37, #AA8C2C);
     --red: #E50914; 
     --text-main: #ffffff;
-    --text-muted: #aaaaaa;
+    --text-muted: #aaaaaa; 
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
