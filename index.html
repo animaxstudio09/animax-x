@@ -489,7 +489,24 @@
         // CRITICAL BUG FIX FOR FIREBASE ID
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
-        let userProfileRef = null; // MEMORY LEAK FIX VARIABLE
+        let userProfileRef = null; 
+
+        // FIREBASE SERVER TIME FIX (Blocks Phone Date Cheat)
+        let serverTimeOffset = 0;
+        db.ref('.info/serverTimeOffset').on('value', snap => {
+            serverTimeOffset = snap.val() || 0;
+        });
+
+        // ONLINE USERS TRACKER FIX
+        let mySessionRef = null;
+
+        db.ref('.info/connected').on('value', (snap) => {
+            if (snap.val() === true && currentUser) {
+                mySessionRef = db.ref(`online_users/${currentUser.uid}`);
+                mySessionRef.onDisconnect().remove();
+                mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
+            }
+        });
 
         auth.onAuthStateChanged(user => {
             if (user) { 
@@ -497,28 +514,26 @@
                 document.getElementById('guest-login-content').style.display = 'none'; 
                 document.getElementById('user-profile-content').style.display = 'block'; 
                 checkPremium(user.uid); 
+                
+                db.ref('.info/connected').once('value', snap => {
+                    if (snap.val() === true) {
+                        mySessionRef = db.ref(`online_users/${currentUser.uid}`);
+                        mySessionRef.onDisconnect().remove();
+                        mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
+                    }
+                });
             } 
             else { 
+                if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; 
                 isPremium = false; 
                 document.getElementById('guest-login-content').style.display = 'block'; 
                 document.getElementById('user-profile-content').style.display = 'none'; 
                 
-                // Clear the Firebase listener so emails don't override on logout
                 if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
                 injectFreeAds(); 
             }
             loadContent();
-            
-            // ONLINE USERS TRACKER
-            const connectedRef = db.ref('.info/connected');
-            connectedRef.on('value', (snap) => {
-                if (snap.val() === true && currentUser) {
-                    const mySessionRef = db.ref(`online_users/${currentUser.uid}`);
-                    mySessionRef.onDisconnect().remove(); 
-                    mySessionRef.set({ username: currentUser.email.split('@')[0], time: Date.now() });
-                }
-            });
         });
 
         // AD LOGIC: INJECT SCRIPT ONLY FOR FREE USERS
@@ -533,7 +548,7 @@
             document.body.appendChild(socialBar);
         }
 
-        // MEMORY LEAK AND ID SWITCHING FIX
+        // ANTI-CHEAT & PROFILE SYNC FIX
         function checkPremium(uid) {
             if(userProfileRef) userProfileRef.off(); // Clear previous listener
             userProfileRef = db.ref(`users/${uid}`);
@@ -543,8 +558,10 @@
 
                 const d = s.val() || {};
                 
+                currentUser.username = d.username || currentUser.email.split('@')[0];
+
                 if(d.username) document.getElementById('profile-name').innerHTML = d.username.toUpperCase();
-                else document.getElementById('profile-name').innerHTML = currentUser.email.split('@')[0].toUpperCase();
+                else document.getElementById('profile-name').innerHTML = currentUser.username.toUpperCase();
                 
                 if(d.avatar) document.getElementById('profile-img').src = d.avatar;
                 else document.getElementById('profile-img').src = "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
@@ -552,11 +569,25 @@
                 document.getElementById('profile-rank-val').innerText = d.rank ? `#${d.rank}` : '#N/A';
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('profile-watch-count').innerText = w.numChildren() || "0"; });
                 
-                if(d.premiumExpiry && d.premiumExpiry > Date.now()) { 
-                    isPremium = true; document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
+                // Server Time Check to prevent Date Hack
+                const actualServerTime = Date.now() + serverTimeOffset;
+                
+                if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
+                    isPremium = true; 
+                    document.getElementById('vip-badge').innerText = "VIP MEMBER"; 
+                    document.getElementById('vip-badge').style.color = "var(--gold)";
+                    document.getElementById('vip-badge').style.borderColor = "var(--gold)";
                 } else { 
-                    isPremium = false; document.getElementById('vip-badge').innerText = "FREE USER"; 
+                    isPremium = false; 
+                    document.getElementById('vip-badge').innerText = "FREE USER"; 
+                    document.getElementById('vip-badge').style.color = "#fff";
+                    document.getElementById('vip-badge').style.borderColor = "var(--yellow)";
                     injectFreeAds(); 
+                    
+                    // Auto-cleanup expired VIP from database
+                    if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) {
+                        db.ref(`users/${uid}/premiumExpiry`).remove();
+                    }
                 }
             });
         }
@@ -743,7 +774,7 @@
             if(!isPremium) {
                 document.getElementById('mid-roll-overlay').style.display = 'flex';
                 
-                // Open Smartlink automatically on click
+                // Open Smartlink automatically on click (Using invisible trick)
                 window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
                 
                 // Wait 1 second then hide loading and play video
@@ -890,7 +921,7 @@
             }).catch(err => alert("Error: " + err.message));
         }
 
-        // VIP CODE SYSTEM: PERFECTLY LINKED TO ADMIN PANEL
+        // VIP CODE SYSTEM: SECURE REDEEM FIX
         function redeemCode() { 
             if(!currentUser) { alert("Please login first!"); return; }
             const c = document.getElementById('prem-code').value.trim().toUpperCase(); 
@@ -900,7 +931,7 @@
                 if(s.exists()) {
                     let codeData = s.val();
                     if(codeData.status === 'unused'){ 
-                        let expiryTime = Date.now();
+                        let expiryTime = Date.now() + serverTimeOffset; // Safe time
                         
                         // Admin panel saves it as 'days'
                         if(codeData.days) {
@@ -913,7 +944,7 @@
                         db.ref(`premium_codes/${c}`).update({
                             status:'used', 
                             usedBy: currentUser.email || currentUser.uid, 
-                            usedAt: Date.now()
+                            usedAt: Date.now() + serverTimeOffset
                         }).then(() => {
                             db.ref(`users/${currentUser.uid}`).update({
                                 premiumExpiry: expiryTime
