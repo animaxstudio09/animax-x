@@ -106,14 +106,17 @@
         /* LOGIN PAGE */
         .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800'); background-size: cover; background-position: center; padding: 20px; position: relative;}
         .auth-container { position: relative; width: 100%; max-width: 380px; background: rgba(20,20,20,0.9); padding: 40px 30px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 15px 35px rgba(0,0,0,0.8); z-index: 2; overflow: hidden; }
-        .auth-form { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }
-        .auth-form.hidden { transform: translateX(120%); position: absolute; opacity: 0; pointer-events: none; top: 40px; left: 30px; width: calc(100% - 60px);}
-        .auth-form.active { transform: translateX(0); position: relative; opacity: 1; pointer-events: auto; }
+        
+        /* FIXED: LOGIN & SIGNUP TOGGLE CSS */
+        .auth-form { width: 100%; transition: 0.3s; }
+        .auth-form.hidden { display: none !important; }
+        .auth-form.active { display: block !important; animation: fadeIn 0.4s; }
+
         .auth-title { color: var(--yellow); font-family: 'Orbitron'; font-size: 24px; text-align: center; margin-bottom: 25px; letter-spacing: 1px;}
         .auth-input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #444; padding: 14px; border-radius: 6px; color: #fff; margin-bottom: 15px; font-family: 'Outfit'; outline: none; transition: 0.3s; }
         .auth-btn { width: 100%; background: var(--yellow); color: #000; font-weight: bold; font-family: 'Orbitron'; padding: 14px; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; margin-top: 10px; font-size: 15px;}
         .auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: #aaa; font-family: 'Outfit'; }
-        .auth-switch span { color: var(--yellow); cursor: pointer; font-weight: bold; text-decoration: underline; }
+        .auth-switch span { color: var(--yellow); cursor: pointer; font-weight: bold; text-decoration: underline; padding: 5px; }
 
         /* PROFILE DESIGN */
         .b-profile-container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; font-family: 'Roboto', sans-serif;}
@@ -153,7 +156,7 @@
         .b-history-title { font-size: 12px; color: #ccc; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* ========================================================
-           NEW PREMIUM HUB (Combined Key, Buy, Redeem & Tasks)
+           PREMIUM HUB (Combined Key, Buy, Redeem & Tasks)
            ======================================================== */
         #premium-hub-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f0f0f; z-index: 6000; overflow-y: auto; padding-bottom: 30px; font-family: 'Roboto', sans-serif;}
         .task-header { display: flex; align-items: center; padding: 15px; background: #0a0a0a; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #222;}
@@ -170,18 +173,15 @@
         .task-section-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--yellow); }
         .task-sec-title { text-align: center; color: var(--yellow); font-size: 16px; font-weight: bold; margin-bottom: 15px;}
         
-        /* Paste Key Input */
         .prem-inp-hub { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; outline:none; border-radius: 6px; text-align: center; letter-spacing: 2px; font-family: 'Orbitron'; margin-bottom: 10px;}
         .b-btn-primary { width: 100%; background: var(--yellow); color: #000; padding: 12px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron';}
 
-        /* Benefits Icons */
         .premium-benefits { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; margin-bottom: 5px;}
         .ben-item { display: flex; flex-direction: column; align-items: center; gap: 8px;}
         .ben-icon { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--yellow); border-radius: 8px; color: var(--yellow); font-size: 18px; background: rgba(255, 193, 7, 0.05);}
         .ben-text { font-size: 11px; color: #ccc; font-weight: bold;}
         .ben-plus { color: #555; font-size: 16px; font-weight: bold;}
 
-        /* Buy & Redeem Grids */
         .buy-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;}
         .buy-grid-2 { display: flex; justify-content: center; gap: 10px;}
         .buy-grid-2 > div { width: calc(33.33% - 6px); }
@@ -194,12 +194,10 @@
         .redeem-btn.disabled { background: #333; color: #666; pointer-events: none;}
         .redeem-btn.active { background: var(--yellow); color: #000; pointer-events: auto;}
 
-        /* OR Divider */
         .or-divider { display: flex; align-items: center; text-align: center; color: #666; margin: 15px 0; font-size: 11px; font-weight: bold; letter-spacing: 1px;}
         .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px solid #333; }
         .or-divider span { padding: 0 10px; }
 
-        /* Task List */
         .tl-subtitle { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 15px; text-align: center; padding-top: 10px;}
         .task-item { background: #222; border-radius: 8px; padding: 15px; margin-bottom: 12px; border: 1px solid #333;}
         .ti-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;} 
@@ -310,10 +308,13 @@
 
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view">
-        <!-- LOGIN UI -->
+        
+        <!-- FIXED LOGIN UI -->
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
                 <div class="auth-container">
+                    
+                    <!-- Login Form -->
                     <div class="auth-form active" id="login-form-box">
                         <h1 class="auth-title">Welcome Back</h1>
                         <form onsubmit="event.preventDefault(); handleAuth('login');">
@@ -324,6 +325,7 @@
                         <p class="auth-switch">Don't have an account? <span onclick="toggleAuthForm()">Sign Up</span></p>
                     </div>
 
+                    <!-- Registration Form -->
                     <div class="auth-form hidden" id="reg-form-box">
                         <h1 class="auth-title">Join Animax</h1>
                         <form onsubmit="event.preventDefault(); handleAuth('reg');">
@@ -334,6 +336,7 @@
                         </form>
                         <p class="auth-switch">Already a member? <span onclick="toggleAuthForm()">Login</span></p>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -381,7 +384,7 @@
                         </div>
                     </div>
 
-                    <!-- Tasks for Free Premium Card (ALSO OPENS PREMIUM HUB) -->
+                    <!-- Tasks for Free Premium Card (OPENS PREMIUM HUB) -->
                     <div class="b-card" onclick="openPremiumHub()">
                         <div class="b-card-left">
                             <i class="fas fa-tasks b-card-icon"></i>
@@ -608,6 +611,24 @@
     </nav>
 
     <script>
+        // LOGIN FORM TOGGLE - FIXED
+        function toggleAuthForm() {
+            let loginForm = document.getElementById('login-form-box');
+            let regForm = document.getElementById('reg-form-box');
+            
+            if (loginForm.classList.contains('active')) {
+                loginForm.classList.remove('active');
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                regForm.classList.add('active');
+            } else {
+                regForm.classList.remove('active');
+                regForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                loginForm.classList.add('active');
+            }
+        }
+
         function switchSubTab(parent, type, el) {
             let parentDiv = document.getElementById(`section-${parent}`);
             parentDiv.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
@@ -771,7 +792,6 @@
         function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
 
-        // Telegram Auto-Message Generation
         function buyPremiumTelegram(plan, price) {
             if(!currentUser) return alert("Please login first!");
             let email = currentUser.email || "User";
@@ -1224,6 +1244,7 @@
         
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
+            
             if(currentPlayType === 'movie') {
                 if(window.movieData) { 
                     window.movieData.slice(0,6).forEach(m=>{ 
