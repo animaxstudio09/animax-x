@@ -106,12 +106,9 @@
         /* LOGIN PAGE */
         .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 75vh; width: 100%; background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800'); background-size: cover; background-position: center; padding: 20px; position: relative;}
         .auth-container { position: relative; width: 100%; max-width: 380px; background: rgba(20,20,20,0.9); padding: 40px 30px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 15px 35px rgba(0,0,0,0.8); z-index: 2; overflow: hidden; }
-        
-        /* FIXED: LOGIN & SIGNUP TOGGLE CSS */
         .auth-form { width: 100%; transition: 0.3s; }
         .auth-form.hidden { display: none !important; }
         .auth-form.active { display: block !important; animation: fadeIn 0.4s; }
-
         .auth-title { color: var(--yellow); font-family: 'Orbitron'; font-size: 24px; text-align: center; margin-bottom: 25px; letter-spacing: 1px;}
         .auth-input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #444; padding: 14px; border-radius: 6px; color: #fff; margin-bottom: 15px; font-family: 'Outfit'; outline: none; transition: 0.3s; }
         .auth-btn { width: 100%; background: var(--yellow); color: #000; font-weight: bold; font-family: 'Orbitron'; padding: 14px; border-radius: 6px; border: none; cursor: pointer; transition: 0.3s; margin-top: 10px; font-size: 15px;}
@@ -470,34 +467,34 @@
                 <div class="ben-item"><div class="ben-icon"><i class="fas fa-download"></i></div><span class="ben-text">Downloads</span></div>
             </div>
 
-            <!-- Buy Now Buttons Grid -->
+            <!-- Buy Now Buttons Grid (TK Pricing) -->
             <div class="buy-grid-3">
                 <div class="redeem-card">
                     <div class="redeem-days">1 Month</div>
-                    <div class="redeem-cost">$1</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('1 Month', '$1')">Buy Now</button>
+                    <div class="redeem-cost">50 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('1 Month', '50 tk')">Buy Now</button>
                 </div>
                 <div class="redeem-card">
                     <div class="redeem-days">3 Month</div>
-                    <div class="redeem-cost">$2</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('3 Month', '$2')">Buy Now</button>
+                    <div class="redeem-cost">100 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('3 Month', '100 tk')">Buy Now</button>
                 </div>
                 <div class="redeem-card">
                     <div class="redeem-days">5 Month</div>
-                    <div class="redeem-cost">$3</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('5 Month', '$3')">Buy Now</button>
+                    <div class="redeem-cost">200 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('5 Month', '200 tk')">Buy Now</button>
                 </div>
             </div>
             <div class="buy-grid-2">
                 <div class="redeem-card">
-                    <div class="redeem-days">8 Month</div>
-                    <div class="redeem-cost">$4</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('8 Month', '$4')">Buy Now</button>
+                    <div class="redeem-days">12 Month</div>
+                    <div class="redeem-cost">400 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '400 tk')">Buy Now</button>
                 </div>
                 <div class="redeem-card">
-                    <div class="redeem-days">12 Month</div>
-                    <div class="redeem-cost">$5</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '$5')">Buy Now</button>
+                    <div class="redeem-days">24 Month</div>
+                    <div class="redeem-cost">700 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('24 Month', '700 tk')">Buy Now</button>
                 </div>
             </div>
 
@@ -792,6 +789,7 @@
         function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
 
+        // Telegram Auto-Message Generation (UPDATED FOR TK)
         function buyPremiumTelegram(plan, price) {
             if(!currentUser) return alert("Please login first!");
             let email = currentUser.email || "User";
