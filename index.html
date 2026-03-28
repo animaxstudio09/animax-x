@@ -40,7 +40,7 @@
         :root { 
             --primary-bg: #121212;
             --header-bg: #111111;
-            --yellow: #ffc107; /* Reverted to Original Orange/Yellow Theme */
+            --yellow: #ffc107;
             --dark-gray: #1e1e1e;
             --light-gray: #dddddd;
         }
@@ -144,7 +144,7 @@
         .b-card-left { display: flex; align-items: center; gap: 15px; }
         .b-card-icon { font-size: 22px; color: var(--yellow); }
         .b-card-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px;}
-        .b-card-sub { font-size: 12px; color: #888; font-family: 'Orbitron'; letter-spacing: 0.5px;} /* Special font for Live Timer */
+        .b-card-sub { font-size: 12px; color: #888; font-family: 'Orbitron'; letter-spacing: 0.5px;}
         .b-card-right { display: flex; align-items: center; gap: 10px; color: #666; font-size: 14px;}
         .b-badge { background: #333; color: var(--yellow); padding: 3px 8px; border-radius: 12px; font-size: 11px; display: flex; align-items: center; gap: 4px;}
         
@@ -335,8 +335,8 @@
                         <span>Find Community Mode in Telegram for daily updates.</span>
                     </div>
 
-                    <!-- Premium Trial Card -->
-                    <div class="b-card">
+                    <!-- VIP Premium Status Card -->
+                    <div class="b-card" onclick="togglePremiumInput()">
                         <div class="b-card-left">
                             <i class="fas fa-crown b-card-icon"></i>
                             <div>
@@ -350,23 +350,23 @@
                         </div>
                     </div>
 
-                    <!-- Task / Redeem Key Card -->
-                    <div class="b-card" onclick="togglePremiumInput()">
-                        <div class="b-card-left">
-                            <i class="fas fa-tasks b-card-icon"></i>
-                            <div>
-                                <div class="b-card-title">Tasks for Free Premium</div>
-                                <div class="b-card-sub" style="font-family:'Roboto';">Redeem Key to get premium</div>
-                            </div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:#666;"></i>
-                    </div>
-
                     <!-- Hidden Premium Code Input -->
                     <div id="b-premium-input-area">
                         <input type="text" id="prem-code" class="prem-inp" placeholder="PASTE KEY HERE">
                         <button class="b-btn-primary" onclick="redeemCode()" style="width:100%;">ACTIVATE PREMIUM</button>
                         <p style="font-size:11px; margin-top:15px; color:#aaa; cursor:pointer;" onclick="buyPremium()">Don't have a key? <u style="color:var(--yellow);">Get from Admin</u></p>
+                    </div>
+
+                    <!-- Tasks for Free Premium Card -->
+                    <div class="b-card">
+                        <div class="b-card-left">
+                            <i class="fas fa-tasks b-card-icon"></i>
+                            <div>
+                                <div class="b-card-title">Tasks for Free Premium</div>
+                                <div class="b-card-sub" style="font-family:'Roboto';">Complete task to get premium</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#666;"></i>
                     </div>
 
                     <!-- Hot Novels (Link to Telegram) -->
@@ -614,7 +614,7 @@
         }
 
         // ==========================================
-        // FIXED: LIVE VIP COUNTDOWN TIMER
+        // LIVE VIP COUNTDOWN TIMER
         // ==========================================
         let vipTimerInterval = null;
 
@@ -639,12 +639,11 @@
 
                 const actualServerTime = Date.now() + serverTimeOffset;
                 
-                if(vipTimerInterval) clearInterval(vipTimerInterval); // Clear old timer
+                if(vipTimerInterval) clearInterval(vipTimerInterval);
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
                     
-                    // Update Timer Every Second
                     vipTimerInterval = setInterval(() => {
                         let now = Date.now() + serverTimeOffset;
                         let timeLeft = d.premiumExpiry - now;
@@ -661,12 +660,11 @@
                             let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                             let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
                             
-                            // Format: "3d 14h 25m 10s left"
                             let timerText = `${days}d ${hours}h ${minutes}m ${seconds}s left`;
                             document.getElementById('b-vip-status').innerText = timerText; 
                             document.getElementById('b-vip-status').style.color = "var(--yellow)";
                         }
-                    }, 1000); // 1000ms = 1 second
+                    }, 1000); 
                     
                 } else { 
                     isPremium = false; 
@@ -968,9 +966,41 @@
         
         function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
         
+        // ==========================================
+        // FIXED: RELATED VIDEOS BY CATEGORY ONLY
+        // ==========================================
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
-            if(window.movieData) { window.movieData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}"></div><div class="folder-title">${m.title}</div></div>`; }); }
+            
+            if(currentPlayType === 'movie') {
+                if(window.movieData) { 
+                    window.movieData.slice(0,6).forEach(m=>{ 
+                        let sid=m.id||m.title; 
+                        let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
+                        g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; 
+                    }); 
+                }
+            } else if(currentPlayType === 'cartoon') {
+                if(window.cartoonData) { 
+                    window.cartoonData.slice(0,6).forEach(m=>{ 
+                        let sid=m.id||m.title; 
+                        let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>';
+                        g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; 
+                    }); 
+                }
+            } else {
+                // Default is Anime
+                if(window.animeData) {
+                    let count = 0;
+                    Object.keys(window.animeData).forEach(n=>{ 
+                        if(count >= 6) return;
+                        let f = window.animeData[n][0]; 
+                        let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>';
+                        g.innerHTML+=`<div class="folder-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${n}</div></div>`; 
+                        count++;
+                    }); 
+                }
+            }
         }
 
         // --- SHORTS VIDEO LOGIC ---
