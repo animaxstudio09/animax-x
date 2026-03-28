@@ -125,8 +125,9 @@
         .b-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;}
         .b-user-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color:var(--yellow); font-family: 'Orbitron';}
         .b-user-id { background: #2a2a2a; padding: 4px 12px; border-radius: 12px; font-size: 12px; color: #aaa; display: inline-block; border: 1px solid #444;}
-        .b-btn-primary { background: var(--yellow); color: #000; padding: 8px 18px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron';}
+        
         .b-banner-alert { background: rgba(255, 193, 7, 0.1); color: var(--yellow); padding: 12px 15px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; cursor: pointer; border: 1px solid rgba(255, 193, 7, 0.3);}
+        
         .b-card { background: #1a1a1a; border-radius: 8px; padding: 18px 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid #222;}
         .b-card-left { display: flex; align-items: center; gap: 15px; }
         .b-card-icon { font-size: 22px; color: var(--yellow); }
@@ -134,12 +135,14 @@
         .b-card-sub { font-size: 12px; color: #888; font-family: 'Orbitron'; letter-spacing: 0.5px;}
         .b-card-right { display: flex; align-items: center; gap: 10px; color: #666; font-size: 14px;}
         .b-badge { background: #333; color: var(--yellow); padding: 3px 8px; border-radius: 12px; font-size: 11px; display: flex; align-items: center; gap: 4px;}
+        
         .b-list-group { background: #1a1a1a; border-radius: 8px; margin-bottom: 15px; overflow: hidden; border: 1px solid #222; }
         .b-list-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 15px; border-bottom: 1px solid #222; cursor: pointer; }
         .b-list-item:last-child { border-bottom: none; }
         .b-list-item-left { display: flex; align-items: center; gap: 15px; font-size: 15px; color:#eee;}
         .b-list-item-left i { font-size: 18px; color: #aaa; width: 20px; text-align: center; }
         .b-list-item-right { color: #888; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        
         .b-history-section { padding: 5px 15px 15px 15px; border-bottom: 1px solid #222;}
         .b-history-scroll { display: flex; gap: 12px; overflow-x: auto; margin-top: 10px; scrollbar-width: none; padding-bottom: 5px; }
         .b-history-scroll::-webkit-scrollbar { display: none; }
@@ -148,46 +151,63 @@
         .b-history-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
         .b-history-type { position: absolute; top: 5px; left: 5px; background: rgba(255, 193, 7, 0.9); color: #000; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold;}
         .b-history-title { font-size: 12px; color: #ccc; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #b-premium-input-area { display: none; padding: 15px; background: #1a1a1a; margin-bottom: 15px; border-radius: 8px; text-align:center; border: 1px solid var(--yellow);}
-        .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; margin: 10px 0; outline:none; border-radius: 4px; text-align: center; letter-spacing: 2px;}
 
         /* ========================================================
-           NEW REWARD TASK UI
+           NEW PREMIUM HUB (Combined Key, Buy, Redeem & Tasks)
            ======================================================== */
-        #task-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f0f0f; z-index: 6000; overflow-y: auto; padding-bottom: 30px; font-family: 'Roboto', sans-serif;}
+        #premium-hub-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f0f0f; z-index: 6000; overflow-y: auto; padding-bottom: 30px; font-family: 'Roboto', sans-serif;}
         .task-header { display: flex; align-items: center; padding: 15px; background: #0a0a0a; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #222;}
         .task-back { font-size: 20px; color: #fff; margin-right: 15px; cursor: pointer;}
         .task-title { font-size: 16px; font-weight: bold; flex: 1; text-align: center; margin-right: 35px; color:#fff;}
         
         .task-user-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; }
         .task-u-left { display: flex; align-items: center; gap: 10px;}
-        .task-u-avatar { width: 30px; height: 30px; border-radius: 50%; background: #fff; object-fit: cover;}
+        .task-u-avatar { width: 30px; height: 30px; border-radius: 50%; background: #fff; object-fit: cover; border: 1px solid var(--yellow);}
         .task-u-name { font-size: 14px; color: #ccc; font-weight: bold;}
-        .task-coin-badge { background: #333; border-radius: 15px; padding: 5px 12px; font-size: 13px; font-weight: bold; color: #fff; border: 1px solid #555; display:flex; align-items:center; gap:5px;}
+        .task-coin-badge { background: #222; border-radius: 15px; padding: 5px 12px; font-size: 13px; font-weight: bold; color: #fff; border: 1px solid #555; display:flex; align-items:center; gap:5px;}
         
-        .task-section-box { border: 1px solid var(--yellow); border-radius: 12px 12px 0 0; margin: 0 10px; padding: 15px; background: #151515;}
+        .task-section-box { border: 1px solid #222; border-radius: 12px; margin: 0 10px 20px 10px; padding: 18px 15px; background: #151515; position: relative; overflow: hidden;}
+        .task-section-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--yellow); }
         .task-sec-title { text-align: center; color: var(--yellow); font-size: 16px; font-weight: bold; margin-bottom: 15px;}
         
-        .redeem-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        /* Paste Key Input */
+        .prem-inp-hub { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; outline:none; border-radius: 6px; text-align: center; letter-spacing: 2px; font-family: 'Orbitron'; margin-bottom: 10px;}
+        .b-btn-primary { width: 100%; background: var(--yellow); color: #000; padding: 12px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron';}
+
+        /* Benefits Icons */
+        .premium-benefits { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; margin-bottom: 5px;}
+        .ben-item { display: flex; flex-direction: column; align-items: center; gap: 8px;}
+        .ben-icon { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--yellow); border-radius: 8px; color: var(--yellow); font-size: 18px; background: rgba(255, 193, 7, 0.05);}
+        .ben-text { font-size: 11px; color: #ccc; font-weight: bold;}
+        .ben-plus { color: #555; font-size: 16px; font-weight: bold;}
+
+        /* Buy & Redeem Grids */
+        .buy-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;}
+        .buy-grid-2 { display: flex; justify-content: center; gap: 10px;}
+        .buy-grid-2 > div { width: calc(33.33% - 6px); }
+
         .redeem-card { background: #222; border-radius: 8px; text-align: center; display:flex; flex-direction: column; overflow:hidden; border: 1px solid #333;}
-        .redeem-days { padding: 10px 5px; color: #ddd; font-size: 13px; font-weight: bold;}
+        .redeem-days { padding: 10px 5px 5px 5px; color: #ddd; font-size: 12px;}
         .redeem-cost { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 10px;}
+        .buy-btn { width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; cursor: pointer; background: var(--yellow); color: #000; transition: 0.3s;}
         .redeem-btn { width: 100%; padding: 8px; font-size: 12px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s;}
         .redeem-btn.disabled { background: #333; color: #666; pointer-events: none;}
         .redeem-btn.active { background: var(--yellow); color: #000; pointer-events: auto;}
 
-        .task-list-box { border: 1px solid #222; border-top: none; margin: 0 10px; padding: 15px; background: #151515;}
-        .tl-title { color: var(--yellow); text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 20px;}
-        .tl-subtitle { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 15px;}
+        /* OR Divider */
+        .or-divider { display: flex; align-items: center; text-align: center; color: #666; margin: 15px 0; font-size: 11px; font-weight: bold; letter-spacing: 1px;}
+        .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px solid #333; }
+        .or-divider span { padding: 0 10px; }
 
-        .task-item { background: #222; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #333;}
-        .ti-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;} /* Fixed margin */
+        /* Task List */
+        .tl-subtitle { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 15px; text-align: center; padding-top: 10px;}
+        .task-item { background: #222; border-radius: 8px; padding: 15px; margin-bottom: 12px; border: 1px solid #333;}
+        .ti-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;} 
         .ti-info { display: flex; align-items: center; gap: 12px;}
         .ti-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover;}
-        .ti-name { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px;}
-        .ti-coin-val { font-size: 12px; color: var(--yellow); font-weight: bold; }
-        
-        .ti-btn { background: #333; color: var(--yellow); border: 1px solid #444; padding: 8px 15px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; min-width: 80px;}
+        .ti-name { font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 4px;}
+        .ti-coin-val { font-size: 11px; color: var(--yellow); font-weight: bold; }
+        .ti-btn { background: #333; color: var(--yellow); border: 1px solid #444; padding: 8px 15px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; min-width: 80px; text-align: center;}
         .ti-btn.running { background: var(--yellow); color: #000; animation: pulse 1s infinite;}
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
@@ -250,7 +270,6 @@
 
     <!-- MAIN HOME PAGE -->
     <div id="main-app" class="app-view" style="display:block;">
-        
         <div id="banner-slider">
             <div id="banner-slides-container"></div>
         </div>
@@ -347,8 +366,8 @@
                         <span>Find Community Mode in Telegram for daily updates.</span>
                     </div>
 
-                    <!-- VIP Premium Status Card (TOGGLES KEY INPUT) -->
-                    <div class="b-card" onclick="togglePremiumInput()">
+                    <!-- VIP Premium Status Card (OPENS PREMIUM HUB) -->
+                    <div class="b-card" onclick="openPremiumHub()">
                         <div class="b-card-left">
                             <i class="fas fa-crown b-card-icon"></i>
                             <div>
@@ -362,15 +381,8 @@
                         </div>
                     </div>
 
-                    <!-- Hidden Premium Code Input -->
-                    <div id="b-premium-input-area">
-                        <input type="text" id="prem-code" class="prem-inp" placeholder="PASTE KEY HERE">
-                        <button class="b-btn-primary" onclick="redeemCode()" style="width:100%;">ACTIVATE PREMIUM</button>
-                        <p style="font-size:11px; margin-top:15px; color:#aaa; cursor:pointer;" onclick="buyPremium()">Don't have a key? <u style="color:var(--yellow);">Get from Admin</u></p>
-                    </div>
-
-                    <!-- Tasks for Free Premium Card (OPENS TASK VIEW) -->
-                    <div class="b-card" onclick="openTaskView()">
+                    <!-- Tasks for Free Premium Card (ALSO OPENS PREMIUM HUB) -->
+                    <div class="b-card" onclick="openPremiumHub()">
                         <div class="b-card-left">
                             <i class="fas fa-tasks b-card-icon"></i>
                             <div>
@@ -411,25 +423,18 @@
                             <div class="b-history-scroll" id="b-recent-history-scroll"></div>
                         </div>
                     </div>
-
-                    <div class="b-list-group">
-                        <div class="b-list-item">
-                            <div class="b-list-item-left"><i class="far fa-bell"></i> Messages</div>
-                            <div class="b-list-item-right"><span style="background:#e53935; color:#fff; padding:2px 6px; border-radius:10px; font-size:10px; font-weight:bold;">2</span> <i class="fas fa-chevron-right"></i></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ==========================================
-         NEW: REWARD TASK VIEW (10 Tasks + Daily Reset)
+         NEW: UNIFIED PREMIUM HUB (Pricing, Redeem, Tasks)
          ========================================== -->
-    <div id="task-view">
+    <div id="premium-hub-view">
         <div class="task-header">
-            <i class="fas fa-arrow-left task-back" onclick="closeTaskView()"></i>
-            <div class="task-title">Get points and get ad free</div>
+            <i class="fas fa-arrow-left task-back" onclick="closePremiumHub()"></i>
+            <div class="task-title">Premium Center</div>
         </div>
         
         <div class="task-user-row">
@@ -442,22 +447,71 @@
             </div>
         </div>
 
+        <!-- 1. Redeem Code Section -->
         <div class="task-section-box">
-            <div class="task-sec-title">Extent your Premium benefits</div>
-            <div class="redeem-row">
-                <!-- 16 Hours -->
+            <div class="task-sec-title">Redeem VIP Key</div>
+            <input type="text" id="prem-code" class="prem-inp-hub" placeholder="PASTE KEY HERE">
+            <button class="b-btn-primary" onclick="redeemCode()">ACTIVATE PREMIUM</button>
+            <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
+        </div>
+
+        <!-- 2. Benefits & Paid Options Section -->
+        <div class="task-section-box">
+            <div class="task-sec-title" style="margin-bottom: 5px;">Extent your Premium benefits</div>
+            
+            <div class="premium-benefits">
+                <div class="ben-item"><div class="ben-icon"><i class="fas fa-ad"></i></div><span class="ben-text">No ads</span></div>
+                <div class="ben-plus">+</div>
+                <div class="ben-item"><div class="ben-icon"><i class="fas fa-tv"></i></div><span class="ben-text">1080p HD</span></div>
+                <div class="ben-plus">+</div>
+                <div class="ben-item"><div class="ben-icon"><i class="fas fa-download"></i></div><span class="ben-text">Downloads</span></div>
+            </div>
+
+            <!-- Buy Now Buttons Grid -->
+            <div class="buy-grid-3">
+                <div class="redeem-card">
+                    <div class="redeem-days">1 Month</div>
+                    <div class="redeem-cost">$1</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('1 Month', '$1')">Buy Now</button>
+                </div>
+                <div class="redeem-card">
+                    <div class="redeem-days">3 Month</div>
+                    <div class="redeem-cost">$2</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('3 Month', '$2')">Buy Now</button>
+                </div>
+                <div class="redeem-card">
+                    <div class="redeem-days">5 Month</div>
+                    <div class="redeem-cost">$3</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('5 Month', '$3')">Buy Now</button>
+                </div>
+            </div>
+            <div class="buy-grid-2">
+                <div class="redeem-card">
+                    <div class="redeem-days">8 Month</div>
+                    <div class="redeem-cost">$4</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('8 Month', '$4')">Buy Now</button>
+                </div>
+                <div class="redeem-card">
+                    <div class="redeem-days">12 Month</div>
+                    <div class="redeem-cost">$5</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '$5')">Buy Now</button>
+                </div>
+            </div>
+
+            <div class="or-divider"><span>OR EXCHANGE POINTS</span></div>
+
+            <!-- Point Redeem Grid -->
+            <div class="buy-grid-3">
                 <div class="redeem-card">
                     <div class="redeem-days">16 Hours</div>
                     <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 5</div>
                     <button class="redeem-btn disabled" id="rbtn-1" onclick="redeemPointsForVIP(16, 5)">Redeem</button>
                 </div>
-                <!-- 3 Days (72 Hours) -->
                 <div class="redeem-card">
                     <div class="redeem-days">3 Days</div>
                     <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 15</div>
                     <button class="redeem-btn disabled" id="rbtn-7" onclick="redeemPointsForVIP(72, 15)">Redeem</button>
                 </div>
-                <!-- 10 Days (240 Hours) -->
                 <div class="redeem-card">
                     <div class="redeem-days">10 Days</div>
                     <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 45</div>
@@ -466,15 +520,14 @@
             </div>
         </div>
 
-        <div class="task-list-box">
-            <div class="tl-title">Complete tasks to get points</div>
+        <!-- 3. Free Tasks Section -->
+        <div class="task-section-box" style="border-radius:12px; border-top: 1px solid #222;">
+            <div class="task-sec-title" style="color:#fff; margin-bottom: 5px;">Free Trial Premium</div>
             <div class="tl-subtitle">Must view AD for 30s to get +2 points</div>
             
-            <!-- DYNAMIC 10 TASKS CONTAINER -->
             <div id="dynamic-task-list">
-                <!-- Javascript will load 10 tasks here -->
+                <!-- Javascript loads 10 tasks here -->
             </div>
-
         </div>
     </div>
 
@@ -555,20 +608,6 @@
     </nav>
 
     <script>
-        // TOGGLE PREMIUM INPUT FIELD
-        function togglePremiumInput() {
-            const el = document.getElementById('b-premium-input-area');
-            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-        }
-
-        // LOGIN FORM TOGGLE
-        function toggleAuthForm() {
-            document.getElementById('login-form-box').classList.toggle('hidden');
-            document.getElementById('login-form-box').classList.toggle('active');
-            document.getElementById('reg-form-box').classList.toggle('hidden');
-            document.getElementById('reg-form-box').classList.toggle('active');
-        }
-
         function switchSubTab(parent, type, el) {
             let parentDiv = document.getElementById(`section-${parent}`);
             parentDiv.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
@@ -578,7 +617,7 @@
         }
 
         function switchTab(t) { 
-            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts(); closeTaskView();
+            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts(); closePremiumHub();
             const searchBox = document.getElementById('main-search-box');
             if(t==='home') { document.getElementById('main-app').style.display='block'; if(searchBox) searchBox.style.display = 'block'; }
             if(t==='profile') { 
@@ -637,7 +676,7 @@
                 document.getElementById('user-profile-content').style.display = 'block'; 
                 checkPremium(user.uid); 
                 loadRecentHistoryUI(); 
-                loadDailyTasks(); // Load Dynamic 10 Tasks Here
+                loadDailyTasks(); 
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; 
@@ -672,7 +711,6 @@
                 if(!currentUser || currentUser.uid !== uid) return; 
                 const d = s.val() || {};
                 
-                // Set Points
                 userPoints = d.points || 0;
                 document.getElementById('task-coin-balance').innerText = userPoints;
                 updateRedeemButtonsUI();
@@ -692,12 +730,10 @@
                 });
 
                 const actualServerTime = Date.now() + serverTimeOffset;
-                
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
-                    
                     vipTimerInterval = setInterval(() => {
                         let now = Date.now() + serverTimeOffset;
                         let timeLeft = d.premiumExpiry - now;
@@ -719,24 +755,33 @@
                             document.getElementById('b-vip-status').style.color = "var(--yellow)";
                         }
                     }, 1000); 
-                    
                 } else { 
                     isPremium = false; 
                     document.getElementById('b-vip-status').innerText = "Free User"; 
                     document.getElementById('b-vip-status').style.color = "#888";
                     injectFreeAds(); 
-                    if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) {
-                        db.ref(`users/${uid}/premiumExpiry`).remove();
-                    }
+                    if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) { db.ref(`users/${uid}/premiumExpiry`).remove(); }
                 }
             });
         }
 
         // ==========================================
+        // NEW: UNIFIED PREMIUM HUB & BUY PREMIUM
+        // ==========================================
+        function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
+        function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
+
+        // Telegram Auto-Message Generation
+        function buyPremiumTelegram(plan, price) {
+            if(!currentUser) return alert("Please login first!");
+            let email = currentUser.email || "User";
+            let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`;
+            window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // ==========================================
         // DYNAMIC 10 TASKS & DAILY RESET LOGIC
         // ==========================================
-        
-        // Permanent Flaticon Gaming/App Icons
         const dailyTasksData = [
             { id: "t1", name: "Block Puzzle Ad", img: "https://cdn-icons-png.flaticon.com/512/808/808439.png" },
             { id: "t2", name: "Rolling Twins Ad", img: "https://cdn-icons-png.flaticon.com/512/136/136524.png" },
@@ -750,7 +795,6 @@
             { id: "t10", name: "Coin Master Ad", img: "https://cdn-icons-png.flaticon.com/512/1021/1021207.png" }
         ];
 
-        // Returns Local Date YYYY-MM-DD (Resets strictly at Local Midnight 12:00 AM)
         function getTodayDate() {
             let d = new Date();
             return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0');
@@ -758,27 +802,24 @@
 
         function loadDailyTasks() {
             if(!currentUser) return;
-            let today = getTodayDate(); // e.g., "2023-10-25"
+            let today = getTodayDate(); 
             
-            // This reads current completed tasks for TODAY ONLY. 
-            // Previous days are ignored, acting as an automatic reset.
             db.ref(`users/${currentUser.uid}/daily_tasks/${today}`).on('value', snap => {
                 let completedTasks = snap.val() || {};
                 let container = document.getElementById('dynamic-task-list');
                 if(!container) return;
                 
-                container.innerHTML = ""; // Clear list
+                container.innerHTML = ""; 
                 
                 dailyTasksData.forEach(task => {
                     let isDone = completedTasks[task.id];
-                    
                     let btnHTML = isDone 
                         ? `<button class="ti-btn" style="background:#333;color:#666;cursor:not-allowed;">Completed</button>`
                         : `<button class="ti-btn" id="btn-${task.id}" onclick="startWebTask('${task.id}', this, 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871')">Get Now</button>`;
                     
                     container.innerHTML += `
                     <div class="task-item">
-                        <div class="ti-top" style="margin-bottom:0;">
+                        <div class="ti-top">
                             <div class="ti-info">
                                 <img src="${task.img}" class="ti-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/107/107783.png'">
                                 <div>
@@ -792,10 +833,6 @@
                 });
             });
         }
-
-
-        function openTaskView() { document.getElementById('task-view').style.display = 'block'; }
-        function closeTaskView() { document.getElementById('task-view').style.display = 'none'; }
 
         function updateRedeemButtonsUI() {
             const b1 = document.getElementById('rbtn-1');
@@ -843,42 +880,27 @@
             if(activeTask) return alert("Please finish or cancel your current task first!");
             
             let popup = window.open(adLink, '_blank');
-            if(!popup) {
-                alert("Popup blocked! Please allow popups to complete tasks.");
-                return;
-            }
+            if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
             
-            activeTask = {
-                id: taskId,
-                btnEl: btnEl,
-                startTime: Date.now(),
-                completed: false
-            };
+            activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
 
             btnEl.innerText = "Verifying...";
             btnEl.classList.add('running');
             btnEl.onclick = () => { alert("Please stay on the ad page for full 30 seconds!"); };
 
-            // Backup auto-complete for split screen / users who don't switch tabs
             activeInterval = setInterval(() => {
                 if(!activeTask) { clearInterval(activeInterval); return; }
                 let elapsed = Date.now() - activeTask.startTime;
-                if(elapsed >= 30000 && !activeTask.completed) {
-                    completeTaskSuccess();
-                }
+                if(elapsed >= 30000 && !activeTask.completed) completeTaskSuccess();
             }, 1000);
         }
 
-        // Triggered when user returns to app tab
         function checkTaskStatus() {
             if (!activeTask) return;
             let elapsed = Date.now() - activeTask.startTime;
-            
-            // Give 2s buffer (if they switch instantly, ignore)
             if (elapsed < 2000) return; 
 
             if (elapsed < 30000 && !activeTask.completed) {
-                // User came back too early -> FAILED
                 clearInterval(activeInterval);
                 alert(`❌ Task Failed!\n\nYou returned after ${Math.floor(elapsed/1000)} seconds.\nYou must view the ad for full 30 seconds!`);
                 activeTask.btnEl.innerText = "Get Now";
@@ -890,21 +912,17 @@
                 
                 activeTask = null;
             } else if (elapsed >= 30000 && !activeTask.completed) {
-                // Success!
                 completeTaskSuccess();
             }
         }
 
         function completeTaskSuccess() {
             if(!activeTask) return;
-            let taskId = activeTask.id; // Store ID securely
+            let taskId = activeTask.id; 
             activeTask.completed = true;
             clearInterval(activeInterval);
             
-            // Give Points
             db.ref(`users/${currentUser.uid}/points`).set(userPoints + 2);
-            
-            // Mark Task as Done for Today
             let today = getTodayDate();
             db.ref(`users/${currentUser.uid}/daily_tasks/${today}/${taskId}`).set(true);
 
@@ -1204,12 +1222,8 @@
         
         function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
         
-        // ==========================================
-        // FIXED: RELATED VIDEOS BY CATEGORY ONLY
-        // ==========================================
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
-            
             if(currentPlayType === 'movie') {
                 if(window.movieData) { 
                     window.movieData.slice(0,6).forEach(m=>{ 
