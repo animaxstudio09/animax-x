@@ -488,34 +488,34 @@
             <div class="buy-grid-2">
                 <div class="redeem-card">
                     <div class="redeem-days">12 Month</div>
-                    <div class="redeem-cost">400 tk</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '400 tk')">Buy Now</button>
+                    <div class="redeem-cost">500 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '500 tk')">Buy Now</button>
                 </div>
                 <div class="redeem-card">
                     <div class="redeem-days">24 Month</div>
-                    <div class="redeem-cost">700 tk</div>
-                    <button class="buy-btn" onclick="buyPremiumTelegram('24 Month', '700 tk')">Buy Now</button>
+                    <div class="redeem-cost">800 tk</div>
+                    <button class="buy-btn" onclick="buyPremiumTelegram('24 Month', '800 tk')">Buy Now</button>
                 </div>
             </div>
 
             <div class="or-divider"><span>OR EXCHANGE POINTS</span></div>
 
-            <!-- Point Redeem Grid -->
+            <!-- Point Redeem Grid (10 Hours, 1 Day, 3 Days) -->
             <div class="buy-grid-3">
                 <div class="redeem-card">
-                    <div class="redeem-days">16 Hours</div>
+                    <div class="redeem-days">10 Hours</div>
                     <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 5</div>
-                    <button class="redeem-btn disabled" id="rbtn-1" onclick="redeemPointsForVIP(16, 5)">Redeem</button>
+                    <button class="redeem-btn disabled" id="rbtn-1" onclick="redeemPointsForVIP(10, 5)">Redeem</button>
+                </div>
+                <div class="redeem-card">
+                    <div class="redeem-days">1 Day</div>
+                    <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 15</div>
+                    <button class="redeem-btn disabled" id="rbtn-7" onclick="redeemPointsForVIP(24, 15)">Redeem</button>
                 </div>
                 <div class="redeem-card">
                     <div class="redeem-days">3 Days</div>
-                    <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 15</div>
-                    <button class="redeem-btn disabled" id="rbtn-7" onclick="redeemPointsForVIP(72, 15)">Redeem</button>
-                </div>
-                <div class="redeem-card">
-                    <div class="redeem-days">10 Days</div>
                     <div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 45</div>
-                    <button class="redeem-btn disabled" id="rbtn-30" onclick="redeemPointsForVIP(240, 45)">Redeem</button>
+                    <button class="redeem-btn disabled" id="rbtn-30" onclick="redeemPointsForVIP(72, 45)">Redeem</button>
                 </div>
             </div>
         </div>
@@ -526,7 +526,7 @@
             <div class="tl-subtitle">Must view AD for 30s to get +2 points</div>
             
             <div id="dynamic-task-list">
-                <!-- Javascript loads 10 tasks here -->
+                <!-- Javascript loads 20 tasks here -->
             </div>
         </div>
     </div>
@@ -729,6 +729,7 @@
                 if(!currentUser || currentUser.uid !== uid) return; 
                 const d = s.val() || {};
                 
+                // Set Points
                 userPoints = d.points || 0;
                 document.getElementById('task-coin-balance').innerText = userPoints;
                 updateRedeemButtonsUI();
@@ -789,7 +790,7 @@
         function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
 
-        // Telegram Auto-Message Generation (UPDATED FOR TK)
+        // Telegram Auto-Message Generation
         function buyPremiumTelegram(plan, price) {
             if(!currentUser) return alert("Please login first!");
             let email = currentUser.email || "User";
@@ -798,7 +799,7 @@
         }
 
         // ==========================================
-        // DYNAMIC 10 TASKS & DAILY RESET LOGIC
+        // DYNAMIC 20 TASKS & DAILY RESET LOGIC
         // ==========================================
         const dailyTasksData = [
             { id: "t1", name: "Block Puzzle Ad", img: "https://cdn-icons-png.flaticon.com/512/808/808439.png" },
@@ -810,7 +811,17 @@
             { id: "t7", name: "Race Master Ad", img: "https://cdn-icons-png.flaticon.com/512/3202/3202926.png" },
             { id: "t8", name: "Sniper 3D Ad", img: "https://cdn-icons-png.flaticon.com/512/3801/3801530.png" },
             { id: "t9", name: "Farm Heroes Ad", img: "https://cdn-icons-png.flaticon.com/512/2689/2689408.png" },
-            { id: "t10", name: "Coin Master Ad", img: "https://cdn-icons-png.flaticon.com/512/1021/1021207.png" }
+            { id: "t10", name: "Coin Master Ad", img: "https://cdn-icons-png.flaticon.com/512/1021/1021207.png" },
+            { id: "t11", name: "Subway Surfers Ad", img: "https://cdn-icons-png.flaticon.com/512/888/888856.png" },
+            { id: "t12", name: "Ludo King Ad", img: "https://cdn-icons-png.flaticon.com/512/806/806126.png" },
+            { id: "t13", name: "8 Ball Pool Ad", img: "https://cdn-icons-png.flaticon.com/512/3039/3039395.png" },
+            { id: "t14", name: "Temple Run Ad", img: "https://cdn-icons-png.flaticon.com/512/888/888874.png" },
+            { id: "t15", name: "Angry Birds Ad", img: "https://cdn-icons-png.flaticon.com/512/1033/1033324.png" },
+            { id: "t16", name: "Clash of Clans Ad", img: "https://cdn-icons-png.flaticon.com/512/1033/1033306.png" },
+            { id: "t17", name: "Free Fire Ad", img: "https://cdn-icons-png.flaticon.com/512/3211/3211516.png" },
+            { id: "t18", name: "PUBG Mobile Ad", img: "https://cdn-icons-png.flaticon.com/512/3094/3094825.png" },
+            { id: "t19", name: "Roblox Ad", img: "https://cdn-icons-png.flaticon.com/512/3801/3801538.png" },
+            { id: "t20", name: "Minecraft Ad", img: "https://cdn-icons-png.flaticon.com/512/1068/1068777.png" }
         ];
 
         function getTodayDate() {
@@ -853,18 +864,13 @@
         }
 
         function updateRedeemButtonsUI() {
-            const b1 = document.getElementById('rbtn-1');
-            const b7 = document.getElementById('rbtn-7');
-            const b30 = document.getElementById('rbtn-30');
+            const btns1 = document.querySelectorAll('#rbtn-1');
+            const btns7 = document.querySelectorAll('#rbtn-7');
+            const btns30 = document.querySelectorAll('#rbtn-30');
             
-            if(userPoints >= 5) { b1.classList.remove('disabled'); b1.classList.add('active'); } 
-            else { b1.classList.add('disabled'); b1.classList.remove('active'); }
-            
-            if(userPoints >= 15) { b7.classList.remove('disabled'); b7.classList.add('active'); } 
-            else { b7.classList.add('disabled'); b7.classList.remove('active'); }
-
-            if(userPoints >= 45) { b30.classList.remove('disabled'); b30.classList.add('active'); } 
-            else { b30.classList.add('disabled'); b30.classList.remove('active'); }
+            btns1.forEach(b => { if(userPoints >= 5) { b.classList.remove('disabled'); b.classList.add('active'); } else { b.classList.add('disabled'); b.classList.remove('active'); } });
+            btns7.forEach(b => { if(userPoints >= 15) { b.classList.remove('disabled'); b.classList.add('active'); } else { b.classList.add('disabled'); b.classList.remove('active'); } });
+            btns30.forEach(b => { if(userPoints >= 45) { b.classList.remove('disabled'); b.classList.add('active'); } else { b.classList.add('disabled'); b.classList.remove('active'); } });
         }
 
         function redeemPointsForVIP(hours, cost) {
