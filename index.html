@@ -152,8 +152,12 @@
         .b-history-type { position: absolute; top: 5px; left: 5px; background: rgba(255, 193, 7, 0.9); color: #000; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold;}
         .b-history-title { font-size: 12px; color: #ccc; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Premium input hidden initially */
+        #b-premium-input-area { display: none; padding: 15px; background: #1a1a1a; margin-bottom: 15px; border-radius: 8px; text-align:center; border: 1px solid var(--yellow);}
+        .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; margin: 10px 0; outline:none; border-radius: 4px; text-align: center; letter-spacing: 2px;}
+
         /* ========================================================
-           PREMIUM HUB (Combined Key, Buy, Redeem & Tasks)
+           UNIFIED PREMIUM HUB (Pricing, Redeem, Tasks)
            ======================================================== */
         #premium-hub-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f0f0f; z-index: 6000; overflow-y: auto; padding-bottom: 30px; font-family: 'Roboto', sans-serif;}
         .task-header { display: flex; align-items: center; padding: 15px; background: #0a0a0a; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #222;}
@@ -381,6 +385,13 @@
                         </div>
                     </div>
 
+                    <!-- Hidden Premium Code Input (Profile Context) -->
+                    <div id="b-premium-input-area">
+                        <input type="text" id="prem-code-profile" class="prem-inp" placeholder="PASTE KEY HERE">
+                        <button class="b-btn-primary" onclick="redeemCode('prem-code-profile')" style="width:100%;">ACTIVATE PREMIUM</button>
+                        <p style="font-size:11px; margin-top:15px; color:#aaa; cursor:pointer;" onclick="buyPremium()">Don't have a key? <u style="color:var(--yellow);">Get from Admin</u></p>
+                    </div>
+
                     <!-- Tasks for Free Premium Card (OPENS PREMIUM HUB) -->
                     <div class="b-card" onclick="openPremiumHub()">
                         <div class="b-card-left">
@@ -447,11 +458,11 @@
             </div>
         </div>
 
-        <!-- 1. Redeem Code Section -->
+        <!-- 1. Redeem Code Section (Hub Context) -->
         <div class="task-section-box">
             <div class="task-sec-title">Redeem VIP Key</div>
-            <input type="text" id="prem-code" class="prem-inp-hub" placeholder="PASTE KEY HERE">
-            <button class="b-btn-primary" onclick="redeemCode()">ACTIVATE PREMIUM</button>
+            <input type="text" id="prem-code-hub" class="prem-inp-hub" placeholder="PASTE KEY HERE">
+            <button class="b-btn-primary" onclick="redeemCode('prem-code-hub')">ACTIVATE PREMIUM</button>
             <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
         </div>
 
@@ -1298,22 +1309,47 @@
             document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); 
         }
 
-        // VIP CODE SYSTEM
-        function redeemCode() { 
+        // ==========================================
+        // DYNAMIC VIP CODE SYSTEM FIX
+        // ==========================================
+        function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
-            const c = document.getElementById('prem-code').value.trim().toUpperCase(); 
+            
+            // Get the input safely depending on which button was clicked
+            let inputEl = document.getElementById(inputId);
+            if(!inputEl) return;
+
+            const c = inputEl.value.trim().toUpperCase(); 
             if(!c) return alert("Enter Code!");
             
             db.ref(`premium_codes/${c}`).once('value', s => { 
                 if(s.exists()) {
                     let codeData = s.val();
                     if(codeData.status === 'unused'){ 
-                        let expiryTime = Date.now() + serverTimeOffset + (30 * 24 * 60 * 60 * 1000);
-                        db.ref(`premium_codes/${c}`).update({ status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: Date.now() + serverTimeOffset }).then(() => {
-                            db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: expiryTime }).then(() => {
-                                alert("🎉 VIP ACTIVATED SUCCESSFULLY!"); location.reload(); 
+                        
+                        let actualTime = Date.now() + serverTimeOffset;
+                        
+                        // Extend if active, or start fresh if expired
+                        db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
+                            let currentExp = snap.val() || 0;
+                            let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
+                            
+                            // Check if code has specific days, otherwise default to 30 days
+                            let daysToAdd = codeData.days ? parseInt(codeData.days) : 30; 
+                            let newExp = baseTime + (daysToAdd * 24 * 60 * 60 * 1000);
+
+                            db.ref(`premium_codes/${c}`).update({ 
+                                status:'used', 
+                                usedBy: currentUser.email || currentUser.uid, 
+                                usedAt: actualTime 
+                            }).then(() => {
+                                db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => {
+                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); 
+                                    location.reload(); 
+                                });
                             });
                         });
+
                     } else { alert("❌ This code is already used!"); }
                 } else alert("❌ Invalid Code!"); 
             }); 
