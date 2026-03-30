@@ -152,6 +152,30 @@
         .b-history-type { position: absolute; top: 5px; left: 5px; background: rgba(255, 193, 7, 0.9); color: #000; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold;}
         .b-history-title { font-size: 12px; color: #ccc; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Premium input hidden initially */
+        #b-premium-input-area { display: none; padding: 15px; background: #1a1a1a; margin-bottom: 15px; border-radius: 8px; text-align:center; border: 1px solid var(--yellow);}
+        .prem-inp { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; margin: 10px 0; outline:none; border-radius: 4px; text-align: center; letter-spacing: 2px;}
+
+        /* ========================================================
+           LEADERBOARD VIEW
+           ======================================================== */
+        #leaderboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 7000; overflow-y: auto; padding-bottom: 30px; font-family: 'Roboto', sans-serif;}
+        .lb-header { display: flex; align-items: center; padding: 15px; background: #0a0a0a; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #222;}
+        .lb-back { font-size: 20px; color: #fff; margin-right: 15px; cursor: pointer;}
+        .lb-title { font-size: 16px; font-weight: bold; flex: 1; text-align: center; margin-right: 35px; color:#fff;}
+        
+        .reward-banner { background: linear-gradient(45deg, #1a1a1a, #0a0a0a); border: 1px solid var(--yellow); border-radius: 8px; padding: 15px; margin: 15px; text-align: center; box-shadow: 0 4px 15px rgba(255,193,7,0.1);}
+        .reward-title { color: var(--yellow); font-weight: bold; font-family: 'Orbitron'; margin-bottom: 15px; font-size: 15px;}
+        .reward-prizes { display: flex; justify-content: space-around; font-size: 12px; color: #fff;}
+        .reward-prizes div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .reward-icon { font-size: 24px; margin-bottom: 5px;}
+
+        .lb-item { display: flex; align-items: center; background: #1a1a1a; margin: 0 15px 10px 15px; padding: 12px 15px; border-radius: 8px; border: 1px solid #222;}
+        .lb-rank { width: 30px; font-weight: bold; font-size: 16px; font-family: 'Orbitron'; text-align: center;}
+        .lb-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #444; margin: 0 15px; object-fit: cover;}
+        .lb-info { flex: 1; font-weight: bold; color: #fff; font-size: 14px;}
+        .lb-points { font-weight: bold; color: var(--yellow); font-size: 14px; font-family: 'Orbitron';}
+
         /* ========================================================
            PREMIUM HUB 
            ======================================================== */
@@ -239,9 +263,7 @@
         .comment-send-btn { background: var(--yellow); border: none; width: 40px; height: 40px; color: #000; border-radius: 4px; cursor: pointer; }
         .comment-box-unique { display: flex; gap: 12px; margin-bottom: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border-left: 3px solid var(--yellow); }
 
-        /* ========================================================
-           SHORTS VIEW
-           ======================================================== */
+        /* --- SHORTS VIEW --- */
         #shorts-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; overflow-y: scroll; scroll-snap-type: y mandatory; }
         .short-item { width: 100vw; height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000;}
         .short-item video { width: 100%; height: 100%; object-fit: contain; }
@@ -250,19 +272,7 @@
         .short-btn.liked { color: var(--yellow); }
         .short-btn span { display: block; font-size: 10px; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- SHORTS COMMENTS MODAL --- */
-        #shorts-comments-modal { display:none; position:fixed; bottom:0; left:0; width:100vw; height:60vh; background:#111; border-top:2px solid var(--yellow); padding:20px; z-index:10000; border-radius:15px 15px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); }
-        .sc-header { display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px; }
-        .sc-title { color:var(--yellow); font-family:'Orbitron'; font-weight:bold; }
-        .sc-close { cursor:pointer; color:#fff; font-size:18px; }
-        #shorts-comments-list { height:calc(100% - 60px); overflow-y:auto; margin-bottom:10px; }
-        .sc-input-area { display:flex; gap:10px; position:absolute; bottom:20px; width:calc(100% - 40px); }
-        .sc-input-area input { flex:1; padding:10px; border:1px solid #333; background:#000; color:#fff; border-radius:4px; outline:none;}
-        .sc-input-area button { background:var(--yellow); border:none; width:40px; height:40px; color:#000; cursor:pointer; border-radius:4px; }
-
-        /* ========================================================
-           FULL WATCH HISTORY VIEW
-           ======================================================== */
+        /* --- FULL WATCH HISTORY VIEW --- */
         #history-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 8000; overflow-y: auto; padding: 20px; }
         .history-item { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--yellow); border-radius: 4px; }
 
@@ -346,8 +356,6 @@
 
     <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view">
-        
-        <!-- LOGIN UI -->
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
                 <div class="auth-container">
@@ -375,7 +383,6 @@
             </div>
         </div>
 
-        <!-- NEW USER PROFILE CONTENT -->
         <div id="user-profile-content" style="display:none;">
             <div class="b-profile-container">
                 <div class="prof-cover-area">
@@ -421,7 +428,14 @@
                         <div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Read now</span></div>
                     </div>
 
-                    <div class="b-list-group">
+                    <div class="b-list-group" style="margin-top: 20px;">
+                        
+                        <!-- LEADERBOARD BUTTON -->
+                        <div class="b-list-item" onclick="openLeaderboard()">
+                            <div class="b-list-item-left"><i class="fas fa-trophy" style="color:var(--yellow);"></i> Point Leaderboard</div>
+                            <div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+
                         <div class="b-list-item">
                             <div class="b-list-item-left"><i class="far fa-bookmark"></i> My List</div>
                             <div class="b-list-item-right"><span id="b-watchlist-count" style="color:#fff; font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div>
@@ -445,6 +459,32 @@
         </div>
     </div>
 
+    <!-- ========================================================
+         NEW: LEADERBOARD VIEW
+         ======================================================== -->
+    <div id="leaderboard-view">
+        <div class="lb-header">
+            <i class="fas fa-arrow-left lb-back" onclick="closeLeaderboard()"></i>
+            <div class="lb-title">Point Leaderboard</div>
+        </div>
+        
+        <div class="reward-banner">
+            <div class="reward-title"><i class="fas fa-gift"></i> TOP 3 REWARDS</div>
+            <div class="reward-prizes">
+                <div><div class="reward-icon">🥈</div><span>Top 2</span><span>5 Days VIP</span></div>
+                <div><div class="reward-icon" style="font-size:32px;">🥇</div><span>Top 1</span><span style="color:var(--yellow);font-weight:bold;">7 Days VIP</span></div>
+                <div><div class="reward-icon">🥉</div><span>Top 3</span><span>3 Days VIP</span></div>
+            </div>
+            <div style="margin-top: 15px; color: var(--yellow); font-size: 13px; font-weight:bold;" id="lb-reset-timer">Loading Season Time...</div>
+        </div>
+
+        <div style="padding: 0 15px; margin-bottom: 10px; color: #888; font-size: 12px; text-align: center;">Showing top 100 users (Minimum 30 points)</div>
+        
+        <div id="leaderboard-list">
+            <!-- Javascript loads leaderboard here -->
+        </div>
+    </div>
+
     <!-- PREMIUM HUB -->
     <div id="premium-hub-view">
         <div class="task-header">
@@ -459,11 +499,8 @@
 
         <div class="task-section-box">
             <div class="task-sec-title">Redeem VIP Key</div>
-            
-            <!-- FIXED: INPUT FIELD FOR REDEEM -->
             <input type="text" id="prem-code-hub" class="prem-inp-hub" placeholder="PASTE KEY HERE">
             <button class="b-btn-primary" onclick="redeemCode('prem-code-hub')">ACTIVATE PREMIUM</button>
-            
             <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
         </div>
 
@@ -496,7 +533,8 @@
 
         <div class="task-section-box" style="border-radius:12px; border-top: 1px solid #222;">
             <div class="task-sec-title" style="color:#fff; margin-bottom: 5px;">Free Trial Premium</div>
-            <div class="tl-subtitle">Must view AD for 30s to get +2 points</div>
+            <div class="tl-subtitle" style="color:var(--yellow);">Tasks refresh every 3 Hours!</div>
+            <div class="tl-subtitle" style="margin-top:0;">Must view AD for 30s to get +2 points</div>
             <div id="dynamic-task-list"></div>
         </div>
     </div>
@@ -556,17 +594,12 @@
     <div id="shorts-view">
         <div style="position:fixed; top:20px; left:20px; z-index:9999; color:#fff;" onclick="hideShorts()"><i class="fas fa-arrow-left" style="background:rgba(0,0,0,0.5); padding:12px; border-radius:50%; cursor:pointer;"></i></div>
         <div id="shorts-container" style="width:100vw; height:100vh;"></div>
-        
-        <!-- FIXED: SHORTS COMMENTS MODAL -->
-        <div id="shorts-comments-modal">
-            <div class="sc-header">
-                <span class="sc-title">COMMENTS</span>
-                <i class="fas fa-times sc-close" onclick="closeShortComments()"></i>
-            </div>
-            <div id="shorts-comments-list"></div>
-            <div class="sc-input-area">
-                <input type="text" id="short-comment-in" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') postShortComment();">
-                <button onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
+        <div id="shorts-comments-modal" style="display:none; position:fixed; bottom:0; left:0; width:100vw; height:60vh; background:#111; border-top:2px solid var(--yellow); padding:20px; z-index:10000; border-radius:15px 15px 0 0;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;"><span style="color:var(--yellow); font-family:'Orbitron'; font-weight:bold;">COMMENTS</span><i class="fas fa-times" style="cursor:pointer; color:#fff; font-size:18px;" onclick="closeShortComments()"></i></div>
+            <div id="shorts-comments-list" style="height:calc(100% - 60px); overflow-y:auto; margin-bottom:10px;"></div>
+            <div style="display:flex; gap:10px; position:absolute; bottom:20px; width:calc(100% - 40px);">
+                <input type="text" id="short-comment-in" placeholder="Write a comment..." style="flex:1; padding:10px; border:1px solid #333; background:#000; color:#fff; border-radius:4px;" onkeypress="if(event.key === 'Enter') postShortComment();">
+                <button style="background:var(--yellow); border:none; width:40px; height:40px; color:#000; cursor:pointer; border-radius:4px;" onclick="postShortComment()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -594,14 +627,9 @@
         <div class="so-body">
             <div id="search-tags-section">
                 <div class="so-tags-title">🔥 Everyone is searching</div>
-                <div class="so-tags-container" id="trending-search-tags">
-                    <!-- Javascript generates random tags here daily -->
-                </div>
+                <div class="so-tags-container" id="trending-search-tags"></div>
             </div>
-            
-            <div id="search-results-list" style="margin-top: 10px;">
-                <!-- Live search results show here -->
-            </div>
+            <div id="search-results-list" style="margin-top: 10px;"></div>
         </div>
     </div>
 
@@ -627,7 +655,7 @@
         }
 
         function switchTab(t) { 
-            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts(); closePremiumHub(); closeSearchOverlay();
+            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; closeHistory(); hideShorts(); closePremiumHub(); closeSearchOverlay(); closeLeaderboard();
             const searchBox = document.getElementById('main-search-box');
             if(t==='home') { document.getElementById('main-app').style.display='block'; if(searchBox) searchBox.style.display = 'block'; }
             if(t==='profile') { document.getElementById('profile-view').style.display='block'; if(searchBox) searchBox.style.display = 'none'; loadRecentHistoryUI(); }
@@ -701,6 +729,9 @@
                 document.getElementById('profile-img').src = dpImg; document.getElementById('task-av').src = dpImg;
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
 
+                // FOR LEADERBOARD: Save User Meta Daily
+                db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
+
                 const actualServerTime = Date.now() + serverTimeOffset;
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
@@ -725,6 +756,64 @@
             });
         }
 
+        // ==========================================
+        // NEW: 14 DAYS LEADERBOARD SYSTEM
+        // ==========================================
+        function getLeaderboardCycle() {
+            // 14 Days = 1209600000 ms
+            return Math.floor((Date.now() + serverTimeOffset) / 1209600000);
+        }
+
+        function openLeaderboard() {
+            document.getElementById('leaderboard-view').style.display = 'block';
+            let listContainer = document.getElementById('leaderboard-list');
+            listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Loading Leaderboard...</div>';
+
+            let cycle = getLeaderboardCycle();
+            let cycleEnd = (cycle + 1) * 1209600000;
+            let timeLeft = cycleEnd - (Date.now() + serverTimeOffset);
+            let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('lb-reset-timer').innerText = `Season resets in: ${days}d ${hours}h`;
+
+            // Show top 100 with >= 30 points
+            db.ref(`leaderboard/c_${cycle}`).orderByValue().startAt(30).limitToLast(100).once('value', snap => {
+                if(!snap.exists()) {
+                    listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">No users above 30 points this season yet.</div>';
+                    return;
+                }
+                
+                let lbData = [];
+                snap.forEach(child => { lbData.push({ uid: child.key, points: child.val() }); });
+                lbData.reverse(); 
+
+                db.ref('lb_users').once('value', uSnap => {
+                    let usersMeta = uSnap.val() || {};
+                    listContainer.innerHTML = '';
+                    
+                    lbData.forEach((u, index) => {
+                        let rank = index + 1;
+                        let rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                        let color = rank === 1 ? '#ffc107' : rank === 2 ? '#c0c0c0' : rank === 3 ? '#cd7f32' : '#888';
+                        
+                        let meta = usersMeta[u.uid] || {};
+                        let name = meta.name || 'User';
+                        let av = meta.avatar || "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
+
+                        listContainer.innerHTML += `
+                        <div class="lb-item">
+                            <div class="lb-rank" style="color:${color}; font-size:${rank <= 3 ? '20px' : '14px'}">${rankIcon}</div>
+                            <img src="${av}" class="lb-avatar">
+                            <div class="lb-info">${name}</div>
+                            <div class="lb-points"><i class="fas fa-star" style="color:var(--yellow); font-size:10px;"></i> ${u.points}</div>
+                        </div>`;
+                    });
+                });
+            });
+        }
+        function closeLeaderboard() { document.getElementById('leaderboard-view').style.display = 'none'; }
+
+
         function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
         function buyPremiumTelegram(plan, price) {
@@ -746,11 +835,16 @@
             { id: "t19", name: "Roblox Ad", img: "https://cdn-icons-png.flaticon.com/512/3801/3801538.png" }, { id: "t20", name: "Minecraft Ad", img: "https://cdn-icons-png.flaticon.com/512/1068/1068777.png" }
         ];
 
-        function getTodayDate() { let d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2, '0'); }
+        function getCurrentTimeWindow() { 
+            let now = Date.now() + serverTimeOffset; 
+            return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); 
+        }
 
         function loadDailyTasks() {
-            if(!currentUser) return; let today = getTodayDate(); 
-            db.ref(`users/${currentUser.uid}/daily_tasks/${today}`).on('value', snap => {
+            if(!currentUser) return; 
+            let timeWindow = getCurrentTimeWindow(); 
+            
+            db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}`).on('value', snap => {
                 let completedTasks = snap.val() || {}; let container = document.getElementById('dynamic-task-list'); if(!container) return;
                 container.innerHTML = ""; 
                 dailyTasksData.forEach(task => {
@@ -809,46 +903,43 @@
 
         function completeTaskSuccess() {
             if(!activeTask) return; let taskId = activeTask.id; activeTask.completed = true; clearInterval(activeInterval);
+            
+            // 1. Add Wallet Points
             db.ref(`users/${currentUser.uid}/points`).set(userPoints + 2);
-            let today = getTodayDate(); db.ref(`users/${currentUser.uid}/daily_tasks/${today}/${taskId}`).set(true);
+            
+            // 2. Mark task completed for 3 hour window
+            let timeWindow = getCurrentTimeWindow();
+            db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
+            
+            // 3. Add to Season Leaderboard
+            let cycle = getLeaderboardCycle();
+            db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).transaction(c => (c || 0) + 2);
+
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
         document.addEventListener("visibilitychange", () => { if (!document.hidden) checkTaskStatus(); });
         window.addEventListener("focus", () => { checkTaskStatus(); });
 
-        // ==========================================
-        // REDEEM CODE FUNCTION (RESTORED & FIXED)
-        // ==========================================
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
-            
-            let inputEl = document.getElementById(inputId);
-            if(!inputEl) return;
-
-            const c = inputEl.value.trim().toUpperCase(); 
-            if(!c) return alert("Enter Code!");
+            let inputEl = document.getElementById(inputId); if(!inputEl) return;
+            const c = inputEl.value.trim().toUpperCase(); if(!c) return alert("Enter Code!");
             
             db.ref(`premium_codes/${c}`).once('value', s => { 
                 if(s.exists()) {
                     let codeData = s.val();
                     if(codeData.status === 'unused'){ 
                         let actualTime = Date.now() + serverTimeOffset;
-                        
                         db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                             let currentExp = snap.val() || 0;
                             let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
-                            
                             let daysToAdd = codeData.days ? parseInt(codeData.days) : 30; 
                             let newExp = baseTime + (daysToAdd * 24 * 60 * 60 * 1000);
 
-                            db.ref(`premium_codes/${c}`).update({ 
-                                status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: actualTime 
-                            }).then(() => {
+                            db.ref(`premium_codes/${c}`).update({ status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: actualTime }).then(() => {
                                 db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => {
-                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); 
-                                    inputEl.value = ""; 
-                                    location.reload(); 
+                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); inputEl.value = ""; location.reload(); 
                                 });
                             });
                         });
@@ -1097,46 +1188,18 @@
             } else { if(window.animeData) { let count = 0; Object.keys(window.animeData).forEach(n=>{ if(count >= 6) return; let f = window.animeData[n][0]; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${n}</div></div>`; count++; }); } }
         }
 
-        function shareContent() { const videoTitle = document.getElementById('player-title').innerText; const siteUrl = window.location.href.split('?')[0]; const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${siteUrl}`; navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", siteUrl); }); }
-
-        // ==========================================
-        // RESTORED SHORTS & COMMENTS LOGIC
-        // ==========================================
-        let shortsObserver = null; let activeShortId = null; let currentShortsCommentsRef = null;
-        
+        let shortsObserver = null;
         function showShorts() { 
             document.getElementById('shorts-view').style.display='block'; const c = document.getElementById('shorts-container'); 
-            if(c.children.length === 0){ 
-                db.ref('shorts').once('value', s => { 
-                    if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; }
-                    s.forEach(i => { 
-                        let d = i.val(), k = i.key; 
-                        c.innerHTML += `<div class="short-item" data-id="${k}">
-                            <video src="${d.url}" loop playsinline preload="metadata" onclick="if(this.paused)this.play();else this.pause();"></video>
-                            <div class="short-overlay">
-                                <div class="short-btn" id="s-like-${k}" onclick="toggleShortLike('${k}')"><i class="fas fa-heart"></i><span id="s-like-cnt-${k}">0</span></div>
-                                <div class="short-btn" onclick="openShortComments('${k}')"><i class="fas fa-comment"></i><span>Comment</span></div>
-                            </div>
-                        </div>`; 
-                        loadShortLikes(k);
-                    }); 
-                    initShortsObserver(); 
-                }); 
-            } else { initShortsObserver(); } 
+            if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline preload="metadata" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn" id="s-like-${k}" onclick="toggleShortLike('${k}')"><i class="fas fa-heart"></i><span id="s-like-cnt-${k}">0</span></div><div class="short-btn" onclick="openShortComments('${k}')"><i class="fas fa-comment"></i><span>Comment</span></div></div></div>`; loadShortLikes(k); }); initShortsObserver(); }); } else { initShortsObserver(); } 
         }
-        
         function hideShorts() { document.getElementById('shorts-view').style.display='none'; document.querySelectorAll('#shorts-container video').forEach(v => v.pause()); if(shortsObserver) shortsObserver.disconnect(); }
-        
-        function initShortsObserver() { 
-            if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; 
-            shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); 
-            document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); 
-        }
+        function initShortsObserver() { if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); }
 
         function loadShortLikes(k) { db.ref(`shorts_likes/${k}`).on('value', s=>{ const d=s.val()||{}, c=d.count||0, b=document.getElementById(`s-like-${k}`), t=document.getElementById(`s-like-cnt-${k}`); if(b&&t){ t.innerText=c; if(currentUser&&d[currentUser.uid])b.classList.add('liked'); else b.classList.remove('liked'); } }); }
-        
         function toggleShortLike(k) { if(!currentUser){alert("Login required");return;} const r=db.ref(`shorts_likes/${k}`); r.child(currentUser.uid).once('value', s=>{ if(s.exists()){ r.child(currentUser.uid).remove(); r.child('count').transaction(c=>(c||0)-1); } else { r.child(currentUser.uid).set(true); r.child('count').transaction(c=>(c||0)+1); } }); }
         
+        let currentShortsCommentsRef = null; let activeShortId = null;
         function openShortComments(k) { 
             activeShortId = k; document.getElementById('shorts-comments-modal').style.display='block'; const l = document.getElementById('shorts-comments-list'); 
             if(currentShortsCommentsRef) currentShortsCommentsRef.off(); currentShortsCommentsRef = db.ref(`shorts_comments/${k}`);
@@ -1148,14 +1211,14 @@
                 });
             }); 
         }
-        
         function closeShortComments() { document.getElementById('shorts-comments-modal').style.display = 'none'; if(currentShortsCommentsRef) { currentShortsCommentsRef.off(); currentShortsCommentsRef = null; } }
-        
         function postShortComment() { 
             if(!currentUser){alert("Login required");return;} if(!activeShortId)return; 
             const t=document.getElementById('short-comment-in').value; if(!t.trim())return; 
             db.ref(`shorts_comments/${activeShortId}`).push({ user: currentUser.username || currentUser.email.split('@')[0], text: t, time: Date.now() }).then(() => { document.getElementById('short-comment-in').value=""; });
         }
+
+        function shareContent() { const videoTitle = document.getElementById('player-title').innerText; const siteUrl = window.location.href.split('?')[0]; const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${siteUrl}`; navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", siteUrl); }); }
 
         function openHistory() { 
             if(!currentUser) { alert("Please login first."); return; }
@@ -1169,9 +1232,6 @@
         }
         function closeHistory() { document.getElementById('history-view').style.display='none'; }
 
-        // ==========================================
-        // SEARCH OVERLAY SYSTEM
-        // ==========================================
         let phInterval;
         function startPlaceholderAnimation() {
             clearInterval(phInterval);
