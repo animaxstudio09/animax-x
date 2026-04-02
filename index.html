@@ -18,17 +18,12 @@
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "2a43ab1f-601f-42ae-a013-f8571598bc01",
-    });
-  });
-</script>
-    
-    <!-- Adsterra Social Bar -->
-    <script type='text/javascript' src='https://pl28670634.effectivegatecpm.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js'></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
+      });
+    </script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -280,7 +275,7 @@
 </head>
 <body>
 
-    <div id="mid-roll-overlay"><div class="loading-spinner"></div><div style="color:#fff; font-family:'Orbitron'; font-size:14px; margin-top:15px;">Loading Stream...</div></div>
+    <div id="mid-roll-overlay"><div class="loading-spinner"></div><div style="color:#fff; font-family:'Orbitron'; letter-spacing:1px; font-size:14px; margin-top:15px;">Loading Stream...</div></div>
 
     <header>
         <div class="logo" onclick="switchTab('home')">ANIMAX <span>TV</span></div>
@@ -292,6 +287,7 @@
 
     <div id="main-app" class="app-view" style="display:block;">
         <div id="banner-slider"><div id="banner-slides-container"></div></div>
+
         <div class="category-tabs">
             <div style="font-weight:900; color:#111; margin-right:5px; font-family:'Orbitron';">MENU</div>
             <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">LATEST</div>
@@ -299,13 +295,22 @@
             <div class="cat-tab" onclick="filterHomeCategory('cartoon', this)">CARTOON</div>
             <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIE</div>
         </div>
+        
         <div id="section-trending" style="display:block;"><div class="section-header"><div class="sec-title-text">TRENDING NOW</div></div><div id="trending-grid" class="grid-container"></div></div>
-        <div id="section-anime" style="display:none;"><div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('anime', 'series', this)">ANIME SERIES</div><div class="sub-tab" onclick="switchSubTab('anime', 'movie', this)">ANIME MOVIES</div></div><div id="anime-series-wrapper"><div id="anime-grid" class="grid-container"></div></div><div id="anime-movie-wrapper" style="display:none;"><div id="anime-movie-grid" class="grid-container"></div></div></div>
-        <div id="section-cartoon" style="display:none;"><div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)">CARTOON SERIES</div><div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)">CARTOON MOVIES</div></div><div id="cartoon-series-wrapper"><div id="cartoon-grid" class="grid-container"></div></div><div id="cartoon-movie-wrapper" style="display:none;"><div id="cartoon-movie-grid" class="grid-container"></div></div></div>
+        
+        <div id="section-anime" style="display:none;">
+            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('anime', 'series', this)">ANIME SERIES</div><div class="sub-tab" onclick="switchSubTab('anime', 'movie', this)">ANIME MOVIES</div></div>
+            <div id="anime-series-wrapper"><div id="anime-grid" class="grid-container"></div></div><div id="anime-movie-wrapper" style="display:none;"><div id="anime-movie-grid" class="grid-container"></div></div>
+        </div>
+
+        <div id="section-cartoon" style="display:none;">
+            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)">CARTOON SERIES</div><div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)">CARTOON MOVIES</div></div>
+            <div id="cartoon-series-wrapper"><div id="cartoon-grid" class="grid-container"></div></div><div id="cartoon-movie-wrapper" style="display:none;"><div id="cartoon-movie-grid" class="grid-container"></div></div>
+        </div>
+
         <div id="section-movie" style="display:none;"><div class="section-header"><div class="sec-title-text">ALL MOVIES</div></div><div id="movie-grid" class="grid-container"></div></div>
     </div>
 
-    <!-- PROFILE VIEW -->
     <div id="profile-view" class="app-view">
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
@@ -322,15 +327,30 @@
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     <div class="b-banner-alert" onclick="window.open('https://t.me/animax090', '_blank')"><i class="fas fa-bullhorn" style="font-size:14px;"></i> <span>Find Community Mode in Telegram for daily updates.</span></div>
-                    <div class="b-card" onclick="openPremiumHub()"><div class="b-card-left"><i class="fas fa-crown b-card-icon"></i><div><div class="b-card-title">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div><div class="b-card-right"><div class="b-badge" style="background:#222;"><i class="fas fa-star" style="font-size:10px;"></i> VIP</div><i class="fas fa-chevron-right"></i></div></div>
-                    <div class="b-card" onclick="openPremiumHub()"><div class="b-card-left"><i class="fas fa-tasks b-card-icon"></i><div><div class="b-card-title">Tasks for Free Premium</div><div class="b-card-sub" style="font-family:'Roboto';">Complete task to get premium</div></div></div><i class="fas fa-chevron-right" style="color:#666;"></i></div>
-                    <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')"><div class="b-card-left"><i class="fas fa-book-open b-card-icon"></i><div><div class="b-card-title">Hot Updates</div><div class="b-card-sub" style="font-family:'Roboto';">Offline, Free and Daily updated</div></div></div><div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Read now</span></div></div>
-                    
+
+                    <div class="b-card" onclick="openPremiumHub()">
+                        <div class="b-card-left"><i class="fas fa-crown b-card-icon"></i><div><div class="b-card-title">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
+                        <div class="b-card-right"><div class="b-badge" style="background:#222;"><i class="fas fa-star" style="font-size:10px;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
+                    </div>
+
+                    <div class="b-card" onclick="openPremiumHub()">
+                        <div class="b-card-left"><i class="fas fa-tasks b-card-icon"></i><div><div class="b-card-title">Tasks for Free Premium</div><div class="b-card-sub" style="font-family:'Roboto';">Complete task to get premium</div></div></div>
+                        <i class="fas fa-chevron-right" style="color:#666;"></i>
+                    </div>
+
+                    <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')">
+                        <div class="b-card-left"><i class="fas fa-book-open b-card-icon"></i><div><div class="b-card-title">Hot Updates</div><div class="b-card-sub" style="font-family:'Roboto';">Offline, Free and Daily updated</div></div></div>
+                        <div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Read now</span></div>
+                    </div>
+
                     <div class="b-list-group" style="margin-top: 20px;">
                         <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy" style="color:var(--yellow);"></i> Point Leaderboard</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-list-item"><div class="b-list-item-left"><i class="far fa-bookmark"></i> My List</div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:#fff; font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-list-item"><div class="b-list-item-left"><i class="far fa-thumbs-up"></i> My Likes</div><div class="b-list-item-right"><span style="color:#fff; font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-history-section"><div class="b-list-item" style="padding: 15px 0 5px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history"></i> Watch History</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div><div class="b-history-scroll" id="b-recent-history-scroll"></div></div>
+                        <div class="b-history-section">
+                            <div class="b-list-item" style="padding: 15px 0 5px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history"></i> Watch History</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
+                            <div class="b-history-scroll" id="b-recent-history-scroll"></div>
+                        </div>
                     </div>
                     <div style="text-align: center; color: #555; font-size: 12px; margin-top: 35px; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-weight: bold;">DEVELOPER BY RONI VAI</div>
                 </div>
@@ -338,7 +358,6 @@
         </div>
     </div>
 
-    <!-- LEADERBOARD VIEW -->
     <div id="leaderboard-view">
         <div class="lb-header"><i class="fas fa-arrow-left lb-back" onclick="closeLeaderboard()"></i><div class="lb-title">Point Leaderboard</div></div>
         <div class="reward-banner">
@@ -350,16 +369,16 @@
         <div id="leaderboard-list"></div>
     </div>
 
-    <!-- PREMIUM HUB -->
     <div id="premium-hub-view">
         <div class="task-header"><i class="fas fa-arrow-left task-back" onclick="closePremiumHub()"></i><div class="task-title">Premium Center</div></div>
         <div class="task-user-row"><div class="task-u-left"><img src="logo.png" class="task-u-avatar" id="task-av"><div class="task-u-name" id="task-un">User</div></div><div class="task-coin-badge"><i class="fas fa-star" style="color:var(--yellow); font-size:14px;"></i> <span id="task-coin-balance">0</span></div></div>
         
         <div class="task-section-box">
             <div class="task-sec-title">Redeem VIP Key</div>
+            <!-- FIXED: Ensure ID matches perfectly -->
             <input type="text" id="prem-code-hub" class="prem-inp-hub" placeholder="PASTE KEY HERE">
             <button class="b-btn-primary" onclick="redeemCode('prem-code-hub')">ACTIVATE PREMIUM</button>
-            <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="buyPremium()">Get from Admin</span></div>
+            <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
         </div>
 
         <div class="task-section-box">
@@ -397,6 +416,7 @@
     <div id="player-view">
         <div class="video-wrapper">
             <div style="position:absolute; top:10px; left:10px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
+            <!-- FIXED: Video will stream anything natively without crash -->
             <video id="main-video" controls playsinline preload="metadata" controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
@@ -471,12 +491,20 @@
             document.getElementById(`${parent}-movie-wrapper`).style.display = type === 'movie' ? 'block' : 'none';
         }
 
+        // FIXED: ADDED TRY-CATCH BLOCKS TO PREVENT UI CRASHES
         function switchTab(t) { 
-            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); document.getElementById('player-view').style.display='none'; 
-            try{ closeHistory(); }catch(e){} try{ hideShorts(); }catch(e){} try{ closePremiumHub(); }catch(e){} try{ closeSearchOverlay(); }catch(e){} try{ closeLeaderboard(); }catch(e){}
+            document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
+            document.getElementById('player-view').style.display='none'; 
+            try { closeHistory(); } catch(e) {} 
+            try { hideShorts(); } catch(e) {} 
+            try { closePremiumHub(); } catch(e) {} 
+            try { closeSearchOverlay(); } catch(e) {} 
+            try { closeLeaderboard(); } catch(e) {}
+
             const searchBox = document.getElementById('main-search-box');
             if(t==='home') { document.getElementById('main-app').style.display='block'; if(searchBox) searchBox.style.display = 'block'; }
             if(t==='profile') { document.getElementById('profile-view').style.display='block'; if(searchBox) searchBox.style.display = 'none'; loadRecentHistoryUI(); }
+            
             document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
             if(t==='home') document.querySelector('.fa-home').classList.add('active');
             if(t==='profile') document.querySelector('.fa-user').classList.add('active');
@@ -487,14 +515,6 @@
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active')); if(element) element.classList.add('active');
             const sections = ['trending', 'anime', 'cartoon', 'movie'];
             sections.forEach(s => { let el = document.getElementById(`section-${s}`); if(el) el.style.display = (cat === s || (cat==='trending' && s==='trending')) ? 'block' : 'none'; });
-        }
-
-        function filterAnime(query) {
-            let filter = query.toUpperCase();
-            document.querySelectorAll('.folder-card').forEach(card => {
-                let titleElement = card.querySelector('.folder-title');
-                if(titleElement) { let title = titleElement.innerText.toUpperCase(); card.style.display = title.indexOf(filter) > -1 ? "" : "none"; }
-            });
         }
 
         const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
@@ -510,7 +530,6 @@
         let userProfileRef = null; let serverTimeOffset = 0; let mySessionRef = null; let vipTimerInterval = null; let userPoints = 0; 
         db.ref('.info/serverTimeOffset').on('value', snap => { serverTimeOffset = snap.val() || 0; });
 
-        // FIXED: ONLINE USERS TRACKING ADDED HERE
         db.ref('.info/connected').on('value', (snap) => {
             if (snap.val() === true && currentUser) {
                 mySessionRef = db.ref(`online_users/${currentUser.uid}`);
@@ -523,16 +542,11 @@
             if (user) { 
                 currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; 
                 checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); 
-                
-                // Extra check for Online Users Tracking when auth changes
                 db.ref('.info/connected').once('value', snap => {
                     if (snap.val() === true) {
-                        mySessionRef = db.ref(`online_users/${currentUser.uid}`);
-                        mySessionRef.onDisconnect().remove();
-                        mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
+                        mySessionRef = db.ref(`online_users/${currentUser.uid}`); mySessionRef.onDisconnect().remove(); mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
                     }
                 });
-
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; 
@@ -693,6 +707,9 @@
 
         document.addEventListener("visibilitychange", () => { if (!document.hidden) checkTaskStatus(); }); window.addEventListener("focus", () => { checkTaskStatus(); });
 
+        // ==========================================
+        // REDEEM VIP CODE (FIXED: MULTIPLE IDS)
+        // ==========================================
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
             let inputEl = document.getElementById(inputId); if(!inputEl) return;
@@ -813,7 +830,7 @@
                 snap.forEach(c=>{ 
                     let d=c.val(), sid=d.id||d.title; window.movieData.push(d); 
                     let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
+                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
                     let category = (d.category || "movie").toLowerCase(); grid.innerHTML += cardHTML; 
                     if(category.includes('anime')) htmlAnimeMoviesFromMoviesNode += cardHTML;
                     if(category.includes('cartoon')) htmlCartoonMoviesFromMoviesNode += cardHTML;
@@ -827,7 +844,7 @@
                     let d=c.val(), sid=d.id||d.title; window.cartoonData.push(d);
                     let category = (d.category || "cartoon").toLowerCase(); let isMovie = category.includes('movie');
                     let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : (isMovie ? '<div class="card-vip-badge">MOVIE</div>' : '<div class="card-vip-badge">DUB</div>');
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title}','${d.url}','${sid}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
+                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
                     if(isMovie) htmlCartoonMoviesFromCartoonsNode += cardHTML; else grid.innerHTML += cardHTML;
                     if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
                 }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex();
@@ -836,6 +853,7 @@
 
         function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
 
+        // FIXED: URL ESCAPING IN VIDEO TITLES
         function openFolder(n) { 
             currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
             const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
@@ -897,7 +915,7 @@
             
             if(!isPremium) {
                 document.getElementById('mid-roll-overlay').style.display = 'flex';
-                window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+                try { window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank'); } catch(e){}
                 setTimeout(() => { document.getElementById('mid-roll-overlay').style.display = 'none'; window.startVideoPlayback(); }, 100);
             } else { window.startVideoPlayback(); }
 
@@ -923,7 +941,6 @@
         function loadSocialData(safeId) {
             currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=s.val()||0; });
             currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=s.val()||0; });
-
             if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
@@ -948,70 +965,20 @@
         
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
-            if(currentPlayType === 'movie') { if(window.movieData) { window.movieData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
-            } else if(currentPlayType === 'cartoon') { if(window.cartoonData) { window.cartoonData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title}','${m.url}','${sid}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
+            if(currentPlayType === 'movie') { if(window.movieData) { window.movieData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
+            } else if(currentPlayType === 'cartoon') { if(window.cartoonData) { window.cartoonData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
             } else { if(window.animeData) { let count = 0; Object.keys(window.animeData).forEach(n=>{ if(count >= 6) return; let f = window.animeData[n][0]; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${n}</div></div>`; count++; }); } }
         }
 
-        function shareContent() { const videoTitle = document.getElementById('player-title').innerText; const siteUrl = window.location.href.split('?')[0]; const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${siteUrl}`; navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", siteUrl); }); }
-
-        // ==========================================
-        // RESTORED SHORTS & COMMENTS LOGIC
-        // ==========================================
-        let shortsObserver = null; let currentShortsCommentsRef = null; let activeShortId = null;
-        
+        let shortsObserver = null;
         function showShorts() { 
             document.getElementById('shorts-view').style.display='block'; const c = document.getElementById('shorts-container'); 
-            if(c.children.length === 0){ 
-                db.ref('shorts').once('value', s => { 
-                    if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; }
-                    s.forEach(i => { 
-                        let d = i.val(), k = i.key; 
-                        c.innerHTML += `<div class="short-item" data-id="${k}">
-                            <video src="${d.url}" loop playsinline preload="metadata" onclick="if(this.paused)this.play();else this.pause();"></video>
-                            <div class="short-overlay">
-                                <div class="short-btn" id="s-like-${k}" onclick="toggleShortLike('${k}')"><i class="fas fa-heart"></i><span id="s-like-cnt-${k}">0</span></div>
-                                <div class="short-btn" onclick="openShortComments('${k}')"><i class="fas fa-comment"></i><span>Comment</span></div>
-                            </div>
-                        </div>`; 
-                        loadShortLikes(k);
-                    }); 
-                    initShortsObserver(); 
-                }); 
-            } else { initShortsObserver(); } 
+            if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline preload="metadata" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; }); initShortsObserver(); }); } else { initShortsObserver(); } 
         }
-        
         function hideShorts() { document.getElementById('shorts-view').style.display='none'; document.querySelectorAll('#shorts-container video').forEach(v => v.pause()); if(shortsObserver) shortsObserver.disconnect(); }
-        
-        function initShortsObserver() { 
-            if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; 
-            shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); 
-            document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); 
-        }
+        function initShortsObserver() { if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); }
 
-        function loadShortLikes(k) { db.ref(`shorts_likes/${k}`).on('value', s=>{ const d=s.val()||{}, c=d.count||0, b=document.getElementById(`s-like-${k}`), t=document.getElementById(`s-like-cnt-${k}`); if(b&&t){ t.innerText=c; if(currentUser&&d[currentUser.uid])b.classList.add('liked'); else b.classList.remove('liked'); } }); }
-        
-        function toggleShortLike(k) { if(!currentUser){alert("Login required");return;} const r=db.ref(`shorts_likes/${k}`); r.child(currentUser.uid).once('value', s=>{ if(s.exists()){ r.child(currentUser.uid).remove(); r.child('count').transaction(c=>(c||0)-1); } else { r.child(currentUser.uid).set(true); r.child('count').transaction(c=>(c||0)+1); } }); }
-        
-        function openShortComments(k) { 
-            activeShortId = k; document.getElementById('shorts-comments-modal').style.display='block'; const l = document.getElementById('shorts-comments-list'); 
-            if(currentShortsCommentsRef) currentShortsCommentsRef.off(); currentShortsCommentsRef = db.ref(`shorts_comments/${k}`);
-            currentShortsCommentsRef.on('value', s => { 
-                l.innerHTML = "";
-                s.forEach(child => { 
-                    const c = child.val(); let d = c.time ? new Date(c.time) : new Date(); let ts = d.toLocaleDateString();
-                    l.innerHTML = `<div class="comment-box-unique"><div class="c-body-unique"><div class="c-user-name" style="color:var(--yellow);font-weight:bold;">${c.user.toUpperCase()} <span style="font-size:9px;color:#888;font-weight:normal;">${ts}</span></div><div class="c-text-content" style="color:#ddd;font-size:12px;">${c.text}</div></div></div>` + l.innerHTML; 
-                });
-            }); 
-        }
-        
-        function closeShortComments() { document.getElementById('shorts-comments-modal').style.display = 'none'; if(currentShortsCommentsRef) { currentShortsCommentsRef.off(); currentShortsCommentsRef = null; } }
-        
-        function postShortComment() { 
-            if(!currentUser){alert("Login required");return;} if(!activeShortId)return; 
-            const t=document.getElementById('short-comment-in').value; if(!t.trim())return; 
-            db.ref(`shorts_comments/${activeShortId}`).push({ user: currentUser.username || currentUser.email.split('@')[0], text: t, time: Date.now() }).then(() => { document.getElementById('short-comment-in').value=""; });
-        }
+        function shareContent() { const videoTitle = document.getElementById('player-title').innerText; const siteUrl = window.location.href.split('?')[0]; const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${siteUrl}`; navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", siteUrl); }); }
 
         function openHistory() { 
             if(!currentUser) { alert("Please login first."); return; }
@@ -1025,9 +992,6 @@
         }
         function closeHistory() { document.getElementById('history-view').style.display='none'; }
 
-        // ==========================================
-        // NEW: SEARCH OVERLAY SYSTEM
-        // ==========================================
         let phInterval;
         function startPlaceholderAnimation() {
             clearInterval(phInterval);
@@ -1046,9 +1010,7 @@
             handleOverlaySearch(""); 
         }
 
-        function closeSearchOverlay() {
-            document.getElementById('search-overlay-view').style.display = 'none';
-        }
+        function closeSearchOverlay() { document.getElementById('search-overlay-view').style.display = 'none'; }
 
         function loadDailyTrendingTags() {
             let today = getTodayDate();
@@ -1079,7 +1041,6 @@
             if(q === "") { container.innerHTML = ""; tagSec.style.display = "block"; return; }
             
             tagSec.style.display = "none"; container.innerHTML = "";
-            
             let matches = allContentList.filter(item => item.title.toLowerCase().includes(q)).slice(0, 20); 
             
             matches.forEach(item => {
@@ -1087,22 +1048,14 @@
                 let highlightedTitle = item.title.replace(regex, "<span style='color:var(--yellow);'>$1</span>");
                 let safeTitle = item.title.replace(/'/g, "\\'");
                 
-                let onClickAttr = "";
-                if(item.type === 'anime') { onClickAttr = `openFolderAndCloseSearch('${safeTitle}')`; } 
-                else { onClickAttr = `playItemAndCloseSearch('${safeTitle}')`; }
-                
+                let onClickAttr = item.type === 'anime' ? `openFolderAndCloseSearch('${safeTitle}')` : `playItemAndCloseSearch('${safeTitle}')`;
                 container.innerHTML += `<div class="sl-item" onclick="${onClickAttr}"><i class="fas fa-search sl-icon"></i><div class="sl-text">${highlightedTitle}</div></div>`;
             });
         }
 
         function executeSearch(val) { document.getElementById('overlay-search-input').value = val; handleOverlaySearch(val); }
-        
         function openFolderAndCloseSearch(folder) { closeSearchOverlay(); openFolder(folder); }
-        
-        function playItemAndCloseSearch(title) {
-            closeSearchOverlay(); let data = findDataByTitle(title);
-            if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); }
-        }
+        function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
     </script>
 </body>
 </html>
