@@ -214,9 +214,17 @@
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 NEW: BUFFERING ANIMATION CSS 🌟 */
+        /* 🌟 NEW AD WARNING AND ENFORCEMENT OVERLAYS 🌟 */
         #vid-buffering { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:5002; pointer-events:none; }
         #vid-buffering .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.2); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom:0;}
+        
+        #ad-warning-overlay { position: absolute; top: 10px; right: 10px; background: rgba(200,0,0,0.9); color: #fff; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; z-index: 5005; display: none; border: 1px solid #ff4444; animation: pulseAd 1s infinite;}
+        @keyframes pulseAd { 0% { box-shadow: 0 0 5px #ff4444; } 50% { box-shadow: 0 0 15px #ff4444; } 100% { box-shadow: 0 0 5px #ff4444; } }
+        
+        #ad-enforce-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5006; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;}
+        .ad-enforce-title { color: var(--yellow); font-size: 18px; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 10px; }
+        .ad-enforce-desc { color: #ccc; font-size: 12px; margin-bottom: 25px; line-height: 1.5; font-family: 'Roboto'; }
+        .ad-enforce-btn { background: var(--yellow); color: #000; padding: 12px 25px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron'; transition: 0.3s; }
 
         .player-meta-container { padding: 15px; }
         .meta-title { font-size: 18px; font-weight: 700; color: var(--yellow); line-height: 1.3; font-family: 'Outfit'; margin-bottom: 5px;}
@@ -230,7 +238,7 @@
         select.custom-drop { background: #222; color: #fff; border: 1px solid #444; padding: 10px 15px; font-size: 13px; outline: none; border-radius: 6px; font-weight: bold; width: auto; max-width: 150px; text-overflow: ellipsis;} 
         .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
         
-        /* 🌟 NEW: PREMIUM EPISODE DESIGN 🌟 */
+        /* 🌟 PREMIUM EPISODE DESIGN 🌟 */
         .ep-pill { min-width: 55px; height: 45px; background: linear-gradient(145deg, #2a2a2a, #1a1a1a); color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: 1px solid #333; border-radius: 6px; cursor: pointer; position: relative; transition: 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-family: 'Orbitron'; }
         .ep-pill:active { transform: scale(0.95); }
         .ep-pill.active { background: linear-gradient(145deg, rgba(255,193,7,0.2), rgba(255,193,7,0.05)); border: 1px solid var(--yellow); color: var(--yellow); box-shadow: 0 0 10px rgba(255,193,7,0.4), inset 0 0 5px rgba(255,193,7,0.1); text-shadow: 0 0 5px rgba(255,193,7,0.5); }
@@ -284,15 +292,27 @@
 </head>
 <body>
 
-    <div id="mid-roll-overlay"><div class="loading-spinner"></div><div style="color:#fff; font-family:'Orbitron'; letter-spacing:1px; font-size:14px; margin-top:15px;">Loading Stream...</div></div>
-
-    <header>
+    <header id="main-header">
         <div class="logo" onclick="switchTab('home')">ANIMAX <span>TV</span></div>
-        <div class="search-wrapper" onclick="openSearchOverlay()">
+        <div class="search-wrapper" id="header-search-wrapper" onclick="openSearchOverlay()">
             <input type="text" class="search-glow" id="main-search-input" placeholder="Search anime..." readonly style="pointer-events:none;">
             <i class="fas fa-search search-icon-pos"></i>
         </div>
     </header>
+
+    <!-- 🌟 BANNER AD SECTION 🌟 -->
+    <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:#111; border-bottom:1px solid #333;">
+        <script>
+          atOptions = {
+            'key' : '9f634c6894bc13ff8f0f19de1fcac9f3',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
+    </div>
 
     <div id="main-app" class="app-view" style="display:block;">
         <div id="banner-slider"><div id="banner-slides-container"></div></div>
@@ -426,10 +446,18 @@
         <div class="video-wrapper">
             <div style="position:absolute; top:10px; left:10px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
             
-            <!-- 🌟 5. VIDEO BUFFERING ANIMATION 🌟 -->
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- 🌟 5. PRELOAD AUTO ADDED 🌟 -->
+            <!-- 🌟 AD WARNING OVERLAY 🌟 -->
+            <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ 10 সেকেন্ড পর একটি অ্যাড আসবে!</span></div>
+            
+            <!-- 🌟 AD ENFORCEMENT OVERLAY 🌟 -->
+            <div id="ad-enforce-overlay">
+                <div class="ad-enforce-title">AD BREAK!</div>
+                <div class="ad-enforce-desc">আপনাকে ভিডিওটি কন্টিনিউ করার জন্য একটি অ্যাড দেখতে হবে।<br>নিচের বাটনে ক্লিক করে ১০ সেকেন্ড অপেক্ষা করুন।</div>
+                <button class="ad-enforce-btn" id="mid-roll-btn" onclick="startMidRollAd()">WATCH AD TO CONTINUE</button>
+            </div>
+
             <video id="main-video" controls playsinline preload="auto" controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
@@ -491,7 +519,7 @@
     </nav>
 
     <script>
-        // 🌟 2. NUMBER FORMATTING (1K, 1M, Unlimited views) 🌟
+        // Number Formatting
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
@@ -511,7 +539,6 @@
             document.getElementById(`${parent}-movie-wrapper`).style.display = type === 'movie' ? 'block' : 'none';
         }
 
-        // 🌟 3. HIDE SEARCH BAR FROM PROFILE 🌟
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
             document.getElementById('player-view').style.display='none'; 
@@ -521,7 +548,7 @@
             try { closeSearchOverlay(); } catch(e) {} 
             try { closeLeaderboard(); } catch(e) {}
 
-            const searchWrapper = document.querySelector('.search-wrapper');
+            const searchWrapper = document.getElementById('header-search-wrapper');
             
             if(t==='home') { 
                 document.getElementById('main-app').style.display='block'; 
@@ -529,7 +556,7 @@
             }
             if(t==='profile') { 
                 document.getElementById('profile-view').style.display='block'; 
-                if(searchWrapper) searchWrapper.style.display = 'none'; // HIDDEN HERE
+                if(searchWrapper) searchWrapper.style.display = 'none'; 
                 loadRecentHistoryUI(); 
             }
             
@@ -586,7 +613,7 @@
 
         let adsInjected = false;
         function injectFreeAds() {
-            if(adsInjected) return; adsInjected = true;
+            if(adsInjected || isPremium) return; adsInjected = true;
             let popunder = document.createElement('script'); popunder.type = 'text/javascript'; popunder.src = 'https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             document.body.appendChild(popunder);
         }
@@ -606,21 +633,22 @@
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
 
-                // 🌟 6. LEADERBOARD EXACT POINT SYNC (FIXED) 🌟
                 let cycle = getLeaderboardCycle();
-                db.ref(`leaderboard/c_${cycle}/${uid}`).once('value', lSnap => {
-                    if(lSnap.val() !== userPoints) { db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints); }
-                });
+                db.ref(`leaderboard/c_${cycle}/${uid}`).once('value', lSnap => { if(lSnap.val() !== userPoints) { db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints); } });
 
                 const actualServerTime = Date.now() + serverTimeOffset;
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
+                    // 🌟 HIDE BANNER FOR VIP 🌟
+                    document.getElementById('global-banner-ad').style.display = 'none';
+                    
                     vipTimerInterval = setInterval(() => {
                         let now = Date.now() + serverTimeOffset; let timeLeft = d.premiumExpiry - now;
                         if(timeLeft <= 0) {
                             clearInterval(vipTimerInterval); isPremium = false;
+                            document.getElementById('global-banner-ad').style.display = 'block';
                             document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "#888"; injectFreeAds();
                         } else {
                             let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24)); let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
@@ -628,7 +656,9 @@
                         }
                     }, 1000); 
                 } else { 
-                    isPremium = false; document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "#888";
+                    isPremium = false; 
+                    document.getElementById('global-banner-ad').style.display = 'block';
+                    document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "#888";
                     injectFreeAds(); if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) { db.ref(`users/${uid}/premiumExpiry`).remove(); }
                 }
             });
@@ -731,22 +761,17 @@
             } else if (elapsed >= 30000 && !activeTask.completed) { completeTaskSuccess(); }
         }
 
-        // 🌟 6. LEADERBOARD PERFECT POINT SYNC RESOLUTION 🌟
         function completeTaskSuccess() {
             if(!activeTask) return; let taskId = activeTask.id; activeTask.completed = true; clearInterval(activeInterval);
-            
-            let newPoints = userPoints + 2;
-            db.ref(`users/${currentUser.uid}/points`).set(newPoints);
-            
+            let newPoints = userPoints + 2; db.ref(`users/${currentUser.uid}/points`).set(newPoints);
             let timeWindow = getCurrentTimeWindow(); db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
-            
-            let cycle = getLeaderboardCycle(); 
-            db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); // Syncs absolute value directly
-            
+            let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); 
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
-        document.addEventListener("visibilitychange", () => { if (!document.hidden) checkTaskStatus(); }); window.addEventListener("focus", () => { checkTaskStatus(); });
+        // 🌟 CHECK TASKS & MID-ROLL ADS ON FOCUS 🌟
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); } }); 
+        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); });
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
@@ -925,10 +950,20 @@
         
         function switchSeason(n) { openFolder(n); }
 
+        // 🌟 10-MINUTES AD VARIABLES 🌟
+        let nextAdTime = 600; 
+        let adWarningShown = false;
+        let adEnforced = false;
+        let midRollTaskActive = false;
+        let midRollTaskStart = 0;
+
         function playVideo(t, u, id, ip, type, idx) {
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
+            // 🌟 EPISODE CHANGE SMARTLINK LOGIC 🌟
+            let isEpisodeChange = (document.getElementById('player-view').style.display === 'block');
+
             currentSafeVideoId = getSafeId(id || t); currentVideoId = id; currentPlayType = type; 
             document.getElementById('player-title').innerText = t;
             
@@ -945,9 +980,16 @@
             const v = document.getElementById('main-video'); let prevTime = 0;
             const bufferUI = document.getElementById('vid-buffering');
             
-            // 🌟 5. BUFFERING EVENTS 🌟
+            // 🌟 RESET AD VARIABLES FOR NEW VIDEO 🌟
+            nextAdTime = 600; 
+            adWarningShown = false;
+            adEnforced = false;
+            midRollTaskActive = false;
+            document.getElementById('ad-warning-overlay').style.display = 'none';
+            document.getElementById('ad-enforce-overlay').style.display = 'none';
+
             v.onwaiting = () => { bufferUI.style.display = 'block'; };
-            v.onplaying = () => { bufferUI.style.display = 'none'; };
+            v.onplaying = () => { bufferUI.style.display = 'none'; if(adEnforced && !isPremium) v.pause(); };
             v.oncanplay = () => { bufferUI.style.display = 'none'; };
             v.onerror = () => { bufferUI.style.display = 'none'; };
 
@@ -958,11 +1000,14 @@
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
-            if(!isPremium) {
+            // 🌟 SHOW SMARTLINK ONLY ON EPISODE CHANGE FOR FREE USERS 🌟
+            if(!isPremium && isEpisodeChange) {
                 document.getElementById('mid-roll-overlay').style.display = 'flex';
                 try { window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank'); } catch(e){}
                 setTimeout(() => { document.getElementById('mid-roll-overlay').style.display = 'none'; window.startVideoPlayback(); }, 100);
-            } else { window.startVideoPlayback(); }
+            } else { 
+                window.startVideoPlayback(); 
+            }
 
             if(currentUser) {
                 let hThumb = "";
@@ -976,6 +1021,63 @@
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); loadSocialData(currentSafeVideoId);
         }
 
+        // 🌟 10-MINUTES VIDEO EVENT LISTENER 🌟
+        document.getElementById('main-video').addEventListener('timeupdate', () => {
+            if(isPremium) return;
+            const v = document.getElementById('main-video');
+            let ct = v.currentTime;
+            
+            if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
+                if(!adWarningShown) {
+                    adWarningShown = true;
+                    document.getElementById('ad-warning-overlay').style.display = 'flex';
+                }
+                let timeLeft = Math.ceil(nextAdTime - ct);
+                document.getElementById('ad-warn-text').innerText = `⚠️ ${timeLeft} সেকেন্ড পর একটি অ্যাড আসবে! না দেখলে ভিডিও বন্ধ হয়ে যাবে।`;
+            }
+
+            if(ct >= nextAdTime && !adEnforced) {
+                v.pause();
+                adEnforced = true;
+                document.getElementById('ad-warning-overlay').style.display = 'none';
+                document.getElementById('ad-enforce-overlay').style.display = 'flex';
+            }
+        });
+
+        // 🌟 START MID ROLL AD BUTTON LOGIC 🌟
+        function startMidRollAd() {
+            if(midRollTaskActive) return;
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            midRollTaskActive = true;
+            midRollTaskStart = Date.now();
+            let btn = document.getElementById('mid-roll-btn');
+            btn.innerText = "Verifying... (Wait 10s on ad page)";
+            btn.style.background = "#333";
+        }
+
+        // 🌟 CHECK MID ROLL SUCCESS / FAILURE 🌟
+        function checkMidRollStatus() {
+            if(midRollTaskActive) {
+                let elapsed = Date.now() - midRollTaskStart;
+                let btn = document.getElementById('mid-roll-btn');
+                if(elapsed >= 10000) { 
+                    midRollTaskActive = false;
+                    adEnforced = false;
+                    adWarningShown = false;
+                    nextAdTime += 600; 
+                    document.getElementById('ad-enforce-overlay').style.display = 'none';
+                    btn.innerText = "WATCH AD TO CONTINUE";
+                    btn.style.background = "var(--yellow)";
+                    document.getElementById('main-video').play().catch(e=>{});
+                } else if (elapsed > 2000) { 
+                    midRollTaskActive = false;
+                    alert("❌ আপনি ১০ সেকেন্ডের আগেই ফিরে এসেছেন! আপনাকে ১০ সেকেন্ড অ্যাড পেজে থাকতে হবে। আবার চেষ্টা করুন।");
+                    btn.innerText = "WATCH AD TO CONTINUE";
+                    btn.style.background = "var(--yellow)";
+                }
+            }
+        }
+
         function changeLanguage(lang) {
             const v = document.getElementById('main-video'); if(!currentPlayingEpisodeData) return; 
             let newUrl = currentPlayingEpisodeData.url; 
@@ -983,7 +1085,6 @@
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
-        // 🌟 2. NUMBER FORMATTING IN SOCIAL DATA 🌟
         function loadSocialData(safeId) {
             currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=formatNumber(s.val()||0); });
             currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=formatNumber(s.val()||0); });
@@ -1079,7 +1180,6 @@
             tags.forEach(t => { container.innerHTML += `<div class="so-tag" onclick="executeSearch('${t.replace(/'/g, "\\'")}')">${t}</div>`; });
         }
 
-        // 🌟 4. SMART SEARCH SYSTEM (HINDI / ENGLISH) 🌟
         function handleOverlaySearch(val) {
             let q = val.toLowerCase().trim();
             let container = document.getElementById('search-results-list');
