@@ -211,8 +211,13 @@
 
         /* PLAYER VIEW */
         #player-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
-        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; }
+        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
+        
+        /* 🌟 NEW: BUFFERING ANIMATION CSS 🌟 */
+        #vid-buffering { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:5002; pointer-events:none; }
+        #vid-buffering .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.2); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom:0;}
+
         .player-meta-container { padding: 15px; }
         .meta-title { font-size: 18px; font-weight: 700; color: var(--yellow); line-height: 1.3; font-family: 'Outfit'; margin-bottom: 5px;}
         .meta-info { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -224,9 +229,13 @@
         .dropdown-row { display: flex; gap: 10px; margin-bottom: 15px; }
         select.custom-drop { background: #222; color: #fff; border: 1px solid #444; padding: 10px 15px; font-size: 13px; outline: none; border-radius: 6px; font-weight: bold; width: auto; max-width: 150px; text-overflow: ellipsis;} 
         .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
-        .ep-pill { min-width: 50px; height: 45px; background: #2a2a2a; color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; position: relative;}
-        .ep-pill.active { background: rgba(255, 193, 7, 0.15); border: 1px solid var(--yellow); color: var(--yellow); }
-        .ep-vip-badge-small { position: absolute; top: -5px; right: -5px; background: #ff0000; color: #fff; font-size: 8px; padding: 2px 4px; border-radius: 2px; }
+        
+        /* 🌟 NEW: PREMIUM EPISODE DESIGN 🌟 */
+        .ep-pill { min-width: 55px; height: 45px; background: linear-gradient(145deg, #2a2a2a, #1a1a1a); color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: 1px solid #333; border-radius: 6px; cursor: pointer; position: relative; transition: 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-family: 'Orbitron'; }
+        .ep-pill:active { transform: scale(0.95); }
+        .ep-pill.active { background: linear-gradient(145deg, rgba(255,193,7,0.2), rgba(255,193,7,0.05)); border: 1px solid var(--yellow); color: var(--yellow); box-shadow: 0 0 10px rgba(255,193,7,0.4), inset 0 0 5px rgba(255,193,7,0.1); text-shadow: 0 0 5px rgba(255,193,7,0.5); }
+        .ep-vip-badge-small { position: absolute; top: -6px; right: -6px; background: linear-gradient(45deg, #ff0000, #aa0000); color: #fff; font-size: 8px; padding: 2px 4px; border-radius: 3px; font-family: 'Roboto'; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid #ff4444;}
+        
         .tab-header { display: flex; gap: 25px; border-bottom: 2px solid #333; margin-bottom: 15px; margin-top: 10px;}
         .tab-item { padding-bottom: 10px; font-size: 15px; color: #888; font-weight: bold; cursor: pointer; }
         .tab-item.active { color: var(--yellow); border-bottom: 2px solid var(--yellow); margin-bottom: -2px; }
@@ -270,7 +279,7 @@
         .so-tag:active { background: #444; }
         .sl-item { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #222; cursor: pointer; }
         .sl-icon { color: #666; font-size: 14px; }
-        .sl-text { font-size: 14px; color: #ddd; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sl-text { font-size: 14px; color: #ddd; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display:flex; align-items:center; flex-wrap:wrap;}
     </style>
 </head>
 <body>
@@ -416,8 +425,12 @@
     <div id="player-view">
         <div class="video-wrapper">
             <div style="position:absolute; top:10px; left:10px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
-            <!-- FIXED: Video will stream anything natively without crash -->
-            <video id="main-video" controls playsinline preload="metadata" controlsList="nodownload" oncontextmenu="return false;"></video>
+            
+            <!-- 🌟 5. VIDEO BUFFERING ANIMATION 🌟 -->
+            <div id="vid-buffering"><div class="loading-spinner"></div></div>
+            
+            <!-- 🌟 5. PRELOAD AUTO ADDED 🌟 -->
+            <video id="main-video" controls playsinline preload="auto" controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
             <div class="meta-title" id="player-title">Loading...</div>
@@ -478,6 +491,13 @@
     </nav>
 
     <script>
+        // 🌟 2. NUMBER FORMATTING (1K, 1M, Unlimited views) 🌟
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num;
+        }
+
         function toggleAuthForm() {
             let loginForm = document.getElementById('login-form-box'); let regForm = document.getElementById('reg-form-box');
             if (loginForm.classList.contains('active')) { loginForm.classList.remove('active'); loginForm.classList.add('hidden'); regForm.classList.remove('hidden'); regForm.classList.add('active');
@@ -491,7 +511,7 @@
             document.getElementById(`${parent}-movie-wrapper`).style.display = type === 'movie' ? 'block' : 'none';
         }
 
-        // FIXED: ADDED TRY-CATCH BLOCKS TO PREVENT UI CRASHES
+        // 🌟 3. HIDE SEARCH BAR FROM PROFILE 🌟
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
             document.getElementById('player-view').style.display='none'; 
@@ -501,9 +521,17 @@
             try { closeSearchOverlay(); } catch(e) {} 
             try { closeLeaderboard(); } catch(e) {}
 
-            const searchBox = document.getElementById('main-search-box');
-            if(t==='home') { document.getElementById('main-app').style.display='block'; if(searchBox) searchBox.style.display = 'block'; }
-            if(t==='profile') { document.getElementById('profile-view').style.display='block'; if(searchBox) searchBox.style.display = 'none'; loadRecentHistoryUI(); }
+            const searchWrapper = document.querySelector('.search-wrapper');
+            
+            if(t==='home') { 
+                document.getElementById('main-app').style.display='block'; 
+                if(searchWrapper) searchWrapper.style.display = 'block'; 
+            }
+            if(t==='profile') { 
+                document.getElementById('profile-view').style.display='block'; 
+                if(searchWrapper) searchWrapper.style.display = 'none'; // HIDDEN HERE
+                loadRecentHistoryUI(); 
+            }
             
             document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
             if(t==='home') document.querySelector('.fa-home').classList.add('active');
@@ -577,6 +605,12 @@
                 document.getElementById('profile-img').src = dpImg; document.getElementById('task-av').src = dpImg;
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
+
+                // 🌟 6. LEADERBOARD EXACT POINT SYNC (FIXED) 🌟
+                let cycle = getLeaderboardCycle();
+                db.ref(`leaderboard/c_${cycle}/${uid}`).once('value', lSnap => {
+                    if(lSnap.val() !== userPoints) { db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints); }
+                });
 
                 const actualServerTime = Date.now() + serverTimeOffset;
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
@@ -697,19 +731,23 @@
             } else if (elapsed >= 30000 && !activeTask.completed) { completeTaskSuccess(); }
         }
 
+        // 🌟 6. LEADERBOARD PERFECT POINT SYNC RESOLUTION 🌟
         function completeTaskSuccess() {
             if(!activeTask) return; let taskId = activeTask.id; activeTask.completed = true; clearInterval(activeInterval);
-            db.ref(`users/${currentUser.uid}/points`).set(userPoints + 2);
+            
+            let newPoints = userPoints + 2;
+            db.ref(`users/${currentUser.uid}/points`).set(newPoints);
+            
             let timeWindow = getCurrentTimeWindow(); db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
-            let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).transaction(c => (c || 0) + 2);
+            
+            let cycle = getLeaderboardCycle(); 
+            db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); // Syncs absolute value directly
+            
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
         document.addEventListener("visibilitychange", () => { if (!document.hidden) checkTaskStatus(); }); window.addEventListener("focus", () => { checkTaskStatus(); });
 
-        // ==========================================
-        // REDEEM VIP CODE (FIXED: MULTIPLE IDS)
-        // ==========================================
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
             let inputEl = document.getElementById(inputId); if(!inputEl) return;
@@ -853,7 +891,6 @@
 
         function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
 
-        // FIXED: URL ESCAPING IN VIDEO TITLES
         function openFolder(n) { 
             currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
             const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
@@ -906,6 +943,14 @@
             }
             
             const v = document.getElementById('main-video'); let prevTime = 0;
+            const bufferUI = document.getElementById('vid-buffering');
+            
+            // 🌟 5. BUFFERING EVENTS 🌟
+            v.onwaiting = () => { bufferUI.style.display = 'block'; };
+            v.onplaying = () => { bufferUI.style.display = 'none'; };
+            v.oncanplay = () => { bufferUI.style.display = 'none'; };
+            v.onerror = () => { bufferUI.style.display = 'none'; };
+
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
             v.src = u; v.dataset.currentId = id; v.load(); 
@@ -938,9 +983,10 @@
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
+        // 🌟 2. NUMBER FORMATTING IN SOCIAL DATA 🌟
         function loadSocialData(safeId) {
-            currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=s.val()||0; });
-            currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=s.val()||0; });
+            currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=formatNumber(s.val()||0); });
+            currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=formatNumber(s.val()||0); });
             if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
@@ -1013,7 +1059,7 @@
         function closeSearchOverlay() { document.getElementById('search-overlay-view').style.display = 'none'; }
 
         function loadDailyTrendingTags() {
-            let today = getTodayDate();
+            let today = new Date().toLocaleDateString();
             let savedData = localStorage.getItem('dailySearchTags');
             let parsed = savedData ? JSON.parse(savedData) : null;
             
@@ -1033,6 +1079,7 @@
             tags.forEach(t => { container.innerHTML += `<div class="so-tag" onclick="executeSearch('${t.replace(/'/g, "\\'")}')">${t}</div>`; });
         }
 
+        // 🌟 4. SMART SEARCH SYSTEM (HINDI / ENGLISH) 🌟
         function handleOverlaySearch(val) {
             let q = val.toLowerCase().trim();
             let container = document.getElementById('search-results-list');
@@ -1041,20 +1088,48 @@
             if(q === "") { container.innerHTML = ""; tagSec.style.display = "block"; return; }
             
             tagSec.style.display = "none"; container.innerHTML = "";
-            let matches = allContentList.filter(item => item.title.toLowerCase().includes(q)).slice(0, 20); 
+            
+            let searchLang = "";
+            if(q.includes("in hindi") || q.includes("hindi")) searchLang = "hindi";
+            else if(q.includes("in english") || q.includes("english") || q.includes("dub")) searchLang = "english";
+
+            let cleanQ = q.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
+
+            let matches = allContentList.filter(item => item.title.toLowerCase().includes(cleanQ)).slice(0, 20); 
             
             matches.forEach(item => {
-                let regex = new RegExp(`(${q})`, "gi");
+                let regex = new RegExp(`(${cleanQ})`, "gi");
                 let highlightedTitle = item.title.replace(regex, "<span style='color:var(--yellow);'>$1</span>");
                 let safeTitle = item.title.replace(/'/g, "\\'");
                 
-                let onClickAttr = item.type === 'anime' ? `openFolderAndCloseSearch('${safeTitle}')` : `playItemAndCloseSearch('${safeTitle}')`;
-                container.innerHTML += `<div class="sl-item" onclick="${onClickAttr}"><i class="fas fa-search sl-icon"></i><div class="sl-text">${highlightedTitle}</div></div>`;
+                let langBadge = "";
+                if(searchLang === "hindi") langBadge = `<span style="background:orange;color:#000;font-size:10px;padding:2px 5px;border-radius:4px;margin-left:8px;font-weight:bold;">HINDI</span>`;
+                else if(searchLang === "english") langBadge = `<span style="background:#007bff;color:#fff;font-size:10px;padding:2px 5px;border-radius:4px;margin-left:8px;font-weight:bold;">ENG</span>`;
+                
+                let onClickAttr = item.type === 'anime' ? `openFolderAndSetLang('${safeTitle}', '${searchLang}')` : `playItemAndCloseSearch('${safeTitle}')`;
+                container.innerHTML += `<div class="sl-item" onclick="${onClickAttr}"><i class="fas fa-search sl-icon"></i><div class="sl-text">${highlightedTitle} ${langBadge}</div></div>`;
             });
         }
 
         function executeSearch(val) { document.getElementById('overlay-search-input').value = val; handleOverlaySearch(val); }
-        function openFolderAndCloseSearch(folder) { closeSearchOverlay(); openFolder(folder); }
+        
+        function openFolderAndSetLang(folder, lang) { 
+            closeSearchOverlay(); 
+            openFolder(folder); 
+            if(lang) {
+                setTimeout(() => {
+                    let sel = document.getElementById('language-select');
+                    if(sel) {
+                        let options = Array.from(sel.options).map(o => o.value);
+                        if(options.includes(lang)) {
+                            sel.value = lang;
+                            changeLanguage(lang);
+                        }
+                    }
+                }, 600);
+            }
+        }
+        
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
     </script>
 </body>
