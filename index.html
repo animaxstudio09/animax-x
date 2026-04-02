@@ -70,7 +70,7 @@
 
         /* GRID */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 10px 20px 10px; }
-        .folder-card { background: transparent; cursor: pointer; display: flex; flex-direction: column; }
+        .folder-card { background: transparent; cursor: pointer; display: flex; flex-direction: column; position: relative;}
         .img-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; border: 1px solid #333; border-radius: 4px; overflow: hidden; background:#111;}
         .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
@@ -79,6 +79,10 @@
         .folder-ep { color: #888; text-align: center; font-size: 10px; margin-top: 3px; }
         .section-header { padding: 0 10px; margin-bottom: 10px; display: flex; justify-content: space-between; margin-top: 15px;}
         .sec-title-text { font-size: 15px; font-weight: bold; color: #fff; border-left: 3px solid var(--yellow); padding-left: 8px; font-family: 'Orbitron'; }
+
+        /* CW PROGRESS BAR */
+        .cw-progress-bg { position:absolute; bottom:0; left:0; width:100%; height:4px; background:rgba(255,255,255,0.2); z-index:5;}
+        .cw-progress-fill { height:100%; background:var(--yellow); }
 
         /* BANNER SLIDER */
         #banner-slider { width: 95%; height: 180px; margin: 10px auto; position: relative; overflow: hidden; border: 1px solid var(--yellow); border-radius: 4px;}
@@ -143,7 +147,7 @@
         .b-history-section { padding: 5px 15px 15px 15px; border-bottom: 1px solid #222;}
         .b-history-scroll { display: flex; gap: 12px; overflow-x: auto; margin-top: 10px; scrollbar-width: none; padding-bottom: 5px; }
         .b-history-scroll::-webkit-scrollbar { display: none; }
-        .b-history-card { min-width: 130px; width: 130px; cursor: pointer; display: flex; flex-direction: column;}
+        .b-history-card { min-width: 130px; width: 130px; cursor: pointer; display: flex; flex-direction: column; position: relative;}
         .b-history-img-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; position: relative; background: #222; border: 1px solid #333;}
         .b-history-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
         .b-history-type { position: absolute; top: 5px; left: 5px; background: rgba(255, 193, 7, 0.9); color: #000; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: bold;}
@@ -214,7 +218,14 @@
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 NEW AD WARNING AND ENFORCEMENT OVERLAYS 🌟 */
+        /* 🌟 NEW DOUBLE TAP SKIP & AUTOPLAY UI 🌟 */
+        .dt-zone { position:absolute; top:0; width:40%; height:100%; z-index:5003; }
+        .dt-left { left:0; } .dt-right { right:0; }
+        .skip-anim { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; display:none; z-index:5004; pointer-events:none; font-family:'Orbitron'; }
+        .skip-left { left:15%; } .skip-right { right:15%; }
+        
+        .autoplay-overlay { display:none; position:absolute; bottom:20px; right:20px; background:rgba(0,0,0,0.9); border:1px solid var(--yellow); padding:10px 15px; border-radius:8px; z-index:5005; color:#fff; font-size:12px; font-weight:bold; font-family:'Roboto'; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+
         #vid-buffering { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:5002; pointer-events:none; }
         #vid-buffering .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.2); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom:0;}
         
@@ -238,7 +249,6 @@
         select.custom-drop { background: #222; color: #fff; border: 1px solid #444; padding: 10px 15px; font-size: 13px; outline: none; border-radius: 6px; font-weight: bold; width: auto; max-width: 150px; text-overflow: ellipsis;} 
         .ep-pill-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
         
-        /* 🌟 PREMIUM EPISODE DESIGN 🌟 */
         .ep-pill { min-width: 55px; height: 45px; background: linear-gradient(145deg, #2a2a2a, #1a1a1a); color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: 1px solid #333; border-radius: 6px; cursor: pointer; position: relative; transition: 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); font-family: 'Orbitron'; }
         .ep-pill:active { transform: scale(0.95); }
         .ep-pill.active { background: linear-gradient(145deg, rgba(255,193,7,0.2), rgba(255,193,7,0.05)); border: 1px solid var(--yellow); color: var(--yellow); box-shadow: 0 0 10px rgba(255,193,7,0.4), inset 0 0 5px rgba(255,193,7,0.1); text-shadow: 0 0 5px rgba(255,193,7,0.5); }
@@ -300,7 +310,6 @@
         </div>
     </header>
 
-    <!-- 🌟 BANNER AD SECTION 🌟 -->
     <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:#111; border-bottom:1px solid #333;">
         <script>
           atOptions = {
@@ -315,6 +324,13 @@
     </div>
 
     <div id="main-app" class="app-view" style="display:block;">
+        
+        <!-- 🌟 NEW: CONTINUE WATCHING SECTION 🌟 -->
+        <div id="continue-watching-section" style="display:none; margin-bottom:10px;">
+            <div class="section-header"><div class="sec-title-text" style="color:var(--yellow);"><i class="fas fa-play-circle"></i> CONTINUE WATCHING</div></div>
+            <div class="b-history-scroll" id="cw-grid" style="padding:0 10px;"></div>
+        </div>
+
         <div id="banner-slider"><div id="banner-slides-container"></div></div>
 
         <div class="category-tabs">
@@ -355,7 +371,11 @@
                 <div class="prof-cover-area"><div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer; z-index:10;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div><div class="prof-avatar-section"><div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div></div></div>
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
-                    <div class="b-banner-alert" onclick="window.open('https://t.me/animax090', '_blank')"><i class="fas fa-bullhorn" style="font-size:14px;"></i> <span>Find Community Mode in Telegram for daily updates.</span></div>
+                    
+                    <!-- 🌟 NEW: DAILY LOGIN BONUS CARD 🌟 -->
+                    <div class="b-banner-alert" onclick="claimDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
+                        <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
+                    </div>
 
                     <div class="b-card" onclick="openPremiumHub()">
                         <div class="b-card-left"><i class="fas fa-crown b-card-icon"></i><div><div class="b-card-title">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
@@ -368,8 +388,8 @@
                     </div>
 
                     <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')">
-                        <div class="b-card-left"><i class="fas fa-book-open b-card-icon"></i><div><div class="b-card-title">Hot Updates</div><div class="b-card-sub" style="font-family:'Roboto';">Offline, Free and Daily updated</div></div></div>
-                        <div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Read now</span></div>
+                        <div class="b-card-left"><i class="fas fa-paper-plane b-card-icon"></i><div><div class="b-card-title">Request Anime/Movie</div><div class="b-card-sub" style="font-family:'Roboto';">Join Telegram to request</div></div></div>
+                        <div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Request</span></div>
                     </div>
 
                     <div class="b-list-group" style="margin-top: 20px;">
@@ -448,10 +468,16 @@
             
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- 🌟 AD WARNING OVERLAY 🌟 -->
-            <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ 10 সেকেন্ড পর একটি অ্যাড আসবে!</span></div>
+            <!-- 🌟 NEW: DOUBLE TAP SKIP ZONES 🌟 -->
+            <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
+            <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
+            <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
+            <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
             
-            <!-- 🌟 AD ENFORCEMENT OVERLAY 🌟 -->
+            <!-- 🌟 NEW: AUTOPLAY COUNTDOWN OVERLAY 🌟 -->
+            <div id="autoplay-box" class="autoplay-overlay">Next Episode in <span id="ap-count">5</span>s <button onclick="cancelAutoplay()" style="background:#333;color:#fff;border:none;margin-left:5px;padding:4px 8px;border-radius:4px;cursor:pointer;">Cancel</button></div>
+
+            <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ 10 সেকেন্ড পর একটি অ্যাড আসবে!</span></div>
             <div id="ad-enforce-overlay">
                 <div class="ad-enforce-title">AD BREAK!</div>
                 <div class="ad-enforce-desc">আপনাকে ভিডিওটি কন্টিনিউ করার জন্য একটি অ্যাড দেখতে হবে।<br>নিচের বাটনে ক্লিক করে ১০ সেকেন্ড অপেক্ষা করুন।</div>
@@ -471,7 +497,8 @@
             <div class="action-buttons-row">
                 <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
-                <button class="act-btn"><i class="fas fa-download"></i> Download</button>
+                <!-- 🌟 VIP DOWNLOAD ENFORCEMENT 🌟 -->
+                <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
             </div>
             <div class="resources-header">Resources <span>Uploaded by Animax etc. <i class="far fa-question-circle" style="font-size:10px;"></i></span></div>
             <div class="dropdown-row">
@@ -519,7 +546,6 @@
     </nav>
 
     <script>
-        // Number Formatting
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
@@ -553,11 +579,12 @@
             if(t==='home') { 
                 document.getElementById('main-app').style.display='block'; 
                 if(searchWrapper) searchWrapper.style.display = 'block'; 
+                loadContinueWatching(); // 🌟 LOAD CW ON HOME 🌟
             }
             if(t==='profile') { 
                 document.getElementById('profile-view').style.display='block'; 
                 if(searchWrapper) searchWrapper.style.display = 'none'; 
-                loadRecentHistoryUI(); 
+                loadRecentHistoryUI(); checkDailyBonusUI();
             }
             
             document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
@@ -572,43 +599,30 @@
             sections.forEach(s => { let el = document.getElementById(`section-${s}`); if(el) el.style.display = (cat === s || (cat==='trending' && s==='trending')) ? 'block' : 'none'; });
         }
 
-        const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079", storageBucket: "myanimeapp-8d079.firebasestorage.app", messagingSenderId: "37482342893", appId: "1:37482342893:web:bebc7352e4bc102b725fe4" };
+        const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
 
         let currentUser = null, isPremium = false, currentVideoId = null, currentSafeVideoId = null, currentPlayType = 'anime';
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
-        let currentFolder = null, currentPlayingEpisodeData = null; let allContentList = [];
+        let currentFolder = null, currentPlayingEpisodeData = null, currentEpIndex = -1; 
+        let allContentList = [];
 
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
         let userProfileRef = null; let serverTimeOffset = 0; let mySessionRef = null; let vipTimerInterval = null; let userPoints = 0; 
         db.ref('.info/serverTimeOffset').on('value', snap => { serverTimeOffset = snap.val() || 0; });
 
-        db.ref('.info/connected').on('value', (snap) => {
-            if (snap.val() === true && currentUser) {
-                mySessionRef = db.ref(`online_users/${currentUser.uid}`);
-                mySessionRef.onDisconnect().remove();
-                mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
-            }
-        });
-
         auth.onAuthStateChanged(user => {
             if (user) { 
                 currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; 
-                checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); 
-                db.ref('.info/connected').once('value', snap => {
-                    if (snap.val() === true) {
-                        mySessionRef = db.ref(`online_users/${currentUser.uid}`); mySessionRef.onDisconnect().remove(); mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
-                    }
-                });
+                checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); checkDailyBonusUI();
             } else { 
-                if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; 
                 if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
                 if(vipTimerInterval) clearInterval(vipTimerInterval); injectFreeAds(); 
             }
-            loadContent();
+            loadContent(); loadContinueWatching();
         });
 
         let adsInjected = false;
@@ -641,9 +655,7 @@
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
-                    // 🌟 HIDE BANNER FOR VIP 🌟
                     document.getElementById('global-banner-ad').style.display = 'none';
-                    
                     vipTimerInterval = setInterval(() => {
                         let now = Date.now() + serverTimeOffset; let timeLeft = d.premiumExpiry - now;
                         if(timeLeft <= 0) {
@@ -664,6 +676,37 @@
             });
         }
 
+        // 🌟 NEW: DAILY LOGIN BONUS 🌟
+        function checkDailyBonusUI() {
+            if(!currentUser) return;
+            let today = new Date().toLocaleDateString();
+            db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
+                let lastDate = s.val();
+                let txt = document.getElementById('daily-bonus-text');
+                if(lastDate === today) { txt.innerText = "BONUS CLAIMED TODAY ✓"; txt.parentElement.style.opacity = "0.5"; txt.parentElement.style.pointerEvents = "none"; } 
+                else { txt.innerText = "CLAIM DAILY LOGIN BONUS (+5 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
+            });
+        }
+        function claimDailyBonus() {
+            if(!currentUser) return; let today = new Date().toLocaleDateString();
+            db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
+                if(s.val() !== today) {
+                    let newPoints = userPoints + 5;
+                    db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
+                        let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
+                        alert("🎉 Daily Bonus Claimed! +5 Points added to your account."); checkDailyBonusUI();
+                    });
+                }
+            });
+        }
+
+        // 🌟 NEW: VIP DOWNLOAD ENFORCEMENT 🌟
+        function handleDownload() {
+            if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
+            else { alert("✅ Download server connecting... Please wait."); }
+        }
+
+        // LEADERBOARD, HUB, TASKS (Existing Code)
         let lbTimerInterval = null;
         function getLeaderboardCycle() { return Math.floor((Date.now() + serverTimeOffset) / 1209600000); }
         function openLeaderboard() {
@@ -700,7 +743,7 @@
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"},{id:"t3",name:"Tile Explorer Ad",img:"https://cdn-icons-png.flaticon.com/512/751/751462.png"},{id:"t4",name:"Merge Master Ad",img:"https://cdn-icons-png.flaticon.com/512/860/860472.png"},{id:"t5",name:"Word Search Ad",img:"https://cdn-icons-png.flaticon.com/512/3408/3408506.png"},{id:"t6",name:"Candy Crush Ad",img:"https://cdn-icons-png.flaticon.com/512/5243/5243460.png"},{id:"t7",name:"Race Master Ad",img:"https://cdn-icons-png.flaticon.com/512/3202/3202926.png"},{id:"t8",name:"Sniper 3D Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801530.png"},{id:"t9",name:"Farm Heroes Ad",img:"https://cdn-icons-png.flaticon.com/512/2689/2689408.png"},{id:"t10",name:"Coin Master Ad",img:"https://cdn-icons-png.flaticon.com/512/1021/1021207.png"},{id:"t11",name:"Subway Surfers Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888856.png"},{id:"t12",name:"Ludo King Ad",img:"https://cdn-icons-png.flaticon.com/512/806/806126.png"},{id:"t13",name:"8 Ball Pool Ad",img:"https://cdn-icons-png.flaticon.com/512/3039/3039395.png"},{id:"t14",name:"Temple Run Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888874.png"},{id:"t15",name:"Angry Birds Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033324.png"},{id:"t16",name:"Clash of Clans Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033306.png"},{id:"t17",name:"Free Fire Ad",img:"https://cdn-icons-png.flaticon.com/512/3211/3211516.png"},{id:"t18",name:"PUBG Mobile Ad",img:"https://cdn-icons-png.flaticon.com/512/3094/3094825.png"},{id:"t19",name:"Roblox Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801538.png"},{id:"t20",name:"Minecraft Ad",img:"https://cdn-icons-png.flaticon.com/512/1068/1068777.png"}];
+        const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"}];
 
         function getCurrentTimeWindow() { let now = Date.now() + serverTimeOffset; return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); }
 
@@ -769,7 +812,6 @@
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
-        // 🌟 CHECK TASKS & MID-ROLL ADS ON FOCUS 🌟
         document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); } }); 
         window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); });
 
@@ -921,7 +963,12 @@
             const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
             let folderElement = document.getElementById('season-select');
             if(folderElement) { folderElement.innerHTML = `<option value="${n}">${n}</option>`; }
-            playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', 0); loadPlayerUI(n); 
+            
+            // 🌟 CONTINUE WATCHING SEEK LOGIC 🌟
+            let savedData = localStorage.getItem('cw_' + getSafeId(epId));
+            let parsedTime = savedData ? JSON.parse(savedData).time : 0;
+            
+            playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', 0, parsedTime); loadPlayerUI(n); 
         }
 
         function loadPlayerUI(f) { 
@@ -950,22 +997,16 @@
         
         function switchSeason(n) { openFolder(n); }
 
-        // 🌟 10-MINUTES AD VARIABLES 🌟
-        let nextAdTime = 600; 
-        let adWarningShown = false;
-        let adEnforced = false;
-        let midRollTaskActive = false;
-        let midRollTaskStart = 0;
+        let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; let midRollTaskActive = false; let midRollTaskStart = 0;
 
-        function playVideo(t, u, id, ip, type, idx) {
+        function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
-            // 🌟 EPISODE CHANGE SMARTLINK LOGIC 🌟
             let isEpisodeChange = (document.getElementById('player-view').style.display === 'block');
-
-            currentSafeVideoId = getSafeId(id || t); currentVideoId = id; currentPlayType = type; 
+            currentSafeVideoId = getSafeId(id || t); currentVideoId = id; currentPlayType = type; currentEpIndex = idx;
             document.getElementById('player-title').innerText = t;
+            cancelAutoplay(); // Hide autoplay box on new video
             
             if (idx !== -1 && currentFolder && window.animeData[currentFolder]) { currentPlayingEpisodeData = window.animeData[currentFolder][idx]; } else { currentPlayingEpisodeData = null; }
             
@@ -977,16 +1018,11 @@
                 document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
             }
             
-            const v = document.getElementById('main-video'); let prevTime = 0;
+            const v = document.getElementById('main-video'); let prevTime = seekTime;
             const bufferUI = document.getElementById('vid-buffering');
             
-            // 🌟 RESET AD VARIABLES FOR NEW VIDEO 🌟
-            nextAdTime = 600; 
-            adWarningShown = false;
-            adEnforced = false;
-            midRollTaskActive = false;
-            document.getElementById('ad-warning-overlay').style.display = 'none';
-            document.getElementById('ad-enforce-overlay').style.display = 'none';
+            nextAdTime = 600; adWarningShown = false; adEnforced = false; midRollTaskActive = false;
+            document.getElementById('ad-warning-overlay').style.display = 'none'; document.getElementById('ad-enforce-overlay').style.display = 'none';
 
             v.onwaiting = () => { bufferUI.style.display = 'block'; };
             v.onplaying = () => { bufferUI.style.display = 'none'; if(adEnforced && !isPremium) v.pause(); };
@@ -1000,80 +1036,132 @@
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
-            // 🌟 SHOW SMARTLINK ONLY ON EPISODE CHANGE FOR FREE USERS 🌟
             if(!isPremium && isEpisodeChange) {
                 document.getElementById('mid-roll-overlay').style.display = 'flex';
                 try { window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank'); } catch(e){}
                 setTimeout(() => { document.getElementById('mid-roll-overlay').style.display = 'none'; window.startVideoPlayback(); }, 100);
-            } else { 
-                window.startVideoPlayback(); 
-            }
+            } else { window.startVideoPlayback(); }
 
             if(currentUser) {
                 let hThumb = "";
                 if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
                 else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
                 else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
-                
                 db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).update({ title: t, date: Date.now(), thumb: hThumb, type: type, folderName: currentFolder || t });
             }
 
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); loadSocialData(currentSafeVideoId);
         }
 
-        // 🌟 10-MINUTES VIDEO EVENT LISTENER 🌟
+        // 🌟 NEW: DOUBLE TAP SKIP LOGIC 🌟
+        function skipTime(seconds) {
+            const v = document.getElementById('main-video');
+            if(v.duration) {
+                v.currentTime += seconds;
+                let animId = seconds > 0 ? 'skip-right-anim' : 'skip-left-anim';
+                let animEl = document.getElementById(animId);
+                animEl.style.display = 'block';
+                setTimeout(() => { animEl.style.display = 'none'; }, 500);
+            }
+        }
+
+        // 🌟 NEW: AUTOPLAY & CONTINUE WATCHING TRACKER 🌟
+        let autoPlayTimer = null;
+        document.getElementById('main-video').addEventListener('ended', () => {
+            if(currentPlayType !== 'anime' || currentEpIndex === -1 || !window.animeData[currentFolder]) return;
+            let nextIdx = currentEpIndex + 1;
+            let nextBtn = document.getElementById(`ep-btn-${nextIdx}`);
+            if(nextBtn) {
+                document.getElementById('autoplay-box').style.display = 'block';
+                let counter = 5; document.getElementById('ap-count').innerText = counter;
+                autoPlayTimer = setInterval(() => {
+                    counter--; document.getElementById('ap-count').innerText = counter;
+                    if(counter <= 0) { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; nextBtn.click(); }
+                }, 1000);
+            }
+        });
+        function cancelAutoplay() { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; }
+
         document.getElementById('main-video').addEventListener('timeupdate', () => {
-            if(isPremium) return;
             const v = document.getElementById('main-video');
             let ct = v.currentTime;
             
-            if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
-                if(!adWarningShown) {
-                    adWarningShown = true;
-                    document.getElementById('ad-warning-overlay').style.display = 'flex';
-                }
-                let timeLeft = Math.ceil(nextAdTime - ct);
-                document.getElementById('ad-warn-text').innerText = `⚠️ ${timeLeft} সেকেন্ড পর একটি অ্যাড আসবে! না দেখলে ভিডিও বন্ধ হয়ে যাবে।`;
+            // CW Tracker
+            if(ct > 10 && v.duration > 0) {
+                let hThumb = "";
+                if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
+                else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === document.getElementById('player-title').innerText); if(match) hThumb = match.thumbnail; }
+                let progress = { id: currentSafeVideoId, title: document.getElementById('player-title').innerText, time: ct, duration: v.duration, thumb: hThumb, folder: currentFolder, type: currentPlayType, idx: currentEpIndex, ts: Date.now() };
+                localStorage.setItem('cw_' + currentSafeVideoId, JSON.stringify(progress));
             }
 
+            // 10-Min Ad Tracker
+            if(isPremium) return;
+            if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
+                if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
+                let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ ${timeLeft} সেকেন্ড পর একটি অ্যাড আসবে!`;
+            }
             if(ct >= nextAdTime && !adEnforced) {
-                v.pause();
-                adEnforced = true;
-                document.getElementById('ad-warning-overlay').style.display = 'none';
-                document.getElementById('ad-enforce-overlay').style.display = 'flex';
+                v.pause(); adEnforced = true; document.getElementById('ad-warning-overlay').style.display = 'none'; document.getElementById('ad-enforce-overlay').style.display = 'flex';
             }
         });
 
-        // 🌟 START MID ROLL AD BUTTON LOGIC 🌟
+        // 🌟 NEW: LOAD CONTINUE WATCHING ON HOME 🌟
+        function loadContinueWatching() {
+            let cwData = [];
+            for(let i=0; i<localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if(key.startsWith('cw_')) {
+                    let data = JSON.parse(localStorage.getItem(key));
+                    if((data.time / data.duration) < 0.95) cwData.push(data); // Don't show if >95% watched
+                }
+            }
+            cwData.sort((a,b) => b.ts - a.ts);
+            
+            let cwSection = document.getElementById('continue-watching-section');
+            let cwGrid = document.getElementById('cw-grid');
+            cwGrid.innerHTML = '';
+            
+            if(cwData.length > 0) {
+                cwSection.style.display = 'block';
+                cwData.slice(0, 10).forEach(d => {
+                    let pWidth = (d.time / d.duration) * 100;
+                    let typeBadge = d.type === 'movie' ? 'MV' : 'TV';
+                    let safeTitle = d.title.replace(/'/g, "\\'");
+                    let safeFolder = d.folder ? d.folder.replace(/'/g, "\\'") : '';
+                    let imgThumb = d.thumb ? d.thumb : "https://via.placeholder.com/160x90/222/555?text=Video";
+                    
+                    cwGrid.innerHTML += `<div class="b-history-card" onclick="resumeVideo('${safeTitle}', '${safeFolder}', '${d.type}', '${d.id}', ${d.idx})">
+                        <div class="b-history-img-wrap"><img src="${imgThumb}"><div class="b-history-type">${typeBadge}</div><div class="cw-progress-bg"><div class="cw-progress-fill" style="width:${pWidth}%;"></div></div></div>
+                        <div class="b-history-title">${d.title}</div>
+                    </div>`;
+                });
+            } else { cwSection.style.display = 'none'; }
+        }
+
+        function resumeVideo(title, folder, type, id, idx) {
+            if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } 
+            else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
+        }
+
         function startMidRollAd() {
             if(midRollTaskActive) return;
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            midRollTaskActive = true;
-            midRollTaskStart = Date.now();
-            let btn = document.getElementById('mid-roll-btn');
-            btn.innerText = "Verifying... (Wait 10s on ad page)";
-            btn.style.background = "#333";
+            midRollTaskActive = true; midRollTaskStart = Date.now();
+            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "Verifying... (Wait 10s on ad page)"; btn.style.background = "#333";
         }
 
-        // 🌟 CHECK MID ROLL SUCCESS / FAILURE 🌟
         function checkMidRollStatus() {
             if(midRollTaskActive) {
-                let elapsed = Date.now() - midRollTaskStart;
-                let btn = document.getElementById('mid-roll-btn');
+                let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
                 if(elapsed >= 10000) { 
-                    midRollTaskActive = false;
-                    adEnforced = false;
-                    adWarningShown = false;
-                    nextAdTime += 600; 
+                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; nextAdTime += 600; 
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
-                    btn.innerText = "WATCH AD TO CONTINUE";
-                    btn.style.background = "var(--yellow)";
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
                     document.getElementById('main-video').play().catch(e=>{});
                 } else if (elapsed > 2000) { 
-                    midRollTaskActive = false;
-                    alert("❌ আপনি ১০ সেকেন্ডের আগেই ফিরে এসেছেন! আপনাকে ১০ সেকেন্ড অ্যাড পেজে থাকতে হবে। আবার চেষ্টা করুন।");
-                    btn.innerText = "WATCH AD TO CONTINUE";
-                    btn.style.background = "var(--yellow)";
+                    midRollTaskActive = false; alert("❌ আপনি ১০ সেকেন্ডের আগেই ফিরে এসেছেন! আপনাকে ১০ সেকেন্ড অ্যাড পেজে থাকতে হবে। আবার চেষ্টা করুন।");
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
                 }
             }
         }
@@ -1094,21 +1182,28 @@
             currentCommentsRef.on('value', s => {
                 document.getElementById('tab-btn-comments').innerText = `Comments (${s.numChildren()})`; l.innerHTML = ""; 
                 s.forEach(child => {
-                    const c = child.val(); let d = c.time ? new Date(c.time) : new Date(); let ts = d.toLocaleDateString();
-                    l.innerHTML = `<div class="comment-box-unique"><div class="c-body-unique"><div class="c-user-name" style="color:var(--yellow);font-weight:bold;">${c.user.toUpperCase()}</div><div class="c-text-content" style="color:#ddd;font-size:12px;">${c.text}</div></div></div>` + l.innerHTML; 
+                    const c = child.val(); 
+                    // 🌟 NEW: VIP COMMENT BADGE 🌟
+                    let crownHtml = c.isVIP ? `<i class="fas fa-crown" style="color:var(--yellow); margin-left:5px; font-size:12px;"></i>` : '';
+                    l.innerHTML = `<div class="comment-box-unique"><div class="c-body-unique"><div class="c-user-name" style="color:var(--yellow);font-weight:bold;">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:#ddd;font-size:12px;">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
         }
 
         function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentSafeVideoId)return; const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); } else { r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); } }); }
-        function postComment() { if(!currentUser){alert("Please Login to comment.");return;} const t = document.getElementById('comment-input').value; if(!t.trim()) return; db.ref(`comments/${currentSafeVideoId}`).push({ user: currentUser.username || currentUser.email.split('@')[0], text: t, time: Date.now() }).then(() => { document.getElementById('comment-input').value = ""; }); }
+        
+        function postComment() { 
+            if(!currentUser){alert("Please Login to comment.");return;} 
+            const t = document.getElementById('comment-input').value; if(!t.trim()) return; 
+            db.ref(`comments/${currentSafeVideoId}`).push({ user: currentUser.username || currentUser.email.split('@')[0], text: t, time: Date.now(), isVIP: isPremium }).then(() => { document.getElementById('comment-input').value = ""; }); 
+        }
 
         function switchPlayerTab(t) { 
             if(t==='foryou'){ document.getElementById('tab-btn-foryou').classList.add('active'); document.getElementById('tab-btn-comments').classList.remove('active'); document.getElementById('tab-content-foryou').style.display='block'; document.getElementById('tab-content-comments').style.display='none'; } 
             else { document.getElementById('tab-btn-comments').classList.add('active'); document.getElementById('tab-btn-foryou').classList.remove('active'); document.getElementById('tab-content-comments').style.display='block'; document.getElementById('tab-content-foryou').style.display='none'; } 
         }
         
-        function closePlayer() { const v=document.getElementById('main-video'); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
+        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
         
         function loadForYouVideos() { 
             const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
