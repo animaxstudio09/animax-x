@@ -406,6 +406,18 @@
                         <i class="fas fa-chevron-right" style="color:#666;"></i>
                     </div>
 
+                    <!-- 🌟 NEW: LUCKY SPIN IN PROFILE 🌟 -->
+                    <div class="b-card" onclick="openSpinWheel()">
+                        <div class="b-card-left">
+                            <i class="fas fa-dharmachakra b-card-icon" style="color: #ff9800;"></i>
+                            <div>
+                                <div class="b-card-title">Lucky Spin 🎰</div>
+                                <div class="b-card-sub" style="font-family:'Roboto';">Cost 2 Pts • Win up to 10 Pts / VIP</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:#666;"></i>
+                    </div>
+
                     <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')">
                         <div class="b-card-left"><i class="fas fa-paper-plane b-card-icon"></i><div><div class="b-card-title">Request Anime/Movie</div><div class="b-card-sub" style="font-family:'Roboto';">Join Telegram to request</div></div></div>
                         <div class="b-card-right"><span style="background:#333; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:bold; color:#fff;">Request</span></div>
@@ -492,13 +504,6 @@
                 <div class="redeem-card"><div class="redeem-days">1 Day</div><div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 15</div><button class="redeem-btn disabled" id="rbtn-7" onclick="redeemPointsForVIP(24, 15)">Redeem</button></div>
                 <div class="redeem-card"><div class="redeem-days">3 Days</div><div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 45</div><button class="redeem-btn disabled" id="rbtn-30" onclick="redeemPointsForVIP(72, 45)">Redeem</button></div>
             </div>
-        </div>
-        
-        <!-- OPEN LUCKY SPIN MODAL BUTTON -->
-        <div class="task-section-box" style="border-radius:12px;">
-            <div class="task-sec-title">Lucky Spin 🎰</div>
-            <div style="text-align:center; color:#ccc; font-size:12px; margin-bottom:15px; font-family:'Roboto';">Cost: 2 Points. Win up to 10 Points instantly!</div>
-            <button class="b-btn-primary" onclick="openSpinWheel()">OPEN SPIN WHEEL</button>
         </div>
 
         <div class="task-section-box" style="border-radius:12px; border-top: 1px solid #222;">
@@ -812,45 +817,39 @@
             let btn = document.getElementById('start-spin-btn');
             btn.innerText = "SPINNING..."; btn.disabled = true;
             
-            db.ref(`users/${currentUser.uid}/points`).set(userPoints - 2).then(() => {
+            let startingPoints = userPoints; 
+            db.ref(`users/${currentUser.uid}/points`).set(startingPoints - 2).then(() => {
                 let wheel = document.getElementById('real-wheel');
                 
-                // Array of prizes corresponding to 8 slices.
-                // Assuming CSS slices start from top and go clockwise: 0, 1, 2, 5, 0, 10, 0, VIP
                 let prizes = [0, 1, 2, 5, 0, 10, 0, 'VIP'];
-                
-                // 🌟 Probability Logic (100 Spins): 1% VIP, 5% 10Pts, 15% 5Pts, 20% 2Pts, 20% 1Pts, 39% 0Pts
-                let rand = Math.random() * 100;
+                let rand = Math.floor(Math.random() * 100) + 1; // 1 to 100
                 let winIndex = 0;
                 
-                if (rand < 1) { winIndex = 7; } // 1% chance for VIP
-                else if (rand < 6) { winIndex = 5; } // 5% chance for 10 Pts
-                else if (rand < 21) { winIndex = 3; } // 15% chance for 5 Pts
-                else if (rand < 41) { winIndex = 2; } // 20% chance for 2 Pts
-                else if (rand < 61) { winIndex = 1; } // 20% chance for 1 Pts
+                if (rand === 1) { winIndex = 7; } // 1% chance for VIP
+                else if (rand <= 6) { winIndex = 5; } // 5% chance for 10 Pts
+                else if (rand <= 21) { winIndex = 3; } // 15% chance for 5 Pts
+                else if (rand <= 51) { winIndex = 2; } // 30% chance for 2 Pts
+                else if (rand <= 71) { winIndex = 1; } // 20% chance for 1 Pts
                 else { 
-                    // 39% chance for 0 Pts. Randomly pick one of the '0' slices (0, 4, 6)
                     let zeroSlices = [0, 4, 6];
                     winIndex = zeroSlices[Math.floor(Math.random() * zeroSlices.length)]; 
-                }
+                } // 29% chance for 0 Pts
                 
                 let wonPrize = prizes[winIndex];
                 
-                // Calculate rotation. 
-                // Each slice is 45 deg. We want the center of the winning slice to hit the top pointer (0deg).
                 let extraDeg = 360 - (winIndex * 45) - 22.5; 
-                let totalDeg = (360 * 5) + extraDeg; // Spin 5 times then stop
+                let totalDeg = (360 * 5) + extraDeg; 
                 
                 wheel.style.transform = `rotate(${totalDeg}deg)`;
                 
                 setTimeout(() => {
                     wheel.style.transition = 'none';
-                    wheel.style.transform = `rotate(${extraDeg}deg)`; // Reset rotation count seamlessly
+                    wheel.style.transform = `rotate(${extraDeg}deg)`; 
                     setTimeout(() => { wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)'; }, 50);
 
                     if(wonPrize === 'VIP') {
                         playSuccessSound();
-                        alert("🎉 JACKPOT! You won 7 Days VIP Premium!");
+                        alert("🎉 JACKPOT! You spent 2 points and won 7 Days VIP Premium!");
                         let actualTime = Date.now() + serverTimeOffset;
                         db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                             let currentExp = snap.val() || 0;
@@ -860,10 +859,10 @@
                         });
                     } else if(wonPrize > 0) {
                         playSuccessSound();
-                        alert(`🎉 Congratulations! You won ${wonPrize} Points!`);
-                        let newPts = (userPoints - 2) + wonPrize;
-                        db.ref(`users/${currentUser.uid}/points`).set(newPts);
-                        let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPts);
+                        alert(`🎉 Congratulations! You spent 2 points and won ${wonPrize} Points!`);
+                        let finalPts = userPoints + wonPrize; 
+                        db.ref(`users/${currentUser.uid}/points`).set(finalPts);
+                        let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(finalPts);
                     } else { alert("😢 Better luck next time! You won 0 Points."); }
                     
                     btn.innerText = "SPIN (-2 PTS)"; btn.disabled = false;
