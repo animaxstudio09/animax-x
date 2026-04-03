@@ -209,27 +209,35 @@
         .ti-btn.running { background: var(--yellow); color: #000; animation: pulse 1s infinite;}
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
+        /* 🌟 NEW: REAL SPIN WHEEL UI 🌟 */
+        #spin-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
+        .wheel-container { position:relative; width:280px; height:280px; margin-bottom:30px; }
+        .wheel { width:100%; height:100%; border-radius:50%; border:5px solid var(--yellow); transition:transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); background: conic-gradient(#ffc107 0 45deg, #ff9800 45deg 90deg, #ff5722 90deg 135deg, #f44336 135deg 180deg, #e91e63 180deg 225deg, #9c27b0 225deg 270deg, #673ab7 270deg 315deg, #3f51b5 315deg 360deg); position:relative; overflow:hidden; box-shadow:0 0 20px rgba(255,193,7,0.5);}
+        .wheel-inner-text { position:absolute; width:100%; height:100%; top:0; left:0; border-radius:50%; }
+        .wheel-slice { position:absolute; width:50%; height:50%; top:0; right:0; transform-origin:0% 100%; display:flex; align-items:flex-end; justify-content:center; font-weight:bold; color:#fff; font-size:18px; font-family:'Orbitron'; padding-bottom:20px; text-shadow:1px 1px 2px #000; }
+        .w-1 { transform: rotate(22.5deg) skewY(45deg); } .w-1 span { transform: skewY(-45deg) rotate(-22.5deg); }
+        .wheel-pointer { position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-top:25px solid #fff; z-index:10; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.5));}
+        .wheel-center-dot { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:20px; height:20px; background:#fff; border-radius:50%; z-index:10; box-shadow:0 0 5px #000;}
+        .spin-close-btn { position:absolute; top:20px; right:20px; font-size:24px; color:#fff; cursor:pointer;}
+
         /* PLAYER VIEW */
         #player-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 NEW: DOUBLE TAP SKIP ZONES 🌟 */
-        .dt-zone { position:absolute; top:0; width:40%; height:100%; z-index:5003; }
+        /* 🌟 FIXED: DOUBLE TAP ZONES & Z-INDEX SO BOTTOM CONTROLS & BACK BUTTON WORK 🌟 */
+        .dt-zone { position:absolute; top:10%; width:40%; height:70%; z-index:5003; }
         .dt-left { left:0; } .dt-right { right:0; }
         .skip-anim { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; display:none; z-index:5004; pointer-events:none; font-family:'Orbitron'; }
         .skip-left { left:15%; } .skip-right { right:15%; }
         
-        /* 🌟 NEW: SKIP INTRO BUTTON 🌟 */
         #skip-intro-btn { position:absolute; bottom:50px; right:15px; background:rgba(255,255,255,0.9); color:#000; padding:6px 12px; border-radius:4px; font-weight:bold; font-size:12px; cursor:pointer; z-index:5004; display:none; font-family:'Outfit'; box-shadow:0 2px 10px rgba(0,0,0,0.5); border:1px solid #ddd; }
         
-        /* 🌟 NEW: AUTOPLAY COUNTDOWN 🌟 */
         .autoplay-overlay { display:none; position:absolute; bottom:20px; right:20px; background:rgba(0,0,0,0.9); border:1px solid var(--yellow); padding:10px 15px; border-radius:8px; z-index:5005; color:#fff; font-size:12px; font-weight:bold; font-family:'Roboto'; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
 
         #vid-buffering { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:5002; pointer-events:none; }
         #vid-buffering .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.2); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom:0;}
         
-        /* 🌟 ENGLISH AD WARNINGS 🌟 */
         #ad-warning-overlay { position: absolute; top: 10px; right: 10px; background: rgba(200,0,0,0.9); color: #fff; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; z-index: 5005; display: none; border: 1px solid #ff4444; animation: pulseAd 1s infinite;}
         @keyframes pulseAd { 0% { box-shadow: 0 0 5px #ff4444; } 50% { box-shadow: 0 0 15px #ff4444; } 100% { box-shadow: 0 0 5px #ff4444; } }
         
@@ -374,8 +382,8 @@
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
-                    <!-- DAILY LOGIN BONUS CARD -->
-                    <div class="b-banner-alert" onclick="claimDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
+                    <!-- 🌟 DAILY LOGIN BONUS (1 MIN AD SYSTEM) 🌟 -->
+                    <div class="b-banner-alert" onclick="startDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
                         <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
                     </div>
 
@@ -410,6 +418,21 @@
         </div>
     </div>
 
+    <!-- 🌟 NEW: REAL WORKING SPIN WHEEL MODAL 🌟 -->
+    <div id="spin-modal">
+        <i class="fas fa-times spin-close-btn" onclick="closeSpinWheel()"></i>
+        <div style="color:var(--yellow); font-size:24px; font-family:'Orbitron'; font-weight:bold; margin-bottom:20px;">LUCKY SPIN</div>
+        <div class="wheel-container">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="real-wheel">
+                <!-- 8 Segments (0, 0, 1, 1, 2, 3, 5, 10) generated via CSS conic gradient -->
+            </div>
+            <div class="wheel-center-dot"></div>
+        </div>
+        <button class="b-btn-primary" style="width:200px; padding:15px; font-size:18px;" id="start-spin-btn" onclick="executeRealSpin()">SPIN (-2 PTS)</button>
+        <div style="color:#aaa; font-size:12px; margin-top:15px;">Cost: 2 Points. Win up to 10 Points instantly!</div>
+    </div>
+
     <div id="leaderboard-view">
         <div class="lb-header"><i class="fas fa-arrow-left lb-back" onclick="closeLeaderboard()"></i><div class="lb-title">Point Leaderboard</div></div>
         <div class="reward-banner">
@@ -427,7 +450,6 @@
         
         <div class="task-section-box">
             <div class="task-sec-title">Redeem VIP Key</div>
-            <!-- FIXED: Ensure ID matches perfectly -->
             <input type="text" id="prem-code-hub" class="prem-inp-hub" placeholder="PASTE KEY HERE">
             <button class="b-btn-primary" onclick="redeemCode('prem-code-hub')">ACTIVATE PREMIUM</button>
             <div style="text-align:center; margin-top:12px; font-size:11px; color:#888;">Don't have a key? <span style="color:var(--yellow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
@@ -457,11 +479,11 @@
             </div>
         </div>
         
-        <!-- LUCKY SPIN FEATURE -->
+        <!-- OPEN LUCKY SPIN MODAL BUTTON -->
         <div class="task-section-box" style="border-radius:12px;">
             <div class="task-sec-title">Lucky Spin 🎰</div>
             <div style="text-align:center; color:#ccc; font-size:12px; margin-bottom:15px; font-family:'Roboto';">Cost: 2 Points. Win up to 10 Points instantly!</div>
-            <button class="b-btn-primary" onclick="spinLuckyWheel()" id="spin-btn">SPIN NOW (-2 PTS)</button>
+            <button class="b-btn-primary" onclick="openSpinWheel()">OPEN SPIN WHEEL</button>
         </div>
 
         <div class="task-section-box" style="border-radius:12px; border-top: 1px solid #222;">
@@ -476,16 +498,17 @@
     <div id="player-view">
         <div class="video-wrapper">
             
-            <!-- 🌟 Z-INDEX FIXED FOR BACK BUTTON TO AVOID DOUBLE TAP ZONE BLOCKING 🌟 -->
+            <!-- 🌟 FIXED: Z-INDEX 9000 Ensures Back Button is Clickable Over Double Tap Zones 🌟 -->
             <div style="position:absolute; top:15px; left:15px; z-index:9000;" onclick="closePlayer()">
                 <i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.6); padding:10px 12px; border-radius:50%; cursor:pointer; font-size:16px;"></i>
             </div>
             
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- DOUBLE TAP SKIP ZONES -->
+            <!-- 🌟 FIXED: DOUBLE TAP ZONES TOP 10% AND HEIGHT 70% TO ALLOW SEEKING VIDEO TIMELINE 🌟 -->
             <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
             <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
+            
             <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
             <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
             
@@ -572,6 +595,10 @@
     </nav>
 
     <script>
+        // 🌟 SUCCESS SOUND EFFECT 🌟
+        const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
+        function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
+
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
@@ -599,6 +626,7 @@
             try { closePremiumHub(); } catch(e) {} 
             try { closeSearchOverlay(); } catch(e) {} 
             try { closeLeaderboard(); } catch(e) {}
+            try { closeSpinWheel(); } catch(e) {}
 
             const searchWrapper = document.getElementById('header-search-wrapper');
             
@@ -702,7 +730,10 @@
             });
         }
 
-        // DAILY LOGIN BONUS
+        // 🌟 DAILY LOGIN BONUS (1 MINUTE AD LOGIC) 🌟
+        let dailyBonusActive = false;
+        let dailyBonusStartTime = 0;
+
         function checkDailyBonusUI() {
             if(!currentUser) return;
             let today = new Date().toLocaleDateString();
@@ -713,17 +744,38 @@
                 else { txt.innerText = "CLAIM DAILY LOGIN BONUS (+5 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
             });
         }
-        function claimDailyBonus() {
-            if(!currentUser) return; let today = new Date().toLocaleDateString();
+        function startDailyBonus() {
+            if(!currentUser) return alert("Login required!");
+            if(dailyBonusActive) return alert("You are already claiming a bonus!");
+            
+            let today = new Date().toLocaleDateString();
             db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
                 if(s.val() !== today) {
-                    let newPoints = userPoints + 5;
-                    db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
-                        let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
-                        alert("🎉 Daily Bonus Claimed! +5 Points added to your account."); checkDailyBonusUI();
-                    });
+                    window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+                    dailyBonusActive = true;
+                    dailyBonusStartTime = Date.now();
+                    document.getElementById('daily-bonus-text').innerText = "VERIFYING... (WAIT 60s)";
                 }
             });
+        }
+
+        function checkDailyBonusStatus() {
+            if(!dailyBonusActive) return;
+            let elapsed = Date.now() - dailyBonusStartTime;
+            if(elapsed >= 60000) {
+                dailyBonusActive = false;
+                let today = new Date().toLocaleDateString();
+                let newPoints = userPoints + 5;
+                db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
+                    let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
+                    playSuccessSound();
+                    alert("🎉 Daily Bonus Claimed! +5 Points added to your account."); checkDailyBonusUI();
+                });
+            } else if (elapsed > 2000) {
+                dailyBonusActive = false;
+                alert("❌ You returned too early!\n\nYou must stay on the ad page for full 60 seconds to claim the daily bonus.");
+                document.getElementById('daily-bonus-text').innerText = "CLAIM DAILY LOGIN BONUS (+5 PTS)";
+            }
         }
 
         // REFER AND EARN
@@ -734,26 +786,50 @@
             navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
         }
 
-        // LUCKY SPIN
-        function spinLuckyWheel() {
+        // 🌟 REAL WORKING SPIN WHEEL LOGIC 🌟
+        function openSpinWheel() { document.getElementById('spin-modal').style.display = 'flex'; }
+        function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
+        
+        function executeRealSpin() {
             if(!currentUser) return;
             if(userPoints < 2) return alert("❌ Not enough points to spin!");
             
-            let btn = document.getElementById('spin-btn');
+            let btn = document.getElementById('start-spin-btn');
             btn.innerText = "SPINNING..."; btn.disabled = true;
             
             db.ref(`users/${currentUser.uid}/points`).set(userPoints - 2).then(() => {
+                let wheel = document.getElementById('real-wheel');
+                
+                // Array of prizes corresponding to 8 slices.
+                // Assuming CSS slices start from top and go clockwise: 0, 0, 1, 1, 2, 3, 5, 10
+                let prizes = [0, 0, 1, 1, 2, 3, 5, 10];
+                let winIndex = Math.floor(Math.random() * 8);
+                let wonPoints = prizes[winIndex];
+                
+                // Calculate rotation. Each slice is 45 deg. Top pointer logic:
+                // We add 360 * 5 (5 full spins) + mapping to the target slice center.
+                // The slices are: 0(0-45), 1(45-90), 2(90-135), 3(135-180), 4(180-225), 5(225-270), 6(270-315), 7(315-360)
+                // Target angle = 360 - (winIndex * 45) - 22.5 (center of slice)
+                let extraDeg = 360 - (winIndex * 45) - 22.5; 
+                let totalDeg = (360 * 5) + extraDeg;
+                
+                wheel.style.transform = `rotate(${totalDeg}deg)`;
+                
                 setTimeout(() => {
-                    let prizes = [0, 0, 1, 1, 2, 3, 5, 10];
-                    let won = prizes[Math.floor(Math.random() * prizes.length)];
-                    if(won > 0) {
-                        alert(`🎉 Congratulations! You won ${won} Points!`);
-                        let newPts = (userPoints - 2) + won;
+                    wheel.style.transition = 'none';
+                    wheel.style.transform = `rotate(${extraDeg}deg)`; // Reset rotation count
+                    setTimeout(() => { wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)'; }, 50); // Restore transition
+
+                    if(wonPoints > 0) {
+                        playSuccessSound();
+                        alert(`🎉 Congratulations! You won ${wonPoints} Points!`);
+                        let newPts = (userPoints - 2) + wonPoints; // recalculate dynamically to be safe
                         db.ref(`users/${currentUser.uid}/points`).set(newPts);
                         let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPts);
                     } else { alert("😢 Better luck next time! You won 0 Points."); }
-                    btn.innerText = "SPIN NOW (-2 PTS)"; btn.disabled = false;
-                }, 1500);
+                    
+                    btn.innerText = "SPIN (-2 PTS)"; btn.disabled = false;
+                }, 3000);
             });
         }
 
@@ -807,7 +883,8 @@
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"}];
+        // 🌟 RESTORED ALL 20 TASKS 🌟
+        const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"},{id:"t3",name:"Tile Explorer Ad",img:"https://cdn-icons-png.flaticon.com/512/751/751462.png"},{id:"t4",name:"Merge Master Ad",img:"https://cdn-icons-png.flaticon.com/512/860/860472.png"},{id:"t5",name:"Word Search Ad",img:"https://cdn-icons-png.flaticon.com/512/3408/3408506.png"},{id:"t6",name:"Candy Crush Ad",img:"https://cdn-icons-png.flaticon.com/512/5243/5243460.png"},{id:"t7",name:"Race Master Ad",img:"https://cdn-icons-png.flaticon.com/512/3202/3202926.png"},{id:"t8",name:"Sniper 3D Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801530.png"},{id:"t9",name:"Farm Heroes Ad",img:"https://cdn-icons-png.flaticon.com/512/2689/2689408.png"},{id:"t10",name:"Coin Master Ad",img:"https://cdn-icons-png.flaticon.com/512/1021/1021207.png"},{id:"t11",name:"Subway Surfers Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888856.png"},{id:"t12",name:"Ludo King Ad",img:"https://cdn-icons-png.flaticon.com/512/806/806126.png"},{id:"t13",name:"8 Ball Pool Ad",img:"https://cdn-icons-png.flaticon.com/512/3039/3039395.png"},{id:"t14",name:"Temple Run Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888874.png"},{id:"t15",name:"Angry Birds Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033324.png"},{id:"t16",name:"Clash of Clans Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033306.png"},{id:"t17",name:"Free Fire Ad",img:"https://cdn-icons-png.flaticon.com/512/3211/3211516.png"},{id:"t18",name:"PUBG Mobile Ad",img:"https://cdn-icons-png.flaticon.com/512/3094/3094825.png"},{id:"t19",name:"Roblox Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801538.png"},{id:"t20",name:"Minecraft Ad",img:"https://cdn-icons-png.flaticon.com/512/1068/1068777.png"}];
 
         function getCurrentTimeWindow() { let now = Date.now() + serverTimeOffset; return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); }
 
@@ -837,7 +914,10 @@
                 let actualTime = Date.now() + serverTimeOffset;
                 db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                     let currentExp = snap.val() || 0; let baseTime = (currentExp > actualTime) ? currentExp : actualTime; let newExp = baseTime + (hours * 60 * 60 * 1000);
-                    db.ref(`users/${currentUser.uid}`).update({ points: userPoints - cost, premiumExpiry: newExp }).then(() => { alert(`🎉 Success! Premium extended by ${hours} hours!`); });
+                    db.ref(`users/${currentUser.uid}`).update({ points: userPoints - cost, premiumExpiry: newExp }).then(() => { 
+                        playSuccessSound();
+                        alert(`🎉 Success! Premium extended by ${hours} hours!`); 
+                    });
                 });
             } else { alert("❌ Not enough points!"); }
         }
@@ -873,11 +953,13 @@
             let newPoints = userPoints + 2; db.ref(`users/${currentUser.uid}/points`).set(newPoints);
             let timeWindow = getCurrentTimeWindow(); db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
             let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); 
+            playSuccessSound();
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
-        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); } }); 
-        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); });
+        // 🌟 CHECK DAILY BONUS AND TASKS ON FOCUS 🌟
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); } }); 
+        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); });
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
@@ -892,7 +974,11 @@
                             let currentExp = snap.val() || 0; let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
                             let daysToAdd = codeData.days ? parseInt(codeData.days) : 30; let newExp = baseTime + (daysToAdd * 24 * 60 * 60 * 1000);
                             db.ref(`premium_codes/${c}`).update({ status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: actualTime }).then(() => {
-                                db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => { alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); inputEl.value = ""; location.reload(); });
+                                db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => { 
+                                    playSuccessSound();
+                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); 
+                                    inputEl.value = ""; location.reload(); 
+                                });
                             });
                         });
                     } else { alert("❌ This code is already used!"); }
