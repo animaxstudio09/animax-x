@@ -95,11 +95,6 @@
         nav i { font-size: 22px; color: #666; padding: 5px 20px; cursor: pointer; transition: 0.3s; }
         nav i.active { color: var(--yellow); }
 
-        /* PRE-ROLL AD OVERLAY */
-        #mid-roll-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
-        .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.3); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         /* APP VIEW */
         .app-view { display: none; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -183,7 +178,8 @@
         .task-section-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--yellow); }
         .task-sec-title { text-align: center; color: var(--yellow); font-size: 16px; font-weight: bold; margin-bottom: 15px;}
         .prem-inp-hub { width: 100%; background: #222; border: 1px solid #444; padding: 12px; color: #fff; outline:none; border-radius: 6px; text-align: center; letter-spacing: 2px; font-family: 'Orbitron'; margin-bottom: 10px;}
-        .b-btn-primary { width: 100%; background: var(--yellow); color: #000; padding: 12px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron';}
+        .b-btn-primary { width: 100%; background: var(--yellow); color: #000; padding: 12px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron'; transition:0.3s;}
+        .b-btn-primary:active { transform: scale(0.95); }
         .premium-benefits { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; margin-bottom: 5px;}
         .ben-item { display: flex; flex-direction: column; align-items: center; gap: 8px;}
         .ben-icon { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border: 2px solid var(--yellow); border-radius: 8px; color: var(--yellow); font-size: 18px; background: rgba(255, 193, 7, 0.05);}
@@ -218,24 +214,29 @@
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 NEW DOUBLE TAP SKIP & AUTOPLAY UI 🌟 */
+        /* 🌟 NEW: DOUBLE TAP SKIP ZONES 🌟 */
         .dt-zone { position:absolute; top:0; width:40%; height:100%; z-index:5003; }
         .dt-left { left:0; } .dt-right { right:0; }
         .skip-anim { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; display:none; z-index:5004; pointer-events:none; font-family:'Orbitron'; }
         .skip-left { left:15%; } .skip-right { right:15%; }
         
+        /* 🌟 NEW: SKIP INTRO BUTTON 🌟 */
+        #skip-intro-btn { position:absolute; bottom:50px; right:15px; background:rgba(255,255,255,0.9); color:#000; padding:6px 12px; border-radius:4px; font-weight:bold; font-size:12px; cursor:pointer; z-index:5004; display:none; font-family:'Outfit'; box-shadow:0 2px 10px rgba(0,0,0,0.5); border:1px solid #ddd; }
+        
+        /* 🌟 NEW: AUTOPLAY COUNTDOWN 🌟 */
         .autoplay-overlay { display:none; position:absolute; bottom:20px; right:20px; background:rgba(0,0,0,0.9); border:1px solid var(--yellow); padding:10px 15px; border-radius:8px; z-index:5005; color:#fff; font-size:12px; font-weight:bold; font-family:'Roboto'; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
 
         #vid-buffering { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:5002; pointer-events:none; }
         #vid-buffering .loading-spinner { border: 4px solid rgba(255, 193, 7, 0.2); border-top: 4px solid var(--yellow); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom:0;}
         
+        /* 🌟 ENGLISH AD WARNINGS 🌟 */
         #ad-warning-overlay { position: absolute; top: 10px; right: 10px; background: rgba(200,0,0,0.9); color: #fff; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; z-index: 5005; display: none; border: 1px solid #ff4444; animation: pulseAd 1s infinite;}
         @keyframes pulseAd { 0% { box-shadow: 0 0 5px #ff4444; } 50% { box-shadow: 0 0 15px #ff4444; } 100% { box-shadow: 0 0 5px #ff4444; } }
         
         #ad-enforce-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5006; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;}
-        .ad-enforce-title { color: var(--yellow); font-size: 18px; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 10px; }
-        .ad-enforce-desc { color: #ccc; font-size: 12px; margin-bottom: 25px; line-height: 1.5; font-family: 'Roboto'; }
-        .ad-enforce-btn { background: var(--yellow); color: #000; padding: 12px 25px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron'; transition: 0.3s; }
+        .ad-enforce-title { color: var(--yellow); font-size: 20px; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 10px; text-transform:uppercase;}
+        .ad-enforce-desc { color: #ccc; font-size: 13px; margin-bottom: 25px; line-height: 1.6; font-family: 'Roboto'; }
+        .ad-enforce-btn { background: var(--yellow); color: #000; padding: 12px 30px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; font-family: 'Orbitron'; transition: 0.3s; text-transform:uppercase;}
 
         .player-meta-container { padding: 15px; }
         .meta-title { font-size: 18px; font-weight: 700; color: var(--yellow); line-height: 1.3; font-family: 'Outfit'; margin-bottom: 5px;}
@@ -310,6 +311,7 @@
         </div>
     </header>
 
+    <!-- BANNER AD SECTION -->
     <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:#111; border-bottom:1px solid #333;">
         <script>
           atOptions = {
@@ -325,7 +327,7 @@
 
     <div id="main-app" class="app-view" style="display:block;">
         
-        <!-- 🌟 NEW: CONTINUE WATCHING SECTION 🌟 -->
+        <!-- CONTINUE WATCHING SECTION -->
         <div id="continue-watching-section" style="display:none; margin-bottom:10px;">
             <div class="section-header"><div class="sec-title-text" style="color:var(--yellow);"><i class="fas fa-play-circle"></i> CONTINUE WATCHING</div></div>
             <div class="b-history-scroll" id="cw-grid" style="padding:0 10px;"></div>
@@ -372,7 +374,7 @@
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
-                    <!-- 🌟 NEW: DAILY LOGIN BONUS CARD 🌟 -->
+                    <!-- DAILY LOGIN BONUS CARD -->
                     <div class="b-banner-alert" onclick="claimDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
                         <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
                     </div>
@@ -381,9 +383,10 @@
                         <div class="b-card-left"><i class="fas fa-crown b-card-icon"></i><div><div class="b-card-title">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
                         <div class="b-card-right"><div class="b-badge" style="background:#222;"><i class="fas fa-star" style="font-size:10px;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
                     </div>
-
-                    <div class="b-card" onclick="openPremiumHub()">
-                        <div class="b-card-left"><i class="fas fa-tasks b-card-icon"></i><div><div class="b-card-title">Tasks for Free Premium</div><div class="b-card-sub" style="font-family:'Roboto';">Complete task to get premium</div></div></div>
+                    
+                    <!-- REFER AND EARN -->
+                    <div class="b-card" onclick="copyReferCode()">
+                        <div class="b-card-left"><i class="fas fa-user-plus b-card-icon"></i><div><div class="b-card-title">Refer & Earn</div><div class="b-card-sub" style="font-family:'Roboto';">Invite friends & get +5 points</div></div></div>
                         <i class="fas fa-chevron-right" style="color:#666;"></i>
                     </div>
 
@@ -453,6 +456,14 @@
                 <div class="redeem-card"><div class="redeem-days">3 Days</div><div class="redeem-cost"><i class="fas fa-star" style="color:var(--yellow); font-size:12px;"></i> 45</div><button class="redeem-btn disabled" id="rbtn-30" onclick="redeemPointsForVIP(72, 45)">Redeem</button></div>
             </div>
         </div>
+        
+        <!-- LUCKY SPIN FEATURE -->
+        <div class="task-section-box" style="border-radius:12px;">
+            <div class="task-sec-title">Lucky Spin 🎰</div>
+            <div style="text-align:center; color:#ccc; font-size:12px; margin-bottom:15px; font-family:'Roboto';">Cost: 2 Points. Win up to 10 Points instantly!</div>
+            <button class="b-btn-primary" onclick="spinLuckyWheel()" id="spin-btn">SPIN NOW (-2 PTS)</button>
+        </div>
+
         <div class="task-section-box" style="border-radius:12px; border-top: 1px solid #222;">
             <div class="task-sec-title" style="color:#fff; margin-bottom: 5px;">Free Trial Premium</div>
             <div class="tl-subtitle" style="color:var(--yellow);">Tasks refresh every 3 Hours!</div>
@@ -464,23 +475,33 @@
     <!-- PLAYER VIEW -->
     <div id="player-view">
         <div class="video-wrapper">
-            <div style="position:absolute; top:10px; left:10px; z-index:10;" onclick="closePlayer()"><i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.5); padding:10px; border-radius:50%; cursor:pointer;"></i></div>
+            
+            <!-- 🌟 Z-INDEX FIXED FOR BACK BUTTON TO AVOID DOUBLE TAP ZONE BLOCKING 🌟 -->
+            <div style="position:absolute; top:15px; left:15px; z-index:9000;" onclick="closePlayer()">
+                <i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.6); padding:10px 12px; border-radius:50%; cursor:pointer; font-size:16px;"></i>
+            </div>
             
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- 🌟 NEW: DOUBLE TAP SKIP ZONES 🌟 -->
+            <!-- DOUBLE TAP SKIP ZONES -->
             <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
             <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
             <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
             <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
             
-            <!-- 🌟 NEW: AUTOPLAY COUNTDOWN OVERLAY 🌟 -->
+            <!-- SKIP INTRO BUTTON -->
+            <div id="skip-intro-btn" onclick="skipTime(85); this.style.display='none';">Skip Intro <i class="fas fa-forward"></i></div>
+
+            <!-- AUTOPLAY COUNTDOWN OVERLAY -->
             <div id="autoplay-box" class="autoplay-overlay">Next Episode in <span id="ap-count">5</span>s <button onclick="cancelAutoplay()" style="background:#333;color:#fff;border:none;margin-left:5px;padding:4px 8px;border-radius:4px;cursor:pointer;">Cancel</button></div>
 
-            <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ 10 সেকেন্ড পর একটি অ্যাড আসবে!</span></div>
+            <!-- ENGLISH AD WARNING OVERLAY -->
+            <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ Ad break in 10s!</span></div>
+            
+            <!-- ENGLISH AD ENFORCEMENT OVERLAY -->
             <div id="ad-enforce-overlay">
                 <div class="ad-enforce-title">AD BREAK!</div>
-                <div class="ad-enforce-desc">আপনাকে ভিডিওটি কন্টিনিউ করার জন্য একটি অ্যাড দেখতে হবে।<br>নিচের বাটনে ক্লিক করে ১০ সেকেন্ড অপেক্ষা করুন।</div>
+                <div class="ad-enforce-desc">To continue watching this video, please support us by viewing a quick ad.<br>Click the button below and wait for 10 seconds.</div>
                 <button class="ad-enforce-btn" id="mid-roll-btn" onclick="startMidRollAd()">WATCH AD TO CONTINUE</button>
             </div>
 
@@ -489,7 +510,12 @@
         <div class="player-meta-container">
             <div class="meta-title" id="player-title">Loading...</div>
             <div class="meta-info">
-                <i class="fas fa-tv" style="color:var(--yellow);"></i><span><i class="fas fa-star rating-star"></i> 8.5</span>
+                <i class="fas fa-tv" style="color:var(--yellow);"></i>
+                <!-- STAR RATING SYSTEM -->
+                <span id="star-rating-ui" style="color:#555; cursor:pointer; font-size:13px; margin-left:5px;">
+                    <i class="fas fa-star" onclick="rateVideo(1)"></i><i class="fas fa-star" onclick="rateVideo(2)"></i><i class="fas fa-star" onclick="rateVideo(3)"></i><i class="fas fa-star" onclick="rateVideo(4)"></i><i class="fas fa-star" onclick="rateVideo(5)"></i>
+                </span>
+                <span id="avg-rating-text" style="color:var(--yellow); font-weight:bold; margin-left:3px; margin-right:5px;">4.8</span>
                 <span style="color:#888;">| <span id="content-type-badge">Anime</span></span>
                 <span style="margin-left:10px;"><i class="fas fa-eye" style="color:#666;"></i> <span id="view-count">0</span></span>
                 <span style="margin-left:10px;"><i class="fas fa-heart" style="color:var(--yellow);"></i> <span id="like-count">0</span></span>
@@ -497,7 +523,7 @@
             <div class="action-buttons-row">
                 <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
-                <!-- 🌟 VIP DOWNLOAD ENFORCEMENT 🌟 -->
+                <!-- VIP DOWNLOAD ENFORCEMENT -->
                 <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
             </div>
             <div class="resources-header">Resources <span>Uploaded by Animax etc. <i class="far fa-question-circle" style="font-size:10px;"></i></span></div>
@@ -579,7 +605,7 @@
             if(t==='home') { 
                 document.getElementById('main-app').style.display='block'; 
                 if(searchWrapper) searchWrapper.style.display = 'block'; 
-                loadContinueWatching(); // 🌟 LOAD CW ON HOME 🌟
+                loadContinueWatching(); 
             }
             if(t==='profile') { 
                 document.getElementById('profile-view').style.display='block'; 
@@ -676,7 +702,7 @@
             });
         }
 
-        // 🌟 NEW: DAILY LOGIN BONUS 🌟
+        // DAILY LOGIN BONUS
         function checkDailyBonusUI() {
             if(!currentUser) return;
             let today = new Date().toLocaleDateString();
@@ -700,13 +726,51 @@
             });
         }
 
-        // 🌟 NEW: VIP DOWNLOAD ENFORCEMENT 🌟
+        // REFER AND EARN
+        function copyReferCode() {
+            if(!currentUser) return;
+            let code = currentUser.uid.substring(0, 8).toUpperCase();
+            let msg = `Hey! Join ANIMAX TV using my referral code: ${code} and we both get free VIP points!`;
+            navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
+        }
+
+        // LUCKY SPIN
+        function spinLuckyWheel() {
+            if(!currentUser) return;
+            if(userPoints < 2) return alert("❌ Not enough points to spin!");
+            
+            let btn = document.getElementById('spin-btn');
+            btn.innerText = "SPINNING..."; btn.disabled = true;
+            
+            db.ref(`users/${currentUser.uid}/points`).set(userPoints - 2).then(() => {
+                setTimeout(() => {
+                    let prizes = [0, 0, 1, 1, 2, 3, 5, 10];
+                    let won = prizes[Math.floor(Math.random() * prizes.length)];
+                    if(won > 0) {
+                        alert(`🎉 Congratulations! You won ${won} Points!`);
+                        let newPts = (userPoints - 2) + won;
+                        db.ref(`users/${currentUser.uid}/points`).set(newPts);
+                        let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPts);
+                    } else { alert("😢 Better luck next time! You won 0 Points."); }
+                    btn.innerText = "SPIN NOW (-2 PTS)"; btn.disabled = false;
+                }, 1500);
+            });
+        }
+
+        // VIDEO RATING
+        function rateVideo(stars) {
+            if(!currentUser) return alert("Please login to rate this video!");
+            let children = document.getElementById('star-rating-ui').children;
+            for(let i=0; i<5; i++) { children[i].style.color = i < stars ? "var(--yellow)" : "#555"; }
+            alert(`✅ Thanks for rating! You gave ${stars} stars.`);
+        }
+
+        // VIP DOWNLOAD ENFORCEMENT
         function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
             else { alert("✅ Download server connecting... Please wait."); }
         }
 
-        // LEADERBOARD, HUB, TASKS (Existing Code)
         let lbTimerInterval = null;
         function getLeaderboardCycle() { return Math.floor((Date.now() + serverTimeOffset) / 1209600000); }
         function openLeaderboard() {
@@ -964,7 +1028,6 @@
             let folderElement = document.getElementById('season-select');
             if(folderElement) { folderElement.innerHTML = `<option value="${n}">${n}</option>`; }
             
-            // 🌟 CONTINUE WATCHING SEEK LOGIC 🌟
             let savedData = localStorage.getItem('cw_' + getSafeId(epId));
             let parsedTime = savedData ? JSON.parse(savedData).time : 0;
             
@@ -1006,7 +1069,7 @@
             let isEpisodeChange = (document.getElementById('player-view').style.display === 'block');
             currentSafeVideoId = getSafeId(id || t); currentVideoId = id; currentPlayType = type; currentEpIndex = idx;
             document.getElementById('player-title').innerText = t;
-            cancelAutoplay(); // Hide autoplay box on new video
+            cancelAutoplay(); 
             
             if (idx !== -1 && currentFolder && window.animeData[currentFolder]) { currentPlayingEpisodeData = window.animeData[currentFolder][idx]; } else { currentPlayingEpisodeData = null; }
             
@@ -1053,7 +1116,7 @@
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); loadSocialData(currentSafeVideoId);
         }
 
-        // 🌟 NEW: DOUBLE TAP SKIP LOGIC 🌟
+        // DOUBLE TAP SKIP LOGIC
         function skipTime(seconds) {
             const v = document.getElementById('main-video');
             if(v.duration) {
@@ -1065,7 +1128,7 @@
             }
         }
 
-        // 🌟 NEW: AUTOPLAY & CONTINUE WATCHING TRACKER 🌟
+        // AUTOPLAY NEXT EPISODE
         let autoPlayTimer = null;
         document.getElementById('main-video').addEventListener('ended', () => {
             if(currentPlayType !== 'anime' || currentEpIndex === -1 || !window.animeData[currentFolder]) return;
@@ -1082,10 +1145,15 @@
         });
         function cancelAutoplay() { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; }
 
+        // VIDEO TIMEUPDATE TRACKER (CW & ADS)
         document.getElementById('main-video').addEventListener('timeupdate', () => {
             const v = document.getElementById('main-video');
             let ct = v.currentTime;
             
+            // Skip Intro Button Logic
+            let skipBtn = document.getElementById('skip-intro-btn');
+            if(ct > 5 && ct < 60) { skipBtn.style.display = 'block'; } else { skipBtn.style.display = 'none'; }
+
             // CW Tracker
             if(ct > 10 && v.duration > 0) {
                 let hThumb = "";
@@ -1095,18 +1163,18 @@
                 localStorage.setItem('cw_' + currentSafeVideoId, JSON.stringify(progress));
             }
 
-            // 10-Min Ad Tracker
+            // ENGLISH 10-Min Ad Tracker
             if(isPremium) return;
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
-                let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ ${timeLeft} সেকেন্ড পর একটি অ্যাড আসবে!`;
+                let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ Ad break in ${timeLeft}s!`;
             }
             if(ct >= nextAdTime && !adEnforced) {
                 v.pause(); adEnforced = true; document.getElementById('ad-warning-overlay').style.display = 'none'; document.getElementById('ad-enforce-overlay').style.display = 'flex';
             }
         });
 
-        // 🌟 NEW: LOAD CONTINUE WATCHING ON HOME 🌟
+        // LOAD CONTINUE WATCHING ON HOME
         function loadContinueWatching() {
             let cwData = [];
             for(let i=0; i<localStorage.length; i++) {
@@ -1144,11 +1212,12 @@
             else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
         }
 
+        // ENGLISH AD VERIFICATION LOGIC
         function startMidRollAd() {
             if(midRollTaskActive) return;
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             midRollTaskActive = true; midRollTaskStart = Date.now();
-            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "Verifying... (Wait 10s on ad page)"; btn.style.background = "#333";
+            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "#333";
         }
 
         function checkMidRollStatus() {
@@ -1160,7 +1229,8 @@
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
                     document.getElementById('main-video').play().catch(e=>{});
                 } else if (elapsed > 2000) { 
-                    midRollTaskActive = false; alert("❌ আপনি ১০ সেকেন্ডের আগেই ফিরে এসেছেন! আপনাকে ১০ সেকেন্ড অ্যাড পেজে থাকতে হবে। আবার চেষ্টা করুন।");
+                    midRollTaskActive = false; 
+                    alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
                 }
             }
@@ -1183,7 +1253,6 @@
                 document.getElementById('tab-btn-comments').innerText = `Comments (${s.numChildren()})`; l.innerHTML = ""; 
                 s.forEach(child => {
                     const c = child.val(); 
-                    // 🌟 NEW: VIP COMMENT BADGE 🌟
                     let crownHtml = c.isVIP ? `<i class="fas fa-crown" style="color:var(--yellow); margin-left:5px; font-size:12px;"></i>` : '';
                     l.innerHTML = `<div class="comment-box-unique"><div class="c-body-unique"><div class="c-user-name" style="color:var(--yellow);font-weight:bold;">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:#ddd;font-size:12px;">${c.text}</div></div></div>` + l.innerHTML; 
                 });
