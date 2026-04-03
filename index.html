@@ -438,7 +438,7 @@
         </div>
     </div>
 
-    <!-- 🌟 NEW: REAL WORKING SPIN WHEEL MODAL 🌟 -->
+    <!-- 🌟 REAL WORKING SPIN WHEEL MODAL 🌟 -->
     <div id="spin-modal">
         <i class="fas fa-times spin-close-btn" onclick="closeSpinWheel()"></i>
         <div style="color:var(--yellow); font-size:24px; font-family:'Orbitron'; font-weight:bold; margin-bottom:20px;">LUCKY SPIN</div>
@@ -821,23 +821,35 @@
             db.ref(`users/${currentUser.uid}/points`).set(startingPoints - 2).then(() => {
                 let wheel = document.getElementById('real-wheel');
                 
+                // 🌟 EXACT 100-SPIN PROBABILITY DECK SYSTEM 🌟
+                let pool = JSON.parse(localStorage.getItem('animax_spin_pool'));
+                if(!pool || pool.length === 0) {
+                    pool = [];
+                    pool.push(7); // 1 VIP
+                    for(let i=0; i<5; i++) pool.push(5); // 5x (10 pts)
+                    for(let i=0; i<15; i++) pool.push(3); // 15x (5 pts)
+                    for(let i=0; i<25; i++) pool.push(2); // 25x (2 pts)
+                    for(let i=0; i<25; i++) pool.push(1); // 25x (1 pt)
+                    for(let i=0; i<29; i++) {
+                        let zeroSlices = [0, 4, 6];
+                        pool.push(zeroSlices[Math.floor(Math.random() * zeroSlices.length)]); // 29x (0 pts)
+                    }
+                    // Shuffle the deck
+                    for (let i = pool.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [pool[i], pool[j]] = [pool[j], pool[i]];
+                    }
+                }
+                
+                let winIndex = pool.pop(); // Take one spin result
+                localStorage.setItem('animax_spin_pool', JSON.stringify(pool));
+                
                 let prizes = [0, 1, 2, 5, 0, 10, 0, 'VIP'];
-                let rand = Math.floor(Math.random() * 100) + 1; // 1 to 100
-                let winIndex = 0;
-                
-                if (rand === 1) { winIndex = 7; } // 1% chance for VIP
-                else if (rand <= 6) { winIndex = 5; } // 5% chance for 10 Pts
-                else if (rand <= 21) { winIndex = 3; } // 15% chance for 5 Pts
-                else if (rand <= 51) { winIndex = 2; } // 30% chance for 2 Pts
-                else if (rand <= 71) { winIndex = 1; } // 20% chance for 1 Pts
-                else { 
-                    let zeroSlices = [0, 4, 6];
-                    winIndex = zeroSlices[Math.floor(Math.random() * zeroSlices.length)]; 
-                } // 29% chance for 0 Pts
-                
                 let wonPrize = prizes[winIndex];
                 
-                let extraDeg = 360 - (winIndex * 45) - 22.5; 
+                // Perfect Rotation Calculation to align visually with the top pointer
+                let extraDeg = 270 - (winIndex * 45) - 22.5; 
+                if (extraDeg < 0) extraDeg += 360;
                 let totalDeg = (360 * 5) + extraDeg; 
                 
                 wheel.style.transform = `rotate(${totalDeg}deg)`;
@@ -860,7 +872,7 @@
                     } else if(wonPrize > 0) {
                         playSuccessSound();
                         alert(`🎉 Congratulations! You spent 2 points and won ${wonPrize} Points!`);
-                        let finalPts = userPoints + wonPrize; 
+                        let finalPts = (startingPoints - 2) + wonPrize; 
                         db.ref(`users/${currentUser.uid}/points`).set(finalPts);
                         let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(finalPts);
                     } else { alert("😢 Better luck next time! You won 0 Points."); }
