@@ -209,13 +209,11 @@
         .ti-btn.running { background: var(--yellow); color: #000; animation: pulse 1s infinite;}
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-        /* 🌟 NEW: REAL SPIN WHEEL UI 🌟 */
+        /* 🌟 NEW: REAL SPIN WHEEL UI WITH TEXT 🌟 */
         #spin-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; flex-direction:column; align-items:center; justify-content:center; }
         .wheel-container { position:relative; width:280px; height:280px; margin-bottom:30px; }
         .wheel { width:100%; height:100%; border-radius:50%; border:5px solid var(--yellow); transition:transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); background: conic-gradient(#ffc107 0 45deg, #ff9800 45deg 90deg, #ff5722 90deg 135deg, #f44336 135deg 180deg, #e91e63 180deg 225deg, #9c27b0 225deg 270deg, #673ab7 270deg 315deg, #3f51b5 315deg 360deg); position:relative; overflow:hidden; box-shadow:0 0 20px rgba(255,193,7,0.5);}
-        .wheel-inner-text { position:absolute; width:100%; height:100%; top:0; left:0; border-radius:50%; }
-        .wheel-slice { position:absolute; width:50%; height:50%; top:0; right:0; transform-origin:0% 100%; display:flex; align-items:flex-end; justify-content:center; font-weight:bold; color:#fff; font-size:18px; font-family:'Orbitron'; padding-bottom:20px; text-shadow:1px 1px 2px #000; }
-        .w-1 { transform: rotate(22.5deg) skewY(45deg); } .w-1 span { transform: skewY(-45deg) rotate(-22.5deg); }
+        .w-text { position: absolute; top: 50%; left: 50%; width: 40px; height: 140px; margin-left: -20px; margin-top: -140px; transform-origin: bottom center; transform: rotate(calc(var(--i) * 45deg + 22.5deg)); display: flex; justify-content: center; padding-top: 15px; font-weight: 900; font-size: 22px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); font-family: 'Orbitron'; z-index: 2; }
         .wheel-pointer { position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-top:25px solid #fff; z-index:10; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.5));}
         .wheel-center-dot { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:20px; height:20px; background:#fff; border-radius:50%; z-index:10; box-shadow:0 0 5px #000;}
         .spin-close-btn { position:absolute; top:20px; right:20px; font-size:24px; color:#fff; cursor:pointer;}
@@ -225,7 +223,7 @@
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 FIXED: DOUBLE TAP ZONES & Z-INDEX SO BOTTOM CONTROLS & BACK BUTTON WORK 🌟 */
+        /* 🌟 FIXED: DOUBLE TAP ZONES & Z-INDEX TO ALLOW SEEKING VIDEO TIMELINE 🌟 */
         .dt-zone { position:absolute; top:10%; width:40%; height:70%; z-index:5003; }
         .dt-left { left:0; } .dt-right { right:0; }
         .skip-anim { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; display:none; z-index:5004; pointer-events:none; font-family:'Orbitron'; }
@@ -319,7 +317,6 @@
         </div>
     </header>
 
-    <!-- BANNER AD SECTION -->
     <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:#111; border-bottom:1px solid #333;">
         <script>
           atOptions = {
@@ -335,7 +332,6 @@
 
     <div id="main-app" class="app-view" style="display:block;">
         
-        <!-- CONTINUE WATCHING SECTION -->
         <div id="continue-watching-section" style="display:none; margin-bottom:10px;">
             <div class="section-header"><div class="sec-title-text" style="color:var(--yellow);"><i class="fas fa-play-circle"></i> CONTINUE WATCHING</div></div>
             <div class="b-history-scroll" id="cw-grid" style="padding:0 10px;"></div>
@@ -382,7 +378,6 @@
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
-                    <!-- 🌟 DAILY LOGIN BONUS (1 MIN AD SYSTEM) 🌟 -->
                     <div class="b-banner-alert" onclick="startDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
                         <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
                     </div>
@@ -392,7 +387,6 @@
                         <div class="b-card-right"><div class="b-badge" style="background:#222;"><i class="fas fa-star" style="font-size:10px;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
                     </div>
                     
-                    <!-- REFER AND EARN -->
                     <div class="b-card" onclick="copyReferCode()">
                         <div class="b-card-left"><i class="fas fa-user-plus b-card-icon"></i><div><div class="b-card-title">Refer & Earn</div><div class="b-card-sub" style="font-family:'Roboto';">Invite friends & get +5 points</div></div></div>
                         <i class="fas fa-chevron-right" style="color:#666;"></i>
@@ -418,14 +412,22 @@
         </div>
     </div>
 
-    <!-- 🌟 NEW: REAL WORKING SPIN WHEEL MODAL 🌟 -->
+    <!-- 🌟 REAL WORKING SPIN WHEEL MODAL 🌟 -->
     <div id="spin-modal">
         <i class="fas fa-times spin-close-btn" onclick="closeSpinWheel()"></i>
         <div style="color:var(--yellow); font-size:24px; font-family:'Orbitron'; font-weight:bold; margin-bottom:20px;">LUCKY SPIN</div>
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="real-wheel">
-                <!-- 8 Segments (0, 0, 1, 1, 2, 3, 5, 10) generated via CSS conic gradient -->
+                <!-- Point texts applied exactly on slices -->
+                <div class="w-text" style="--i:0;">0</div>
+                <div class="w-text" style="--i:1;">0</div>
+                <div class="w-text" style="--i:2;">1</div>
+                <div class="w-text" style="--i:3;">1</div>
+                <div class="w-text" style="--i:4;">2</div>
+                <div class="w-text" style="--i:5;">3</div>
+                <div class="w-text" style="--i:6;">5</div>
+                <div class="w-text" style="--i:7;">10</div>
             </div>
             <div class="wheel-center-dot"></div>
         </div>
@@ -498,30 +500,24 @@
     <div id="player-view">
         <div class="video-wrapper">
             
-            <!-- 🌟 FIXED: Z-INDEX 9000 Ensures Back Button is Clickable Over Double Tap Zones 🌟 -->
             <div style="position:absolute; top:15px; left:15px; z-index:9000;" onclick="closePlayer()">
                 <i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.6); padding:10px 12px; border-radius:50%; cursor:pointer; font-size:16px;"></i>
             </div>
             
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- 🌟 FIXED: DOUBLE TAP ZONES TOP 10% AND HEIGHT 70% TO ALLOW SEEKING VIDEO TIMELINE 🌟 -->
             <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
             <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
             
             <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
             <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
             
-            <!-- SKIP INTRO BUTTON -->
             <div id="skip-intro-btn" onclick="skipTime(85); this.style.display='none';">Skip Intro <i class="fas fa-forward"></i></div>
 
-            <!-- AUTOPLAY COUNTDOWN OVERLAY -->
             <div id="autoplay-box" class="autoplay-overlay">Next Episode in <span id="ap-count">5</span>s <button onclick="cancelAutoplay()" style="background:#333;color:#fff;border:none;margin-left:5px;padding:4px 8px;border-radius:4px;cursor:pointer;">Cancel</button></div>
 
-            <!-- ENGLISH AD WARNING OVERLAY -->
             <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ Ad break in 10s!</span></div>
             
-            <!-- ENGLISH AD ENFORCEMENT OVERLAY -->
             <div id="ad-enforce-overlay">
                 <div class="ad-enforce-title">AD BREAK!</div>
                 <div class="ad-enforce-desc">To continue watching this video, please support us by viewing a quick ad.<br>Click the button below and wait for 10 seconds.</div>
@@ -534,7 +530,6 @@
             <div class="meta-title" id="player-title">Loading...</div>
             <div class="meta-info">
                 <i class="fas fa-tv" style="color:var(--yellow);"></i>
-                <!-- STAR RATING SYSTEM -->
                 <span id="star-rating-ui" style="color:#555; cursor:pointer; font-size:13px; margin-left:5px;">
                     <i class="fas fa-star" onclick="rateVideo(1)"></i><i class="fas fa-star" onclick="rateVideo(2)"></i><i class="fas fa-star" onclick="rateVideo(3)"></i><i class="fas fa-star" onclick="rateVideo(4)"></i><i class="fas fa-star" onclick="rateVideo(5)"></i>
                 </span>
@@ -546,7 +541,6 @@
             <div class="action-buttons-row">
                 <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
-                <!-- VIP DOWNLOAD ENFORCEMENT -->
                 <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
             </div>
             <div class="resources-header">Resources <span>Uploaded by Animax etc. <i class="far fa-question-circle" style="font-size:10px;"></i></span></div>
@@ -595,7 +589,6 @@
     </nav>
 
     <script>
-        // 🌟 SUCCESS SOUND EFFECT 🌟
         const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
         function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
 
@@ -730,7 +723,6 @@
             });
         }
 
-        // 🌟 DAILY LOGIN BONUS (1 MINUTE AD LOGIC) 🌟
         let dailyBonusActive = false;
         let dailyBonusStartTime = 0;
 
@@ -778,7 +770,6 @@
             }
         }
 
-        // REFER AND EARN
         function copyReferCode() {
             if(!currentUser) return;
             let code = currentUser.uid.substring(0, 8).toUpperCase();
@@ -786,7 +777,6 @@
             navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
         }
 
-        // 🌟 REAL WORKING SPIN WHEEL LOGIC 🌟
         function openSpinWheel() { document.getElementById('spin-modal').style.display = 'flex'; }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
@@ -800,16 +790,21 @@
             db.ref(`users/${currentUser.uid}/points`).set(userPoints - 2).then(() => {
                 let wheel = document.getElementById('real-wheel');
                 
-                // Array of prizes corresponding to 8 slices.
-                // Assuming CSS slices start from top and go clockwise: 0, 0, 1, 1, 2, 3, 5, 10
                 let prizes = [0, 0, 1, 1, 2, 3, 5, 10];
-                let winIndex = Math.floor(Math.random() * 8);
+                
+                // 🌟 Smart Probability System 🌟
+                let rand = Math.random() * 100;
+                let winIndex = 0;
+                
+                if(rand <= 1) { winIndex = 7; } // 1% chance for 10 Points
+                else if(rand <= 11) { winIndex = 6; } // 10% chance for 5 Points
+                else if(rand <= 16) { winIndex = 5; } // 5% chance for 3 Points
+                else if(rand <= 26) { winIndex = 4; } // 10% chance for 2 Points
+                else if(rand <= 50) { winIndex = (Math.random() > 0.5) ? 2 : 3; } // 24% chance for 1 Point
+                else { winIndex = (Math.random() > 0.5) ? 0 : 1; } // 50% chance for 0 Points
+                
                 let wonPoints = prizes[winIndex];
                 
-                // Calculate rotation. Each slice is 45 deg. Top pointer logic:
-                // We add 360 * 5 (5 full spins) + mapping to the target slice center.
-                // The slices are: 0(0-45), 1(45-90), 2(90-135), 3(135-180), 4(180-225), 5(225-270), 6(270-315), 7(315-360)
-                // Target angle = 360 - (winIndex * 45) - 22.5 (center of slice)
                 let extraDeg = 360 - (winIndex * 45) - 22.5; 
                 let totalDeg = (360 * 5) + extraDeg;
                 
@@ -817,13 +812,13 @@
                 
                 setTimeout(() => {
                     wheel.style.transition = 'none';
-                    wheel.style.transform = `rotate(${extraDeg}deg)`; // Reset rotation count
-                    setTimeout(() => { wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)'; }, 50); // Restore transition
+                    wheel.style.transform = `rotate(${extraDeg}deg)`; 
+                    setTimeout(() => { wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)'; }, 50); 
 
                     if(wonPoints > 0) {
                         playSuccessSound();
                         alert(`🎉 Congratulations! You won ${wonPoints} Points!`);
-                        let newPts = (userPoints - 2) + wonPoints; // recalculate dynamically to be safe
+                        let newPts = (userPoints - 2) + wonPoints;
                         db.ref(`users/${currentUser.uid}/points`).set(newPts);
                         let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPts);
                     } else { alert("😢 Better luck next time! You won 0 Points."); }
@@ -833,7 +828,6 @@
             });
         }
 
-        // VIDEO RATING
         function rateVideo(stars) {
             if(!currentUser) return alert("Please login to rate this video!");
             let children = document.getElementById('star-rating-ui').children;
@@ -841,7 +835,6 @@
             alert(`✅ Thanks for rating! You gave ${stars} stars.`);
         }
 
-        // VIP DOWNLOAD ENFORCEMENT
         function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
             else { alert("✅ Download server connecting... Please wait."); }
@@ -883,7 +876,6 @@
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // 🌟 RESTORED ALL 20 TASKS 🌟
         const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"},{id:"t3",name:"Tile Explorer Ad",img:"https://cdn-icons-png.flaticon.com/512/751/751462.png"},{id:"t4",name:"Merge Master Ad",img:"https://cdn-icons-png.flaticon.com/512/860/860472.png"},{id:"t5",name:"Word Search Ad",img:"https://cdn-icons-png.flaticon.com/512/3408/3408506.png"},{id:"t6",name:"Candy Crush Ad",img:"https://cdn-icons-png.flaticon.com/512/5243/5243460.png"},{id:"t7",name:"Race Master Ad",img:"https://cdn-icons-png.flaticon.com/512/3202/3202926.png"},{id:"t8",name:"Sniper 3D Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801530.png"},{id:"t9",name:"Farm Heroes Ad",img:"https://cdn-icons-png.flaticon.com/512/2689/2689408.png"},{id:"t10",name:"Coin Master Ad",img:"https://cdn-icons-png.flaticon.com/512/1021/1021207.png"},{id:"t11",name:"Subway Surfers Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888856.png"},{id:"t12",name:"Ludo King Ad",img:"https://cdn-icons-png.flaticon.com/512/806/806126.png"},{id:"t13",name:"8 Ball Pool Ad",img:"https://cdn-icons-png.flaticon.com/512/3039/3039395.png"},{id:"t14",name:"Temple Run Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888874.png"},{id:"t15",name:"Angry Birds Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033324.png"},{id:"t16",name:"Clash of Clans Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033306.png"},{id:"t17",name:"Free Fire Ad",img:"https://cdn-icons-png.flaticon.com/512/3211/3211516.png"},{id:"t18",name:"PUBG Mobile Ad",img:"https://cdn-icons-png.flaticon.com/512/3094/3094825.png"},{id:"t19",name:"Roblox Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801538.png"},{id:"t20",name:"Minecraft Ad",img:"https://cdn-icons-png.flaticon.com/512/1068/1068777.png"}];
 
         function getCurrentTimeWindow() { let now = Date.now() + serverTimeOffset; return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); }
@@ -957,7 +949,6 @@
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
-        // 🌟 CHECK DAILY BONUS AND TASKS ON FOCUS 🌟
         document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); } }); 
         window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); });
 
