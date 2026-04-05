@@ -233,7 +233,6 @@
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative;}
         video { width: 100%; height: 100%; }
         
-        /* 🌟 FIXED: DOUBLE TAP ZONES & Z-INDEX TO FIX VIDEO SEEKING BUG 🌟 */
         .dt-zone { position:absolute; top:10%; width:40%; height:70%; z-index:5003; }
         .dt-left { left:0; } .dt-right { right:0; }
         .skip-anim { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; display:none; z-index:5004; pointer-events:none; font-family:'Orbitron'; }
@@ -300,13 +299,13 @@
         #history-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 8000; overflow-y: auto; padding: 20px; }
         .history-item { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--yellow); border-radius: 4px; }
 
-        /* REWARD SYSTEM WAITING PAGE */
+        /* 🌟 REWARD SYSTEM WAITING PAGE 🌟 */
         #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Roboto', sans-serif;}
         .ad-placement { width: 320px; height: 50px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border: 1px dashed #444; color: #666; font-size: 12px; }
         .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: #1a1a1a; padding: 30px 20px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
         .reward-close { position:absolute; top:15px; right:15px; font-size:20px; color:#fff; cursor:pointer; }
-        .reward-title { color: var(--yellow); font-family: 'Orbitron'; margin-bottom: 20px; font-weight:bold; }
-        .reward-desc { color: #ccc; font-size: 13px; margin-bottom: 15px; }
+        .reward-title { color: var(--yellow); font-family: 'Orbitron'; margin-bottom: 20px; font-weight:bold; font-size:22px;}
+        .reward-desc { color: #ccc; font-size: 13px; margin-bottom: 20px; line-height:1.5;}
         .reward-progress-box { width: 100%; height: 12px; background: #333; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid #444; }
         .reward-progress-fill { height: 100%; width: 0%; background: #00ff00; box-shadow: 0 0 10px #00ff00; transition: width 1s linear; }
         .reward-claim-btn { display: none; width: 100%; padding: 15px; background: #00ff00; color: #000; font-size: 15px; font-weight: bold; font-family: 'Orbitron'; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #00ff00; transition: 0.3s; text-transform: uppercase; }
@@ -464,15 +463,20 @@
             <i class="fas fa-times reward-close" onclick="closeRewardPage()"></i>
             <h2 class="reward-title">DAILY REWARD</h2>
             
-            <div id="reward-timer-section">
+            <p class="reward-desc" id="reward-desc-text">To claim your 5 points, click the button below to start verification. A quick ad will open to support us.</p>
+
+            <!-- 🌟 HIGH REVENUE CLICK TRIGGER 🌟 -->
+            <button id="start-timer-btn" class="reward-claim-btn" style="display:block; background:#ff9800; color:#000; box-shadow: 0 0 15px #ff9800; margin-bottom:10px;" onclick="startRewardTimer()">START VERIFICATION</button>
+            
+            <div id="reward-timer-section" style="display:none;">
                 <p class="reward-desc">Verifying your activity... Please wait <span id="reward-sec" style="color:var(--yellow); font-weight:bold; font-size:18px;">60</span> seconds.</p>
                 <div class="reward-progress-box">
                     <div id="reward-progress-fill" class="reward-progress-fill"></div>
                 </div>
             </div>
 
-            <!-- href logic handled via onclick for Firebase sync -->
-            <button id="reward-claim-btn" class="reward-claim-btn" onclick="executeRewardClaim()">Claim Your Reward</button>
+            <!-- 🌟 DOUBLE CLICK REVENUE 🌟 -->
+            <button id="reward-claim-btn" class="reward-claim-btn" onclick="executeRewardClaim()">CLAIM 5 POINTS</button>
         </div>
 
         <!-- BOTTOM AD PLACEMENT -->
@@ -563,31 +567,24 @@
     <!-- PLAYER VIEW -->
     <div id="player-view">
         <div class="video-wrapper">
-            
-            <!-- 🌟 FIXED: Z-INDEX 9000 Ensures Back Button is Clickable Over Double Tap Zones 🌟 -->
             <div style="position:absolute; top:15px; left:15px; z-index:9000;" onclick="closePlayer()">
                 <i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.6); padding:10px 12px; border-radius:50%; cursor:pointer; font-size:16px;"></i>
             </div>
             
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
-            <!-- 🌟 FIXED: DOUBLE TAP ZONES TOP 10% AND HEIGHT 70% TO ALLOW SEEKING VIDEO TIMELINE 🌟 -->
             <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
             <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
             
             <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
             <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
             
-            <!-- SKIP INTRO BUTTON -->
             <div id="skip-intro-btn" onclick="skipTime(85); this.style.display='none';">Skip Intro <i class="fas fa-forward"></i></div>
 
-            <!-- AUTOPLAY COUNTDOWN OVERLAY -->
             <div id="autoplay-box" class="autoplay-overlay">Next Episode in <span id="ap-count">5</span>s <button onclick="cancelAutoplay()" style="background:#333;color:#fff;border:none;margin-left:5px;padding:4px 8px;border-radius:4px;cursor:pointer;">Cancel</button></div>
 
-            <!-- ENGLISH AD WARNING OVERLAY -->
             <div id="ad-warning-overlay"><span id="ad-warn-text">⚠️ Ad break in 10s!</span></div>
             
-            <!-- ENGLISH AD ENFORCEMENT OVERLAY -->
             <div id="ad-enforce-overlay">
                 <div class="ad-enforce-title">AD BREAK!</div>
                 <div class="ad-enforce-desc">To continue watching this video, please support us by viewing a quick ad.<br>Click the button below and wait for 10 seconds.</div>
@@ -600,7 +597,6 @@
             <div class="meta-title" id="player-title">Loading...</div>
             <div class="meta-info">
                 <i class="fas fa-tv" style="color:var(--yellow);"></i>
-                <!-- STAR RATING SYSTEM -->
                 <span id="star-rating-ui" style="color:#555; cursor:pointer; font-size:13px; margin-left:5px;">
                     <i class="fas fa-star" onclick="rateVideo(1)"></i><i class="fas fa-star" onclick="rateVideo(2)"></i><i class="fas fa-star" onclick="rateVideo(3)"></i><i class="fas fa-star" onclick="rateVideo(4)"></i><i class="fas fa-star" onclick="rateVideo(5)"></i>
                 </span>
@@ -612,7 +608,6 @@
             <div class="action-buttons-row">
                 <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
-                <!-- VIP DOWNLOAD ENFORCEMENT -->
                 <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
             </div>
             <div class="resources-header">Resources <span>Uploaded by Animax etc. <i class="far fa-question-circle" style="font-size:10px;"></i></span></div>
@@ -659,13 +654,10 @@
         <i class="fas fa-play-circle" onclick="showShorts()"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
-    
-    <!-- POPUNDER AD PLACEMENT -->
 
     <script>
-        // 🌟 SUCCESS SOUND EFFECT 🌟
         const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
-        function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
+        function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked")); }
 
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -799,7 +791,7 @@
             });
         }
 
-        // 🌟 REWARD WAITING PAGE (DAILY BONUS WITH ADS) 🌟
+        // 🌟 REWARD WAITING PAGE (HIGH REVENUE 1 MIN SYSTEM) 🌟
         let rewardInterval;
         function checkDailyBonusUI() {
             if(!currentUser) return;
@@ -814,42 +806,25 @@
 
         function openRewardPage() {
             if(!currentUser) return alert("Login required!");
-            
             let today = new Date().toLocaleDateString();
             db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
-                if(s.val() === today) {
-                    return alert("You have already claimed your daily bonus today!");
-                }
+                if(s.val() === today) return alert("You have already claimed your daily bonus today!");
                 
                 document.getElementById('reward-waiting-view').style.display = 'flex';
-                document.getElementById('reward-claim-btn').style.display = 'none';
-                document.getElementById('reward-timer-section').style.display = 'block';
                 
                 let lastBypass = localStorage.getItem('rewardTimerBypass');
                 let now = Date.now();
                 
                 if(lastBypass && (now - parseInt(lastBypass) < 86400000)) {
+                    document.getElementById('start-timer-btn').style.display = 'none';
                     document.getElementById('reward-timer-section').style.display = 'none';
+                    document.getElementById('reward-desc-text').innerText = "Verification Complete! Click below to claim.";
                     document.getElementById('reward-claim-btn').style.display = 'block';
                 } else {
-                    let timeLeft = 60;
-                    document.getElementById('reward-sec').innerText = timeLeft;
-                    document.getElementById('reward-progress-fill').style.width = '0%';
-                    
-                    clearInterval(rewardInterval);
-                    rewardInterval = setInterval(() => {
-                        timeLeft--;
-                        document.getElementById('reward-sec').innerText = timeLeft;
-                        let progress = ((60 - timeLeft) / 60) * 100;
-                        document.getElementById('reward-progress-fill').style.width = progress + '%';
-                        
-                        if(timeLeft <= 0) {
-                            clearInterval(rewardInterval);
-                            localStorage.setItem('rewardTimerBypass', Date.now());
-                            document.getElementById('reward-timer-section').style.display = 'none';
-                            document.getElementById('reward-claim-btn').style.display = 'block';
-                        }
-                    }, 1000);
+                    document.getElementById('start-timer-btn').style.display = 'block';
+                    document.getElementById('reward-timer-section').style.display = 'none';
+                    document.getElementById('reward-claim-btn').style.display = 'none';
+                    document.getElementById('reward-desc-text').innerText = "To claim your 5 points, click the button below to start verification. A quick ad will open to support us.";
                 }
             });
         }
@@ -859,7 +834,38 @@
             clearInterval(rewardInterval);
         }
 
+        function startRewardTimer() {
+            // TRIGGER SMARTLINK 1
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            
+            document.getElementById('start-timer-btn').style.display = 'none';
+            document.getElementById('reward-timer-section').style.display = 'block';
+            document.getElementById('reward-desc-text').style.display = 'none';
+
+            let timeLeft = 60;
+            document.getElementById('reward-sec').innerText = timeLeft;
+            document.getElementById('reward-progress-fill').style.width = '0%';
+            
+            clearInterval(rewardInterval);
+            rewardInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('reward-sec').innerText = timeLeft;
+                let progress = ((60 - timeLeft) / 60) * 100;
+                document.getElementById('reward-progress-fill').style.width = progress + '%';
+                
+                if(timeLeft <= 0) {
+                    clearInterval(rewardInterval);
+                    localStorage.setItem('rewardTimerBypass', Date.now());
+                    document.getElementById('reward-timer-section').style.display = 'none';
+                    document.getElementById('reward-desc-text').style.display = 'block';
+                    document.getElementById('reward-desc-text').innerText = "Verification Complete! Claim your reward.";
+                    document.getElementById('reward-claim-btn').style.display = 'block';
+                }
+            }, 1000);
+        }
+
         function executeRewardClaim() {
+            // TRIGGER SMARTLINK 2
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             
             let today = new Date().toLocaleDateString();
@@ -873,7 +879,6 @@
             });
         }
 
-        // REFER AND EARN
         function copyReferCode() {
             if(!currentUser) return;
             let code = currentUser.uid.substring(0, 8).toUpperCase();
@@ -881,7 +886,6 @@
             navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
         }
 
-        // 🌟 REAL WORKING SPIN WHEEL LOGIC 🌟
         function openSpinWheel() { document.getElementById('spin-modal').style.display = 'flex'; }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
@@ -900,10 +904,10 @@
                 if(!pool || pool.length === 0) {
                     pool = [];
                     pool.push(7); // 1 VIP
-                    for(let i=0; i<5; i++) pool.push(5); // 5x (10 pts)
-                    for(let i=0; i<15; i++) pool.push(3); // 15x (5 pts)
-                    for(let i=0; i<25; i++) pool.push(2); // 25x (2 pts)
-                    for(let i=0; i<25; i++) pool.push(1); // 25x (1 pt)
+                    for(let i=0; i<5; i++) pool.push(5); 
+                    for(let i=0; i<15; i++) pool.push(3); 
+                    for(let i=0; i<25; i++) pool.push(2); 
+                    for(let i=0; i<25; i++) pool.push(1); 
                     for(let i=0; i<29; i++) {
                         let zeroSlices = [0, 4, 6];
                         pool.push(zeroSlices[Math.floor(Math.random() * zeroSlices.length)]); 
@@ -954,7 +958,6 @@
             });
         }
 
-        // VIDEO RATING
         function rateVideo(stars) {
             if(!currentUser) return alert("Please login to rate this video!");
             let children = document.getElementById('star-rating-ui').children;
@@ -962,7 +965,6 @@
             alert(`✅ Thanks for rating! You gave ${stars} stars.`);
         }
 
-        // VIP DOWNLOAD ENFORCEMENT
         function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
             else { alert("✅ Download server connecting... Please wait."); }
@@ -1076,6 +1078,9 @@
             playSuccessSound();
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
+
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); } }); 
+        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); });
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
@@ -1412,6 +1417,30 @@
         function resumeVideo(title, folder, type, id, idx) {
             if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } 
             else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
+        }
+
+        // ENGLISH AD VERIFICATION LOGIC
+        function startMidRollAd() {
+            if(midRollTaskActive) return;
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            midRollTaskActive = true; midRollTaskStart = Date.now();
+            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "#333";
+        }
+
+        function checkMidRollStatus() {
+            if(midRollTaskActive) {
+                let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
+                if(elapsed >= 10000) { 
+                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; nextAdTime += 600; 
+                    document.getElementById('ad-enforce-overlay').style.display = 'none';
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
+                    document.getElementById('main-video').play().catch(e=>{});
+                } else if (elapsed > 2000) { 
+                    midRollTaskActive = false; 
+                    alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
+                }
+            }
         }
 
         function changeLanguage(lang) {
