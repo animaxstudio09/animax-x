@@ -300,6 +300,17 @@
         #history-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 8000; overflow-y: auto; padding: 20px; }
         .history-item { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--yellow); border-radius: 4px; }
 
+        /* REWARD SYSTEM WAITING PAGE */
+        #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Roboto', sans-serif;}
+        .ad-placement { width: 320px; height: 50px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border: 1px dashed #444; color: #666; font-size: 12px; }
+        .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: #1a1a1a; padding: 30px 20px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
+        .reward-close { position:absolute; top:15px; right:15px; font-size:20px; color:#fff; cursor:pointer; }
+        .reward-title { color: var(--yellow); font-family: 'Orbitron'; margin-bottom: 20px; font-weight:bold; }
+        .reward-desc { color: #ccc; font-size: 13px; margin-bottom: 15px; }
+        .reward-progress-box { width: 100%; height: 12px; background: #333; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid #444; }
+        .reward-progress-fill { height: 100%; width: 0%; background: #00ff00; box-shadow: 0 0 10px #00ff00; transition: width 1s linear; }
+        .reward-claim-btn { display: none; width: 100%; padding: 15px; background: #00ff00; color: #000; font-size: 15px; font-weight: bold; font-family: 'Orbitron'; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #00ff00; transition: 0.3s; text-transform: uppercase; }
+
         /* SEARCH OVERLAY SYSTEM */
         #search-overlay-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 99999; overflow-y: auto; animation: fadeIn 0.3s; font-family: 'Roboto', sans-serif;}
         .so-header { display: flex; align-items: center; padding: 15px; gap: 15px; background: var(--header-bg); position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #222;}
@@ -390,8 +401,8 @@
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
-                    <!-- 🌟 DAILY LOGIN BONUS (1 MIN AD SYSTEM) 🌟 -->
-                    <div class="b-banner-alert" onclick="startDailyBonus()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
+                    <!-- 🌟 DAILY LOGIN BONUS OPENS REWARD WAITING PAGE 🌟 -->
+                    <div class="b-banner-alert" onclick="openRewardPage()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
                         <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
                     </div>
 
@@ -406,7 +417,7 @@
                         <i class="fas fa-chevron-right" style="color:#666;"></i>
                     </div>
 
-                    <!-- 🌟 NEW: LUCKY SPIN IN PROFILE 🌟 -->
+                    <!-- LUCKY SPIN IN PROFILE -->
                     <div class="b-card" onclick="openSpinWheel()">
                         <div class="b-card-left">
                             <i class="fas fa-dharmachakra b-card-icon" style="color: #ff9800;"></i>
@@ -435,6 +446,41 @@
                     <div style="text-align: center; color: #555; font-size: 12px; margin-top: 35px; margin-bottom: 20px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; font-weight: bold;">DEVELOPER BY RONI VAI</div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- 🌟 REWARD SYSTEM WAITING PAGE 🌟 -->
+    <div id="reward-waiting-view">
+        <!-- TOP AD PLACEMENT -->
+        <div class="ad-placement">
+            <script>
+              atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="reward-main-content">
+            <i class="fas fa-times reward-close" onclick="closeRewardPage()"></i>
+            <h2 class="reward-title">DAILY REWARD</h2>
+            
+            <div id="reward-timer-section">
+                <p class="reward-desc">Verifying your activity... Please wait <span id="reward-sec" style="color:var(--yellow); font-weight:bold; font-size:18px;">60</span> seconds.</p>
+                <div class="reward-progress-box">
+                    <div id="reward-progress-fill" class="reward-progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- href logic handled via onclick for Firebase sync -->
+            <button id="reward-claim-btn" class="reward-claim-btn" onclick="executeRewardClaim()">Claim Your Reward</button>
+        </div>
+
+        <!-- BOTTOM AD PLACEMENT -->
+        <div class="ad-placement">
+            <script>
+              atOptions = { 'key' : '9f634c6894bc13ff8f0f19de1fcac9f3', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></script>
         </div>
     </div>
 
@@ -613,6 +659,8 @@
         <i class="fas fa-play-circle" onclick="showShorts()"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
+    
+    <!-- POPUNDER AD PLACEMENT -->
 
     <script>
         // 🌟 SUCCESS SOUND EFFECT 🌟
@@ -647,6 +695,7 @@
             try { closeSearchOverlay(); } catch(e) {} 
             try { closeLeaderboard(); } catch(e) {}
             try { closeSpinWheel(); } catch(e) {}
+            try { closeRewardPage(); } catch(e) {}
 
             const searchWrapper = document.getElementById('header-search-wrapper');
             
@@ -750,10 +799,8 @@
             });
         }
 
-        // 🌟 DAILY LOGIN BONUS (1 MIN AD SYSTEM) 🌟
-        let dailyBonusActive = false;
-        let dailyBonusStartTime = 0;
-
+        // 🌟 REWARD WAITING PAGE (DAILY BONUS WITH ADS) 🌟
+        let rewardInterval;
         function checkDailyBonusUI() {
             if(!currentUser) return;
             let today = new Date().toLocaleDateString();
@@ -764,38 +811,66 @@
                 else { txt.innerText = "CLAIM DAILY LOGIN BONUS (+5 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
             });
         }
-        function startDailyBonus() {
+
+        function openRewardPage() {
             if(!currentUser) return alert("Login required!");
-            if(dailyBonusActive) return alert("You are already claiming a bonus!");
             
             let today = new Date().toLocaleDateString();
             db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
-                if(s.val() !== today) {
-                    window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-                    dailyBonusActive = true;
-                    dailyBonusStartTime = Date.now();
-                    document.getElementById('daily-bonus-text').innerText = "VERIFYING... (WAIT 60s)";
+                if(s.val() === today) {
+                    return alert("You have already claimed your daily bonus today!");
+                }
+                
+                document.getElementById('reward-waiting-view').style.display = 'flex';
+                document.getElementById('reward-claim-btn').style.display = 'none';
+                document.getElementById('reward-timer-section').style.display = 'block';
+                
+                let lastBypass = localStorage.getItem('rewardTimerBypass');
+                let now = Date.now();
+                
+                if(lastBypass && (now - parseInt(lastBypass) < 86400000)) {
+                    document.getElementById('reward-timer-section').style.display = 'none';
+                    document.getElementById('reward-claim-btn').style.display = 'block';
+                } else {
+                    let timeLeft = 60;
+                    document.getElementById('reward-sec').innerText = timeLeft;
+                    document.getElementById('reward-progress-fill').style.width = '0%';
+                    
+                    clearInterval(rewardInterval);
+                    rewardInterval = setInterval(() => {
+                        timeLeft--;
+                        document.getElementById('reward-sec').innerText = timeLeft;
+                        let progress = ((60 - timeLeft) / 60) * 100;
+                        document.getElementById('reward-progress-fill').style.width = progress + '%';
+                        
+                        if(timeLeft <= 0) {
+                            clearInterval(rewardInterval);
+                            localStorage.setItem('rewardTimerBypass', Date.now());
+                            document.getElementById('reward-timer-section').style.display = 'none';
+                            document.getElementById('reward-claim-btn').style.display = 'block';
+                        }
+                    }, 1000);
                 }
             });
         }
 
-        function checkDailyBonusStatus() {
-            if(!dailyBonusActive) return;
-            let elapsed = Date.now() - dailyBonusStartTime;
-            if(elapsed >= 60000) {
-                dailyBonusActive = false;
-                let today = new Date().toLocaleDateString();
-                let newPoints = userPoints + 5;
-                db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
-                    let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
-                    playSuccessSound();
-                    alert("🎉 Daily Bonus Claimed! +5 Points added to your account."); checkDailyBonusUI();
-                });
-            } else if (elapsed > 2000) {
-                dailyBonusActive = false;
-                alert("❌ You returned too early!\n\nYou must stay on the ad page for full 60 seconds to claim the daily bonus.");
-                document.getElementById('daily-bonus-text').innerText = "CLAIM DAILY LOGIN BONUS (+5 PTS)";
-            }
+        function closeRewardPage() {
+            document.getElementById('reward-waiting-view').style.display = 'none';
+            clearInterval(rewardInterval);
+        }
+
+        function executeRewardClaim() {
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            
+            let today = new Date().toLocaleDateString();
+            let newPoints = userPoints + 5;
+            db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
+                let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
+                playSuccessSound();
+                alert("🎉 Daily Reward Claimed! +5 Points added to your account."); 
+                closeRewardPage();
+                checkDailyBonusUI();
+            });
         }
 
         // REFER AND EARN
@@ -821,7 +896,6 @@
             db.ref(`users/${currentUser.uid}/points`).set(startingPoints - 2).then(() => {
                 let wheel = document.getElementById('real-wheel');
                 
-                // 🌟 EXACT 100-SPIN PROBABILITY DECK SYSTEM 🌟
                 let pool = JSON.parse(localStorage.getItem('animax_spin_pool'));
                 if(!pool || pool.length === 0) {
                     pool = [];
@@ -832,22 +906,20 @@
                     for(let i=0; i<25; i++) pool.push(1); // 25x (1 pt)
                     for(let i=0; i<29; i++) {
                         let zeroSlices = [0, 4, 6];
-                        pool.push(zeroSlices[Math.floor(Math.random() * zeroSlices.length)]); // 29x (0 pts)
+                        pool.push(zeroSlices[Math.floor(Math.random() * zeroSlices.length)]); 
                     }
-                    // Shuffle the deck
                     for (let i = pool.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
                         [pool[i], pool[j]] = [pool[j], pool[i]];
                     }
                 }
                 
-                let winIndex = pool.pop(); // Take one spin result
+                let winIndex = pool.pop(); 
                 localStorage.setItem('animax_spin_pool', JSON.stringify(pool));
                 
                 let prizes = [0, 1, 2, 5, 0, 10, 0, 'VIP'];
                 let wonPrize = prizes[winIndex];
                 
-                // Perfect Rotation Calculation to align visually with the top pointer
                 let extraDeg = 270 - (winIndex * 45) - 22.5; 
                 if (extraDeg < 0) extraDeg += 360;
                 let totalDeg = (360 * 5) + extraDeg; 
@@ -932,7 +1004,6 @@
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // 🌟 RESTORED ALL 20 TASKS 🌟
         const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"},{id:"t3",name:"Tile Explorer Ad",img:"https://cdn-icons-png.flaticon.com/512/751/751462.png"},{id:"t4",name:"Merge Master Ad",img:"https://cdn-icons-png.flaticon.com/512/860/860472.png"},{id:"t5",name:"Word Search Ad",img:"https://cdn-icons-png.flaticon.com/512/3408/3408506.png"},{id:"t6",name:"Candy Crush Ad",img:"https://cdn-icons-png.flaticon.com/512/5243/5243460.png"},{id:"t7",name:"Race Master Ad",img:"https://cdn-icons-png.flaticon.com/512/3202/3202926.png"},{id:"t8",name:"Sniper 3D Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801530.png"},{id:"t9",name:"Farm Heroes Ad",img:"https://cdn-icons-png.flaticon.com/512/2689/2689408.png"},{id:"t10",name:"Coin Master Ad",img:"https://cdn-icons-png.flaticon.com/512/1021/1021207.png"},{id:"t11",name:"Subway Surfers Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888856.png"},{id:"t12",name:"Ludo King Ad",img:"https://cdn-icons-png.flaticon.com/512/806/806126.png"},{id:"t13",name:"8 Ball Pool Ad",img:"https://cdn-icons-png.flaticon.com/512/3039/3039395.png"},{id:"t14",name:"Temple Run Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888874.png"},{id:"t15",name:"Angry Birds Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033324.png"},{id:"t16",name:"Clash of Clans Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033306.png"},{id:"t17",name:"Free Fire Ad",img:"https://cdn-icons-png.flaticon.com/512/3211/3211516.png"},{id:"t18",name:"PUBG Mobile Ad",img:"https://cdn-icons-png.flaticon.com/512/3094/3094825.png"},{id:"t19",name:"Roblox Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801538.png"},{id:"t20",name:"Minecraft Ad",img:"https://cdn-icons-png.flaticon.com/512/1068/1068777.png"}];
 
         function getCurrentTimeWindow() { let now = Date.now() + serverTimeOffset; return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); }
@@ -1005,10 +1076,6 @@
             playSuccessSound();
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
-
-        // 🌟 CHECK DAILY BONUS AND TASKS ON FOCUS 🌟
-        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); } }); 
-        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); checkDailyBonusStatus(); });
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
@@ -1345,30 +1412,6 @@
         function resumeVideo(title, folder, type, id, idx) {
             if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } 
             else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
-        }
-
-        // ENGLISH AD VERIFICATION LOGIC
-        function startMidRollAd() {
-            if(midRollTaskActive) return;
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            midRollTaskActive = true; midRollTaskStart = Date.now();
-            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "#333";
-        }
-
-        function checkMidRollStatus() {
-            if(midRollTaskActive) {
-                let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
-                if(elapsed >= 10000) { 
-                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; nextAdTime += 600; 
-                    document.getElementById('ad-enforce-overlay').style.display = 'none';
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
-                    document.getElementById('main-video').play().catch(e=>{});
-                } else if (elapsed > 2000) { 
-                    midRollTaskActive = false; 
-                    alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--yellow)";
-                }
-            }
         }
 
         function changeLanguage(lang) {
