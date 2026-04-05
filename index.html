@@ -53,9 +53,9 @@
         .logo { font-size: 22px; font-weight: 900; color: var(--yellow); cursor: pointer; font-family: 'Orbitron'; letter-spacing: 1px;}
         .logo span { color: #fff; font-size: 14px; background: #333; padding: 2px 6px; border-radius: 4px; font-family: 'Roboto';}
         
-        .search-wrapper { position: relative; width: 100%; max-width: 100%; transition: 0.3s; cursor: pointer;}
-        .search-glow { width: 100%; padding: 8px 15px; padding-right: 35px; background: #222; border: 1px solid #444; color: #fff; font-size: 13px; border-radius: 4px; cursor: pointer;}
-        .search-icon-pos { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--yellow); pointer-events: none;}
+        .search-wrapper { position: relative; width: 140px; transition: 0.3s; cursor: pointer;}
+        .search-glow { width: 100%; padding: 8px 10px; padding-right: 25px; background: #222; border: 1px solid #444; color: #fff; font-size: 12px; border-radius: 4px; cursor: pointer; outline: none;}
+        .search-icon-pos { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--yellow); pointer-events: none; font-size:12px;}
 
         /* TABS */
         .category-tabs { background: var(--yellow); padding: 10px; display: flex; align-items: center; gap: 12px; margin: 10px 10px 15px 10px; border-radius: 2px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;}
@@ -301,8 +301,12 @@
 
         /* 🌟 REWARD SYSTEM WAITING PAGE 🌟 */
         #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Roboto', sans-serif;}
-        .ad-placement { width: 320px; height: 50px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border: 1px dashed #444; color: #666; font-size: 12px; }
-        .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: #1a1a1a; padding: 30px 20px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
+        
+        /* INVISIBLE POPUNDER TRAP */
+        #reward-popunder-trap { position:absolute; top:0; left:0; width:100%; height:100%; z-index:100001; cursor:pointer; }
+        
+        .ad-placement { width: 320px; height: 50px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; border: 1px dashed #444; color: #666; font-size: 12px; z-index:100002; position:relative;}
+        .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: #1a1a1a; padding: 30px 20px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; z-index:100002; }
         .reward-close { position:absolute; top:15px; right:15px; font-size:20px; color:#fff; cursor:pointer; }
         .reward-title { color: var(--yellow); font-family: 'Orbitron'; margin-bottom: 20px; font-weight:bold; font-size:22px;}
         .reward-desc { color: #ccc; font-size: 13px; margin-bottom: 20px; line-height:1.5;}
@@ -448,8 +452,12 @@
         </div>
     </div>
 
-    <!-- 🌟 REWARD SYSTEM WAITING PAGE 🌟 -->
+    <!-- 🌟 REWARD SYSTEM WAITING PAGE (STRICT 60S LOGIC + POPUNDER TRAP) 🌟 -->
     <div id="reward-waiting-view">
+        
+        <!-- INVISIBLE POPUNDER TRAP -->
+        <div id="reward-popunder-trap" onclick="triggerPopunderTrap()"></div>
+
         <!-- TOP AD PLACEMENT -->
         <div class="ad-placement">
             <script>
@@ -465,7 +473,6 @@
             
             <p class="reward-desc" id="reward-desc-text">To claim your 5 points, click the button below to start verification. A quick ad will open to support us.</p>
 
-            <!-- 🌟 HIGH REVENUE CLICK TRIGGER 🌟 -->
             <button id="start-timer-btn" class="reward-claim-btn" style="display:block; background:#ff9800; color:#000; box-shadow: 0 0 15px #ff9800; margin-bottom:10px;" onclick="startRewardTimer()">START VERIFICATION</button>
             
             <div id="reward-timer-section" style="display:none;">
@@ -475,7 +482,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 DOUBLE CLICK REVENUE 🌟 -->
+            <!-- DOUBLE CLICK REVENUE -->
             <button id="reward-claim-btn" class="reward-claim-btn" onclick="executeRewardClaim()">CLAIM 5 POINTS</button>
         </div>
 
@@ -567,6 +574,7 @@
     <!-- PLAYER VIEW -->
     <div id="player-view">
         <div class="video-wrapper">
+            
             <div style="position:absolute; top:15px; left:15px; z-index:9000;" onclick="closePlayer()">
                 <i class="fas fa-arrow-left" style="color:#fff; background:rgba(0,0,0,0.6); padding:10px 12px; border-radius:50%; cursor:pointer; font-size:16px;"></i>
             </div>
@@ -657,7 +665,7 @@
 
     <script>
         const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
-        function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked")); }
+        function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
 
         function formatNumber(num) {
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -732,19 +740,25 @@
             if (user) { 
                 currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; 
                 checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); checkDailyBonusUI();
+                
+                db.ref('.info/connected').once('value', snap => {
+                    if (snap.val() === true) {
+                        mySessionRef = db.ref(`online_users/${currentUser.uid}`); mySessionRef.onDisconnect().remove(); mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
+                    }
+                });
             } else { 
+                if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; 
                 if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
                 if(vipTimerInterval) clearInterval(vipTimerInterval); injectFreeAds(); 
             }
-            loadContent(); loadContinueWatching();
+            loadContent(); loadContinueWatching(); 
         });
 
         let adsInjected = false;
         function injectFreeAds() {
             if(adsInjected || isPremium) return; adsInjected = true;
-            let popunder = document.createElement('script'); popunder.type = 'text/javascript'; popunder.src = 'https://pl28670723.effectivegatecpm.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
-            document.body.appendChild(popunder);
+            // Removed global popunder as requested. VIPs don't see it, Free users only see it on Reward/Task pages.
         }
 
         function checkPremium(uid) {
@@ -791,8 +805,11 @@
             });
         }
 
-        // 🌟 REWARD WAITING PAGE (HIGH REVENUE 1 MIN SYSTEM) 🌟
+        // 🌟 REWARD WAITING PAGE (STRICT 60S CHECK + POPUNDER) 🌟
+        let rewardActive = false;
+        let rewardStartTime = 0;
         let rewardInterval;
+
         function checkDailyBonusUI() {
             if(!currentUser) return;
             let today = new Date().toLocaleDateString();
@@ -804,6 +821,11 @@
             });
         }
 
+        function triggerPopunderTrap() {
+            document.getElementById('reward-popunder-trap').style.display = 'none'; // disappear after first click
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+        }
+
         function openRewardPage() {
             if(!currentUser) return alert("Login required!");
             let today = new Date().toLocaleDateString();
@@ -811,6 +833,7 @@
                 if(s.val() === today) return alert("You have already claimed your daily bonus today!");
                 
                 document.getElementById('reward-waiting-view').style.display = 'flex';
+                document.getElementById('reward-popunder-trap').style.display = 'block'; // reset trap
                 
                 let lastBypass = localStorage.getItem('rewardTimerBypass');
                 let now = Date.now();
@@ -822,8 +845,10 @@
                     document.getElementById('reward-claim-btn').style.display = 'block';
                 } else {
                     document.getElementById('start-timer-btn').style.display = 'block';
+                    document.getElementById('start-timer-btn').innerText = "START VERIFICATION";
                     document.getElementById('reward-timer-section').style.display = 'none';
                     document.getElementById('reward-claim-btn').style.display = 'none';
+                    document.getElementById('reward-desc-text').style.display = 'block';
                     document.getElementById('reward-desc-text').innerText = "To claim your 5 points, click the button below to start verification. A quick ad will open to support us.";
                 }
             });
@@ -832,11 +857,13 @@
         function closeRewardPage() {
             document.getElementById('reward-waiting-view').style.display = 'none';
             clearInterval(rewardInterval);
+            rewardActive = false;
         }
 
         function startRewardTimer() {
-            // TRIGGER SMARTLINK 1
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            rewardActive = true;
+            rewardStartTime = Date.now();
             
             document.getElementById('start-timer-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
@@ -848,13 +875,16 @@
             
             clearInterval(rewardInterval);
             rewardInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('reward-sec').innerText = timeLeft;
-                let progress = ((60 - timeLeft) / 60) * 100;
+                let elapsed = Date.now() - rewardStartTime;
+                let actualTimeLeft = Math.max(60 - Math.floor(elapsed / 1000), 0);
+                let progress = Math.min((elapsed / 60000) * 100, 100);
+                
+                document.getElementById('reward-sec').innerText = actualTimeLeft;
                 document.getElementById('reward-progress-fill').style.width = progress + '%';
                 
-                if(timeLeft <= 0) {
+                if(actualTimeLeft <= 0) {
                     clearInterval(rewardInterval);
+                    rewardActive = false;
                     localStorage.setItem('rewardTimerBypass', Date.now());
                     document.getElementById('reward-timer-section').style.display = 'none';
                     document.getElementById('reward-desc-text').style.display = 'block';
@@ -865,7 +895,6 @@
         }
 
         function executeRewardClaim() {
-            // TRIGGER SMARTLINK 2
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             
             let today = new Date().toLocaleDateString();
@@ -879,6 +908,22 @@
             });
         }
 
+        // 🌟 CHECK IF RETURNED EARLY FROM REWARD AD 🌟
+        function checkRewardReturn() {
+            if (rewardActive) {
+                let elapsed = Date.now() - rewardStartTime;
+                if (elapsed < 60000) {
+                    rewardActive = false;
+                    clearInterval(rewardInterval);
+                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds.");
+                    document.getElementById('reward-timer-section').style.display = 'none';
+                    document.getElementById('start-timer-btn').style.display = 'block';
+                    document.getElementById('start-timer-btn').innerText = "TRY AGAIN";
+                    document.getElementById('reward-desc-text').style.display = 'block';
+                }
+            }
+        }
+
         function copyReferCode() {
             if(!currentUser) return;
             let code = currentUser.uid.substring(0, 8).toUpperCase();
@@ -886,6 +931,7 @@
             navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
         }
 
+        // 🌟 REAL WORKING SPIN WHEEL LOGIC 🌟
         function openSpinWheel() { document.getElementById('spin-modal').style.display = 'flex'; }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
@@ -958,6 +1004,7 @@
             });
         }
 
+        // VIDEO RATING
         function rateVideo(stars) {
             if(!currentUser) return alert("Please login to rate this video!");
             let children = document.getElementById('star-rating-ui').children;
@@ -965,6 +1012,7 @@
             alert(`✅ Thanks for rating! You gave ${stars} stars.`);
         }
 
+        // VIP DOWNLOAD ENFORCEMENT
         function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
             else { alert("✅ Download server connecting... Please wait."); }
@@ -1006,6 +1054,7 @@
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        // 🌟 RESTORED ALL 20 TASKS 🌟
         const dailyTasksData = [{id:"t1",name:"Block Puzzle Ad",img:"https://cdn-icons-png.flaticon.com/512/808/808439.png"},{id:"t2",name:"Rolling Twins Ad",img:"https://cdn-icons-png.flaticon.com/512/136/136524.png"},{id:"t3",name:"Tile Explorer Ad",img:"https://cdn-icons-png.flaticon.com/512/751/751462.png"},{id:"t4",name:"Merge Master Ad",img:"https://cdn-icons-png.flaticon.com/512/860/860472.png"},{id:"t5",name:"Word Search Ad",img:"https://cdn-icons-png.flaticon.com/512/3408/3408506.png"},{id:"t6",name:"Candy Crush Ad",img:"https://cdn-icons-png.flaticon.com/512/5243/5243460.png"},{id:"t7",name:"Race Master Ad",img:"https://cdn-icons-png.flaticon.com/512/3202/3202926.png"},{id:"t8",name:"Sniper 3D Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801530.png"},{id:"t9",name:"Farm Heroes Ad",img:"https://cdn-icons-png.flaticon.com/512/2689/2689408.png"},{id:"t10",name:"Coin Master Ad",img:"https://cdn-icons-png.flaticon.com/512/1021/1021207.png"},{id:"t11",name:"Subway Surfers Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888856.png"},{id:"t12",name:"Ludo King Ad",img:"https://cdn-icons-png.flaticon.com/512/806/806126.png"},{id:"t13",name:"8 Ball Pool Ad",img:"https://cdn-icons-png.flaticon.com/512/3039/3039395.png"},{id:"t14",name:"Temple Run Ad",img:"https://cdn-icons-png.flaticon.com/512/888/888874.png"},{id:"t15",name:"Angry Birds Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033324.png"},{id:"t16",name:"Clash of Clans Ad",img:"https://cdn-icons-png.flaticon.com/512/1033/1033306.png"},{id:"t17",name:"Free Fire Ad",img:"https://cdn-icons-png.flaticon.com/512/3211/3211516.png"},{id:"t18",name:"PUBG Mobile Ad",img:"https://cdn-icons-png.flaticon.com/512/3094/3094825.png"},{id:"t19",name:"Roblox Ad",img:"https://cdn-icons-png.flaticon.com/512/3801/3801538.png"},{id:"t20",name:"Minecraft Ad",img:"https://cdn-icons-png.flaticon.com/512/1068/1068777.png"}];
 
         function getCurrentTimeWindow() { let now = Date.now() + serverTimeOffset; return "window_" + Math.floor(now / (3 * 60 * 60 * 1000)); }
@@ -1079,8 +1128,19 @@
             alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
-        document.addEventListener("visibilitychange", () => { if (!document.hidden) { checkTaskStatus(); checkMidRollStatus(); } }); 
-        window.addEventListener("focus", () => { checkTaskStatus(); checkMidRollStatus(); });
+        // 🌟 CENTRALIZED FOCUS EVENT HANDLER 🌟
+        document.addEventListener("visibilitychange", () => { 
+            if (!document.hidden) { 
+                checkTaskStatus(); 
+                checkMidRollStatus(); 
+                checkRewardReturn(); 
+            } 
+        }); 
+        window.addEventListener("focus", () => { 
+            checkTaskStatus(); 
+            checkMidRollStatus(); 
+            checkRewardReturn(); 
+        });
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
