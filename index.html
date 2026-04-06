@@ -371,6 +371,7 @@
 
         <div id="banner-slider"><div id="banner-slides-container"></div></div>
 
+        <!-- 🌟 CATEGORY TABS FIXED 🌟 -->
         <div class="category-tabs">
             <div style="font-weight:900; color:#111; margin-right:5px; font-family:'Orbitron';">MENU</div>
             <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">LATEST</div>
@@ -707,11 +708,43 @@
             } else { regForm.classList.remove('active'); regForm.classList.add('hidden'); loginForm.classList.remove('hidden'); loginForm.classList.add('active'); }
         }
 
+        // 🌟 CATEGORY TABS FIXED LOGIC (FOOLPROOF) 🌟
+        function filterHomeCategory(cat, element) {
+            // Remove active class from all tabs
+            let tabs = document.getElementsByClassName('cat-tab');
+            for(let i=0; i<tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            // Add active to clicked tab
+            if(element) element.classList.add('active');
+            
+            // Hide all sections manually
+            let sTrending = document.getElementById('section-trending'); if(sTrending) sTrending.style.display = 'none';
+            let sAnime = document.getElementById('section-anime'); if(sAnime) sAnime.style.display = 'none';
+            let sCartoon = document.getElementById('section-cartoon'); if(sCartoon) sCartoon.style.display = 'none';
+            let sMovie = document.getElementById('section-movie'); if(sMovie) sMovie.style.display = 'none';
+            
+            // Show only target section
+            let targetSection = document.getElementById('section-' + cat);
+            if(targetSection) targetSection.style.display = 'block';
+        }
+
+        // 🌟 SUB TABS FIXED LOGIC (FOOLPROOF) 🌟
         function switchSubTab(parent, type, el) {
             let parentDiv = document.getElementById(`section-${parent}`);
-            parentDiv.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active')); el.classList.add('active');
-            document.getElementById(`${parent}-series-wrapper`).style.display = type === 'series' ? 'block' : 'none';
-            document.getElementById(`${parent}-movie-wrapper`).style.display = type === 'movie' ? 'block' : 'none';
+            if(!parentDiv) return;
+            
+            let tabs = parentDiv.getElementsByClassName('sub-tab');
+            for(let i=0; i<tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            el.classList.add('active');
+            
+            let seriesWrapper = document.getElementById(`${parent}-series-wrapper`);
+            let movieWrapper = document.getElementById(`${parent}-movie-wrapper`);
+            
+            if(seriesWrapper) seriesWrapper.style.display = (type === 'series') ? 'block' : 'none';
+            if(movieWrapper) movieWrapper.style.display = (type === 'movie') ? 'block' : 'none';
         }
 
         function switchTab(t) { 
