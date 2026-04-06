@@ -612,7 +612,8 @@
                 <button class="ad-enforce-btn" id="ep-unlock-btn" onclick="startEpUnlockAd()">VERIFY TO UNLOCK</button>
             </div>
 
-            <video id="main-video" controls playsinline preload="auto" controlsList="nodownload" oncontextmenu="return false;"></video>
+            <!-- 🌟 OPTIMIZED MAIN VIDEO TAG (preload=auto + playsinline) 🌟 -->
+            <video id="main-video" controls playsinline webkit-playsinline preload="auto" x5-video-player-type="h5" x5-playsinline="true" controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
             <div class="meta-title" id="player-title">Loading...</div>
@@ -1430,6 +1431,8 @@
             v.onwaiting = () => { bufferUI.style.display = 'block'; };
             v.onplaying = () => { bufferUI.style.display = 'none'; if(adEnforced && !isPremium) v.pause(); };
             v.oncanplay = () => { bufferUI.style.display = 'none'; };
+            // 🌟 NEW: স্পিনার ফিক্স (ডাটা লোড হলেই স্পিনার গায়েব হবে) 🌟
+            v.onloadeddata = () => { bufferUI.style.display = 'none'; };
             v.onerror = () => { bufferUI.style.display = 'none'; };
 
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
@@ -1627,9 +1630,10 @@
         }
 
         let shortsObserver = null;
+        // 🌟 SHORTS OPTIMIZATION: preload="auto" + webkit-playsinline 🌟
         function showShorts() { 
             document.getElementById('shorts-view').style.display='block'; const c = document.getElementById('shorts-container'); 
-            if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline preload="metadata" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; }); initShortsObserver(); }); } else { initShortsObserver(); } 
+            if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline webkit-playsinline x5-playsinline="true" preload="auto" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; }); initShortsObserver(); }); } else { initShortsObserver(); } 
         }
         function hideShorts() { document.getElementById('shorts-view').style.display='none'; document.querySelectorAll('#shorts-container video').forEach(v => v.pause()); if(shortsObserver) shortsObserver.disconnect(); }
         function initShortsObserver() { if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); }
