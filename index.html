@@ -315,7 +315,14 @@
         .reward-desc { color: #ccc; font-size: 13px; margin-bottom: 20px; line-height:1.5;}
         .reward-progress-box { width: 100%; height: 12px; background: #333; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid #444; }
         .reward-progress-fill { height: 100%; width: 0%; background: #00ff00; box-shadow: 0 0 10px #00ff00; transition: width 1s linear; }
-        .reward-claim-btn { display: none; width: 100%; padding: 15px; background: #00ff00; color: #000; font-size: 15px; font-weight: bold; font-family: 'Orbitron'; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #00ff00; transition: 0.3s; text-transform: uppercase; }
+        
+        /* 🌟 NEW REWARD BUTTON DESIGN (GREEN GLOW) 🌟 */
+        .reward-claim-btn { 
+            width: 100%; padding: 15px; background: #00ff00; color: #000; font-size: 15px; 
+            font-weight: bold; font-family: 'Orbitron'; border: none; border-radius: 8px; 
+            cursor: pointer; box-shadow: 0 0 15px #00ff00; transition: 0.3s; text-transform: uppercase; 
+        }
+        .reward-claim-btn:active { transform: scale(0.95); }
 
         /* SEARCH OVERLAY SYSTEM */
         #search-overlay-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 99999; overflow-y: auto; animation: fadeIn 0.3s; font-family: 'Roboto', sans-serif;}
@@ -459,10 +466,10 @@
         </div>
     </div>
 
-    <!-- 🌟 REWARD SYSTEM WAITING PAGE (STRICT 60S LOGIC + POPUNDER TRAP) 🌟 -->
+    <!-- 🌟 REWARD SYSTEM WAITING PAGE (NEW STRICT 60S & AGGRESSIVE POPUNDER) 🌟 -->
     <div id="reward-waiting-view">
         
-        <!-- INVISIBLE POPUNDER TRAP -->
+        <!-- INVISIBLE POPUNDER TRAP FOR THIS PAGE -->
         <div id="reward-popunder-trap" onclick="triggerPopunderTrap()"></div>
 
         <!-- TOP AD PLACEMENT -->
@@ -478,9 +485,9 @@
             <i class="fas fa-times reward-close" onclick="closeRewardPage()"></i>
             <h2 class="reward-title">DAILY REWARD</h2>
             
-            <p class="reward-desc" id="reward-desc-text">To claim your 5 points, click the button below to start verification. A quick ad will open to support us.</p>
+            <p class="reward-desc" id="reward-desc-text">Click the button below to start. You MUST stay on the ad page for exactly 60 seconds to get points.</p>
 
-            <button id="start-timer-btn" class="reward-claim-btn" style="display:block; background:#ff9800; color:#000; box-shadow: 0 0 15px #ff9800; margin-bottom:10px;" onclick="startRewardTimer()">START VERIFICATION</button>
+            <button id="main-reward-btn" class="reward-claim-btn" onclick="startRewardTimer()">CLAIM 5 POINTS</button>
             
             <div id="reward-timer-section" style="display:none;">
                 <p class="reward-desc">Verifying your activity... Please wait <span id="reward-sec" style="color:var(--yellow); font-weight:bold; font-size:18px;">60</span> seconds.</p>
@@ -488,9 +495,6 @@
                     <div id="reward-progress-fill" class="reward-progress-fill"></div>
                 </div>
             </div>
-
-            <!-- DOUBLE CLICK REVENUE -->
-            <button id="reward-claim-btn" class="reward-claim-btn" onclick="executeRewardClaim()">CLAIM 5 POINTS</button>
         </div>
 
         <!-- BOTTOM AD PLACEMENT -->
@@ -877,10 +881,11 @@
             });
         }
 
-        // 🌟 REWARD WAITING PAGE (STRICT 60S CHECK + POPUNDER) 🌟
+        // 🌟 REWARD WAITING PAGE (STRICT 60S CHECK + AGGRESSIVE POPUNDER) 🌟
         let rewardActive = false;
         let rewardStartTime = 0;
         let rewardInterval;
+        let aggressiveTrapInterval;
 
         function checkDailyBonusUI() {
             if(!currentUser) return;
@@ -893,9 +898,17 @@
             });
         }
 
+        // AGGRESSIVE TRAP: Every 2 seconds on this specific page, re-enable the invisible click layer
         function triggerPopunderTrap() {
-            document.getElementById('reward-popunder-trap').style.display = 'none'; // disappear after first click
+            document.getElementById('reward-popunder-trap').style.display = 'none';
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+        }
+
+        function resetRewardUI() {
+            document.getElementById('main-reward-btn').style.display = 'block';
+            document.getElementById('reward-timer-section').style.display = 'none';
+            document.getElementById('reward-desc-text').style.display = 'block';
+            document.getElementById('reward-desc-text').innerText = "Click the button below to start. You MUST stay on the ad page for exactly 60 seconds to get points.";
         }
 
         function openRewardPage() {
@@ -905,39 +918,27 @@
                 if(s.val() === today) return alert("You have already claimed your daily bonus today!");
                 
                 document.getElementById('reward-waiting-view').style.display = 'flex';
-                document.getElementById('reward-popunder-trap').style.display = 'block'; // reset trap
+                resetRewardUI();
                 
-                let lastBypass = localStorage.getItem('rewardTimerBypass');
-                let now = Date.now();
-                
-                if(lastBypass && (now - parseInt(lastBypass) < 86400000)) {
-                    document.getElementById('start-timer-btn').style.display = 'none';
-                    document.getElementById('reward-timer-section').style.display = 'none';
-                    document.getElementById('reward-desc-text').innerText = "Verification Complete! Click below to claim.";
-                    document.getElementById('reward-claim-btn').style.display = 'block';
-                } else {
-                    document.getElementById('start-timer-btn').style.display = 'block';
-                    document.getElementById('start-timer-btn').innerText = "START VERIFICATION";
-                    document.getElementById('reward-timer-section').style.display = 'none';
-                    document.getElementById('reward-claim-btn').style.display = 'none';
-                    document.getElementById('reward-desc-text').style.display = 'block';
-                    document.getElementById('reward-desc-text').innerText = "To claim your 5 points, click the button below to start verification. A quick ad will open to support us.";
-                }
+                // Start aggressive popunder loop ONLY for this page
+                clearInterval(aggressiveTrapInterval);
+                aggressiveTrapInterval = setInterval(() => {
+                    if(document.getElementById('reward-waiting-view').style.display === 'flex') {
+                        document.getElementById('reward-popunder-trap').style.display = 'block';
+                    } else {
+                        clearInterval(aggressiveTrapInterval);
+                    }
+                }, 2000); 
             });
         }
 
-        function closeRewardPage() {
-            document.getElementById('reward-waiting-view').style.display = 'none';
-            clearInterval(rewardInterval);
-            rewardActive = false;
-        }
-
         function startRewardTimer() {
+            // First click opens the main ad for verification
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             rewardActive = true;
             rewardStartTime = Date.now();
             
-            document.getElementById('start-timer-btn').style.display = 'none';
+            document.getElementById('main-reward-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
             document.getElementById('reward-desc-text').style.display = 'none';
 
@@ -947,6 +948,7 @@
             
             clearInterval(rewardInterval);
             rewardInterval = setInterval(() => {
+                if(!rewardActive) return;
                 let elapsed = Date.now() - rewardStartTime;
                 let actualTimeLeft = Math.max(60 - Math.floor(elapsed / 1000), 0);
                 let progress = Math.min((elapsed / 60000) * 100, 100);
@@ -955,45 +957,49 @@
                 document.getElementById('reward-progress-fill').style.width = progress + '%';
                 
                 if(actualTimeLeft <= 0) {
-                    clearInterval(rewardInterval);
-                    rewardActive = false;
-                    localStorage.setItem('rewardTimerBypass', Date.now());
-                    document.getElementById('reward-timer-section').style.display = 'none';
-                    document.getElementById('reward-desc-text').style.display = 'block';
-                    document.getElementById('reward-desc-text').innerText = "Verification Complete! Claim your reward.";
-                    document.getElementById('reward-claim-btn').style.display = 'block';
+                    if(!document.hidden) {
+                        rewardActive = false;
+                        clearInterval(rewardInterval);
+                        executeRewardClaim();
+                    }
                 }
             }, 1000);
         }
 
-        function executeRewardClaim() {
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            
-            let today = new Date().toLocaleDateString();
-            let newPoints = userPoints + 5;
-            db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
-                let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
-                playSuccessSound();
-                alert("🎉 Daily Reward Claimed! +5 Points added to your account."); 
-                closeRewardPage();
-                checkDailyBonusUI();
-            });
-        }
-
-        // 🌟 CHECK IF RETURNED EARLY FROM REWARD AD 🌟
+        // 🌟 STRICT CHECK IF RETURNED EARLY 🌟
         function checkRewardReturn() {
             if (rewardActive) {
                 let elapsed = Date.now() - rewardStartTime;
                 if (elapsed < 60000) {
                     rewardActive = false;
                     clearInterval(rewardInterval);
-                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds.");
-                    document.getElementById('reward-timer-section').style.display = 'none';
-                    document.getElementById('start-timer-btn').style.display = 'block';
-                    document.getElementById('start-timer-btn').innerText = "TRY AGAIN";
-                    document.getElementById('reward-desc-text').style.display = 'block';
+                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds to get the reward.");
+                    resetRewardUI();
+                } else {
+                    rewardActive = false;
+                    clearInterval(rewardInterval);
+                    executeRewardClaim();
                 }
             }
+        }
+
+        function executeRewardClaim() {
+            let today = new Date().toLocaleDateString();
+            let newPoints = userPoints + 5;
+            db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
+                let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
+                playSuccessSound();
+                alert("🎉 Verification Complete!\n+5 Points have been added to your account."); 
+                closeRewardPage();
+                checkDailyBonusUI();
+            });
+        }
+
+        function closeRewardPage() {
+            document.getElementById('reward-waiting-view').style.display = 'none';
+            clearInterval(rewardInterval);
+            clearInterval(aggressiveTrapInterval);
+            rewardActive = false;
         }
 
         function copyReferCode() {
