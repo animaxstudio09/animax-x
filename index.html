@@ -1435,6 +1435,13 @@
         let isDataLoaded = false;
         function loadContent() {
             if(isDataLoaded) return; isDataLoaded = true;
+            
+            // 🌟 FETCH ALL SHORTS DATA IN BACKGROUND FOR RELATED SECTION 🌟
+            db.ref('shorts').once('value', s => {
+                window.allShortsData = [];
+                if(s.exists()) { s.forEach(i => { window.allShortsData.push({...i.val(), key: i.key}); }); }
+            });
+
             db.ref('banners').on('value', s => {
                 const c = document.getElementById('banner-slides-container'); if(!c) return; c.innerHTML = ""; let i=0;
                 s.forEach(b => { let data = b.val(); let fName = (data.folderName || "").trim(); c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="playBannerAnime('${fName.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; });
@@ -1755,14 +1762,66 @@
         
         function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
         
+        // 🌟 NEW: 12 VIDEOS + MIDDLE SHORTS SCROLLER LOGIC 🌟
+        function generateCardHtml(item) {
+            if(item.type === 'anime') {
+                let f = item.data; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>';
+                return `<div class="folder-card" onclick="openFolder('${item.folder.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${item.title}</div></div>`;
+            } else {
+                let m = item; let sid = m.id || m.title;
+                let pType = currentPlayType === 'cartoon' ? 'cartoon' : 'movie';
+                let tBadge = pType === 'cartoon' ? 'DUB' : 'MOVIE';
+                let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : `<div class="card-vip-badge">${tBadge}</div>`;
+                return `<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, '${pType}', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`;
+            }
+        }
+
         function loadForYouVideos() { 
-            const g = document.getElementById('dynamic-rec-grid'); g.innerHTML=""; 
-            if(currentPlayType === 'movie') { if(window.movieData) { window.movieData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
-            } else if(currentPlayType === 'cartoon') { if(window.cartoonData) { window.cartoonData.slice(0,6).forEach(m=>{ let sid=m.id||m.title; let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">DUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`; }); }
-            } else { if(window.animeData) { let count = 0; Object.keys(window.animeData).forEach(n=>{ if(count >= 6) return; let f = window.animeData[n][0]; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#ff0000;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>'; g.innerHTML+=`<div class="folder-card" onclick="openFolder('${n.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${n}</div></div>`; count++; }); } }
+            const g = document.getElementById('dynamic-rec-grid'); 
+            g.innerHTML = "<div style='text-align:center;width:100%;color:#888;grid-column:1/-1;padding:20px;'>Loading related videos...</div>"; 
+            
+            let pool = [];
+            if(currentPlayType === 'movie' && window.movieData) { pool = [...window.movieData]; }
+            else if(currentPlayType === 'cartoon' && window.cartoonData) { pool = [...window.cartoonData]; }
+            else if(window.animeData) { 
+                Object.keys(window.animeData).forEach(n => { pool.push({title: n, type: 'anime', folder: n, data: window.animeData[n][0]}); });
+            }
+            
+            // Randomize to show fresh recommendations
+            pool = pool.sort(() => 0.5 - Math.random());
+            let selected = pool.slice(0, 12); 
+
+            let html = "";
+            
+            // First 6 videos
+            selected.slice(0, 6).forEach(item => { html += generateCardHtml(item); });
+            
+            // Insert Shorts Row (Span full width of the grid)
+            if(window.allShortsData && window.allShortsData.length > 0) {
+                let randomShorts = [...window.allShortsData].sort(() => 0.5 - Math.random()).slice(0, 8); // Take 8 random shorts
+                
+                html += `<div style="grid-column: 1 / -1; margin: 15px 0 10px 0;">`;
+                html += `<div style="font-size:14px; font-weight:bold; color:var(--yellow); margin-bottom:10px; font-family:'Orbitron';"><i class="fas fa-bolt"></i> TRENDING SHORTS</div>`;
+                html += `<div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:10px; scrollbar-width:none;">`;
+                
+                randomShorts.forEach(sh => {
+                    html += `<div style="min-width:110px; width:110px; aspect-ratio:9/16; background:#111; border-radius:6px; border:1px solid #333; overflow:hidden; position:relative; cursor:pointer;" onclick="showShorts()">`;
+                    html += `<video src="${sh.url}#t=0.1" preload="metadata" style="width:100%; height:100%; object-fit:cover;"></video>`;
+                    html += `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:rgba(255,255,255,0.8); font-size:24px; filter:drop-shadow(0 2px 4px #000);"><i class="fas fa-play-circle"></i></div>`;
+                    html += `</div>`;
+                });
+                
+                html += `</div></div>`;
+            }
+
+            // Remaining videos (up to 6 more, total 12)
+            selected.slice(6, 12).forEach(item => { html += generateCardHtml(item); });
+            
+            g.innerHTML = html;
         }
 
         let shortsObserver = null;
+        // 🌟 SHORTS OPTIMIZATION: preload="auto" + webkit-playsinline 🌟
         function showShorts() { 
             document.getElementById('shorts-view').style.display='block'; const c = document.getElementById('shorts-container'); 
             if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline webkit-playsinline x5-playsinline="true" preload="auto" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; }); initShortsObserver(); }); } else { initShortsObserver(); } 
