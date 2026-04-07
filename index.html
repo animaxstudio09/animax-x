@@ -1552,7 +1552,6 @@
             v.onwaiting = () => { bufferUI.style.display = 'block'; };
             v.onplaying = () => { bufferUI.style.display = 'none'; if(adEnforced && !isPremium) v.pause(); };
             v.oncanplay = () => { bufferUI.style.display = 'none'; };
-            // 🌟 NEW: স্পিনার ফিক্স (ডাটা লোড হলেই স্পিনার গায়েব হবে) 🌟
             v.onloadeddata = () => { bufferUI.style.display = 'none'; };
             v.onerror = () => { bufferUI.style.display = 'none'; };
 
@@ -1560,6 +1559,23 @@
 
             v.src = u; v.dataset.currentId = id; v.load(); 
             document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
+
+            // 🌟 NEW: MEDIA SESSION API FOR BACKGROUND NOTIFICATION LOGO/ARTWORK 🌟
+            let hThumb = "logo.png";
+            if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
+            else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
+            else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: t,
+                    artist: 'ANIMAX TV',
+                    artwork: [
+                        { src: hThumb, type: 'image/jpeg' },
+                        { src: 'logo.png', type: 'image/png' }
+                    ]
+                });
+            }
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
@@ -1575,10 +1591,6 @@
             }
 
             if(currentUser) {
-                let hThumb = "";
-                if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
-                else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
-                else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
                 db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).update({ title: t, date: Date.now(), thumb: hThumb, type: type, folderName: currentFolder || t });
             }
 
@@ -1751,7 +1763,6 @@
         }
 
         let shortsObserver = null;
-        // 🌟 SHORTS OPTIMIZATION: preload="auto" + webkit-playsinline 🌟
         function showShorts() { 
             document.getElementById('shorts-view').style.display='block'; const c = document.getElementById('shorts-container'); 
             if(c.children.length === 0){ db.ref('shorts').once('value', s => { if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } s.forEach(i => { let d = i.val(), k = i.key; c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline webkit-playsinline x5-playsinline="true" preload="auto" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; }); initShortsObserver(); }); } else { initShortsObserver(); } 
