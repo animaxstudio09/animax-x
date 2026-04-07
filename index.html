@@ -403,8 +403,13 @@
     </div>
 
     <div id="profile-view" class="app-view">
+        
+        <!-- 🌟 LOGIN FORM VIEW (Shown only when clicking Login icon) 🌟 -->
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
+                <!-- Back Button to return to Guest Profile -->
+                <div style="position:absolute; top:20px; left:20px; color:#fff; font-size:24px; cursor:pointer; z-index:5;" onclick="switchTab('profile')"><i class="fas fa-arrow-left"></i></div>
+                
                 <div class="auth-container">
                     <div class="auth-form active" id="login-form-box"><h1 class="auth-title">Welcome Back</h1><form onsubmit="event.preventDefault(); handleAuth('login');"><input type="email" id="email-in" class="auth-input" placeholder="Email Address" required><input type="password" id="pass-in" class="auth-input" placeholder="Password" required><button type="submit" class="auth-btn">LOGIN</button></form><p class="auth-switch">Don't have an account? <span onclick="toggleAuthForm()">Sign Up</span></p></div>
                     <div class="auth-form hidden" id="reg-form-box"><h1 class="auth-title">Join Animax</h1><form onsubmit="event.preventDefault(); handleAuth('reg');"><input type="text" id="rname-in" class="auth-input" placeholder="Your Full Name" required><input type="email" id="remail-in" class="auth-input" placeholder="Email Address" required><input type="password" id="rpass-in" class="auth-input" placeholder="Password" required><button type="submit" class="auth-btn">REGISTER</button></form><p class="auth-switch">Already a member? <span onclick="toggleAuthForm()">Login</span></p></div>
@@ -412,13 +417,23 @@
             </div>
         </div>
 
+        <!-- 🌟 UNIFIED PROFILE VIEW (For both Guest & Logged In) 🌟 -->
         <div id="user-profile-content" style="display:none;">
             <div class="b-profile-container">
-                <div class="prof-cover-area"><div style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer; z-index:10;" onclick="auth.signOut()"><i class="fas fa-sign-out-alt" style="color:var(--yellow);"></i></div><div class="prof-avatar-section"><div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div></div></div>
+                
+                <!-- Login / Logout Action Button -->
+                <div class="prof-cover-area">
+                    <div id="auth-action-btn" style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.6); padding:10px; border-radius:50%; cursor:pointer; z-index:10;">
+                        <i id="auth-action-icon" class="fas fa-sign-out-alt" style="color:var(--yellow);"></i>
+                    </div>
+                    <div class="prof-avatar-section"><div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div></div>
+                </div>
+                
                 <div class="b-content-pad">
-                    <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">USER</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
+                    <!-- Profile Name with Edit Icon -->
+                    <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">GUEST</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
-                    <!-- 🌟 DAILY LOGIN BONUS OPENS REWARD WAITING PAGE 🌟 -->
+                    <!-- DAILY LOGIN BONUS -->
                     <div class="b-banner-alert" onclick="openRewardPage()" style="background:rgba(255,193,7,0.15); border:1px solid var(--yellow); justify-content:center;">
                         <i class="fas fa-gift" style="font-size:16px;"></i> <span id="daily-bonus-text" style="font-weight:bold; font-family:'Orbitron';">CLAIM DAILY LOGIN BONUS (+5 PTS)</span>
                     </div>
@@ -434,7 +449,7 @@
                         <i class="fas fa-chevron-right" style="color:#666;"></i>
                     </div>
 
-                    <!-- LUCKY SPIN IN PROFILE -->
+                    <!-- LUCKY SPIN -->
                     <div class="b-card" onclick="openSpinWheel()">
                         <div class="b-card-left">
                             <i class="fas fa-dharmachakra b-card-icon" style="color: #ff9800;"></i>
@@ -453,8 +468,8 @@
 
                     <div class="b-list-group" style="margin-top: 20px;">
                         <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy" style="color:var(--yellow);"></i> Point Leaderboard</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item"><div class="b-list-item-left"><i class="far fa-bookmark"></i> My List</div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:#fff; font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item"><div class="b-list-item-left"><i class="far fa-thumbs-up"></i> My Likes</div><div class="b-list-item-right"><span style="color:#fff; font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-bookmark"></i> My List</div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:#fff; font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-thumbs-up"></i> My Likes</div><div class="b-list-item-right"><span style="color:#fff; font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-history-section">
                             <div class="b-list-item" style="padding: 15px 0 5px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history"></i> Watch History</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
                             <div class="b-history-scroll" id="b-recent-history-scroll"></div>
@@ -697,19 +712,45 @@
             let banner = document.getElementById('global-banner-ad');
             if (!banner) return;
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
+            let isLoginFormVisible = document.getElementById('guest-login-content').style.display === 'block';
+            
             if (isPremium) {
                 banner.style.display = 'none'; // VIP rule
-            } else if (!currentUser && isProfileTab) {
+            } else if (!currentUser && isProfileTab && isLoginFormVisible) {
                 banner.style.display = 'none'; // Login Page NO AD rule
             } else {
                 banner.style.display = 'block'; // Free user elsewhere
             }
         }
 
+        // 🌟 GUEST PROFILE LOGIN FORM TOGGLE 🌟
+        function showLoginForm() {
+            document.getElementById('user-profile-content').style.display = 'none';
+            document.getElementById('guest-login-content').style.display = 'block';
+            updateBannerVisibility();
+        }
+
         function toggleAuthForm() {
             let loginForm = document.getElementById('login-form-box'); let regForm = document.getElementById('reg-form-box');
             if (loginForm.classList.contains('active')) { loginForm.classList.remove('active'); loginForm.classList.add('hidden'); regForm.classList.remove('hidden'); regForm.classList.add('active');
             } else { regForm.classList.remove('active'); regForm.classList.add('hidden'); loginForm.classList.remove('hidden'); loginForm.classList.add('active'); }
+        }
+
+        // 🌟 EDIT USERNAME LOGIC 🌟
+        function editUsername() {
+            if(!currentUser) return;
+            let currentName = document.getElementById('b-profile-name').innerText.replace('GUEST', '').trim();
+            let newName = prompt("Enter your new username:", currentName);
+            if(newName && newName.trim() !== "" && newName.trim().length > 2) {
+                let safeName = newName.trim().substring(0, 20); // max 20 chars
+                db.ref(`users/${currentUser.uid}`).update({ username: safeName }).then(() => {
+                    db.ref(`lb_users/${currentUser.uid}`).update({ name: safeName.toUpperCase() });
+                    currentUser.username = safeName; // update local cache
+                    document.getElementById('b-profile-name').innerHTML = safeName.toUpperCase() + ' <i class="fas fa-edit" id="edit-name-icon" style="font-size:14px; color:#888; cursor:pointer;" onclick="editUsername()"></i>';
+                    document.getElementById('task-un').innerText = safeName;
+                    alert("✅ Username updated successfully!");
+                });
+            }
         }
 
         // 🌟 CATEGORY TABS FIXED LOGIC (FOOLPROOF) 🌟
@@ -771,6 +812,9 @@
             }
             if(t==='profile') { 
                 document.getElementById('profile-view').style.display='block'; 
+                // Always force show profile content, hide login form initially
+                document.getElementById('user-profile-content').style.display = 'block';
+                document.getElementById('guest-login-content').style.display = 'none';
                 if(searchWrapper) searchWrapper.style.display = 'none'; 
                 loadRecentHistoryUI(); checkDailyBonusUI();
             }
@@ -798,7 +842,14 @@
 
         auth.onAuthStateChanged(user => {
             if (user) { 
-                currentUser = user; document.getElementById('guest-login-content').style.display = 'none'; document.getElementById('user-profile-content').style.display = 'block'; 
+                currentUser = user; 
+                document.getElementById('guest-login-content').style.display = 'none'; 
+                document.getElementById('user-profile-content').style.display = 'block'; 
+                
+                // Set to LOGOUT mode
+                document.getElementById('auth-action-icon').className = "fas fa-sign-out-alt";
+                document.getElementById('auth-action-btn').onclick = () => auth.signOut();
+
                 checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); checkDailyBonusUI();
                 
                 db.ref('.info/connected').once('value', snap => {
@@ -808,7 +859,29 @@
                 });
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
-                currentUser = null; isPremium = false; document.getElementById('guest-login-content').style.display = 'block'; document.getElementById('user-profile-content').style.display = 'none'; 
+                currentUser = null; isPremium = false; 
+                
+                // Guest Profile Defaults
+                document.getElementById('guest-login-content').style.display = 'none'; 
+                document.getElementById('user-profile-content').style.display = 'block'; 
+                
+                // Set to LOGIN mode
+                document.getElementById('auth-action-icon').className = "fas fa-sign-in-alt";
+                document.getElementById('auth-action-btn').onclick = () => showLoginForm();
+
+                document.getElementById('b-profile-name').innerHTML = "GUEST"; // wipes out edit icon
+                document.getElementById('task-un').innerText = "GUEST";
+                document.getElementById('b-profile-id').innerText = "ID: Not Logged In";
+                document.getElementById('b-vip-status').innerText = "Free User"; 
+                document.getElementById('b-vip-status').style.color = "#888";
+                document.getElementById('task-coin-balance').innerText = "0";
+                document.getElementById('b-watchlist-count').innerText = "0";
+                document.getElementById('b-mylikes-count').innerText = "0";
+                document.getElementById('profile-img').src = "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
+                
+                let histContainer = document.getElementById('b-recent-history-scroll');
+                if(histContainer) histContainer.innerHTML = "<div style='color:#666; font-size:12px; padding:10px;'>Login to view history.</div>";
+
                 if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
                 if(vipTimerInterval) clearInterval(vipTimerInterval); injectFreeAds(); 
             }
@@ -842,7 +915,10 @@
                 const d = s.val() || {};
                 userPoints = d.points || 0; document.getElementById('task-coin-balance').innerText = userPoints; updateRedeemButtonsUI();
                 currentUser.username = d.username || currentUser.email.split('@')[0];
-                document.getElementById('b-profile-name').innerText = currentUser.username.toUpperCase();
+                
+                // Restores Edit Icon dynamically
+                document.getElementById('b-profile-name').innerHTML = currentUser.username.toUpperCase() + ' <i class="fas fa-edit" id="edit-name-icon" style="font-size:14px; color:#888; cursor:pointer;" onclick="editUsername()"></i>';
+                
                 document.getElementById('task-un').innerText = currentUser.username;
                 document.getElementById('b-profile-id').innerText = "ID: " + uid.substring(0, 10).toUpperCase();
                 let dpImg = d.avatar ? d.avatar : "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
@@ -1010,7 +1086,10 @@
         }
 
         // 🌟 REAL WORKING SPIN WHEEL LOGIC 🌟
-        function openSpinWheel() { document.getElementById('spin-modal').style.display = 'flex'; }
+        function openSpinWheel() { 
+            if(!currentUser) return alert("Login required!");
+            document.getElementById('spin-modal').style.display = 'flex'; 
+        }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
         function executeRealSpin() {
@@ -1125,7 +1204,10 @@
         }
         function closeLeaderboard() { document.getElementById('leaderboard-view').style.display = 'none'; if(lbTimerInterval) clearInterval(lbTimerInterval); }
 
-        function openPremiumHub() { document.getElementById('premium-hub-view').style.display = 'block'; }
+        function openPremiumHub() { 
+            if(!currentUser) return alert("Login required!");
+            document.getElementById('premium-hub-view').style.display = 'block'; 
+        }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
         function buyPremiumTelegram(plan, price) {
             if(!currentUser) return alert("Please login first!"); let email = currentUser.email || "User";
