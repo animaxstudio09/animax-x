@@ -632,8 +632,8 @@
                 <button class="ad-enforce-btn" id="ep-unlock-btn" onclick="startEpUnlockAd()">VERIFY TO UNLOCK</button>
             </div>
 
-            <!-- 🌟 OPTIMIZED MAIN VIDEO TAG (preload=auto + playsinline) 🌟 -->
-            <video id="main-video" controls playsinline webkit-playsinline preload="auto" x5-video-player-type="h5" x5-playsinline="true" controlsList="nodownload" oncontextmenu="return false;"></video>
+            <!-- 🌟 OPTIMIZED MAIN VIDEO TAG (preload=metadata + playsinline) 🌟 -->
+            <video id="main-video" controls playsinline webkit-playsinline preload="metadata" x5-video-player-type="h5" x5-playsinline="true" controlsList="nodownload" oncontextmenu="return false;"></video>
         </div>
         <div class="player-meta-container">
             <div class="meta-title" id="player-title">Loading...</div>
@@ -1556,11 +1556,12 @@
             nextAdTime = 600; adWarningShown = false; adEnforced = false; midRollTaskActive = false;
             document.getElementById('ad-warning-overlay').style.display = 'none'; document.getElementById('ad-enforce-overlay').style.display = 'none';
 
-            v.onwaiting = () => { bufferUI.style.display = 'block'; };
-            v.onplaying = () => { bufferUI.style.display = 'none'; if(adEnforced && !isPremium) v.pause(); };
-            v.oncanplay = () => { bufferUI.style.display = 'none'; };
-            v.onloadeddata = () => { bufferUI.style.display = 'none'; };
-            v.onerror = () => { bufferUI.style.display = 'none'; };
+            bufferUI.style.display = 'none'; // Custom spinner off to prevent double loading
+            v.onwaiting = () => { };
+            v.onplaying = () => { if(adEnforced && !isPremium) v.pause(); };
+            v.oncanplay = () => { };
+            v.onloadeddata = () => { };
+            v.onerror = () => { };
 
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
@@ -1806,7 +1807,7 @@
                 
                 randomShorts.forEach(sh => {
                     html += `<div style="min-width:110px; width:110px; aspect-ratio:9/16; background:#111; border-radius:6px; border:1px solid #333; overflow:hidden; position:relative; cursor:pointer;" onclick="showShorts('${sh.key}')">`;
-                    html += `<video src="${sh.url}#t=0.1" preload="metadata" style="width:100%; height:100%; object-fit:cover;"></video>`;
+                    html += `<video src="${sh.url}#t=0.1" preload="none" style="width:100%; height:100%; object-fit:cover;"></video>`;
                     html += `<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:rgba(255,255,255,0.8); font-size:24px; filter:drop-shadow(0 2px 4px #000);"><i class="fas fa-play-circle"></i></div>`;
                     html += `</div>`;
                 });
@@ -1836,7 +1837,7 @@
                     if(!s.exists()) { c.innerHTML = '<div style="color:#fff; text-align:center; padding-top:50px;">No shorts available.</div>'; return; } 
                     s.forEach(i => { 
                         let d = i.val(), k = i.key; 
-                        c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline webkit-playsinline x5-playsinline="true" preload="auto" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; 
+                        c.innerHTML += `<div class="short-item" data-id="${k}"><video src="${d.url}" loop playsinline webkit-playsinline x5-playsinline="true" preload="none" onclick="if(this.paused)this.play();else this.pause();"></video><div class="short-overlay"><div class="short-btn"><i class="fas fa-heart"></i></div></div></div>`; 
                     }); 
                     initShortsObserver(); 
                     if(targetId) scrollToShort(targetId);
