@@ -1281,7 +1281,11 @@
                 try {
                     // Using XMLHttpRequest to get download progress
                     let xhr = new XMLHttpRequest();
-                    xhr.open('GET', vidUrl, true);
+                    
+                    // FIX: Cache-busting URL to avoid CORS conflict with video tag
+                    let fetchUrl = vidUrl + (vidUrl.includes('?') ? '&' : '?') + 'nocache=' + Date.now();
+                    
+                    xhr.open('GET', fetchUrl, true);
                     xhr.responseType = 'blob';
                     
                     xhr.onprogress = function(event) {
@@ -1292,7 +1296,7 @@
                     };
 
                     xhr.onload = function() {
-                        if (this.status === 200) {
+                        if (this.status === 200 || this.status === 206) {
                             let blob = this.response;
                             let tx = dbOffline.transaction("videos", "readwrite");
                             tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: blob, thumb: thumbImg, time: Date.now() });
@@ -1307,7 +1311,15 @@
                     };
                     
                     xhr.onerror = function() {
-                        showDlToast("❌ Network Error! Please check your connection.", false);
+                        // FALLBACK: If GitHub blocks background download, force direct browser download
+                        showDlToast("Network Error! Using direct download...", false);
+                        let a = document.createElement('a');
+                        a.href = vidUrl;
+                        a.target = "_blank";
+                        a.download = vidTitle + ".mp4";
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
                     };
 
                     xhr.send();
