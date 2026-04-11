@@ -16,6 +16,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
+    <!-- Popunder Script Added -->
+    <script src="https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js"></script>
+
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -362,12 +365,20 @@
         /* Toast Notification */
         #dl-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--accent-glow); padding: 12px 20px; border-radius: 30px; color: #fff; font-size: 13px; font-weight: bold; z-index: 99999; transition: 0.4s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;}
         #dl-toast.show { transform: translateX(-50%) translateY(0); }
+        .dl-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 5px; overflow: hidden; display: none; }
+        .dl-progress-fill { height: 100%; background: var(--accent-gradient); width: 0%; transition: width 0.2s;}
     </style>
 </head>
 <body>
 
     <!-- 🌟 NEW: DOWNLOAD TOAST 🌟 -->
-    <div id="dl-toast"><div class="loading-spinner" style="width:15px;height:15px;border:2px solid transparent;border-top-color:var(--accent-glow);border-radius:50%;animation:spin 1s linear infinite;"></div> <span id="dl-toast-msg">Downloading...</span></div>
+    <div id="dl-toast">
+        <div class="loading-spinner" id="dl-spinner" style="width:15px;height:15px;border:2px solid transparent;border-top-color:var(--accent-glow);border-radius:50%;animation:spin 1s linear infinite;"></div> 
+        <div>
+            <div id="dl-toast-msg" style="margin-bottom: 2px;">Downloading...</div>
+            <div class="dl-progress-bar" id="dl-prog-container"><div class="dl-progress-fill" id="dl-prog-fill"></div></div>
+        </div>
+    </div>
 
     <!-- 🌟 GLOBAL POPUNDER TRAP 🌟 -->
     <div id="global-popunder-trap" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99998; cursor:pointer;" onclick="triggerGlobalPopunder()"></div>
@@ -732,10 +743,26 @@
             dbOffline = e.target.result; 
         };
 
-        function showDlToast(msg, showSpinner = true) {
+        function showDlToast(msg, showSpinner = true, progress = 0) {
             let toast = document.getElementById('dl-toast');
             document.getElementById('dl-toast-msg').innerText = msg;
-            toast.querySelector('.loading-spinner').style.display = showSpinner ? 'block' : 'none';
+            
+            let spinner = document.getElementById('dl-spinner');
+            let progContainer = document.getElementById('dl-prog-container');
+            let progFill = document.getElementById('dl-prog-fill');
+            
+            if(showSpinner && progress > 0) {
+                spinner.style.display = 'none';
+                progContainer.style.display = 'block';
+                progFill.style.width = progress + '%';
+            } else if(showSpinner) {
+                spinner.style.display = 'block';
+                progContainer.style.display = 'none';
+            } else {
+                spinner.style.display = 'none';
+                progContainer.style.display = 'none';
+            }
+
             toast.classList.add('show');
             if(!showSpinner) { setTimeout(() => toast.classList.remove('show'), 3000); }
         }
@@ -996,7 +1023,6 @@
                     clearInterval(globalPopunderTimer);
                     document.getElementById('global-popunder-trap').style.display = 'none';
                     
-                    // Remove Popunder if user upgraded
                     let poScript = document.getElementById('external-popunder-script');
                     if(poScript) poScript.remove();
 
@@ -1227,7 +1253,7 @@
         }
 
         // ==========================================
-        // 🌟 DOWNLOAD LOGIC WITH CORS FALLBACK 🌟
+        // 🌟 DOWNLOAD LOGIC WITH PROGRESS BAR 🌟
         // ==========================================
         async function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); return; } 
@@ -1246,35 +1272,49 @@
             req.onsuccess = async () => {
                 if(req.result) return alert("✅ This video is already downloaded!");
                 
-                showDlToast(`Downloading: ${vidTitle}...`);
+                showDlToast(`Downloading: ${vidTitle}...`, true, 0);
                 
                 let thumbImg = "logo.png";
                 if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) thumbImg = window.animeData[currentFolder][0].thumbnail;
                 else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === vidTitle); if(match) thumbImg = match.thumbnail; }
                 
                 try {
-                    let response = await fetch(vidUrl);
-                    if(!response.ok) throw new Error("Network response was not ok");
-                    let blob = await response.blob();
+                    // Using XMLHttpRequest to get download progress
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET', vidUrl, true);
+                    xhr.responseType = 'blob';
                     
-                    let tx = dbOffline.transaction("videos", "readwrite");
-                    tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: blob, thumb: thumbImg, time: Date.now() });
-                    tx.oncomplete = () => { showDlToast("✅ Download Complete!", false); playSuccessSound(); loadDownloadsList(); };
+                    xhr.onprogress = function(event) {
+                        if (event.lengthComputable) {
+                            let percentComplete = (event.loaded / event.total) * 100;
+                            showDlToast(`Downloading: ${Math.round(percentComplete)}%`, true, percentComplete);
+                        }
+                    };
+
+                    xhr.onload = function() {
+                        if (this.status === 200) {
+                            let blob = this.response;
+                            let tx = dbOffline.transaction("videos", "readwrite");
+                            tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: blob, thumb: thumbImg, time: Date.now() });
+                            tx.oncomplete = () => { 
+                                showDlToast("✅ Download Complete!", false); 
+                                playSuccessSound(); 
+                                loadDownloadsList(); 
+                            };
+                        } else {
+                            showDlToast("❌ Download Failed! Try again.", false);
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        showDlToast("❌ Network Error! Please check your connection.", false);
+                    };
+
+                    xhr.send();
+                    
                 } catch(e) {
-                    console.log("CORS blocked in-app blob fetch. Using native download.");
-                    let a = document.createElement('a');
-                    a.href = vidUrl;
-                    a.target = '_blank';
-                    a.download = vidTitle + ".mp4";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    
-                    let tx = dbOffline.transaction("videos", "readwrite");
-                    tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: "native_dl", thumb: thumbImg, time: Date.now() });
-                    tx.oncomplete = () => { loadDownloadsList(); }
-                    
-                    showDlToast("✅ Download started directly to your device!", false);
+                    console.error("Download Error:", e);
+                    showDlToast("❌ Error initializing download.", false);
                 }
             };
         }
@@ -1296,13 +1336,13 @@
                 }
                 
                 items.sort((a,b) => b.time - a.time).forEach(item => {
-                    let dlStatusText = (item.blob === "native_dl") ? "Saved to Phone Gallery" : ((item.blob.size / (1024*1024)).toFixed(1) + " MB • Offline App");
+                    let sizeMB = (item.blob.size / (1024*1024)).toFixed(1);
                     container.innerHTML += `
                     <div class="dl-card">
                         <img src="${item.thumb}" class="dl-thumb">
                         <div class="dl-info">
                             <div class="dl-title">${item.title}</div>
-                            <div class="dl-status">${dlStatusText}</div>
+                            <div class="dl-status">${sizeMB} MB • Saved Offline</div>
                         </div>
                         <button class="dl-play-btn" onclick="playOfflineVideo('${item.id}')"><i class="fas fa-play"></i></button>
                         <button class="dl-del-btn" onclick="deleteDownload('${item.id}')"><i class="fas fa-trash"></i></button>
@@ -1318,23 +1358,19 @@
             req.onsuccess = () => {
                 if(req.result) {
                     let item = req.result;
-                    if (item.blob === "native_dl") {
-                        alert("🎬 This video was saved directly to your phone's Gallery/Downloads folder. Please play it from your file manager.");
-                    } else {
-                        if(offlineBlobUrl) URL.revokeObjectURL(offlineBlobUrl);
-                        offlineBlobUrl = URL.createObjectURL(item.blob);
-                        
-                        document.getElementById('player-view').style.display = 'block';
-                        document.getElementById('downloads-view').style.display = 'none';
-                        document.getElementById('player-title').innerText = item.title + " (OFFLINE)";
-                        document.getElementById('content-type-badge').innerText = "OFFLINE";
-                        document.getElementById('episode-pill-container').style.display = 'none'; 
-                        document.querySelector('.dropdown-row').style.display = 'none';
-                        
-                        const v = document.getElementById('main-video');
-                        v.src = offlineBlobUrl;
-                        v.play();
-                    }
+                    if(offlineBlobUrl) URL.revokeObjectURL(offlineBlobUrl);
+                    offlineBlobUrl = URL.createObjectURL(item.blob);
+                    
+                    document.getElementById('player-view').style.display = 'block';
+                    document.getElementById('downloads-view').style.display = 'none';
+                    document.getElementById('player-title').innerText = item.title + " (OFFLINE)";
+                    document.getElementById('content-type-badge').innerText = "OFFLINE";
+                    document.getElementById('episode-pill-container').style.display = 'none'; 
+                    document.querySelector('.dropdown-row').style.display = 'none';
+                    
+                    const v = document.getElementById('main-video');
+                    v.src = offlineBlobUrl;
+                    v.play();
                 } else {
                     alert("Video file not found!");
                 }
