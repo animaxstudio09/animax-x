@@ -129,16 +129,16 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION */
+        /* 🌟 FLOATING BOTTOM NAVIGATION (Updated for 4 buttons) */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 400px; 
-            background: rgba(15, 15, 20, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            width: 95%; max-width: 450px; 
+            background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             display: flex; justify-content: space-around; align-items: center; padding: 12px 0; 
             border-radius: 40px; border: 1px solid var(--glass-border); 
             z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
         }
-        nav i { font-size: 20px; color: var(--text-muted); padding: 10px 25px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px;}
+        nav i { font-size: 20px; color: var(--text-muted); padding: 10px 20px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px;}
         nav i.active { color: #000; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4); transform: translateY(-5px);}
 
         /* APP VIEW */
@@ -349,9 +349,28 @@
         .reward-claim-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, #00ff87, #60efff); color: #000; font-size: 16px; font-weight: 900; font-family: 'Orbitron'; border: none; border-radius: 16px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,255,135,0.4); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;}
         .reward-progress-box { width: 100%; height: 16px; background: rgba(0,0,0,0.5); border-radius: 20px; overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .reward-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00ff87, #60efff); box-shadow: 0 0 15px #00ff87; transition: width 1s linear; }
+
+        /* 🌟 NEW: DOWNLOADS VIEW STYLING 🌟 */
+        #downloads-view { padding: 20px; }
+        .dl-header { font-size: 24px; font-weight: 800; color: var(--text-main); font-family: 'Orbitron'; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
+        .dl-card { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 12px; position: relative;}
+        .dl-thumb { width: 80px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .dl-info { flex: 1; }
+        .dl-title { font-size: 14px; font-weight: 700; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+        .dl-status { font-size: 11px; color: #00ff87; font-weight: bold; margin-top: 4px; }
+        .dl-play-btn { background: var(--accent-gradient); color: #000; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; cursor: pointer; border: none;}
+        .dl-del-btn { position: absolute; top: -5px; right: -5px; background: #e63946; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 10px; cursor: pointer; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
+        .empty-dl { text-align: center; color: var(--text-muted); font-size: 14px; padding: 50px 20px; font-weight: 600;}
+        
+        /* Toast Notification */
+        #dl-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--accent-glow); padding: 12px 20px; border-radius: 30px; color: #fff; font-size: 13px; font-weight: bold; z-index: 99999; transition: 0.4s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;}
+        #dl-toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
+
+    <!-- 🌟 NEW: DOWNLOAD TOAST 🌟 -->
+    <div id="dl-toast"><div class="loading-spinner" style="width:15px;height:15px;border:2px solid transparent;border-top-color:var(--accent-glow);border-radius:50%;animation:spin 1s linear infinite;"></div> <span id="dl-toast-msg">Downloading...</span></div>
 
     <!-- 🌟 GLOBAL POPUNDER TRAP 🌟 -->
     <div id="global-popunder-trap" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99998; cursor:pointer;" onclick="triggerGlobalPopunder()"></div>
@@ -408,6 +427,14 @@
         </div>
 
         <div id="section-movie" style="display:none;"><div class="section-header"><div class="sec-title-text">ALL MOVIES</div></div><div id="movie-grid" class="grid-container"></div></div>
+    </div>
+
+    <!-- 🌟 NEW: DOWNLOADS VIEW 🌟 -->
+    <div id="downloads-view" class="app-view">
+        <div class="dl-header"><i class="fas fa-download" style="color:var(--accent-glow);"></i> Offline Downloads</div>
+        <div id="downloads-list-container">
+            <div class="empty-dl">Loading downloads...</div>
+        </div>
     </div>
 
     <div id="profile-view" class="app-view">
@@ -681,15 +708,49 @@
         <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff0055;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- 🌟 BOTTOM NAVIGATION (4 BUTTONS) 🌟 -->
     <nav id="main-nav">
         <i class="fas fa-home active" onclick="switchTab('home')"></i>
         <i class="fas fa-bolt" onclick="showShorts()"></i>
+        <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
 
     <!-- 🚀 JS LOGIC REMAINS 100% UNTOUCHED BELOW THIS POINT 🚀 -->
     <script>
+        // ==========================================
+        // 🌟 NEW: INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
+        // ==========================================
+        let dbOffline;
+        const requestOfflineDB = indexedDB.open("AnimaxOfflineDB", 1);
+        
+        requestOfflineDB.onupgradeneeded = (e) => {
+            dbOffline = e.target.result;
+            if (!dbOffline.objectStoreNames.contains("videos")) {
+                dbOffline.createObjectStore("videos", { keyPath: "id" });
+            }
+        };
+        
+        requestOfflineDB.onsuccess = (e) => { 
+            dbOffline = e.target.result; 
+        };
+
+        // UI Toast Helper
+        function showDlToast(msg, showSpinner = true) {
+            let toast = document.getElementById('dl-toast');
+            document.getElementById('dl-toast-msg').innerText = msg;
+            toast.querySelector('.loading-spinner').style.display = showSpinner ? 'block' : 'none';
+            toast.classList.add('show');
+            if(!showSpinner) { setTimeout(() => toast.classList.remove('show'), 3000); }
+        }
+
+        function hideDlToast() {
+            document.getElementById('dl-toast').classList.remove('show');
+        }
+
+        // ==========================================
+        // 🚀 EXISTING JAVASCRIPT START 🚀
+        // ==========================================
         const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
         function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
 
@@ -775,8 +836,19 @@
             if(movieWrapper) movieWrapper.style.display = (type === 'movie') ? 'block' : 'none';
         }
 
+        // 🌟 UPDATED: switchTab to support downloads view
+        let offlineBlobUrl = null; // Memory management for offline videos
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
+            
+            // Clean up offline blob memory if leaving player
+            if(offlineBlobUrl && t !== 'downloads') {
+                const v = document.getElementById('main-video');
+                v.pause(); v.src = "";
+                URL.revokeObjectURL(offlineBlobUrl);
+                offlineBlobUrl = null;
+            }
+
             document.getElementById('player-view').style.display='none'; 
             try { closeHistory(); } catch(e) {} 
             try { hideShorts(); } catch(e) {} 
@@ -793,6 +865,11 @@
                 if(searchWrapper) searchWrapper.style.display = 'block'; 
                 loadContinueWatching(); 
             }
+            if(t==='downloads') { 
+                document.getElementById('downloads-view').style.display='block'; 
+                if(searchWrapper) searchWrapper.style.display = 'none'; 
+                loadDownloadsList();
+            }
             if(t==='profile') { 
                 document.getElementById('profile-view').style.display='block'; 
                 document.getElementById('user-profile-content').style.display = 'block';
@@ -803,6 +880,7 @@
             
             document.querySelectorAll('nav i').forEach(i=>i.classList.remove('active'));
             if(t==='home') document.querySelector('.fa-home').classList.add('active');
+            if(t==='downloads') document.querySelector('.fa-download').classList.add('active');
             if(t==='profile') document.querySelector('.fa-user').classList.add('active');
             window.scrollTo(0,0);
             updateBannerVisibility();
@@ -1139,10 +1217,127 @@
             alert(`✅ Thanks for rating! You gave ${stars} stars.`);
         }
 
-        function handleDownload() {
-            if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); } 
-            else { alert("✅ Download server connecting... Please wait."); }
+        // ==========================================
+        // 🌟 NEW: OFFLINE DOWNLOAD LOGIC 🌟
+        // ==========================================
+        async function handleDownload() {
+            if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); return; } 
+            
+            const v = document.getElementById('main-video');
+            if(!v || !v.src || v.src.startsWith('blob:')) return alert("Cannot download this video right now.");
+            
+            let vidUrl = v.src;
+            let vidId = currentSafeVideoId || "dl_" + Date.now();
+            let vidTitle = document.getElementById('player-title').innerText;
+            
+            // Check if already downloaded
+            if(!dbOffline) return alert("Database not ready yet.");
+            let checkTx = dbOffline.transaction("videos", "readonly");
+            let req = checkTx.objectStore("videos").get(vidId);
+            req.onsuccess = async () => {
+                if(req.result) return alert("✅ This video is already downloaded!");
+                
+                showDlToast(`Downloading: ${vidTitle}...`);
+                try {
+                    // Note: This fetch will fail if the video server does not allow CORS (Cross-Origin Resource Sharing)
+                    let response = await fetch(vidUrl);
+                    if(!response.ok) throw new Error("Network response was not ok");
+                    let blob = await response.blob();
+                    
+                    let thumbImg = "logo.png";
+                    if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) thumbImg = window.animeData[currentFolder][0].thumbnail;
+                    else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === vidTitle); if(match) thumbImg = match.thumbnail; }
+                    
+                    let tx = dbOffline.transaction("videos", "readwrite");
+                    let store = tx.objectStore("videos");
+                    store.put({
+                        id: vidId,
+                        title: vidTitle,
+                        blob: blob,
+                        thumb: thumbImg,
+                        time: Date.now()
+                    });
+                    
+                    tx.oncomplete = () => {
+                        showDlToast("✅ Download Complete!", false);
+                        playSuccessSound();
+                    };
+                } catch(e) {
+                    console.error("Download error:", e);
+                    showDlToast("❌ Download Failed! The video server might have restricted access.", false);
+                }
+            };
         }
+
+        function loadDownloadsList() {
+            let container = document.getElementById('downloads-list-container');
+            if(!dbOffline) { container.innerHTML = "<div class='empty-dl'>Offline Database is not ready.</div>"; return; }
+            
+            container.innerHTML = "";
+            let tx = dbOffline.transaction("videos", "readonly");
+            let store = tx.objectStore("videos");
+            let req = store.getAll();
+            
+            req.onsuccess = () => {
+                let items = req.result;
+                if(items.length === 0) {
+                    container.innerHTML = "<div class='empty-dl'><i class='fas fa-folder-open' style='font-size:30px; margin-bottom:10px; color:var(--glass-border);'></i><br>No downloaded videos yet.<br>Go to a video and click Download.</div>";
+                    return;
+                }
+                
+                items.sort((a,b) => b.time - a.time).forEach(item => {
+                    let sizeMB = (item.blob.size / (1024*1024)).toFixed(1);
+                    container.innerHTML += `
+                    <div class="dl-card">
+                        <img src="${item.thumb}" class="dl-thumb">
+                        <div class="dl-info">
+                            <div class="dl-title">${item.title}</div>
+                            <div class="dl-status">${sizeMB} MB • Saved Offline</div>
+                        </div>
+                        <button class="dl-play-btn" onclick="playOfflineVideo('${item.id}')"><i class="fas fa-play"></i></button>
+                        <button class="dl-del-btn" onclick="deleteDownload('${item.id}')"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                });
+            };
+        }
+
+        function playOfflineVideo(id) {
+            if(!dbOffline) return;
+            let tx = dbOffline.transaction("videos", "readonly");
+            let req = tx.objectStore("videos").get(id);
+            req.onsuccess = () => {
+                if(req.result) {
+                    let item = req.result;
+                    // Clean previous blob url to prevent memory leaks
+                    if(offlineBlobUrl) URL.revokeObjectURL(offlineBlobUrl);
+                    offlineBlobUrl = URL.createObjectURL(item.blob);
+                    
+                    // Setup Player UI for offline
+                    document.getElementById('player-view').style.display = 'block';
+                    document.getElementById('downloads-view').style.display = 'none';
+                    document.getElementById('player-title').innerText = item.title + " (OFFLINE)";
+                    document.getElementById('content-type-badge').innerText = "OFFLINE";
+                    document.getElementById('episode-pill-container').style.display = 'none'; 
+                    document.querySelector('.dropdown-row').style.display = 'none';
+                    
+                    const v = document.getElementById('main-video');
+                    v.src = offlineBlobUrl;
+                    v.play();
+                } else {
+                    alert("Video file not found!");
+                }
+            };
+        }
+
+        function deleteDownload(id) {
+            if(!confirm("Are you sure you want to delete this downloaded video?")) return;
+            let tx = dbOffline.transaction("videos", "readwrite");
+            let req = tx.objectStore("videos").delete(id);
+            req.onsuccess = () => {
+                loadDownloadsList();
+            };
+        }
+        // ==========================================
 
         let lbTimerInterval = null;
         function getLeaderboardCycle() { return Math.floor((Date.now() + serverTimeOffset) / 1209600000); }
@@ -1615,7 +1810,6 @@
 
             if(isPremium) return;
             
-            // 🌟 10 Min Ad Tracker (Modified to show only ONCE) 🌟
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
                 let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ Ad break in ${timeLeft}s!`;
@@ -1669,13 +1863,12 @@
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
         }
 
-        // 🌟 Modified to ensure Ad comes only ONCE per video 🌟
         function checkMidRollStatus() {
             if(midRollTaskActive) {
                 let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
                 if(elapsed >= 10000) { 
                     midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
-                    nextAdTime = Infinity; // <--- Changed from += 600 to Infinity so it never shows again
+                    nextAdTime = Infinity;
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
                     document.getElementById('main-video').play().catch(e=>{});
