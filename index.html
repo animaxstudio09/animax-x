@@ -16,9 +16,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
-    <!-- Popunder Script Added -->
-    <script src="https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js"></script>
-
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -719,7 +716,7 @@
     <!-- 🚀 JS LOGIC REMAINS 100% UNTOUCHED BELOW THIS POINT 🚀 -->
     <script>
         // ==========================================
-        // 🌟 NEW: INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
+        // 🌟 INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
         // ==========================================
         let dbOffline;
         const requestOfflineDB = indexedDB.open("AnimaxOfflineDB", 1);
@@ -735,7 +732,6 @@
             dbOffline = e.target.result; 
         };
 
-        // UI Toast Helper
         function showDlToast(msg, showSpinner = true) {
             let toast = document.getElementById('dl-toast');
             document.getElementById('dl-toast-msg').innerText = msg;
@@ -836,12 +832,10 @@
             if(movieWrapper) movieWrapper.style.display = (type === 'movie') ? 'block' : 'none';
         }
 
-        // 🌟 UPDATED: switchTab to support downloads view
-        let offlineBlobUrl = null; // Memory management for offline videos
+        let offlineBlobUrl = null; 
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
             
-            // Clean up offline blob memory if leaving player
             if(offlineBlobUrl && t !== 'downloads') {
                 const v = document.getElementById('main-video');
                 v.pause(); v.src = "";
@@ -959,9 +953,19 @@
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             startGlobalPopunderTimer(); 
         }
+
+        // 🌟 NEW: Popunder Script is dynamically added ONLY for Free Users
         function injectFreeAds() {
-            if(adsInjected || isPremium) return; adsInjected = true;
+            if(adsInjected || isPremium) return; 
+            adsInjected = true;
             startGlobalPopunderTimer();
+            
+            if(!document.getElementById('external-popunder-script')) {
+                let script = document.createElement('script');
+                script.id = 'external-popunder-script';
+                script.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+                document.head.appendChild(script);
+            }
         }
 
         function checkPremium(uid) {
@@ -991,6 +995,11 @@
                     isPremium = true; 
                     clearInterval(globalPopunderTimer);
                     document.getElementById('global-popunder-trap').style.display = 'none';
+                    
+                    // Remove Popunder if user upgraded
+                    let poScript = document.getElementById('external-popunder-script');
+                    if(poScript) poScript.remove();
+
                     updateBannerVisibility();
                     vipTimerInterval = setInterval(() => {
                         let now = Date.now() + serverTimeOffset; let timeLeft = d.premiumExpiry - now;
@@ -1218,7 +1227,7 @@
         }
 
         // ==========================================
-        // 🌟 NEW: OFFLINE DOWNLOAD LOGIC 🌟
+        // 🌟 DOWNLOAD LOGIC WITH CORS FALLBACK 🌟
         // ==========================================
         async function handleDownload() {
             if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); return; } 
@@ -1230,41 +1239,42 @@
             let vidId = currentSafeVideoId || "dl_" + Date.now();
             let vidTitle = document.getElementById('player-title').innerText;
             
-            // Check if already downloaded
             if(!dbOffline) return alert("Database not ready yet.");
             let checkTx = dbOffline.transaction("videos", "readonly");
             let req = checkTx.objectStore("videos").get(vidId);
+            
             req.onsuccess = async () => {
                 if(req.result) return alert("✅ This video is already downloaded!");
                 
                 showDlToast(`Downloading: ${vidTitle}...`);
+                
+                let thumbImg = "logo.png";
+                if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) thumbImg = window.animeData[currentFolder][0].thumbnail;
+                else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === vidTitle); if(match) thumbImg = match.thumbnail; }
+                
                 try {
-                    // Note: This fetch will fail if the video server does not allow CORS (Cross-Origin Resource Sharing)
                     let response = await fetch(vidUrl);
                     if(!response.ok) throw new Error("Network response was not ok");
                     let blob = await response.blob();
                     
-                    let thumbImg = "logo.png";
-                    if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) thumbImg = window.animeData[currentFolder][0].thumbnail;
-                    else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === vidTitle); if(match) thumbImg = match.thumbnail; }
+                    let tx = dbOffline.transaction("videos", "readwrite");
+                    tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: blob, thumb: thumbImg, time: Date.now() });
+                    tx.oncomplete = () => { showDlToast("✅ Download Complete!", false); playSuccessSound(); loadDownloadsList(); };
+                } catch(e) {
+                    console.log("CORS blocked in-app blob fetch. Using native download.");
+                    let a = document.createElement('a');
+                    a.href = vidUrl;
+                    a.target = '_blank';
+                    a.download = vidTitle + ".mp4";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
                     
                     let tx = dbOffline.transaction("videos", "readwrite");
-                    let store = tx.objectStore("videos");
-                    store.put({
-                        id: vidId,
-                        title: vidTitle,
-                        blob: blob,
-                        thumb: thumbImg,
-                        time: Date.now()
-                    });
+                    tx.objectStore("videos").put({ id: vidId, title: vidTitle, blob: "native_dl", thumb: thumbImg, time: Date.now() });
+                    tx.oncomplete = () => { loadDownloadsList(); }
                     
-                    tx.oncomplete = () => {
-                        showDlToast("✅ Download Complete!", false);
-                        playSuccessSound();
-                    };
-                } catch(e) {
-                    console.error("Download error:", e);
-                    showDlToast("❌ Download Failed! The video server might have restricted access.", false);
+                    showDlToast("✅ Download started directly to your device!", false);
                 }
             };
         }
@@ -1286,13 +1296,13 @@
                 }
                 
                 items.sort((a,b) => b.time - a.time).forEach(item => {
-                    let sizeMB = (item.blob.size / (1024*1024)).toFixed(1);
+                    let dlStatusText = (item.blob === "native_dl") ? "Saved to Phone Gallery" : ((item.blob.size / (1024*1024)).toFixed(1) + " MB • Offline App");
                     container.innerHTML += `
                     <div class="dl-card">
                         <img src="${item.thumb}" class="dl-thumb">
                         <div class="dl-info">
                             <div class="dl-title">${item.title}</div>
-                            <div class="dl-status">${sizeMB} MB • Saved Offline</div>
+                            <div class="dl-status">${dlStatusText}</div>
                         </div>
                         <button class="dl-play-btn" onclick="playOfflineVideo('${item.id}')"><i class="fas fa-play"></i></button>
                         <button class="dl-del-btn" onclick="deleteDownload('${item.id}')"><i class="fas fa-trash"></i></button>
@@ -1308,21 +1318,23 @@
             req.onsuccess = () => {
                 if(req.result) {
                     let item = req.result;
-                    // Clean previous blob url to prevent memory leaks
-                    if(offlineBlobUrl) URL.revokeObjectURL(offlineBlobUrl);
-                    offlineBlobUrl = URL.createObjectURL(item.blob);
-                    
-                    // Setup Player UI for offline
-                    document.getElementById('player-view').style.display = 'block';
-                    document.getElementById('downloads-view').style.display = 'none';
-                    document.getElementById('player-title').innerText = item.title + " (OFFLINE)";
-                    document.getElementById('content-type-badge').innerText = "OFFLINE";
-                    document.getElementById('episode-pill-container').style.display = 'none'; 
-                    document.querySelector('.dropdown-row').style.display = 'none';
-                    
-                    const v = document.getElementById('main-video');
-                    v.src = offlineBlobUrl;
-                    v.play();
+                    if (item.blob === "native_dl") {
+                        alert("🎬 This video was saved directly to your phone's Gallery/Downloads folder. Please play it from your file manager.");
+                    } else {
+                        if(offlineBlobUrl) URL.revokeObjectURL(offlineBlobUrl);
+                        offlineBlobUrl = URL.createObjectURL(item.blob);
+                        
+                        document.getElementById('player-view').style.display = 'block';
+                        document.getElementById('downloads-view').style.display = 'none';
+                        document.getElementById('player-title').innerText = item.title + " (OFFLINE)";
+                        document.getElementById('content-type-badge').innerText = "OFFLINE";
+                        document.getElementById('episode-pill-container').style.display = 'none'; 
+                        document.querySelector('.dropdown-row').style.display = 'none';
+                        
+                        const v = document.getElementById('main-video');
+                        v.src = offlineBlobUrl;
+                        v.play();
+                    }
                 } else {
                     alert("Video file not found!");
                 }
@@ -1330,7 +1342,7 @@
         }
 
         function deleteDownload(id) {
-            if(!confirm("Are you sure you want to delete this downloaded video?")) return;
+            if(!confirm("Are you sure you want to remove this video from downloads list?")) return;
             let tx = dbOffline.transaction("videos", "readwrite");
             let req = tx.objectStore("videos").delete(id);
             req.onsuccess = () => {
@@ -1810,6 +1822,7 @@
 
             if(isPremium) return;
             
+            // 🌟 10 Min Ad Tracker (Modified to show only ONCE) 🌟
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
                 let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ Ad break in ${timeLeft}s!`;
@@ -1863,12 +1876,13 @@
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
         }
 
+        // 🌟 Modified to ensure Ad comes only ONCE per video 🌟
         function checkMidRollStatus() {
             if(midRollTaskActive) {
                 let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
                 if(elapsed >= 10000) { 
                     midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
-                    nextAdTime = Infinity;
+                    nextAdTime = Infinity; // <--- Changed from += 600 to Infinity so it never shows again
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
                     document.getElementById('main-video').play().catch(e=>{});
