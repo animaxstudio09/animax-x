@@ -16,6 +16,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
+    <!-- Popunder Script Added -->
+    <script src="https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js"></script>
+
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
@@ -1611,6 +1614,8 @@
             }
 
             if(isPremium) return;
+            
+            // 🌟 10 Min Ad Tracker (Modified to show only ONCE) 🌟
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
                 let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ Ad break in ${timeLeft}s!`;
@@ -1664,11 +1669,13 @@
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
         }
 
+        // 🌟 Modified to ensure Ad comes only ONCE per video 🌟
         function checkMidRollStatus() {
             if(midRollTaskActive) {
                 let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
                 if(elapsed >= 10000) { 
-                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; nextAdTime += 600; 
+                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
+                    nextAdTime = Infinity; // <--- Changed from += 600 to Infinity so it never shows again
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
                     document.getElementById('main-video').play().catch(e=>{});
