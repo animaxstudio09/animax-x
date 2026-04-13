@@ -16,8 +16,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
-    <!-- Popunder Script - Moved to dynamic loader for Premium Fix -->
-    <script id="popunder-ad-script"></script>
+    <!-- Popunder Script - Loaded Dynamically to protect Premium Users -->
+    <script id="popunder-ad-manager"></script>
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -129,7 +129,7 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION (Updated for 4 buttons) */
+        /* 🌟 FLOATING BOTTOM NAVIGATION */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
             width: 95%; max-width: 450px; 
@@ -1029,7 +1029,7 @@
             adsInjected = true;
             startGlobalPopunderTimer();
             
-            let popScript = document.getElementById('popunder-ad-script');
+            let popScript = document.getElementById('popunder-ad-manager');
             if(popScript) {
                 popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             }
@@ -1064,7 +1064,7 @@
                     document.getElementById('global-popunder-trap').style.display = 'none';
                     
                     // Stop Ads
-                    let popScript = document.getElementById('popunder-ad-script');
+                    let popScript = document.getElementById('popunder-ad-manager');
                     if(popScript) popScript.src = "";
                     
                     updateBannerVisibility();
@@ -2205,7 +2205,7 @@
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
 
         // ============================================================
-        // 🤖 ANIMAX AI MANAGER (SPECIFIC UPDATES)
+        // 🤖 ANIMAX AI MANAGER (WITH INFINITE LOOP FIX)
         // ============================================================
 
         function toggleAIChat() {
@@ -2224,14 +2224,11 @@
             if(isNew) document.getElementById('ai-notif-badge').style.display = 'block';
         }
 
-        // 1. SMART "WATCH NOW" LOGIC
         function aiPlayBanner(title) {
-            // Find in Anime
             if(window.animeData && window.animeData[title]) {
                 openFolder(title);
                 return;
             }
-            // Find in Movies/Cartoons
             let match = findDataByTitle(title);
             if(match) {
                 playVideo(title, match.url, match.id || title, match.isPremium, match.type, -1);
@@ -2241,26 +2238,41 @@
             }
         }
 
-        // 2. SMART LANGUAGE LOGIC
+        // 🌟 100% FIXED: NO MORE VIDEO LOOPING/FLICKERING 🌟
+        let processedVideoIdForLang = null; // Lock variable to stop infinite loops
+
         function aiHandleLanguage() {
-            if(!currentPlayingEpisodeData) return;
+            if(!currentPlayingEpisodeData || !currentSafeVideoId) return;
+            
+            // This line stops the loop. If we already checked this video, DO NOT check again!
+            if(processedVideoIdForLang === currentSafeVideoId) return; 
+
             let hasOriginal = !!currentPlayingEpisodeData.url;
             let hasHindi = !!currentPlayingEpisodeData.url_hin;
             let hasEnglish = !!currentPlayingEpisodeData.url_eng;
 
             if (hasHindi && !hasOriginal && !hasEnglish) {
+                processedVideoIdForLang = currentSafeVideoId; // Lock it
                 changeLanguage('hindi');
                 let sel = document.getElementById('language-select');
                 if(sel) sel.value = 'hindi';
-                aiAddLog(`🤖 <b>Smart Select:</b> Audio set to <b>Hindi</b> (Auto-detected).`, true);
+                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>Hindi</b>.`, true);
+            } else if (hasEnglish && !hasOriginal && !hasHindi) {
+                processedVideoIdForLang = currentSafeVideoId; // Lock it
+                changeLanguage('english');
+                let sel = document.getElementById('language-select');
+                if(sel) sel.value = 'english';
+                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>English</b>.`, true);
+            } else {
+                processedVideoIdForLang = currentSafeVideoId; // Lock it even if no change needed
             }
         }
 
         document.getElementById('main-video').addEventListener('loadstart', () => {
-            setTimeout(aiHandleLanguage, 1500);
+            // Check language ONLY once per episode load
+            setTimeout(aiHandleLanguage, 800);
         });
 
-        // 3. SYSTEM DIAGNOSTIC & PREMIUM PROTECTION
         function aiMonitor() {
             const v = document.getElementById('main-video');
             v.addEventListener('error', () => {
@@ -2268,10 +2280,14 @@
                 if(db) db.ref('admin_reports').push({ error: "Source Error: " + v.src, user: currentUser?currentUser.email:"Guest", time: Date.now() });
             });
 
+            // Upgrade: Time-based Greeting
+            let hour = new Date().getHours();
+            let greeting = (hour < 12) ? "Good Morning" : (hour < 18 ? "Good Afternoon" : "Good Evening");
+
             if(!currentUser) {
-                aiAddLog("👋 <b>Welcome Guest!</b> Login to save points and enjoy personalized Anime history.");
+                aiAddLog(`👋 <b>${greeting} Guest!</b> Login to save points and enjoy personalized Anime history.`);
             } else {
-                aiAddLog(`✅ <b>Status:</b> Hello ${currentUser.username.split(' ')[0]}! System is optimized for your account.`);
+                aiAddLog(`✅ <b>Status:</b> ${greeting} ${currentUser.username.split(' ')[0]}! System is optimized for your account.`);
                 if(!isPremium) {
                     setTimeout(() => {
                         aiAddLog(`👑 <b>Upgrade:</b> Enjoy 1080p Ultra HD and <b>No Ads</b>. Join VIP today!<br><button onclick="openPremiumHub()" style="width:100%; margin-top:10px; padding:8px; background:var(--accent-gradient); border:none; border-radius:10px; cursor:pointer; font-weight:900; font-family:'Orbitron'; font-size:11px;">GO PREMIUM</button>`, true);
@@ -2280,7 +2296,6 @@
             }
         }
 
-        // 4. SPOTLIGHT CHECKER
         function aiCheckSpotlight() {
             db.ref('anime').limitToLast(1).once('value', s => {
                 s.forEach(c => {
@@ -2290,7 +2305,6 @@
             });
         }
 
-        // Init AI
         setTimeout(() => {
             aiMonitor();
             aiCheckSpotlight();
