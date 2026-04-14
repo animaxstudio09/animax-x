@@ -16,8 +16,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
-    <!-- Popunder Script - Loaded Dynamically to protect Premium Users -->
+    <!-- Popunder & Social Bar Script - Loaded Dynamically to protect Premium Users -->
     <script id="popunder-ad-manager"></script>
+    <script id="socialbar-ad-manager"></script>
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -129,7 +130,7 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION */
+        /* 🌟 FLOATING BOTTOM NAVIGATION (Updated for 4 buttons) */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
             width: 95%; max-width: 450px; 
@@ -1033,6 +1034,12 @@
             if(popScript) {
                 popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             }
+
+            // NEW: Inject Social Bar Ad
+            let socialScript = document.getElementById('socialbar-ad-manager');
+            if(socialScript) {
+                socialScript.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
+            }
         }
 
         function checkPremium(uid) {
@@ -1066,6 +1073,9 @@
                     // Stop Ads
                     let popScript = document.getElementById('popunder-ad-manager');
                     if(popScript) popScript.src = "";
+
+                    let socialScript = document.getElementById('socialbar-ad-manager');
+                    if(socialScript) socialScript.src = "";
                     
                     updateBannerVisibility();
                     vipTimerInterval = setInterval(() => {
@@ -2239,12 +2249,11 @@
         }
 
         // 🌟 100% FIXED: NO MORE VIDEO LOOPING/FLICKERING 🌟
-        let processedVideoIdForLang = null; // Lock variable to stop infinite loops
+        let processedVideoIdForLang = null; 
 
         function aiHandleLanguage() {
             if(!currentPlayingEpisodeData || !currentSafeVideoId) return;
             
-            // This line stops the loop. If we already checked this video, DO NOT check again!
             if(processedVideoIdForLang === currentSafeVideoId) return; 
 
             let hasOriginal = !!currentPlayingEpisodeData.url;
@@ -2252,24 +2261,23 @@
             let hasEnglish = !!currentPlayingEpisodeData.url_eng;
 
             if (hasHindi && !hasOriginal && !hasEnglish) {
-                processedVideoIdForLang = currentSafeVideoId; // Lock it
+                processedVideoIdForLang = currentSafeVideoId; 
                 changeLanguage('hindi');
                 let sel = document.getElementById('language-select');
                 if(sel) sel.value = 'hindi';
                 aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>Hindi</b>.`, true);
             } else if (hasEnglish && !hasOriginal && !hasHindi) {
-                processedVideoIdForLang = currentSafeVideoId; // Lock it
+                processedVideoIdForLang = currentSafeVideoId; 
                 changeLanguage('english');
                 let sel = document.getElementById('language-select');
                 if(sel) sel.value = 'english';
                 aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>English</b>.`, true);
             } else {
-                processedVideoIdForLang = currentSafeVideoId; // Lock it even if no change needed
+                processedVideoIdForLang = currentSafeVideoId; 
             }
         }
 
         document.getElementById('main-video').addEventListener('loadstart', () => {
-            // Check language ONLY once per episode load
             setTimeout(aiHandleLanguage, 800);
         });
 
@@ -2280,7 +2288,6 @@
                 if(db) db.ref('admin_reports').push({ error: "Source Error: " + v.src, user: currentUser?currentUser.email:"Guest", time: Date.now() });
             });
 
-            // Upgrade: Time-based Greeting
             let hour = new Date().getHours();
             let greeting = (hour < 12) ? "Good Morning" : (hour < 18 ? "Good Afternoon" : "Good Evening");
 
