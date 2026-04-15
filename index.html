@@ -397,29 +397,90 @@
         #ai-top-notif.show { top: 20px; }
 
         /* =========================================
-           🤖 NEW CAT-BOT AI DESIGN (IMAGE BASED) 
+           🤖 PURE CSS 3D CAT-BOT AI DESIGN
            ========================================= */
         .ai-cat-bot-container {
-            position: fixed; bottom: 90px; left: 20px; width: 70px; height: 70px;
+            position: fixed; bottom: 90px; left: 20px; width: 70px; height: 90px;
             z-index: 99999; cursor: pointer; user-select: none; touch-action: none;
             animation: floatAI 3s ease-in-out infinite, randomMove 15s ease-in-out infinite; 
-            filter: drop-shadow(0 10px 15px rgba(0,255,135,0.4));
+            filter: drop-shadow(0 10px 15px rgba(0,245,212,0.3));
         }
-        .cat-bot-img {
-            width: 100%; height: 100%; object-fit: contain;
-            animation: breathe 2s infinite alternate; transition: transform 0.3s;
+
+        .cat-head {
+            width: 60px; height: 50px; background: #fff; border-radius: 40% 40% 35% 35%;
+            border: 2px solid #222; position: relative; z-index: 2; 
+            display: flex; justify-content: center; align-items: center; margin: 0 auto;
+            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1);
         }
-        .cat-bot-img.talking { animation: botTalking 0.3s infinite alternate; }
+
+        .cat-ear {
+            position: absolute; width: 0; height: 0;
+            border-left: 12px solid transparent; border-right: 12px solid transparent;
+            border-bottom: 22px solid #fff; top: -14px; z-index: -1;
+            filter: drop-shadow(0 -2px 0px #222);
+        }
+        .cat-ear::after {
+            content: ''; position: absolute; top: 6px; left: -6px;
+            border-left: 6px solid transparent; border-right: 6px solid transparent;
+            border-bottom: 12px solid #00f5d4;
+        }
+        .cat-ear.left { left: 4px; transform: rotate(-20deg); }
+        .cat-ear.right { right: 4px; transform: rotate(20deg); }
+
+        .cat-visor {
+            width: 48px; height: 28px; background: #1a1a24; border-radius: 12px;
+            display: flex; justify-content: center; align-items: center; position: relative;
+            overflow: hidden; border: 2px solid #333;
+        }
+
+        .cat-face-inner {
+            display: flex; flex-direction: column; align-items: center;
+            animation: lookAround 8s infinite;
+        }
+
+        .cat-eyes { display: flex; gap: 8px; }
+        .cat-eye {
+            width: 8px; height: 12px; background: #00f5d4; border-radius: 50%;
+            box-shadow: 0 0 8px #00f5d4; animation: blink 4s infinite; transition: 0.3s;
+        }
         
-        @keyframes floatAI { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes breathe { from { transform: scale(0.95); } to { transform: scale(1.05); } }
-        @keyframes botTalking { from { transform: scale(0.95) translateY(2px); } to { transform: scale(1.05) translateY(-2px); } }
-        @keyframes randomMove {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(5px, -5px) rotate(5deg); }
-            50% { transform: translate(-5px, 5px) rotate(-5deg); }
-            75% { transform: translate(5px, 5px) rotate(3deg); }
+        .cat-mouth {
+            width: 10px; height: 4px; border-bottom: 2px solid #00f5d4; border-radius: 50%;
+            margin-top: 2px; box-shadow: 0 2px 4px rgba(0,245,212,0.5); transition: 0.3s;
         }
+
+        .cat-body {
+            width: 30px; height: 25px; background: #fff; border-radius: 10px 10px 40% 40%;
+            margin: -5px auto 0 auto; border: 2px solid #222; position: relative; z-index: 1;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
+        }
+        .cat-core {
+            width: 12px; height: 12px; background: #00f5d4; border-radius: 50%;
+            box-shadow: 0 0 8px #00f5d4; animation: pulseCore 2s infinite alternate;
+        }
+
+        /* 🌟 CSS ANIMATIONS FOR CAT-BOT 🌟 */
+        @keyframes floatAI { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
+        @keyframes lookAround { 
+            0%, 100% { transform: translateX(0); } 
+            25% { transform: translateX(-4px); } 
+            75% { transform: translateX(4px); } 
+        }
+        @keyframes pulseCore { from { transform: scale(0.9); box-shadow: 0 0 5px #00f5d4; } to { transform: scale(1.1); box-shadow: 0 0 15px #00f5d4; } }
+        @keyframes randomMove {
+            0%, 100% { margin-left: 0; margin-bottom: 0; transform: rotate(0deg); }
+            25% { margin-left: 5px; margin-bottom: -5px; transform: rotate(5deg); }
+            50% { margin-left: -5px; margin-bottom: 5px; transform: rotate(-5deg); }
+            75% { margin-left: 5px; margin-bottom: 5px; transform: rotate(3deg); }
+        }
+
+        /* EMOTES */
+        .cat-bot-talking .cat-mouth { border-radius: 5px; height: 8px; border: none; background: #00f5d4; animation: talkAnim 0.3s infinite alternate; }
+        @keyframes talkAnim { from { transform: scaleY(0.5); } to { transform: scaleY(1.2); } }
+        .cat-bot-happy .cat-eye { border-radius: 0; height: 4px; border-bottom: 4px solid #00f5d4; background: transparent; transform: rotate(-15deg); margin-top: 4px;}
+        .cat-bot-happy .cat-eyes > div:nth-child(2) { transform: rotate(15deg); }
 
     </style>
 </head>
@@ -600,10 +661,24 @@
         <div id="reward-ad-bottom" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
     </div>
 
-    <!-- 🤖 ANIMAX MODERN AI UI (CAT-BOT IMAGE BASED) -->
+    <!-- 🤖 ANIMAX MODERN AI UI (PURE CSS 3D CAT-BOT) -->
     <div class="ai-cat-bot-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
-        <!-- 🔴 IMPORTANT: Save the image you provided in your folder as 'ai-bot.png' 🔴 -->
-        <img src="ai-bot.png" alt="AI Bot" class="cat-bot-img" id="cat-bot-img">
+        <div class="cat-head">
+            <div class="cat-ear left"></div>
+            <div class="cat-ear right"></div>
+            <div class="cat-visor">
+                <div class="cat-face-inner" id="cat-face-inner">
+                    <div class="cat-eyes">
+                        <div class="cat-eye"></div>
+                        <div class="cat-eye"></div>
+                    </div>
+                    <div class="cat-mouth"></div>
+                </div>
+            </div>
+        </div>
+        <div class="cat-body">
+            <div class="cat-core"></div>
+        </div>
         <div class="ai-notif-pulse" id="ai-notif-badge" style="display:none; right:0; top:0;"></div>
     </div>
 
@@ -1452,7 +1527,7 @@
         // ==========================================
         async function handleDownload() {
             if(!isPremium) { 
-                animateBotTalking();
+                setCatEmote('alert');
                 speakLocalized("Sorry friend! Downloads are only for VIP members.", navigator.language.split('-')[0]);
                 showDlToast("👑 VIP Only Feature!", false);
                 alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); 
@@ -2490,10 +2565,10 @@
         setInterval(aiShowTopNotification, 600000);
 
         // ==========================================
-        // 🤖 CAT-BOT AI DRAGGABLE & VOICE LOGIC (UPDATED)
+        // 🤖 CAT-BOT AI DRAGGABLE & VOICE LOGIC (PURE CSS)
         // ==========================================
         const catBot = document.getElementById('ai-cat-bot');
-        const catBotImg = document.getElementById('cat-bot-img');
+        const catFaceInner = document.getElementById('cat-face-inner');
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
         let catMoved = false;
@@ -2534,9 +2609,10 @@
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
-        function animateBotTalking() {
-            catBotImg.classList.add('talking');
-            setTimeout(() => { catBotImg.classList.remove('talking'); }, 3000);
+        function setCatEmote(state) {
+            catFaceInner.className = 'cat-face-inner';
+            if (state === 'happy') catFaceInner.classList.add('cat-bot-happy');
+            if (state === 'talking') catFaceInner.classList.add('cat-bot-talking');
         }
 
         async function speakLocalized(text, langCode) {
@@ -2544,26 +2620,28 @@
             window.speechSynthesis.cancel();
             let utter = new SpeechSynthesisUtterance(text);
             
-            // Try to find the correct voice for the language
             let voices = window.speechSynthesis.getVoices();
             let targetVoice = voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
             if(targetVoice) utter.voice = targetVoice;
             
             utter.lang = langCode;
             utter.rate = 1;
-            utter.pitch = 1.3; // cute bot pitch
+            utter.pitch = 1.3; 
+            
+            utter.onstart = () => setCatEmote('talking');
+            utter.onend = () => setCatEmote('neutral');
+            
             window.speechSynthesis.speak(utter);
         }
 
         // Proactive Friendly Chat Loop (Randomly speaks every 3 minutes if logged in)
         setInterval(() => {
-            if (currentUser && Math.random() > 0.7) { // 30% chance to speak every 3 mins
+            if (currentUser && Math.random() > 0.6) { // 40% chance to speak every 3 mins
                 let uiLang = navigator.language.split('-')[0];
-                let msgEn = "Hey my best friend, I hope you are enjoying your time here!";
+                let msgEn = "Hey friend, hope you are enjoying the anime! Let me know if you need anything.";
                 let urlReply = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${uiLang}&dt=t&q=${encodeURIComponent(msgEn)}`;
                 fetch(urlReply).then(r=>r.json()).then(d=>{
                     let finalMsg = d[0].map(x=>x[0]).join('');
-                    animateBotTalking();
                     speakLocalized(finalMsg, uiLang);
                     aiAddLog(`🤖 <b>${aiName}:</b> ${finalMsg}`, true);
                 }).catch(e=>{});
@@ -2575,7 +2653,6 @@
             toggleAIChat(); 
             
             if(recognition) {
-                animateBotTalking();
                 let uiLang = navigator.language.split('-')[0];
                 
                 // Friendly prompt to speak in user's UI language
@@ -2584,9 +2661,10 @@
                     'hi': "हाँ दोस्त, बोलो मैं सुन रही हूँ!",
                     'ja': "はい、友達。聞いています！",
                     'es': "Sí amigo, dime, ¡estoy escuchando!",
-                    'en': "Yes friend, tell me, I am listening!"
+                    'en': "Yes my friend, tell me, I am listening!"
                 };
                 let sayMsg = prompts[uiLang] || prompts['en'];
+                setCatEmote('happy');
                 speakLocalized(sayMsg, uiLang);
                 aiAddLog(`🤖 <b>${aiName}:</b> ${sayMsg}`, true);
                 
@@ -2599,14 +2677,13 @@
                         aiAddLog(`🗣️ <b>You:</b> ${transcript}`, false);
                         processUniversalCommand(transcript, aiName);
                     };
-                    recognition.onerror = () => {  };
+                    recognition.onerror = () => { setCatEmote('neutral'); };
                 }, 2000); // Start listening after speaking
             }
         }
 
         async function processUniversalCommand(rawTranscript, aiName) {
             try {
-                animateBotTalking();
                 // 1. Detect language and translate to English for intent processing
                 let urlEn = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(rawTranscript)}`;
                 let resEn = await fetch(urlEn);
@@ -2620,23 +2697,29 @@
                 let query = "";
 
                 // 2. Intent matching based on English translation
-                if(englishText.includes('find') || englishText.includes('search') || englishText.includes('look for') || englishText.includes('play') || englishText.includes('show')) {
+                if(englishText.includes('find') || englishText.includes('search') || englishText.includes('look for') || englishText.includes('play') || englishText.includes('show') || englishText.includes('watch')) {
                     intent = "search";
-                    query = englishText.replace(new RegExp(`.*(find|search|look for|play|show)\\s+`, 'i'), '').replace(new RegExp(aiName.toLowerCase(), 'g'), '').trim();
+                    query = englishText.replace(new RegExp(`.*(find|search|look for|play|show|watch)\\s+`, 'i'), '').replace(new RegExp(aiName.toLowerCase(), 'g'), '').trim();
                     if(!query) query = rawTranscript; 
                     replyTextEn = `Okay my friend, I am searching for ${query} right now!`;
                 } 
                 else if (englishText.includes('hello') || englishText.includes('hi') || englishText.includes('hey')) {
-                    replyTextEn = `Hello best friend! How are you doing today?`;
+                    replyTextEn = `Hello my best friend! How are you doing today?`;
                 }
                 else if (englishText.includes('how are you')) {
-                    replyTextEn = `I am doing fantastic, thanks for asking! How about you?`;
+                    replyTextEn = `I am doing fantastic, thanks for asking! I'm here to help you watch anime.`;
                 }
                 else if (englishText.includes('fine') || englishText.includes('good') || englishText.includes('great')) {
-                    replyTextEn = `That is awesome to hear! Let me know if you want to watch any anime.`;
+                    replyTextEn = `That is awesome to hear! Let me know if you want to search for any cartoon or movie.`;
+                }
+                else if (englishText.includes('who are you') || englishText.includes('your name')) {
+                    replyTextEn = `I am your friendly AI companion for Animax TV. You can ask me to search or play anything!`;
+                }
+                else if (englishText.includes('love you') || englishText.includes('friend')) {
+                    replyTextEn = `Aww, I love you too my friend! You are the best.`;
                 }
                 else {
-                    replyTextEn = `I am always here for you! Do you want me to find a specific anime or movie?`;
+                    replyTextEn = `I am always here for you! Do you want me to find a specific anime or movie? Just say search and the name!`;
                 }
 
                 // 3. Translate reply back to user's native language
@@ -2645,12 +2728,13 @@
                 let dataReply = await resReply.json();
                 let finalReply = dataReply[0].map(x => x[0]).join(''); 
                 
+                setCatEmote('happy');
                 speakLocalized(finalReply, detectedLang);
                 aiAddLog(`🤖 <b>${aiName}:</b> ${finalReply}`, true);
                 
                 if (intent === "search" && query) {
                     document.getElementById('header-search-wrapper').click();
-                    setTimeout(() => { executeSearch(query); }, 1500);
+                    setTimeout(() => { executeSearch(query); }, 2000);
                 }
             } catch(e) {
                 let fallbackLang = navigator.language.split('-')[0];
