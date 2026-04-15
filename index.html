@@ -393,9 +393,38 @@
         .ai-msg-container::-webkit-scrollbar { display: none; }
         .ai-msg-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 16px; margin-bottom: 12px; animation: smoothFadeIn 0.4s; }
         .ai-msg-card.new { border-color: var(--accent-glow); background: rgba(255, 183, 3, 0.05); }
+
+        /* 🌟 NEW AI TOP NOTIFICATION BAR 🌟 */
+        #ai-top-notif {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px); border: 1px solid var(--accent-glow);
+            border-radius: 20px; z-index: 100000; padding: 15px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(255, 183, 3, 0.3); transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Outfit', sans-serif;
+        }
+        #ai-top-notif.show { top: 20px; }
     </style>
 </head>
 <body>
+
+    <!-- 🌟 NEW AI TOP NOTIFICATION BAR 🌟 -->
+    <div id="ai-top-notif">
+        <div style="display:flex; align-items:center; gap:15px; flex:1;">
+            <div style="width:40px; height:40px; background:var(--accent-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:20px; color:#000;">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div>
+                <div style="font-size:11px; color:var(--accent-glow); font-weight:800; font-family:'Orbitron'; letter-spacing:1px;">NEW UPLOAD</div>
+                <div id="ai-top-notif-title" style="font-size:14px; color:#fff; font-weight:700; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">Loading...</div>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button id="ai-top-notif-btn" style="background:var(--accent-gradient); border:none; padding:8px 15px; border-radius:12px; font-weight:800; color:#000; cursor:pointer; font-size:12px;">PLAY</button>
+            <i class="fas fa-times" style="color:var(--text-muted); cursor:pointer; font-size:18px;" onclick="closeTopNotif()"></i>
+        </div>
+    </div>
 
     <!-- 🌟 NEW: DOWNLOAD TOAST 🌟 -->
     <div id="dl-toast">
@@ -600,7 +629,7 @@
             <div class="reward-prizes"><div><div class="reward-icon">🥈</div><span>Top 2</span><span style="color:var(--text-muted);">5 Days VIP</span></div><div><div class="reward-icon" style="font-size:38px;">🥇</div><span>Top 1</span><span style="color:var(--accent-glow);font-weight:900;">7 Days VIP</span></div><div><div class="reward-icon">🥉</div><span>Top 3</span><span style="color:var(--text-muted);">3 Days VIP</span></div></div>
             <div style="margin-top: 25px; color: var(--accent-glow); font-size: 13px; font-weight:800; background:rgba(255,183,3,0.1); padding:8px; border-radius:10px; display:inline-block;" id="lb-reset-timer">Loading Time...</div>
         </div>
-        <div style="padding: 0 15px; margin-bottom: 20px; color: var(--text-muted); font-size: 13px; text-align: center; font-weight:500;">Showing top 100 users (Min 30 pts)</div>
+        <div style="padding: 0 15px; margin-bottom: 20px; color: var(--text-muted); font-size: 13px; text-align: center; font-weight:500;">Showing top 100 users</div>
         <div id="leaderboard-list"></div>
     </div>
 
@@ -754,6 +783,34 @@
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         // ==========================================
+        // 🌟 TAB TITLE TIMER SYSTEM 🌟
+        // ==========================================
+        let originalTitle = "ANIMAX TV";
+        let tabTimerInterval = null;
+
+        function startTabTimer(seconds) {
+            clearInterval(tabTimerInterval);
+            let timeLeft = seconds;
+            document.title = `⏳ ${timeLeft}s - Ad Running`;
+            tabTimerInterval = setInterval(() => {
+                timeLeft--;
+                if(timeLeft > 0) {
+                    document.title = `⏳ ${timeLeft}s - Ad Running`;
+                } else {
+                    clearInterval(tabTimerInterval);
+                    document.title = "✅ Reward Ready!";
+                    playSuccessSound();
+                    setTimeout(() => { document.title = originalTitle; }, 4000);
+                }
+            }, 1000);
+        }
+
+        function stopTabTimer() {
+            clearInterval(tabTimerInterval);
+            document.title = originalTitle;
+        }
+
+        // ==========================================
         // 🌟 INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
         // ==========================================
         let dbOffline;
@@ -828,7 +885,6 @@
                 bannerWrap.style.display = 'none'; 
             } else {
                 bannerWrap.style.display = 'block'; 
-                // Re-inject ad if needed
                 if(adBannerContainer && adBannerContainer.innerHTML === "") {
                     adBannerContainer.innerHTML = `<script>atOptions = {'key' : '9f634c6894bc13ff8f0f19de1fcac9f3','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr`+`ipt>`;
                 }
@@ -1035,7 +1091,6 @@
                 popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             }
 
-            // NEW: Inject Social Bar Ad
             let socialScript = document.getElementById('socialbar-ad-manager');
             if(socialScript) {
                 socialScript.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
@@ -1155,6 +1210,8 @@
             rewardActive = true;
             rewardStartTime = Date.now();
             
+            startTabTimer(60); // Tab Timer Added
+
             document.getElementById('main-reward-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
             document.getElementById('reward-desc-text').style.display = 'none';
@@ -1189,6 +1246,7 @@
                 if (elapsed < 60000) {
                     rewardActive = false;
                     clearInterval(rewardInterval);
+                    stopTabTimer();
                     alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds to get the reward.");
                     resetRewardUI();
                 } else {
@@ -1215,6 +1273,7 @@
             document.getElementById('reward-waiting-view').style.display = 'none';
             clearInterval(rewardInterval);
             clearInterval(aggressiveTrapInterval);
+            stopTabTimer();
             rewardActive = false;
         }
 
@@ -1472,8 +1531,9 @@
                 document.getElementById('lb-reset-timer').innerText = `Season resets in: ${days}d ${hours}h ${min}m`;
             }, 1000);
 
-            db.ref(`leaderboard/c_${cycle}`).orderByValue().startAt(30).limitToLast(100).once('value', snap => {
-                if(!snap.exists()) { listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">No users above 30 points this season yet.</div>'; return; }
+            // Leaderboard Fix: startAt(0)
+            db.ref(`leaderboard/c_${cycle}`).orderByValue().startAt(0).limitToLast(100).once('value', snap => {
+                if(!snap.exists()) { listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">No users found this season.</div>'; return; }
                 let lbData = []; snap.forEach(child => { lbData.push({ uid: child.key, points: child.val() }); }); lbData.reverse(); 
                 db.ref('lb_users').once('value', uSnap => {
                     let usersMeta = uSnap.val() || {}; listContainer.innerHTML = '';
@@ -1542,6 +1602,9 @@
             let popup = window.open(adLink, '_blank'); if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
             activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
             btnEl.innerText = "Verifying..."; btnEl.classList.add('running');
+            
+            startTabTimer(30); // Tab Timer Added
+            
             btnEl.onclick = () => { alert("Please stay on the ad page for full 30 seconds!"); };
             activeInterval = setInterval(() => {
                 if(!activeTask) { clearInterval(activeInterval); return; }
@@ -1554,6 +1617,7 @@
             if (!activeTask) return; let elapsed = Date.now() - activeTask.startTime; if (elapsed < 2000) return; 
             if (elapsed < 30000 && !activeTask.completed) {
                 clearInterval(activeInterval);
+                stopTabTimer(); // Stop Tab Timer
                 alert(`❌ Task Failed!\n\nYou returned after ${Math.floor(elapsed/1000)} seconds.\nYou must view the ad for full 30 seconds!`);
                 activeTask.btnEl.innerText = "Get Now"; activeTask.btnEl.classList.remove('running');
                 let tId = activeTask.id; let el = activeTask.btnEl;
@@ -1584,6 +1648,8 @@
             btn.innerText = "VERIFYING... (WAIT 5s)";
             btn.style.background = "rgba(255,255,255,0.1)";
             btn.style.color = "#fff";
+            
+            startTabTimer(5); // Tab Timer Added
         }
 
         function checkEpUnlockStatus() {
@@ -1597,6 +1663,7 @@
                     pendingEpPlayback = null;
                 } else if (elapsed > 1000) { 
                     epUnlockActive = false;
+                    stopTabTimer();
                     alert("❌ Verification Failed!\n\nYou returned too early. Please wait at least 5 seconds on the ad page to unlock the episode.");
                     btn.innerText = "VERIFY TO UNLOCK";
                     btn.style.background = "var(--accent-gradient)";
@@ -1986,6 +2053,8 @@
             if(!isPremium) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             midRollTaskActive = true; midRollTaskStart = Date.now();
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
+            
+            startTabTimer(10); // Tab Timer Added
         }
 
         function checkMidRollStatus() {
@@ -1999,6 +2068,7 @@
                     document.getElementById('main-video').play().catch(e=>{});
                 } else if (elapsed > 2000) { 
                     midRollTaskActive = false; 
+                    stopTabTimer();
                     alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
                 }
@@ -2215,8 +2285,12 @@
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
 
         // ============================================================
-        // 🤖 ANIMAX AI MANAGER (WITH INFINITE LOOP FIX)
+        // 🤖 ANIMAX AI MANAGER (WITH FIXES & NOTIFICATIONS)
         // ============================================================
+
+        function closeTopNotif() {
+            document.getElementById('ai-top-notif').classList.remove('show');
+        }
 
         function toggleAIChat() {
             let box = document.getElementById('ai-chat-modern');
@@ -2248,7 +2322,6 @@
             }
         }
 
-        // 🌟 100% FIXED: NO MORE VIDEO LOOPING/FLICKERING 🌟
         let processedVideoIdForLang = null; 
 
         function aiHandleLanguage() {
@@ -2303,22 +2376,36 @@
             }
         }
 
-        function aiCheckSpotlight() {
+        function aiShowTopNotification() {
             db.ref('anime').limitToLast(1).once('value', s => {
                 s.forEach(c => {
                     let d = c.val();
-                    aiAddLog(`✨ <b>Spotlight:</b> Just uploaded "<b>${d.title}</b>". Don't miss it!<br><button onclick="openFolder('${d.folder.replace(/'/g, "\\'")}')" style="width:100%; margin-top:10px; padding:6px; background:rgba(255,183,3,0.1); border:1px solid var(--accent-glow); color:var(--accent-glow); border-radius:8px; cursor:pointer; font-weight:800; font-size:10px;">WATCH NOW</button>`, true);
+                    let title = d.title || d.folder;
+                    let folder = d.folder;
+                    
+                    let lastNotif = localStorage.getItem('last_top_notif');
+                    if(lastNotif !== title) {
+                        setTimeout(() => {
+                            document.getElementById('ai-top-notif-title').innerText = title;
+                            let btn = document.getElementById('ai-top-notif-btn');
+                            btn.onclick = () => { closeTopNotif(); openFolder(folder); };
+                            document.getElementById('ai-top-notif').classList.add('show');
+                            
+                            localStorage.setItem('last_top_notif', title);
+                            setTimeout(closeTopNotif, 10000); // Auto hide
+                        }, 3000); 
+                    }
                 });
             });
         }
 
         setTimeout(() => {
             aiMonitor();
-            aiCheckSpotlight();
+            aiShowTopNotification();
             updateBannerVisibility();
         }, 5000);
-
-        setInterval(aiCheckSpotlight, 600000);
+        
+        setInterval(aiShowTopNotification, 600000);
     </script>
 </body>
 </html>
