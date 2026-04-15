@@ -16,9 +16,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
     <link rel="shortcut icon" href="logo.png">
 
-    <!-- Popunder & Social Bar Script - Loaded Dynamically to protect Premium Users -->
+    <!-- Popunder Script - Loaded Dynamically to protect Premium Users -->
     <script id="popunder-ad-manager"></script>
-    <script id="socialbar-ad-manager"></script>
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -130,7 +129,7 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION (Updated for 4 buttons) */
+        /* 🌟 FLOATING BOTTOM NAVIGATION */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
             width: 95%; max-width: 450px; 
@@ -509,7 +508,14 @@
                     <div id="auth-action-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; z-index:10; border: 1px solid var(--glass-border);">
                         <i id="auth-action-icon" class="fas fa-sign-out-alt" style="color:var(--text-main); font-size: 16px;"></i>
                     </div>
-                    <div class="prof-avatar-section"><div class="avatar-circle-glow"><img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real"></div></div>
+                    <!-- 🌟 AVATAR UPLOAD CLICKABLE AREA 🌟 -->
+                    <div class="prof-avatar-section">
+                        <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()" style="cursor:pointer;" title="Change Profile Picture">
+                            <img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real">
+                            <div style="position:absolute; bottom:0; right:0; background:var(--accent-gradient); width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:3px solid var(--primary-bg); color:#000; font-size:13px; box-shadow:0 2px 10px rgba(0,0,0,0.5);"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <input type="file" id="avatar-upload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                    </div>
                 </div>
                 
                 <div class="b-content-pad">
@@ -811,6 +817,54 @@
         }
 
         // ==========================================
+        // 🌟 AVATAR UPLOAD SYSTEM 🌟
+        // ==========================================
+        function handleAvatarUpload(event) {
+            if(!currentUser) return alert("Please login to change your profile picture!");
+            let file = event.target.files[0];
+            if(!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let MAX_WIDTH = 250;
+                    let MAX_HEIGHT = 250;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+                    canvas.width = width; canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    let dataUrl = canvas.toDataURL('image/jpeg', 0.6); // Compress to save DB space
+                    
+                    document.getElementById('profile-img').style.opacity = '0.5';
+                    
+                    db.ref(`users/${currentUser.uid}`).update({ avatar: dataUrl }).then(() => {
+                        db.ref(`lb_users/${currentUser.uid}`).update({ avatar: dataUrl });
+                        document.getElementById('profile-img').src = dataUrl;
+                        document.getElementById('task-av').src = dataUrl;
+                        document.getElementById('profile-img').style.opacity = '1';
+                        playSuccessSound();
+                        showDlToast("✅ Profile picture updated!", false);
+                    }).catch(err => {
+                        alert("❌ Upload Error: " + err.message);
+                        document.getElementById('profile-img').style.opacity = '1';
+                    });
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // ==========================================
         // 🌟 INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
         // ==========================================
         let dbOffline;
@@ -1067,6 +1121,8 @@
 
         let adsInjected = false;
         let globalPopunderTimer = null;
+        let socialBarInterval = null;
+
         function startGlobalPopunderTimer() {
             clearInterval(globalPopunderTimer);
             if(isPremium) return;
@@ -1080,7 +1136,17 @@
             startGlobalPopunderTimer(); 
         }
 
-        // 🌟 Popunder Script is dynamically added ONLY for Free Users
+        // 🌟 Social Bar Reload Logic
+        function loadSocialBarAd() {
+            let oldScript = document.getElementById('dynamic-socialbar');
+            if(oldScript) oldScript.remove();
+            let script = document.createElement('script');
+            script.id = 'dynamic-socialbar';
+            script.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
+            document.body.appendChild(script);
+        }
+
+        // 🌟 Popunder & Social Script dynamically added ONLY for Free Users
         function injectFreeAds() {
             if(adsInjected || isPremium) return; 
             adsInjected = true;
@@ -1091,10 +1157,11 @@
                 popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
             }
 
-            let socialScript = document.getElementById('socialbar-ad-manager');
-            if(socialScript) {
-                socialScript.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
-            }
+            loadSocialBarAd();
+            clearInterval(socialBarInterval);
+            socialBarInterval = setInterval(() => {
+                if(!isPremium) loadSocialBarAd();
+            }, 180000); // 3 Minutes Interval
         }
 
         function checkPremium(uid) {
@@ -1125,12 +1192,13 @@
                     clearInterval(globalPopunderTimer);
                     document.getElementById('global-popunder-trap').style.display = 'none';
                     
-                    // Stop Ads
+                    // Stop Ads for Premium
                     let popScript = document.getElementById('popunder-ad-manager');
                     if(popScript) popScript.src = "";
 
-                    let socialScript = document.getElementById('socialbar-ad-manager');
-                    if(socialScript) socialScript.src = "";
+                    clearInterval(socialBarInterval);
+                    let dynamicSocial = document.getElementById('dynamic-socialbar');
+                    if(dynamicSocial) dynamicSocial.remove();
                     
                     updateBannerVisibility();
                     vipTimerInterval = setInterval(() => {
@@ -1210,7 +1278,7 @@
             rewardActive = true;
             rewardStartTime = Date.now();
             
-            startTabTimer(60); // Tab Timer Added
+            startTabTimer(60); 
 
             document.getElementById('main-reward-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
@@ -1603,7 +1671,7 @@
             activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
             btnEl.innerText = "Verifying..."; btnEl.classList.add('running');
             
-            startTabTimer(30); // Tab Timer Added
+            startTabTimer(30); 
             
             btnEl.onclick = () => { alert("Please stay on the ad page for full 30 seconds!"); };
             activeInterval = setInterval(() => {
@@ -1617,7 +1685,7 @@
             if (!activeTask) return; let elapsed = Date.now() - activeTask.startTime; if (elapsed < 2000) return; 
             if (elapsed < 30000 && !activeTask.completed) {
                 clearInterval(activeInterval);
-                stopTabTimer(); // Stop Tab Timer
+                stopTabTimer(); 
                 alert(`❌ Task Failed!\n\nYou returned after ${Math.floor(elapsed/1000)} seconds.\nYou must view the ad for full 30 seconds!`);
                 activeTask.btnEl.innerText = "Get Now"; activeTask.btnEl.classList.remove('running');
                 let tId = activeTask.id; let el = activeTask.btnEl;
@@ -1649,7 +1717,7 @@
             btn.style.background = "rgba(255,255,255,0.1)";
             btn.style.color = "#fff";
             
-            startTabTimer(5); // Tab Timer Added
+            startTabTimer(5); 
         }
 
         function checkEpUnlockStatus() {
@@ -2054,7 +2122,7 @@
             midRollTaskActive = true; midRollTaskStart = Date.now();
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
             
-            startTabTimer(10); // Tab Timer Added
+            startTabTimer(10); 
         }
 
         function checkMidRollStatus() {
