@@ -18,6 +18,7 @@
 
     <!-- Popunder Script - Loaded Dynamically to protect Premium Users -->
     <script id="popunder-ad-manager"></script>
+    <script id="socialbar-ad-manager"></script>
 
     <!-- OneSignal -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -129,7 +130,7 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION */
+        /* 🌟 FLOATING BOTTOM NAVIGATION (Updated for 4 buttons) */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
             width: 95%; max-width: 450px; 
@@ -165,9 +166,10 @@
         .prof-cover-area { height: 200px; width: 100%; background: url('https://github.com/animaxstudio09/anime-world/releases/download/1/c7a40af73711b79dc78bcfbd86de1e4e.jpg') center/cover; position: relative; border-radius: 0 0 30px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
         .prof-cover-area::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--primary-bg) 0%, transparent 100%); border-radius: 0 0 30px 30px;}
         .prof-avatar-section { position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%); z-index: 2; }
-        .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: var(--primary-bg); position: relative; display: flex; justify-content: center; align-items: center;}
+        .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: var(--primary-bg); position: relative; display: flex; justify-content: center; align-items: center; cursor: pointer;}
         .avatar-circle-glow::before { content:''; position:absolute; inset: 0; border-radius: 50%; background: var(--accent-gradient); z-index: -1; filter: blur(8px); opacity: 0.8;}
         .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-bg); }
+        .cam-btn-overlay { position: absolute; bottom: 0; right: 0; background: var(--accent-gradient); width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 3px solid var(--primary-bg); color: #000; font-size: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         
         .b-content-pad { padding: 60px 15px 15px 15px; }
         .b-header { text-align: center; margin-bottom: 25px;}
@@ -279,7 +281,7 @@
         .action-buttons-row { display: flex; gap: 12px; margin: 20px 0; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
         .act-btn { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 10px 20px; font-size: 13px; font-weight: 700; border-radius: 30px; display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; transition: 0.3s;}
         .act-btn:active { transform: scale(0.95); }
-        .act-btn.liked { color: #000; border: none; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3); }
+        .act-btn.liked { color: #000; border: none; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255,183,3,0.3); }
         
         .resources-header { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-family: 'Orbitron';}
         .resources-header span { font-size: 11px; font-weight: 500; color: var(--text-muted); background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-family: 'Outfit';}
@@ -368,42 +370,63 @@
         .dl-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 5px; overflow: hidden; display: none; }
         .dl-progress-fill { height: 100%; background: var(--accent-gradient); width: 0%; transition: width 0.2s;}
 
-        /* AI MODERN STYLES */
-        .ai-modern-bubble { 
-            position: fixed; bottom: 90px; left: 20px; width: 60px; height: 60px; 
-            background: rgba(25, 25, 35, 0.6); backdrop-filter: blur(15px); 
-            border: 2px solid rgba(255, 183, 3, 0.5); border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; z-index: 99999; 
-            box-shadow: 0 8px 32px rgba(255, 183, 3, 0.2); cursor: pointer; transition: 0.4s;
+        /* =========================================
+           🤖 AI CAT-BOT UI & ANIMATIONS 🤖
+           ========================================= */
+        #ai-draggable-container {
+            position: fixed; bottom: 90px; left: 20px; z-index: 100000;
+            touch-action: none; cursor: grab;
         }
-        .ai-modern-bubble i { font-size: 26px; color: var(--accent-glow); text-shadow: 0 0 10px var(--accent-glow); }
-        .ai-modern-bubble:hover { transform: scale(1.1) rotate(10deg); box-shadow: 0 0 25px rgba(255, 183, 3, 0.4); }
-        .ai-notif-pulse { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: #e63946; border: 2px solid #fff; border-radius: 50%; animation: aiPulse 1.5s infinite; display: none;}
-        @keyframes aiPulse { 0% { transform: scale(0.9); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.8; } 100% { transform: scale(0.9); opacity: 1; } }
-        
-        #ai-chat-modern { 
-            display: none; position: fixed; bottom: 160px; left: 20px; width: 310px; max-height: 450px; 
-            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(25px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; z-index: 99999; 
-            flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8); font-family: 'Outfit';
+        .cat-bot {
+            width: 65px; height: 65px; background: #fff; border-radius: 50% 50% 45% 45%;
+            position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 0.2s; animation: floatBot 3s infinite ease-in-out;
         }
-        .ai-modern-header { background: var(--accent-gradient); padding: 15px; color: #000; font-weight: 900; font-family: 'Orbitron'; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; }
-        .ai-msg-container { padding: 15px; overflow-y: auto; color: #fff; font-size: 13px; line-height: 1.6; scrollbar-width: none; }
-        .ai-msg-container::-webkit-scrollbar { display: none; }
-        .ai-msg-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 16px; margin-bottom: 12px; animation: smoothFadeIn 0.4s; }
-        .ai-msg-card.new { border-color: var(--accent-glow); background: rgba(255, 183, 3, 0.05); }
+        .cat-bot.dragging { animation: none; transform: scale(1.1); cursor: grabbing; }
+        @keyframes floatBot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        /* 🌟 NEW AI TOP NOTIFICATION BAR 🌟 */
+        /* Blue Cat Ears */
+        .cat-bot::before, .cat-bot::after {
+            content: ''; position: absolute; top: -5px; width: 18px; height: 22px;
+            background: #2a7fff; border-radius: 50% 50% 0 0; z-index: -1;
+        }
+        .cat-bot::before { left: 8px; transform: rotate(-25deg); }
+        .cat-bot::after { right: 8px; transform: rotate(25deg); }
+
+        /* Black Screen Face */
+        .bot-face {
+            position: absolute; top: 15%; left: 10%; width: 80%; height: 65%;
+            background: #111; border-radius: 40% 40% 35% 35%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        /* Green Eyes & Mouth */
+        .bot-eye-row { display: flex; gap: 12px; margin-bottom: 4px; transition: 0.3s; }
+        .eye { color: #00ff87; font-weight: 900; font-size: 14px; font-family: 'Orbitron'; text-shadow: 0 0 8px #00ff87; }
+        
+        .bot-whiskers { display: flex; gap: 18px; position: absolute; width: 100%; justify-content: space-around; opacity: 0.6; }
+        .whisker { width: 6px; height: 2px; background: #00ff87; border-radius: 2px; }
+        .bot-mouth { font-size: 10px; color: #00ff87; text-shadow: 0 0 5px #00ff87; margin-top: 2px; }
+
+        /* Headset & Mic */
+        .bot-headset { position: absolute; right: -6px; top: 40%; width: 15px; height: 20px; background: #2a7fff; border-radius: 10px; border-left: 2px solid #fff; }
+        .bot-mic { position: absolute; bottom: 8px; right: 4px; width: 25px; height: 3px; background: #2a7fff; transform: rotate(-20deg); border-radius: 10px; }
+        .bot-mic::after { content: ''; position: absolute; left: -4px; top: -2px; width: 8px; height: 8px; background: #111; border-radius: 50%; }
+
+        /* 🌟 NEW AI TOP NOTIFICATION BAR */
         #ai-top-notif {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(20px); border: 1px solid var(--accent-glow);
-            border-radius: 20px; z-index: 100000; padding: 15px 20px;
+            backdrop-filter: blur(25px); border: 1px solid var(--accent-glow);
+            border-radius: 20px; z-index: 100001; padding: 15px 20px;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(255, 183, 3, 0.3); transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8); transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Outfit', sans-serif;
         }
         #ai-top-notif.show { top: 20px; }
+        
+        .cam-btn-overlay { position: absolute; bottom: 0; right: 0; background: var(--accent-gradient); width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 3px solid var(--primary-bg); color: #000; font-size: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -434,8 +457,8 @@
         </div>
     </div>
 
-    <!-- 🌟 GLOBAL POPUNDER TRAP 🌟 -->
-    <div id="global-popunder-trap" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99998; cursor:pointer;" onclick="triggerGlobalPopunder()"></div>
+    <!-- 🌟 GLOBAL POPUNDER TRAP (REMOVED FULL SCREEN INVISIBLE DIV TO PREVENT RANDOM CLICKS) 🌟 -->
+    <!-- Ad trap is now only tied to specific actions (Video Play/Folder Open) -->
 
     <header id="main-header">
         <div class="logo" onclick="switchTab('home')">ANIMAX<span>TV</span></div>
@@ -445,9 +468,8 @@
         </div>
     </header>
 
-    <!-- BANNER AD SECTION (HIDDEN FOR PREMIUM) -->
+    <!-- BANNER AD SECTION -->
     <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:transparent; margin-bottom: 10px;">
-        <!-- Container for dynamic injection -->
         <div id="ad-banner-container"></div>
     </div>
 
@@ -508,11 +530,11 @@
                     <div id="auth-action-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; z-index:10; border: 1px solid var(--glass-border);">
                         <i id="auth-action-icon" class="fas fa-sign-out-alt" style="color:var(--text-main); font-size: 16px;"></i>
                     </div>
-                    <!-- 🌟 AVATAR UPLOAD CLICKABLE AREA 🌟 -->
+                    <!-- 🌟 CLICKABLE AVATAR 🌟 -->
                     <div class="prof-avatar-section">
-                        <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()" style="cursor:pointer;" title="Change Profile Picture">
+                        <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()" title="Change Profile Picture">
                             <img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real">
-                            <div style="position:absolute; bottom:0; right:0; background:var(--accent-gradient); width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:3px solid var(--primary-bg); color:#000; font-size:13px; box-shadow:0 2px 10px rgba(0,0,0,0.5);"><i class="fas fa-camera"></i></div>
+                            <div class="cam-btn-overlay"><i class="fas fa-camera"></i></div>
                         </div>
                         <input type="file" id="avatar-upload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
                     </div>
@@ -586,22 +608,22 @@
         <div id="reward-ad-bottom" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
     </div>
 
-    <!-- 🤖 ANIMAX MODERN AI UI -->
-    <div class="ai-modern-bubble" id="ai-main-trigger" onclick="toggleAIChat()">
-        <i class="fas fa-robot"></i>
-        <div class="ai-notif-pulse" id="ai-notif-badge"></div>
-    </div>
-
-    <div id="ai-chat-modern">
-        <div class="ai-modern-header">
-            <span><i class="fas fa-microchip"></i> ANIMAX AI</span>
-            <i class="fas fa-times" onclick="toggleAIChat()" style="cursor:pointer;"></i>
-        </div>
-        <div class="ai-msg-container" id="ai-chat-list">
-            <!-- AI Messages will load here -->
-        </div>
-        <div style="padding:10px 15px; background:rgba(0,255,135,0.05); border-top:1px solid rgba(255,255,255,0.05); font-size:10px; color:#00ff87; font-weight:bold; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-shield-check"></i> ALL SYSTEMS SECURED & ACTIVE
+    <!-- 🤖 SMART CAT-BOT AI DRAGGABLE -->
+    <div id="ai-draggable-container">
+        <div class="cat-bot" id="main-cat-bot">
+            <div class="bot-face">
+                <div class="bot-eye-row">
+                    <div class="eye eye-left">●</div>
+                    <div class="eye eye-right">●</div>
+                </div>
+                <div class="bot-whiskers">
+                    <div class="whisker"></div>
+                    <div class="whisker"></div>
+                </div>
+                <div class="bot-mouth">w</div>
+            </div>
+            <div class="bot-headset"></div>
+            <div class="bot-mic"></div>
         </div>
     </div>
 
@@ -635,7 +657,7 @@
             <div class="reward-prizes"><div><div class="reward-icon">🥈</div><span>Top 2</span><span style="color:var(--text-muted);">5 Days VIP</span></div><div><div class="reward-icon" style="font-size:38px;">🥇</div><span>Top 1</span><span style="color:var(--accent-glow);font-weight:900;">7 Days VIP</span></div><div><div class="reward-icon">🥉</div><span>Top 3</span><span style="color:var(--text-muted);">3 Days VIP</span></div></div>
             <div style="margin-top: 25px; color: var(--accent-glow); font-size: 13px; font-weight:800; background:rgba(255,183,3,0.1); padding:8px; border-radius:10px; display:inline-block;" id="lb-reset-timer">Loading Time...</div>
         </div>
-        <div style="padding: 0 15px; margin-bottom: 20px; color: var(--text-muted); font-size: 13px; text-align: center; font-weight:500;">Showing top 100 users</div>
+        <div style="padding: 0 15px; margin-bottom: 20px; color: var(--text-muted); font-size: 13px; text-align: center; font-weight:500;">Showing top users</div>
         <div id="leaderboard-list"></div>
     </div>
 
@@ -778,7 +800,7 @@
         <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff0055;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
     </div>
 
-    <!-- 🌟 BOTTOM NAVIGATION (4 BUTTONS) 🌟 -->
+    <!-- 🌟 BOTTOM NAVIGATION 🌟 -->
     <nav id="main-nav">
         <i class="fas fa-home active" onclick="switchTab('home')"></i>
         <i class="fas fa-bolt" onclick="showShorts()"></i>
@@ -789,7 +811,7 @@
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         // ==========================================
-        // 🌟 TAB TITLE TIMER SYSTEM 🌟
+        // 🌟 TAB TITLE TIMER & SOUND SYSTEM 🌟
         // ==========================================
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
@@ -830,10 +852,8 @@
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext('2d');
-                    let MAX_WIDTH = 250;
-                    let MAX_HEIGHT = 250;
-                    let width = img.width;
-                    let height = img.height;
+                    let MAX_WIDTH = 250; let MAX_HEIGHT = 250;
+                    let width = img.width; let height = img.height;
 
                     if (width > height) {
                         if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
@@ -843,7 +863,7 @@
                     canvas.width = width; canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    let dataUrl = canvas.toDataURL('image/jpeg', 0.6); // Compress to save DB space
+                    let dataUrl = canvas.toDataURL('image/jpeg', 0.6); 
                     
                     document.getElementById('profile-img').style.opacity = '0.5';
                     
@@ -1120,37 +1140,12 @@
         });
 
         let adsInjected = false;
-        let globalPopunderTimer = null;
         let socialBarInterval = null;
-
-        function startGlobalPopunderTimer() {
-            clearInterval(globalPopunderTimer);
-            if(isPremium) return;
-            globalPopunderTimer = setInterval(() => {
-                if(!isPremium) document.getElementById('global-popunder-trap').style.display = 'block';
-            }, 300000); 
-        }
-        function triggerGlobalPopunder() {
-            document.getElementById('global-popunder-trap').style.display = 'none';
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            startGlobalPopunderTimer(); 
-        }
-
-        // 🌟 Social Bar Reload Logic
-        function loadSocialBarAd() {
-            let oldScript = document.getElementById('dynamic-socialbar');
-            if(oldScript) oldScript.remove();
-            let script = document.createElement('script');
-            script.id = 'dynamic-socialbar';
-            script.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
-            document.body.appendChild(script);
-        }
 
         // 🌟 Popunder & Social Script dynamically added ONLY for Free Users
         function injectFreeAds() {
             if(adsInjected || isPremium) return; 
             adsInjected = true;
-            startGlobalPopunderTimer();
             
             let popScript = document.getElementById('popunder-ad-manager');
             if(popScript) {
@@ -1162,6 +1157,15 @@
             socialBarInterval = setInterval(() => {
                 if(!isPremium) loadSocialBarAd();
             }, 180000); // 3 Minutes Interval
+        }
+
+        function loadSocialBarAd() {
+            let oldScript = document.getElementById('dynamic-socialbar');
+            if(oldScript) oldScript.remove();
+            let script = document.createElement('script');
+            script.id = 'dynamic-socialbar';
+            script.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
+            document.body.appendChild(script);
         }
 
         function checkPremium(uid) {
@@ -1189,8 +1193,6 @@
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
-                    clearInterval(globalPopunderTimer);
-                    document.getElementById('global-popunder-trap').style.display = 'none';
                     
                     // Stop Ads for Premium
                     let popScript = document.getElementById('popunder-ad-manager');
@@ -1224,7 +1226,6 @@
         let rewardActive = false;
         let rewardStartTime = 0;
         let rewardInterval;
-        let aggressiveTrapInterval;
 
         function checkDailyBonusUI() {
             if(!currentUser) return;
@@ -1235,12 +1236,6 @@
                 if(lastDate === today) { txt.innerText = "BONUS CLAIMED TODAY ✓"; txt.parentElement.style.opacity = "0.5"; txt.parentElement.style.pointerEvents = "none"; } 
                 else { txt.innerText = "CLAIM DAILY BONUS (+5 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
             });
-        }
-
-        function triggerPopunderTrap() {
-            if(isPremium) return;
-            document.getElementById('reward-popunder-trap').style.display = 'none';
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
         }
 
         function resetRewardUI() {
@@ -1255,21 +1250,9 @@
             let today = new Date().toLocaleDateString();
             db.ref(`users/${currentUser.uid}/lastCheckIn`).once('value', s => {
                 if(s.val() === today) return alert("You have already claimed your daily bonus today!");
-                
                 document.getElementById('reward-waiting-view').style.display = 'flex';
                 resetRewardUI();
                 updateBannerVisibility();
-                
-                if(!isPremium) {
-                    clearInterval(aggressiveTrapInterval);
-                    aggressiveTrapInterval = setInterval(() => {
-                        if(document.getElementById('reward-waiting-view').style.display === 'flex') {
-                            document.getElementById('reward-popunder-trap').style.display = 'block';
-                        } else {
-                            clearInterval(aggressiveTrapInterval);
-                        }
-                    }, 2000); 
-                }
             });
         }
 
@@ -1340,7 +1323,6 @@
         function closeRewardPage() {
             document.getElementById('reward-waiting-view').style.display = 'none';
             clearInterval(rewardInterval);
-            clearInterval(aggressiveTrapInterval);
             stopTabTimer();
             rewardActive = false;
         }
@@ -1438,7 +1420,15 @@
         // 🌟 FETCH API DOWNLOAD LOGIC 🌟
         // ==========================================
         async function handleDownload() {
-            if(!isPremium) { alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); switchTab('profile'); return; } 
+            if(!isPremium) { 
+                setBotExpression('alert');
+                let userLang = navigator.language;
+                if(userLang.includes('bn')) aiSpeak("দুঃখিত, ডাউনলোড করতে চাইলে ভিআইপি মেম্বার হতে হবে।", "bn-BD");
+                else aiSpeak("Sorry master, downloading is a VIP feature.", "en-US");
+                showDlToast("👑 VIP Feature Only!", false);
+                setTimeout(() => setBotExpression('neutral'), 4000);
+                return; 
+            } 
             
             const v = document.getElementById('main-video');
             if(!v || !v.src || v.src.startsWith('blob:')) return alert("Cannot download this video right now.");
@@ -1755,164 +1745,167 @@
             checkEpUnlockStatus();
         });
 
-        function redeemCode(inputId) { 
-            if(!currentUser) { alert("Please login first!"); return; }
-            let inputEl = document.getElementById(inputId); if(!inputEl) return;
-            const c = inputEl.value.trim().toUpperCase(); if(!c) return alert("Enter Code!");
-            db.ref(`premium_codes/${c}`).once('value', s => { 
-                if(s.exists()) {
-                    let codeData = s.val();
-                    if(codeData.status === 'unused'){ 
-                        let actualTime = Date.now() + serverTimeOffset;
-                        db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
-                            let currentExp = snap.val() || 0; let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
-                            let daysToAdd = codeData.days ? parseInt(codeData.days) : 30; let newExp = baseTime + (daysToAdd * 24 * 60 * 60 * 1000);
-                            db.ref(`premium_codes/${c}`).update({ status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: actualTime }).then(() => {
-                                db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => { 
-                                    playSuccessSound();
-                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); 
-                                    inputEl.value = ""; location.reload(); 
-                                });
-                            });
-                        });
-                    } else { alert("❌ This code is already used!"); }
-                } else alert("❌ Invalid Code!"); 
-            }); 
+        // ============================================================
+        // 🤖 DRAGGABLE CAT-BOT AI LOGIC
+        // ============================================================
+        const aiContainer = document.getElementById('ai-draggable-container');
+        const catBot = document.getElementById('main-cat-bot');
+        let isDragging = false, startX, startY, initialX, initialY;
+
+        aiContainer.addEventListener('touchstart', dragStart, {passive: false});
+        aiContainer.addEventListener('touchend', dragEnd);
+        aiContainer.addEventListener('touchmove', drag, {passive: false});
+        aiContainer.addEventListener('mousedown', dragStart);
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('mousemove', drag);
+
+        function dragStart(e) {
+            initialX = aiContainer.offsetLeft;
+            initialY = aiContainer.offsetTop;
+            if (e.type === "touchstart") { startX = e.touches[0].clientX; startY = e.touches[0].clientY; } 
+            else { startX = e.clientX; startY = e.clientY; }
         }
 
-        function loadRecentHistoryUI() {
-            if(!currentUser) return;
-            db.ref(`users/${currentUser.uid}/watchlist`).orderByChild('date').limitToLast(10).once('value', s => {
-                const c = document.getElementById('b-recent-history-scroll'); if(!c) return; c.innerHTML = "";
-                if(!s.exists()) { c.innerHTML = "<div style='color:var(--text-muted); font-size:13px; padding:10px;'>No watch history found.</div>"; return; }
-                let historyArray = []; s.forEach(i => { historyArray.push({...i.val(), key: i.key}); }); historyArray.reverse(); 
-                historyArray.forEach(d => {
-                    let title = d.title; let thumb = d.thumb; let typeBadge = d.type === 'movie' ? 'MV' : 'TV';
-                    if(!thumb) { let matchedData = findDataByTitle(title); if(matchedData) { thumb = matchedData.thumbnail; if(matchedData.typeBadge === 'movie') typeBadge = "MV"; } else { thumb = "https://via.placeholder.com/160x90/111/555?text=Video"; } }
-                    let safeTitle = title.replace(/'/g, "\\'"); let safeFolder = d.folderName ? d.folderName.replace(/'/g, "\\'") : safeTitle; let passType = d.type || 'unknown';
-                    c.innerHTML += `<div class="b-history-card" onclick="playFromHistoryV2('${safeTitle}', '${safeFolder}', '${passType}', '${d.key}')"><div class="b-history-img-wrap"><img src="${thumb}"><div class="b-history-type">${typeBadge}</div></div><div class="b-history-title">${title}</div></div>`;
-                });
-            });
-        }
+        function drag(e) {
+            if (!startX || !startY) return;
+            let currentX, currentY;
+            if (e.type === "touchmove") { currentX = e.touches[0].clientX; currentY = e.touches[0].clientY; } 
+            else { currentX = e.clientX; currentY = e.clientY; }
+            
+            let diffX = Math.abs(currentX - startX);
+            let diffY = Math.abs(currentY - startY);
 
-        function findDataByTitle(title) {
-            if(window.animeData) { for(let folder in window.animeData) { let match = window.animeData[folder].find(e => e.title === title); if(match) return { thumbnail: match.thumbnail, url: match.url, id: match.id, isPremium: match.type==='premium', type: 'anime', folder: folder }; } }
-            if(window.movieData) { let match = window.movieData.find(e => e.title === title); if(match) return { thumbnail: match.thumbnail, url: match.url, id: match.id, isPremium: match.type==='premium', type: 'movie', typeBadge: 'movie' }; }
-            if(window.cartoonData) { let match = window.cartoonData.find(e => e.title === title); if(match) return { thumbnail: match.thumbnail, url: match.url, id: match.id, isPremium: match.type==='premium', type: 'cartoon' }; }
-            return null;
-        }
+            // Drag Threshold to prevent accidental clicks
+            if (diffX > 5 || diffY > 5) {
+                isDragging = true;
+                catBot.classList.add('dragging');
+                e.preventDefault();
+                let newX = initialX + (currentX - startX);
+                let newY = initialY + (currentY - startY);
+                
+                // Screen boundaries
+                if (newX < 0) newX = 0;
+                if (newY < 0) newY = 0;
+                if (newX + 65 > window.innerWidth) newX = window.innerWidth - 65;
+                if (newY + 65 > window.innerHeight) newY = window.innerHeight - 65;
 
-        function playFromHistoryV2(title, folder, type, key) {
-            if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } else {
-                let data = findDataByTitle(title);
-                if(data) { if(data.type === 'anime') openFolder(data.folder); else playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } 
-                else { alert("Content not found. It may have been removed or renamed."); }
+                aiContainer.style.left = newX + "px";
+                aiContainer.style.top = newY + "px";
+                aiContainer.style.bottom = "auto";
             }
         }
 
-        function handleAuth(t) { 
-            const e = document.getElementById(t==='login'?'email-in':'remail-in').value; const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
-            if(t === 'reg') {
-                const n = document.getElementById('rname-in').value.trim(); if(!n || !e || !p) return alert("Please fill all details.");
-                auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); }); }).catch(err=>alert(err.message)); 
-            } else { if(!e || !p) return alert("Please fill details."); auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); }
+        function dragEnd(e) {
+            startX = null; startY = null;
+            if (isDragging) {
+                setTimeout(() => { isDragging = false; }, 100);
+            } else if (e.target.closest('#main-cat-bot')) {
+                handleAITap();
+            }
+            catBot.classList.remove('dragging');
         }
 
-        let sliderInterval;
-        function initSlider() { clearInterval(sliderInterval); sliderInterval = setInterval(() => changeSlide(1), 5000); }
-        function changeSlide(direction) {
-            const container = document.getElementById('banner-slides-container'); if(!container) return;
-            const slides = container.querySelectorAll('.slide'); if(slides.length === 0) return;
-            let activeIdx = Array.from(slides).findIndex(s => s.classList.contains('active')); if (activeIdx === -1) activeIdx = 0;
-            slides[activeIdx].classList.remove('active');
-            let nextIdx = (activeIdx + direction + slides.length) % slides.length; slides[nextIdx].classList.add('active');
-            clearInterval(sliderInterval); sliderInterval = setInterval(() => changeSlide(1), 5000);
+        // ============================================================
+        // 🤖 VOICE AI COMMANDS & REACTIONS
+        // ============================================================
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        if(SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = navigator.language || 'en-US';
+            recognition.interimResults = false;
         }
 
-        let trendingAnimeHTML = ""; let trendingMoviesHTML = ""; let trendingCartoonsHTML = "";
-        let htmlAnimeMoviesFromMoviesNode = ""; let htmlCartoonMoviesFromMoviesNode = ""; let htmlCartoonMoviesFromCartoonsNode = "";
-
-        function updateTrendingGrid() {
-            const grid = document.getElementById('trending-grid');
-            if(grid) { grid.innerHTML = trendingAnimeHTML + trendingMoviesHTML + trendingCartoonsHTML; if(grid.innerHTML.trim() === "") grid.innerHTML = "<p style='color:var(--text-muted); font-size:13px; grid-column:1/-1; text-align:center;'>No trending items right now.</p>"; }
+        function setBotExpression(state) {
+            const eyes = document.querySelectorAll('.cat-bot .eye');
+            const mouth = document.querySelector('.cat-bot .bot-mouth');
+            if(state === 'happy') {
+                eyes.forEach((e, i) => e.innerText = i === 0 ? '>' : '<');
+                mouth.innerText = '◡';
+            } else if(state === 'listening') {
+                eyes.forEach(e => e.innerText = '—');
+                mouth.innerText = '〰';
+            } else if(state === 'alert') {
+                eyes.forEach(e => e.innerText = '●');
+                mouth.innerText = 'o';
+            } else {
+                eyes.forEach(e => e.innerText = '●');
+                mouth.innerText = 'w';
+            }
         }
 
-        function updateSubGrids() {
-            let amGrid = document.getElementById('anime-movie-grid'); if(amGrid) amGrid.innerHTML = htmlAnimeMoviesFromMoviesNode;
-            let cmGrid = document.getElementById('cartoon-movie-grid'); if(cmGrid) cmGrid.innerHTML = htmlCartoonMoviesFromMoviesNode + htmlCartoonMoviesFromCartoonsNode;
+        function aiSpeak(text, lang) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang || navigator.language;
+            synth.speak(utter);
         }
 
-        function buildSearchIndex() {
-            allContentList = [];
-            if(window.animeData) { Object.keys(window.animeData).forEach(name => allContentList.push({title: name, type: 'anime', folder: name})); }
-            if(window.movieData) { window.movieData.forEach(m => allContentList.push({title: m.title, type: 'movie', data: m})); }
-            if(window.cartoonData) { window.cartoonData.forEach(c => allContentList.push({title: c.title, type: 'cartoon', data: c})); }
-            startPlaceholderAnimation();
-        }
+        function handleAITap() {
+            if(isDragging) return;
+            let aiName = localStorage.getItem('animax_ai_name');
+            let userLang = navigator.language;
 
-        let isDataLoaded = false;
-        function loadContent() {
-            if(isDataLoaded) return; isDataLoaded = true;
-            
-            db.ref('shorts').once('value', s => {
-                window.allShortsData = [];
-                if(s.exists()) { s.forEach(i => { window.allShortsData.push({...i.val(), key: i.key}); }); }
-            });
-
-            db.ref('banners').on('value', s => {
-                const c = document.getElementById('banner-slides-container'); if(!c) return; c.innerHTML = ""; let i=0;
-                s.forEach(b => { 
-                    let data = b.val(); 
-                    let title = (data.folderName || "").trim(); 
-                    c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="aiPlayBanner('${title.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; 
-                });
-                initSlider();
-            });
-
-            db.ref('anime').on('value', snap => {
-                const animeGrid = document.getElementById('anime-grid'); animeGrid.innerHTML = ""; trendingAnimeHTML = ""; let folders = {};
-                snap.forEach(c => { let d = c.val(); let f = (d.folder||'Misc').trim(); if(!folders[f]) folders[f]=[]; folders[f].push(d); }); window.animeData = folders;
+            if(!aiName) {
+                setBotExpression('listening');
+                if(userLang.includes('bn')) aiSpeak("হ্যালো! আমি আপনার স্মার্ট অ্যাসিস্ট্যান্ট। আমাকে কি নামে ডাকবেন?", 'bn-BD');
+                else aiSpeak("Hello! I am your smart assistant. What name would you like to give me?", 'en-US');
                 
-                Object.keys(folders).forEach(name => {
-                    let firstEp = folders[name][0]; let thumb = firstEp.thumbnail; let epCount = folders[name].length;
-                    let premBadge = firstEp.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>';
-                    let cardHTML = `<div class="folder-card" onclick="openFolder('${name.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${thumb}">${premBadge}</div><div class="folder-title">${name}</div><div class="folder-ep">Episode ${epCount}</div></div>`;
-                    
-                    let category = (firstEp.category || "anime").toLowerCase();
-                    if(category.includes('anime') || category === '') animeGrid.innerHTML += cardHTML;
-                    if(category.includes('trending')) trendingAnimeHTML += cardHTML;
-                }); updateTrendingGrid(); buildSearchIndex();
-            });
-
-            db.ref('movies').on('value', snap => { 
-                const grid = document.getElementById('movie-grid'); grid.innerHTML = ""; trendingMoviesHTML = ""; htmlAnimeMoviesFromMoviesNode = ""; htmlCartoonMoviesFromMoviesNode = ""; window.movieData=[]; 
-                snap.forEach(c=>{ 
-                    let d=c.val(), sid=d.id||d.title; window.movieData.push(d); 
-                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
-                    let category = (d.category || "movie").toLowerCase(); grid.innerHTML += cardHTML; 
-                    if(category.includes('anime')) htmlAnimeMoviesFromMoviesNode += cardHTML;
-                    if(category.includes('cartoon')) htmlCartoonMoviesFromMoviesNode += cardHTML;
-                    if(category.includes('trending')) trendingMoviesHTML += cardHTML;
-                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex();
-            });
-
-            db.ref('cartoons').on('value', snap => { 
-                const grid = document.getElementById('cartoon-grid'); grid.innerHTML = ""; trendingCartoonsHTML = ""; htmlCartoonMoviesFromCartoonsNode = ""; window.cartoonData=[]; 
-                snap.forEach(c=>{ 
-                    let d=c.val(), sid=d.id||d.title; window.cartoonData.push(d);
-                    let category = (d.category || "cartoon").toLowerCase(); let isMovie = category.includes('movie');
-                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : (isMovie ? '<div class="card-vip-badge">MOVIE</div>' : '<div class="card-vip-badge">DUB</div>');
-                    let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
-                    if(isMovie) htmlCartoonMoviesFromCartoonsNode += cardHTML; else grid.innerHTML += cardHTML;
-                    if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
-                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex();
-            });
+                if(recognition) {
+                    recognition.onresult = (e) => {
+                        let name = e.results[0][0].transcript;
+                        localStorage.setItem('animax_ai_name', name);
+                        setBotExpression('happy');
+                        if(userLang.includes('bn')) aiSpeak("ধন্যবাদ! এখন থেকে আমি " + name + "। আমাকে ট্যাপ করে যেকোনো এনিমি খুঁজতে পারেন।", 'bn-BD');
+                        else aiSpeak("Thank you! I am " + name + ". Tap me anytime to find anime!", 'en-US');
+                        setTimeout(() => setBotExpression('neutral'), 3000);
+                        recognition.onresult = processAICommand; // Reset logic
+                    };
+                    recognition.start();
+                }
+            } else {
+                setBotExpression('listening');
+                if(recognition) {
+                    recognition.onresult = processAICommand;
+                    recognition.start();
+                } else {
+                    aiSpeak("Speech recognition not supported on this browser.", 'en-US');
+                }
+            }
         }
 
-        function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
+        function processAICommand(event) {
+            const msg = event.results[0][0].transcript.toLowerCase();
+            let found = false;
+            let userLang = navigator.language;
 
+            allContentList.forEach(item => {
+                if(msg.includes(item.title.toLowerCase())) {
+                    found = true;
+                    setBotExpression('happy');
+                    if(userLang.includes('bn')) aiSpeak(item.title + " খুঁজে পেয়েছি, প্লে করছি!", 'bn-BD');
+                    else if(userLang.includes('ja')) aiSpeak(item.title + " を見つけました！", 'ja-JP');
+                    else aiSpeak("Found " + item.title + "! Playing now.", 'en-US');
+                    
+                    if(item.type === 'anime') openFolder(item.title);
+                    else playItemAndCloseSearch(item.title); // Uses existing movie/cartoon logic
+                }
+            });
+
+            if(!found) {
+                setBotExpression('neutral');
+                if(userLang.includes('bn')) aiSpeak("দুঃখিত, আমি এটি খুঁজে পাইনি।", 'bn-BD');
+                else aiSpeak("Sorry, I couldn't find that title.", 'en-US');
+            }
+            setTimeout(() => setBotExpression('neutral'), 4000);
+        }
+
+        // ==========================================
+        // 🌟 SMART LINK (POP-UNDER) FIX
+        // ==========================================
+        // Prevent random ad clicks. Only trigger on specific actions.
         function openFolder(n) { 
+            if(!isPremium) triggerGlobalPopunder(); // Only trigger here
             currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
             const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
             let folderElement = document.getElementById('season-select');
@@ -1924,6 +1917,16 @@
             playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', 0, parsedTime); loadPlayerUI(n); 
         }
 
+        function aiPlayBanner(title) {
+            if(window.animeData && window.animeData[title]) { openFolder(title); return; }
+            let match = findDataByTitle(title);
+            if(match) { playVideo(title, match.url, match.id || title, match.isPremium, match.type, -1); } 
+            else { setBotExpression('alert'); aiSpeak("Sorry, this title is currently under maintenance. Please check back later!"); setTimeout(() => setBotExpression('neutral'), 3000); }
+        }
+
+        // ==========================================
+        // 🌟 ORIGINAL SYSTEM FUNCTIONS PRESERVED 🌟
+        // ==========================================
         function loadPlayerUI(f) { 
             const s = document.getElementById('season-select'); s.innerHTML=""; 
             let baseName = f.split(/ season/i)[0].trim();
@@ -1954,6 +1957,8 @@
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
+            if(!isPremium && idx === -1) { triggerGlobalPopunder(); } // Trigger for standalone movies
+            
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
             let isEpisodeChange = (document.getElementById('player-view').style.display === 'block');
@@ -1980,9 +1985,19 @@
             bufferUI.style.display = 'none'; 
             v.onwaiting = () => { };
             v.onplaying = () => { if(adEnforced && !isPremium) v.pause(); };
-            v.oncanplay = () => { };
-            v.onloadeddata = () => { };
-            v.onerror = () => { };
+            
+            // SMART LANGUAGE LOOP FIX
+            let processedVideoIdForLang = null; 
+            v.onloadstart = () => {
+                if(!currentPlayingEpisodeData || !currentSafeVideoId) return;
+                if(processedVideoIdForLang === currentSafeVideoId) return; 
+                let hasOriginal = !!currentPlayingEpisodeData.url; let hasHindi = !!currentPlayingEpisodeData.url_hin; let hasEnglish = !!currentPlayingEpisodeData.url_eng;
+                if (hasHindi && !hasOriginal && !hasEnglish) { processedVideoIdForLang = currentSafeVideoId; changeLanguage('hindi'); let sel = document.getElementById('language-select'); if(sel) sel.value = 'hindi'; } 
+                else if (hasEnglish && !hasOriginal && !hasHindi) { processedVideoIdForLang = currentSafeVideoId; changeLanguage('english'); let sel = document.getElementById('language-select'); if(sel) sel.value = 'english'; } 
+                else { processedVideoIdForLang = currentSafeVideoId; }
+            };
+
+            v.oncanplay = () => { }; v.onloadeddata = () => { }; v.onerror = () => { };
 
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
@@ -1994,68 +2009,38 @@
             else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
             else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
 
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: t,
-                    artist: 'ANIMAX TV',
-                    artwork: [
-                        { src: hThumb, type: 'image/jpeg' },
-                        { src: 'logo.png', type: 'image/png' }
-                    ]
-                });
-            }
+            if ('mediaSession' in navigator) { navigator.mediaSession.metadata = new MediaMetadata({ title: t, artist: 'ANIMAX TV', artwork: [ { src: hThumb, type: 'image/jpeg' }, { src: 'logo.png', type: 'image/png' } ] }); }
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
             if(!isPremium && isEpisodeChange) {
                 document.getElementById('ep-unlock-overlay').style.display = 'flex';
                 pendingEpPlayback = window.startVideoPlayback;
-                let btn = document.getElementById('ep-unlock-btn');
-                btn.innerText = "VERIFY TO UNLOCK"; 
-                btn.style.background = "var(--accent-gradient)";
-                btn.style.color = "#000";
-            } else { 
-                window.startVideoPlayback(); 
-            }
+                let btn = document.getElementById('ep-unlock-btn'); btn.innerText = "VERIFY TO UNLOCK"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
+            } else { window.startVideoPlayback(); }
 
-            if(currentUser) {
-                db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).update({ title: t, date: Date.now(), thumb: hThumb, type: type, folderName: currentFolder || t });
-            }
-
+            if(currentUser) { db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).update({ title: t, date: Date.now(), thumb: hThumb, type: type, folderName: currentFolder || t }); }
             db.ref(`views/${currentSafeVideoId}`).transaction(c => (c||0)+1); loadSocialData(currentSafeVideoId);
         }
 
         function skipTime(seconds) {
             const v = document.getElementById('main-video');
-            if(v.duration) {
-                v.currentTime += seconds;
-                let animId = seconds > 0 ? 'skip-right-anim' : 'skip-left-anim';
-                let animEl = document.getElementById(animId);
-                animEl.style.display = 'block';
-                setTimeout(() => { animEl.style.display = 'none'; }, 500);
-            }
+            if(v.duration) { v.currentTime += seconds; let animId = seconds > 0 ? 'skip-right-anim' : 'skip-left-anim'; let animEl = document.getElementById(animId); animEl.style.display = 'block'; setTimeout(() => { animEl.style.display = 'none'; }, 500); }
         }
 
         let autoPlayTimer = null;
         document.getElementById('main-video').addEventListener('ended', () => {
             if(currentPlayType !== 'anime' || currentEpIndex === -1 || !window.animeData[currentFolder]) return;
-            let nextIdx = currentEpIndex + 1;
-            let nextBtn = document.getElementById(`ep-btn-${nextIdx}`);
+            let nextIdx = currentEpIndex + 1; let nextBtn = document.getElementById(`ep-btn-${nextIdx}`);
             if(nextBtn) {
-                document.getElementById('autoplay-box').style.display = 'block';
-                let counter = 5; document.getElementById('ap-count').innerText = counter;
-                autoPlayTimer = setInterval(() => {
-                    counter--; document.getElementById('ap-count').innerText = counter;
-                    if(counter <= 0) { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; nextBtn.click(); }
-                }, 1000);
+                document.getElementById('autoplay-box').style.display = 'block'; let counter = 5; document.getElementById('ap-count').innerText = counter;
+                autoPlayTimer = setInterval(() => { counter--; document.getElementById('ap-count').innerText = counter; if(counter <= 0) { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; nextBtn.click(); } }, 1000);
             }
         });
         function cancelAutoplay() { clearInterval(autoPlayTimer); document.getElementById('autoplay-box').style.display = 'none'; }
 
         document.getElementById('main-video').addEventListener('timeupdate', () => {
-            const v = document.getElementById('main-video');
-            let ct = v.currentTime;
-            
+            const v = document.getElementById('main-video'); let ct = v.currentTime;
             let skipBtn = document.getElementById('skip-intro-btn');
             if(ct > 5 && ct < 60) { skipBtn.style.display = 'block'; } else { skipBtn.style.display = 'none'; }
 
@@ -2353,104 +2338,20 @@
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
 
         // ============================================================
-        // 🤖 ANIMAX AI MANAGER (WITH FIXES & NOTIFICATIONS)
+        // 🌟 INIT AI ON START 🌟
         // ============================================================
-
-        function closeTopNotif() {
-            document.getElementById('ai-top-notif').classList.remove('show');
-        }
-
-        function toggleAIChat() {
-            let box = document.getElementById('ai-chat-modern');
-            let isHidden = (box.style.display === 'none' || box.style.display === '');
-            box.style.display = isHidden ? 'flex' : 'none';
-            document.getElementById('ai-notif-badge').style.display = 'none';
-        }
-
-        function aiAddLog(msg, isNew = false) {
-            const list = document.getElementById('ai-chat-list');
-            const div = document.createElement('div');
-            div.className = `ai-msg-card ${isNew ? 'new' : ''}`;
-            div.innerHTML = msg;
-            list.prepend(div);
-            if(isNew) document.getElementById('ai-notif-badge').style.display = 'block';
-        }
-
-        function aiPlayBanner(title) {
-            if(window.animeData && window.animeData[title]) {
-                openFolder(title);
-                return;
-            }
-            let match = findDataByTitle(title);
-            if(match) {
-                playVideo(title, match.url, match.id || title, match.isPremium, match.type, -1);
-            } else {
-                aiAddLog(`🤖 <b>AI Helper:</b> Sorry, the title "<b>${title}</b>" is currently under maintenance. Please try again later!`, true);
-                toggleAIChat();
-            }
-        }
-
-        let processedVideoIdForLang = null; 
-
-        function aiHandleLanguage() {
-            if(!currentPlayingEpisodeData || !currentSafeVideoId) return;
-            
-            if(processedVideoIdForLang === currentSafeVideoId) return; 
-
-            let hasOriginal = !!currentPlayingEpisodeData.url;
-            let hasHindi = !!currentPlayingEpisodeData.url_hin;
-            let hasEnglish = !!currentPlayingEpisodeData.url_eng;
-
-            if (hasHindi && !hasOriginal && !hasEnglish) {
-                processedVideoIdForLang = currentSafeVideoId; 
-                changeLanguage('hindi');
-                let sel = document.getElementById('language-select');
-                if(sel) sel.value = 'hindi';
-                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>Hindi</b>.`, true);
-            } else if (hasEnglish && !hasOriginal && !hasHindi) {
-                processedVideoIdForLang = currentSafeVideoId; 
-                changeLanguage('english');
-                let sel = document.getElementById('language-select');
-                if(sel) sel.value = 'english';
-                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>English</b>.`, true);
-            } else {
-                processedVideoIdForLang = currentSafeVideoId; 
-            }
-        }
-
-        document.getElementById('main-video').addEventListener('loadstart', () => {
-            setTimeout(aiHandleLanguage, 800);
-        });
-
-        function aiMonitor() {
-            const v = document.getElementById('main-video');
-            v.addEventListener('error', () => {
-                aiAddLog("⚠️ <b>System Alert:</b> Playback failed. Reporting to Admin and switching to backup server...", true);
-                if(db) db.ref('admin_reports').push({ error: "Source Error: " + v.src, user: currentUser?currentUser.email:"Guest", time: Date.now() });
-            });
-
+        setTimeout(() => {
             let hour = new Date().getHours();
             let greeting = (hour < 12) ? "Good Morning" : (hour < 18 ? "Good Afternoon" : "Good Evening");
-
-            if(!currentUser) {
-                aiAddLog(`👋 <b>${greeting} Guest!</b> Login to save points and enjoy personalized Anime history.`);
-            } else {
-                aiAddLog(`✅ <b>Status:</b> ${greeting} ${currentUser.username.split(' ')[0]}! System is optimized for your account.`);
-                if(!isPremium) {
-                    setTimeout(() => {
-                        aiAddLog(`👑 <b>Upgrade:</b> Enjoy 1080p Ultra HD and <b>No Ads</b>. Join VIP today!<br><button onclick="openPremiumHub()" style="width:100%; margin-top:10px; padding:8px; background:var(--accent-gradient); border:none; border-radius:10px; cursor:pointer; font-weight:900; font-family:'Orbitron'; font-size:11px;">GO PREMIUM</button>`, true);
-                    }, 15000);
-                }
-            }
-        }
+            aiSpeak(greeting + " Master! Tap me to search anything.");
+            aiShowTopNotification();
+        }, 5000);
+        setInterval(aiShowTopNotification, 600000);
 
         function aiShowTopNotification() {
             db.ref('anime').limitToLast(1).once('value', s => {
                 s.forEach(c => {
-                    let d = c.val();
-                    let title = d.title || d.folder;
-                    let folder = d.folder;
-                    
+                    let d = c.val(); let title = d.title || d.folder; let folder = d.folder;
                     let lastNotif = localStorage.getItem('last_top_notif');
                     if(lastNotif !== title) {
                         setTimeout(() => {
@@ -2458,22 +2359,14 @@
                             let btn = document.getElementById('ai-top-notif-btn');
                             btn.onclick = () => { closeTopNotif(); openFolder(folder); };
                             document.getElementById('ai-top-notif').classList.add('show');
-                            
                             localStorage.setItem('last_top_notif', title);
-                            setTimeout(closeTopNotif, 10000); // Auto hide
+                            setTimeout(closeTopNotif, 10000);
                         }, 3000); 
                     }
                 });
             });
         }
-
-        setTimeout(() => {
-            aiMonitor();
-            aiShowTopNotification();
-            updateBannerVisibility();
-        }, 5000);
-        
-        setInterval(aiShowTopNotification, 600000);
+        function closeTopNotif() { document.getElementById('ai-top-notif').classList.remove('show'); }
     </script>
 </body>
 </html>
