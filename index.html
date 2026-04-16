@@ -368,21 +368,8 @@
         .dl-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 5px; overflow: hidden; display: none; }
         .dl-progress-fill { height: 100%; background: var(--accent-gradient); width: 0%; transition: width 0.2s;}
 
-        /* AI MODERN STYLES */
-        .ai-notif-pulse { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: #e63946; border: 2px solid #fff; border-radius: 50%; animation: aiPulse 1.5s infinite; display: none;}
-        @keyframes aiPulse { 0% { transform: scale(0.9); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.8; } 100% { transform: scale(0.9); opacity: 1; } }
-        
-        #ai-chat-modern { 
-            display: none; position: fixed; bottom: 160px; left: 20px; width: 310px; max-height: 450px; 
-            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(25px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; z-index: 99999; 
-            flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8); font-family: 'Outfit';
-        }
-        .ai-modern-header { background: var(--accent-gradient); padding: 15px; color: #000; font-weight: 900; font-family: 'Orbitron'; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; }
-        .ai-msg-container { padding: 15px; overflow-y: auto; color: #fff; font-size: 13px; line-height: 1.6; scrollbar-width: none; }
-        .ai-msg-container::-webkit-scrollbar { display: none; }
-        .ai-msg-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 16px; margin-bottom: 12px; animation: smoothFadeIn 0.4s; }
-        .ai-msg-card.new { border-color: var(--accent-glow); background: rgba(255, 183, 3, 0.05); }
+        /* AI MODERN STYLES - CHAT BOX REMOVED (DISPLAY NONE) */
+        #ai-chat-modern { display: none !important; }
 
         /* 🌟 NEW AI TOP NOTIFICATION BAR 🌟 */
         #ai-top-notif {
@@ -679,20 +666,10 @@
         <div class="cat-body">
             <div class="cat-core"></div>
         </div>
-        <div class="ai-notif-pulse" id="ai-notif-badge" style="display:none; right:0; top:0;"></div>
     </div>
 
     <div id="ai-chat-modern">
-        <div class="ai-modern-header">
-            <span><i class="fas fa-microchip"></i> ANIMAX AI</span>
-            <i class="fas fa-times" onclick="toggleAIChat()" style="cursor:pointer;"></i>
-        </div>
-        <div class="ai-msg-container" id="ai-chat-list">
-            <!-- AI Messages will load here -->
-        </div>
-        <div style="padding:10px 15px; background:rgba(0,255,135,0.05); border-top:1px solid rgba(255,255,255,0.05); font-size:10px; color:#00ff87; font-weight:bold; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-shield-check"></i> ALL SYSTEMS SECURED & ACTIVE
-        </div>
+        <!-- REMOVED FROM VIEW TO SAVE SPACE -->
     </div>
 
     <!-- SPIN WHEEL MODAL -->
@@ -878,6 +855,8 @@
 
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
+        let appStartupTime = Date.now(); // 🌟 Grace period tracker for Firebase load
+
         // ==========================================
         // 🌟 TAB TITLE TIMER SYSTEM 🌟
         // ==========================================
@@ -1220,6 +1199,13 @@
         }
         function triggerTargetedAd() {
             if(isPremium) return;
+            // 🌟 3 Seconds Grace Period so Ad doesn't fire mistakenly when app opens
+            if(Date.now() - appStartupTime < 3000) return;
+            
+            // 🌟 Absolute check: If VIP status text says "left" (meaning premium active), do not show ad
+            let vipStatusText = document.getElementById('b-vip-status').innerText;
+            if(currentUser && vipStatusText.includes('left')) { isPremium = true; return; }
+
             if(!window.targetAdCooldown) {
                 window.targetAdCooldown = true;
                 setTimeout(() => { window.targetAdCooldown = false; }, 30000);
@@ -1240,6 +1226,11 @@
         // 🌟 Popunder & Social Script dynamically added ONLY for Free Users
         function injectFreeAds() {
             if(adsInjected || isPremium) return; 
+            
+            // 🌟 Absolute check again before injecting
+            let vipStatusText = document.getElementById('b-vip-status').innerText;
+            if(currentUser && vipStatusText.includes('left')) return; 
+
             adsInjected = true;
             
             let popScript = document.getElementById('popunder-ad-manager');
@@ -2458,18 +2449,12 @@
         }
 
         function toggleAIChat() {
-            let box = document.getElementById('ai-chat-modern');
-            let isHidden = (box.style.display === 'none' || box.style.display === '');
-            box.style.display = isHidden ? 'flex' : 'none';
-            document.getElementById('ai-notif-badge').style.display = 'none';
+            // Disabled chat box popup logic completely to save space
+            // AI now only responds via Voice and Emotes
         }
 
         function aiAddLog(msg, isNew = false) {
-            const list = document.getElementById('ai-chat-list');
-            const div = document.createElement('div');
-            div.className = `ai-msg-card ${isNew ? 'new' : ''}`;
-            div.innerHTML = msg;
-            list.prepend(div);
+            // Background log keeper (hidden from view)
             if(isNew) document.getElementById('ai-notif-badge').style.display = 'block';
         }
 
@@ -2482,8 +2467,8 @@
             if(match) {
                 playVideo(title, match.url, match.id || title, match.isPremium, match.type, -1);
             } else {
-                aiAddLog(`🤖 <b>AI Helper:</b> Sorry, the title "<b>${title}</b>" is currently under maintenance. Please try again later!`, true);
-                toggleAIChat();
+                setCatEmote('alert');
+                speakLocalized(`Sorry friend! The title ${title} is under maintenance.`, navigator.language.split('-')[0]);
             }
         }
 
@@ -2522,13 +2507,14 @@
         function aiMonitor() {
             const v = document.getElementById('main-video');
             v.addEventListener('error', () => {
-                aiAddLog("⚠️ <b>System Alert:</b> Playback failed. Reporting to Admin and switching to backup server...", true);
+                setCatEmote('alert');
+                speakLocalized("System Alert! Playback failed. Switching to backup server.", navigator.language.split('-')[0]);
                 if(db) db.ref('admin_reports').push({ error: "Source Error: " + v.src, user: currentUser?currentUser.email:"Guest", time: Date.now() });
             });
             
             if(currentUser && !isPremium) {
                 setTimeout(() => {
-                    aiAddLog(`👑 <b>Upgrade:</b> Enjoy 1080p Ultra HD and <b>No Ads</b>. Join VIP today!<br><button onclick="openPremiumHub()" style="width:100%; margin-top:10px; padding:8px; background:var(--accent-gradient); border:none; border-radius:10px; cursor:pointer; font-weight:900; font-family:'Orbitron'; font-size:11px;">GO PREMIUM</button>`, true);
+                    aiAddLog(`👑 <b>Upgrade:</b> Enjoy 1080p Ultra HD and <b>No Ads</b>. Join VIP today!`, true);
                 }, 20000);
             }
         }
@@ -2650,8 +2636,9 @@
 
         function handleCatBotClick(e) {
             if(catMoved) return; // Prevent click if dragged
-            toggleAIChat(); 
             
+            document.getElementById('ai-notif-badge').style.display = 'none';
+
             if(recognition) {
                 let uiLang = navigator.language.split('-')[0];
                 
@@ -2666,7 +2653,6 @@
                 let sayMsg = prompts[uiLang] || prompts['en'];
                 setCatEmote('happy');
                 speakLocalized(sayMsg, uiLang);
-                aiAddLog(`🤖 <b>${aiName}:</b> ${sayMsg}`, true);
                 
                 setTimeout(() => {
                     recognition.lang = navigator.language || 'en-US';
@@ -2674,11 +2660,13 @@
                     
                     recognition.onresult = (event) => {
                         let transcript = event.results[0][0].transcript;
-                        aiAddLog(`🗣️ <b>You:</b> ${transcript}`, false);
                         processUniversalCommand(transcript, aiName);
                     };
                     recognition.onerror = () => { setCatEmote('neutral'); };
                 }, 2000); // Start listening after speaking
+            } else {
+                setCatEmote('alert');
+                alert("Voice command is not supported on this browser!");
             }
         }
 
@@ -2730,7 +2718,6 @@
                 
                 setCatEmote('happy');
                 speakLocalized(finalReply, detectedLang);
-                aiAddLog(`🤖 <b>${aiName}:</b> ${finalReply}`, true);
                 
                 if (intent === "search" && query) {
                     document.getElementById('header-search-wrapper').click();
