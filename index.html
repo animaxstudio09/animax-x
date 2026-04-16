@@ -2594,7 +2594,9 @@
 
         // 🌟 GOOGLE GEMINI API CALL 🌟
         async function callGeminiAPI(userText) {
-            const apiKey = "AQ.Ab8RN6L68L42kNcIkfPVlubPMTEvfm7PImnYA3bBCYKPcJz3-Q"; 
+            // 🔴 আপনার নতুন (AIzaSy...) API Key টি নিচের ইনভার্টেড কমার ভেতরে দিন 🔴
+            const apiKey = "AIzaSyCcBpgyJJppwSYwMG9d4aDLsZYTcd5Z9eQ; 
+            
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             const prompt = `You are Animax AI, a super friendly and smart cat-bot assistant for an anime streaming website.
@@ -2617,13 +2619,19 @@
                     body: JSON.stringify(payload)
                 });
                 let data = await res.json();
+                
+                if (!res.ok) {
+                    console.error("Gemini API Error:", data);
+                    return null;
+                }
+
                 if(data && data.candidates && data.candidates.length > 0) {
                     return data.candidates[0].content.parts[0].text;
                 } else {
-                    throw new Error("Invalid response from Gemini");
+                    return null;
                 }
             } catch (e) {
-                console.error("Gemini Error:", e);
+                console.error("Network Error:", e);
                 return null;
             }
         }
@@ -2669,7 +2677,7 @@
                     }
 
                     setCatEmote('happy');
-                    speakLocalized(aiResponse, navigator.language);
+                    speakLocalized(aiResponse, navigator.language.split('-')[0]);
                     if(tooltip) resetTooltip(tooltip);
                     
                     if(searchText) {
@@ -2679,7 +2687,7 @@
                 } else {
                     setCatEmote('neutral');
                     if(tooltip) resetTooltip(tooltip);
-                    speakLocalized("Sorry friend, my brain is a bit slow right now. Please try again.", 'en-US');
+                    speakLocalized("Sorry friend, my brain is a bit slow right now. Please check my API key.", navigator.language.split('-')[0]);
                 }
             };
 
