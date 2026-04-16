@@ -447,6 +447,20 @@
             box-shadow: 0 0 8px #00f5d4; animation: pulseCore 2s infinite alternate;
         }
 
+        /* TOOLTIP ANIMATION */
+        .ai-tooltip {
+            position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-gradient); color: #000; padding: 5px 10px;
+            border-radius: 10px; font-size: 11px; font-weight: 900; font-family: 'Orbitron';
+            white-space: nowrap; opacity: 0; pointer-events: none;
+            animation: showTooltip 8s infinite;
+        }
+        .ai-tooltip::after {
+            content: ''; position: absolute; bottom: -4px; left: 50%;
+            transform: translateX(-50%); border-width: 5px 5px 0;
+            border-style: solid; border-color: #ffb703 transparent transparent transparent;
+        }
+
         /* 🌟 CSS ANIMATIONS FOR CAT-BOT 🌟 */
         @keyframes floatAI { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
@@ -461,6 +475,11 @@
             25% { margin-left: 5px; margin-bottom: -5px; transform: rotate(5deg); }
             50% { margin-left: -5px; margin-bottom: 5px; transform: rotate(-5deg); }
             75% { margin-left: 5px; margin-bottom: 5px; transform: rotate(3deg); }
+        }
+        @keyframes showTooltip {
+            0%, 60% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            70%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
         }
 
         /* EMOTES */
@@ -650,6 +669,7 @@
 
     <!-- 🤖 ANIMAX MODERN AI UI (PURE CSS 3D CAT-BOT) -->
     <div class="ai-cat-bot-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
+        <div class="ai-tooltip" id="ai-action-tooltip">Click me & Speak! 🎤</div>
         <div class="cat-head">
             <div class="cat-ear left"></div>
             <div class="cat-ear right"></div>
@@ -2441,42 +2461,17 @@
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
 
         // ============================================================
-        // 🤖 ANIMAX AI MANAGER (WITH FIXES & NOTIFICATIONS)
+        // 🤖 ANIMAX AI MANAGER - GOOGLE GEMINI POWERED
         // ============================================================
 
         function closeTopNotif() {
             document.getElementById('ai-top-notif').classList.remove('show');
         }
 
-        function toggleAIChat() {
-            // Disabled chat box popup logic completely to save space
-            // AI now only responds via Voice and Emotes
-        }
-
-        function aiAddLog(msg, isNew = false) {
-            // Background log keeper (hidden from view)
-            if(isNew) document.getElementById('ai-notif-badge').style.display = 'block';
-        }
-
-        function aiPlayBanner(title) {
-            if(window.animeData && window.animeData[title]) {
-                openFolder(title);
-                return;
-            }
-            let match = findDataByTitle(title);
-            if(match) {
-                playVideo(title, match.url, match.id || title, match.isPremium, match.type, -1);
-            } else {
-                setCatEmote('alert');
-                speakLocalized(`Sorry friend! The title ${title} is under maintenance.`, navigator.language.split('-')[0]);
-            }
-        }
-
         let processedVideoIdForLang = null; 
 
         function aiHandleLanguage() {
             if(!currentPlayingEpisodeData || !currentSafeVideoId) return;
-            
             if(processedVideoIdForLang === currentSafeVideoId) return; 
 
             let hasOriginal = !!currentPlayingEpisodeData.url;
@@ -2488,13 +2483,11 @@
                 changeLanguage('hindi');
                 let sel = document.getElementById('language-select');
                 if(sel) sel.value = 'hindi';
-                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>Hindi</b>.`, true);
             } else if (hasEnglish && !hasOriginal && !hasHindi) {
                 processedVideoIdForLang = currentSafeVideoId; 
                 changeLanguage('english');
                 let sel = document.getElementById('language-select');
                 if(sel) sel.value = 'english';
-                aiAddLog(`🤖 <b>Smart Select:</b> Audio automatically set to <b>English</b>.`, true);
             } else {
                 processedVideoIdForLang = currentSafeVideoId; 
             }
@@ -2503,21 +2496,6 @@
         document.getElementById('main-video').addEventListener('loadstart', () => {
             setTimeout(aiHandleLanguage, 800);
         });
-
-        function aiMonitor() {
-            const v = document.getElementById('main-video');
-            v.addEventListener('error', () => {
-                setCatEmote('alert');
-                speakLocalized("System Alert! Playback failed. Switching to backup server.", navigator.language.split('-')[0]);
-                if(db) db.ref('admin_reports').push({ error: "Source Error: " + v.src, user: currentUser?currentUser.email:"Guest", time: Date.now() });
-            });
-            
-            if(currentUser && !isPremium) {
-                setTimeout(() => {
-                    aiAddLog(`👑 <b>Upgrade:</b> Enjoy 1080p Ultra HD and <b>No Ads</b>. Join VIP today!`, true);
-                }, 20000);
-            }
-        }
 
         function aiShowTopNotification() {
             db.ref('anime').limitToLast(1).once('value', s => {
@@ -2543,7 +2521,6 @@
         }
 
         setTimeout(() => {
-            aiMonitor();
             aiShowTopNotification();
             updateBannerVisibility();
         }, 5000);
@@ -2551,7 +2528,7 @@
         setInterval(aiShowTopNotification, 600000);
 
         // ==========================================
-        // 🤖 CAT-BOT AI DRAGGABLE & VOICE LOGIC (PURE CSS)
+        // 🤖 CAT-BOT AI DRAGGABLE & VOICE LOGIC 
         // ==========================================
         const catBot = document.getElementById('ai-cat-bot');
         const catFaceInner = document.getElementById('cat-face-inner');
@@ -2590,11 +2567,6 @@
             if(isDraggingCat) { isDraggingCat = false; catBot.style.transition = '0.3s'; }
         }
 
-        // AI Voice Setup
-        let aiName = localStorage.getItem('animax_ai_name') || "Animax Bot";
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition = SpeechRecognition ? new SpeechRecognition() : null;
-
         function setCatEmote(state) {
             catFaceInner.className = 'cat-face-inner';
             if (state === 'happy') catFaceInner.classList.add('cat-bot-happy');
@@ -2620,116 +2592,109 @@
             window.speechSynthesis.speak(utter);
         }
 
-        // Proactive Friendly Chat Loop (Randomly speaks every 3 minutes if logged in)
-        setInterval(() => {
-            if (currentUser && Math.random() > 0.6) { // 40% chance to speak every 3 mins
-                let uiLang = navigator.language.split('-')[0];
-                let msgEn = "Hey friend, hope you are enjoying the anime! Let me know if you need anything.";
-                let urlReply = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${uiLang}&dt=t&q=${encodeURIComponent(msgEn)}`;
-                fetch(urlReply).then(r=>r.json()).then(d=>{
-                    let finalMsg = d[0].map(x=>x[0]).join('');
-                    speakLocalized(finalMsg, uiLang);
-                    aiAddLog(`🤖 <b>${aiName}:</b> ${finalMsg}`, true);
-                }).catch(e=>{});
+        // 🌟 GOOGLE GEMINI API CALL 🌟
+        async function callGeminiAPI(userText) {
+            const apiKey = "AQ.Ab8RN6L68L42kNcIkfPVlubPMTEvfm7PImnYA3bBCYKPcJz3-Q"; 
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            
+            const prompt = `You are Animax AI, a super friendly and smart cat-bot assistant for an anime streaming website.
+            Rules:
+            1. Answer whatever the user asks (jokes, math, general info, anime recommendations, etc.).
+            2. ALWAYS reply in the EXACT SAME LANGUAGE the user used in their prompt. If they speak Bengali, reply in Bengali.
+            3. Keep the answer short, conversational, and friendly (like a best friend).
+            4. IF the user asks to find, search, watch, or play a specific anime/cartoon/movie, add this EXACT tag at the very end of your response: [SEARCH: exact_movie_or_anime_name]. Do not add this tag if they are just chatting.
+            
+            User said: "${userText}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                let res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                let data = await res.json();
+                if(data && data.candidates && data.candidates.length > 0) {
+                    return data.candidates[0].content.parts[0].text;
+                } else {
+                    throw new Error("Invalid response from Gemini");
+                }
+            } catch (e) {
+                console.error("Gemini Error:", e);
+                return null;
             }
-        }, 180000);
+        }
+
+        function resetTooltip(tooltip) {
+            tooltip.innerText = "Click me & Speak! 🎤";
+            tooltip.style.opacity = "";
+            tooltip.style.animation = "showTooltip 8s infinite";
+        }
 
         function handleCatBotClick(e) {
-            if(catMoved) return; // Prevent click if dragged
+            if(catMoved) return; 
             
-            document.getElementById('ai-notif-badge').style.display = 'none';
+            const tooltip = document.getElementById('ai-action-tooltip');
+            
+            if(!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                alert("Voice command is not supported on this browser! Try Google Chrome.");
+                return;
+            }
 
-            if(recognition) {
-                let uiLang = navigator.language.split('-')[0];
-                
-                // Friendly prompt to speak in user's UI language
-                let prompts = {
-                    'bn': "হ্যাঁ বন্ধু, বলো আমি শুনছি!",
-                    'hi': "हाँ दोस्त, बोलो मैं सुन रही हूँ!",
-                    'ja': "はい、友達。聞いています！",
-                    'es': "Sí amigo, dime, ¡estoy escuchando!",
-                    'en': "Yes my friend, tell me, I am listening!"
-                };
-                let sayMsg = prompts[uiLang] || prompts['en'];
+            let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
                 setCatEmote('happy');
-                speakLocalized(sayMsg, uiLang);
+                if(tooltip) { tooltip.innerText = "Listening... 🎤"; tooltip.style.opacity = 1; tooltip.style.animation = "none"; }
+                playSuccessSound(); 
+            };
+
+            recognition.onresult = async (event) => {
+                let transcript = event.results[0][0].transcript;
+                if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
                 
-                setTimeout(() => {
-                    recognition.lang = navigator.language || 'en-US';
-                    try { recognition.start(); } catch(err){}
+                let aiResponse = await callGeminiAPI(transcript);
+                
+                if(aiResponse) {
+                    let searchText = null;
+                    const searchRegex = /\[SEARCH:\s*(.*?)\]/i;
+                    const match = aiResponse.match(searchRegex);
+                    if(match) {
+                        searchText = match[1].trim();
+                        aiResponse = aiResponse.replace(searchRegex, '').trim(); 
+                    }
+
+                    setCatEmote('happy');
+                    speakLocalized(aiResponse, navigator.language);
+                    if(tooltip) resetTooltip(tooltip);
                     
-                    recognition.onresult = (event) => {
-                        let transcript = event.results[0][0].transcript;
-                        processUniversalCommand(transcript, aiName);
-                    };
-                    recognition.onerror = () => { setCatEmote('neutral'); };
-                }, 2000); // Start listening after speaking
-            } else {
-                setCatEmote('alert');
-                alert("Voice command is not supported on this browser!");
-            }
+                    if(searchText) {
+                        document.getElementById('header-search-wrapper').click();
+                        setTimeout(() => { executeSearch(searchText); }, 1500);
+                    }
+                } else {
+                    setCatEmote('neutral');
+                    if(tooltip) resetTooltip(tooltip);
+                    speakLocalized("Sorry friend, my brain is a bit slow right now. Please try again.", 'en-US');
+                }
+            };
+
+            recognition.onerror = (event) => { 
+                setCatEmote('neutral'); 
+                if(tooltip) { tooltip.innerText = "Didn't hear you! ❌"; setTimeout(()=> resetTooltip(tooltip), 2000); }
+            };
+            
+            recognition.onend = () => {
+                 if(tooltip && tooltip.innerText === "Listening... 🎤") resetTooltip(tooltip);
+            };
+
+            try { recognition.start(); } catch(err){}
         }
 
-        async function processUniversalCommand(rawTranscript, aiName) {
-            try {
-                // 1. Detect language and translate to English for intent processing
-                let urlEn = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(rawTranscript)}`;
-                let resEn = await fetch(urlEn);
-                let dataEn = await resEn.json();
-                
-                let englishText = dataEn[0].map(x=>x[0]).join('').toLowerCase();
-                let detectedLang = dataEn[2] || navigator.language.split('-')[0]; 
-                
-                let replyTextEn = "";
-                let intent = "chat";
-                let query = "";
-
-                // 2. Intent matching based on English translation
-                if(englishText.includes('find') || englishText.includes('search') || englishText.includes('look for') || englishText.includes('play') || englishText.includes('show') || englishText.includes('watch')) {
-                    intent = "search";
-                    query = englishText.replace(new RegExp(`.*(find|search|look for|play|show|watch)\\s+`, 'i'), '').replace(new RegExp(aiName.toLowerCase(), 'g'), '').trim();
-                    if(!query) query = rawTranscript; 
-                    replyTextEn = `Okay my friend, I am searching for ${query} right now!`;
-                } 
-                else if (englishText.includes('hello') || englishText.includes('hi') || englishText.includes('hey')) {
-                    replyTextEn = `Hello my best friend! How are you doing today?`;
-                }
-                else if (englishText.includes('how are you')) {
-                    replyTextEn = `I am doing fantastic, thanks for asking! I'm here to help you watch anime.`;
-                }
-                else if (englishText.includes('fine') || englishText.includes('good') || englishText.includes('great')) {
-                    replyTextEn = `That is awesome to hear! Let me know if you want to search for any cartoon or movie.`;
-                }
-                else if (englishText.includes('who are you') || englishText.includes('your name')) {
-                    replyTextEn = `I am your friendly AI companion for Animax TV. You can ask me to search or play anything!`;
-                }
-                else if (englishText.includes('love you') || englishText.includes('friend')) {
-                    replyTextEn = `Aww, I love you too my friend! You are the best.`;
-                }
-                else {
-                    replyTextEn = `I am always here for you! Do you want me to find a specific anime or movie? Just say search and the name!`;
-                }
-
-                // 3. Translate reply back to user's native language
-                let urlReply = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${detectedLang}&dt=t&q=${encodeURIComponent(replyTextEn)}`;
-                let resReply = await fetch(urlReply);
-                let dataReply = await resReply.json();
-                let finalReply = dataReply[0].map(x => x[0]).join(''); 
-                
-                setCatEmote('happy');
-                speakLocalized(finalReply, detectedLang);
-                
-                if (intent === "search" && query) {
-                    document.getElementById('header-search-wrapper').click();
-                    setTimeout(() => { executeSearch(query); }, 2000);
-                }
-            } catch(e) {
-                let fallbackLang = navigator.language.split('-')[0];
-                speakLocalized("Sorry friend, my network is a bit slow.", fallbackLang);
-            }
-        }
-        
-        // Ensure voice list is loaded on page load
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
     </script>
 </body>
