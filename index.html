@@ -944,7 +944,7 @@
         <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
- <!-- 🚀 JS LOGIC 🚀 -->
+<!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
 
@@ -2652,40 +2652,58 @@
             window.speechSynthesis.speak(utter);
         }
 
-        // 🌟 GOOGLE GEMINI API CALL (SMART AI "ANI") 🌟
-        async function callGeminiAPI(userText) {
-            const apiKey = "AIzaSyCcBpgyJJppwSYwMG9d4aDLsZYTcd5Z9eQ"; 
-            
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            
-            const prompt = `Your name is "Ani". You are a highly advanced, super friendly, and cute AI assistant for "ANIMAX TV", a premium anime streaming website.
-            Rules:
-            1. Be polite and chat normally. If asked "Who are you?", say you are Ani.
-            2. Reply in the EXACT SAME LANGUAGE the user used (e.g., reply in Bengali if asked in Bengali).
-            3. Keep answers short and sweet.
-            4. VERY IMPORTANT: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie (e.g., "play solo leveling season 2", "naruto search koro"), you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name]. Do not add this tag for normal chats.
-            
-            User said: "${userText}"`;
+        // 🌟 CEREBRAS API CALL (SMART AI "ANI") 🌟
+        let conversationHistory = [
+            {
+                role: 'system',
+                content: `Your name is "Ani". You are a highly advanced, super friendly, and cute AI assistant for "ANIMAX TV", a premium anime streaming website.
+                Rules:
+                1. Be polite and chat normally. If asked "Who are you?", say you are Ani.
+                2. Reply in the EXACT SAME LANGUAGE the user used (e.g., reply in Bengali if asked in Bengali).
+                3. Keep answers short and sweet.
+                4. VERY IMPORTANT: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie (e.g., "play solo leveling season 2", "naruto search koro"), you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name]. Do not add this tag for normal chats.`
+            }
+        ];
 
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
+        async function callCerebrasAPI(userText) {
+            const apiKey = "csk-te8jh363he8cppk2xcv45fw3ycddw6fwm8etnt3fx53yc3kd";
+            const url = "https://api.cerebras.ai/v1/chat/completions";
+
+            // Add user message to history
+            conversationHistory.push({ role: 'user', content: userText });
+
+            // Keep history manageable
+            if (conversationHistory.length > 11) {
+                conversationHistory = [conversationHistory[0], ...conversationHistory.slice(conversationHistory.length - 10)];
+            }
 
             try {
                 let res = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama3.1-70b",
+                        messages: conversationHistory,
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
                 });
+
                 let data = await res.json();
-                
+
                 if (!res.ok) {
-                    console.error("Gemini API Error:", data);
+                    console.error("Cerebras API Error:", data);
                     return null;
                 }
 
-                if(data && data.candidates && data.candidates.length > 0) {
-                    return data.candidates[0].content.parts[0].text;
+                if (data && data.choices && data.choices.length > 0) {
+                    let botReply = data.choices[0].message.content;
+                    // Save bot reply to history
+                    conversationHistory.push({ role: 'assistant', content: botReply });
+                    return botReply;
                 } else {
                     return null;
                 }
@@ -2765,7 +2783,7 @@
                     return; 
                 }
                 
-                let aiResponse = await callGeminiAPI(transcript);
+                let aiResponse = await callCerebrasAPI(transcript);
                 
                 if(aiResponse) {
                     let playText = null;
