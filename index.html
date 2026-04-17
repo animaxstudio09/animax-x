@@ -835,7 +835,7 @@
             
             <div class="resources-header">Resources <span>Source: Animax</span></div>
             <div class="dropdown-row">
-                <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop"><option value="original">Original Audio</option><option value="hindi">Hindi Audio</option><option value="english">English Dub</option></select>
+                <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop"></select>
                 <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop"></select>
             </div>
             
@@ -2059,6 +2059,14 @@
             } else { 
                 document.getElementById('content-type-badge').innerText="ANIME"; 
                 document.getElementById('episode-pill-container').style.display='flex'; document.querySelector('.dropdown-row').style.display='flex'; document.querySelectorAll('.ep-pill').forEach(b=>b.classList.remove('active')); let ab=document.getElementById(`ep-btn-${idx}`); if(ab) ab.classList.add('active'); 
+                
+                let langSelect = document.getElementById('language-select');
+                if (langSelect && currentPlayingEpisodeData) {
+                    langSelect.innerHTML = '';
+                    if (currentPlayingEpisodeData.url) langSelect.innerHTML += '<option value="original">Original Audio</option>';
+                    if (currentPlayingEpisodeData.url_hin) langSelect.innerHTML += '<option value="hindi">Hindi Audio</option>';
+                    if (currentPlayingEpisodeData.url_eng) langSelect.innerHTML += '<option value="english">English Dub</option>';
+                }
             }
             
             const v = document.getElementById('main-video'); let prevTime = seekTime;
@@ -2574,7 +2582,7 @@
             return "Night";
         }
 
-        let conversationHistory = [];
+        let geminiHistory = [];
 
         function buildSystemPrompt() {
             let timeOfDay = getTimeOfDay();
@@ -2593,9 +2601,9 @@
             5. VIDEO COMMAND: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie, you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name].`;
         }
 
-        async function callCerebrasAPI(userText) {
-            const apiKey = "csk-te8jh363he8cppk2xcv45fw3ycddw6fwm8etnt3fx53yc3kd";
-            const url = "https://api.cerebras.ai/v1/chat/completions";
+        async function callGeminiAPI(userText) {
+            const apiKey = "AIzaSyDVH_T6nVkDTyTdv3hjxxWpxQcirNxFHpw";
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             let lowerText = userText.toLowerCase();
             if (lowerText.includes('muslim') || lowerText.includes('islam') || lowerText.includes('মুসলিম')) {
@@ -2606,36 +2614,35 @@
                 localStorage.setItem('user_religion', 'Christian');
             }
 
-            if(conversationHistory.length === 0 || conversationHistory[0].role !== 'system') {
-                conversationHistory = [{ role: 'system', content: buildSystemPrompt() }];
-            } else {
-                conversationHistory[0].content = buildSystemPrompt(); 
-            }
+            geminiHistory.push({ role: 'user', parts: [{ text: userText }] });
 
-            conversationHistory.push({ role: 'user', content: userText });
-
-            if (conversationHistory.length > 11) {
-                conversationHistory = [conversationHistory[0], ...conversationHistory.slice(-10)];
+            if (geminiHistory.length > 10) {
+                geminiHistory = geminiHistory.slice(-10);
             }
 
             try {
                 let res = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                    body: JSON.stringify({ model: "llama3.1-70b", messages: conversationHistory, temperature: 0.7, max_tokens: 500 })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+                        contents: geminiHistory,
+                        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
+                    })
                 });
 
                 if (!res.ok) throw new Error("API Limit or Setup Error");
 
                 let data = await res.json();
-                if (data && data.choices && data.choices.length > 0) {
-                    let botReply = data.choices[0].message.content;
-                    conversationHistory.push({ role: 'assistant', content: botReply });
+                if (data && data.candidates && data.candidates.length > 0) {
+                    let botReply = data.candidates[0].content.parts[0].text;
+                    geminiHistory.push({ role: 'model', parts: [{ text: botReply }] });
                     return botReply;
                 } else {
-                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি বায়। আবার বলবেন?";
+                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি না। আবার বলবেন?";
                 }
             } catch (e) {
+                geminiHistory.pop();
                 return "ইন্টারনেট কানেকশনে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
             }
         }
@@ -2667,7 +2674,7 @@
                 let transcript = event.results[0][0].transcript;
                 if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
                 
-                let aiResponse = await callCerebrasAPI(transcript);
+                let aiResponse = await callGeminiAPI(transcript);
                 
                 if(aiResponse) {
                     let playText = null;
