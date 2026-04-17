@@ -384,133 +384,164 @@
         #ai-top-notif.show { top: 20px; }
 
         /* =========================================
-           🤖 PURE CSS 3D CAT-BOT AI DESIGN
+           🤖 HIGH-END 3D SMALL FLOATING AI ROBOT "ANI"
            ========================================= */
-        .ai-cat-bot-container {
-            position: fixed; bottom: 90px; left: 20px; width: 70px; height: 90px;
+        .ai-bot-container {
+            position: fixed; bottom: 85px; left: 20px; width: 70px; height: 65px;
             z-index: 99999; cursor: pointer; user-select: none; touch-action: none;
-            animation: floatAI 3s ease-in-out infinite, randomMove 15s ease-in-out infinite; 
-            filter: drop-shadow(0 10px 15px rgba(0,245,212,0.3));
+            animation: hoverFloat 3s ease-in-out infinite; 
+            filter: drop-shadow(0 10px 15px rgba(0, 229, 255, 0.3));
         }
 
-        .cat-head {
-            width: 60px; height: 50px; background: #fff; border-radius: 40% 40% 35% 35%;
-            border: 2px solid #222; position: relative; z-index: 2; 
-            display: flex; justify-content: center; align-items: center; margin: 0 auto;
-            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1);
-        }
-
-        .cat-ear {
-            position: absolute; width: 0; height: 0;
-            border-left: 12px solid transparent; border-right: 12px solid transparent;
-            border-bottom: 22px solid #fff; top: -14px; z-index: -1;
-            filter: drop-shadow(0 -2px 0px #222);
-        }
-        .cat-ear::after {
-            content: ''; position: absolute; top: 6px; left: -6px;
-            border-left: 6px solid transparent; border-right: 6px solid transparent;
-            border-bottom: 12px solid #00f5d4;
-        }
-        .cat-ear.left { left: 4px; transform: rotate(-20deg); }
-        .cat-ear.right { right: 4px; transform: rotate(20deg); }
-
-        .cat-visor {
-            width: 48px; height: 28px; background: #1a1a24; border-radius: 12px;
-            display: flex; justify-content: center; align-items: center; position: relative;
-            overflow: hidden; border: 2px solid #333;
-        }
-
-        .cat-face-inner {
-            display: flex; flex-direction: column; align-items: center;
-            animation: lookAround 8s infinite;
-        }
-
-        .cat-eyes { display: flex; gap: 8px; }
-        .cat-eye {
-            width: 8px; height: 12px; background: #00f5d4; border-radius: 50%;
-            box-shadow: 0 0 8px #00f5d4; animation: blink 4s infinite; transition: 0.3s;
+        /* Head Structure */
+        .bot-head-wrapper {
+            position: absolute; top: 0; left: 0; width: 70px; height: 38px; z-index: 10;
         }
         
-        .cat-mouth {
-            width: 10px; height: 4px; border-bottom: 2px solid #00f5d4; border-radius: 50%;
-            margin-top: 2px; box-shadow: 0 2px 4px rgba(0,245,212,0.5); transition: 0.3s;
+        /* White Top/Bottom Casing */
+        .bot-casing {
+            position: absolute; top: 0; left: 5px; width: 60px; height: 38px;
+            background: linear-gradient(180deg, #f8f9fa 0%, #d1d5db 20%, #111 25%, #111 75%, #d1d5db 80%, #9ca3af 100%);
+            border-radius: 50%; box-shadow: inset 0 2px 5px #fff;
+        }
+        
+        /* Side Blue Cones */
+        .bot-side-cone {
+            position: absolute; top: 12px; width: 14px; height: 16px;
+            background: linear-gradient(90deg, #0077ff, #00e5ff); z-index: -1;
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.6);
+        }
+        .bot-side-cone.left { left: -2px; border-radius: 10px 0 0 10px; transform: perspective(10px) rotateY(20deg); }
+        .bot-side-cone.right { right: -2px; border-radius: 0 10px 10px 0; transform: perspective(10px) rotateY(-20deg); }
+
+        /* Ears & Antenna */
+        .bot-ear {
+            position: absolute; top: -6px; width: 10px; height: 12px;
+            background: #222; z-index: -2; border: 1px solid #d1d5db;
+        }
+        .bot-ear.left { left: 12px; border-radius: 3px 10px 0 0; transform: rotate(-25deg); }
+        .bot-ear.right { right: 12px; border-radius: 10px 3px 0 0; transform: rotate(25deg); }
+        
+        .bot-antenna { position: absolute; top: -10px; width: 1px; height: 8px; background: #555; z-index: -3;}
+        .bot-antenna.left { left: 22px; transform: rotate(-15deg); }
+        .bot-antenna.right { right: 22px; transform: rotate(15deg); }
+        .bot-antenna::after {
+            content: ''; position: absolute; top: -3px; left: -1.5px; width: 4px; height: 4px;
+            background: #ff5555; border-radius: 50%; box-shadow: 0 0 3px #ff5555;
         }
 
-        .cat-body {
-            width: 30px; height: 25px; background: #fff; border-radius: 10px 10px 40% 40%;
-            margin: -5px auto 0 auto; border: 2px solid #222; position: relative; z-index: 1;
+        /* Face Screen */
+        .bot-face-screen {
+            position: absolute; top: 4px; left: 8px; width: 54px; height: 30px;
+            background: #050508; border-radius: 48%; overflow: hidden;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.9), inset 0 2px 3px rgba(255,255,255,0.2);
             display: flex; justify-content: center; align-items: center;
-            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
         }
-        .cat-core {
-            width: 12px; height: 12px; background: #00f5d4; border-radius: 50%;
-            box-shadow: 0 0 8px #00f5d4; animation: pulseCore 2s infinite alternate;
+        .bot-face-screen::before {
+            content:''; position: absolute; inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 229, 255, 0.1) 1px, rgba(0, 229, 255, 0.1) 2px);
+            pointer-events: none; z-index: 5;
         }
 
-        /* TOOLTIP ANIMATION */
+        .cat-face-inner { display: flex; flex-direction: column; align-items: center; width: 100%; z-index: 2;}
+
+        /* Glowing Eyes ^ ^ */
+        .bot-eyes { display: flex; gap: 8px; margin-top: -2px; }
+        .cat-eye {
+            width: 13px; height: 6px;
+            border-top: 3px solid #00e5ff;
+            border-radius: 50%;
+            box-shadow: 0 -3px 8px rgba(0, 229, 255, 0.8);
+            animation: neonFlicker 3s infinite alternate; transition: 0.3s;
+        }
+
+        /* Glowing Mouth */
+        .cat-mouth {
+            width: 22px; height: 9px; margin-top: 3px;
+            background: repeating-linear-gradient(0deg, #00e5ff, #00e5ff 1px, transparent 1px, transparent 2px);
+            border-radius: 3px 3px 20px 20px;
+            box-shadow: 0 3px 8px rgba(0, 229, 255, 0.6); transition: 0.3s;
+        }
+
+        /* Body */
+        .bot-body {
+            position: absolute; top: 38px; left: 23px; width: 25px; height: 23px;
+            background: linear-gradient(135deg, #222 0%, #000 100%);
+            border-radius: 8px 8px 12px 12px; border: 1px solid #333;
+            box-shadow: inset 0 3px 5px rgba(255,255,255,0.1); z-index: 5;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .bot-core {
+            width: 10px; height: 10px; background: #0077ff; border-radius: 50%;
+            border: 1px solid #000; box-shadow: 0 0 8px #00e5ff, inset 0 0 4px #00e5ff;
+            animation: pulseCore 2s infinite alternate;
+        }
+
+        /* Floating Arms */
+        .bot-arm {
+            position: absolute; top: 43px; width: 12px; height: 23px;
+            background: linear-gradient(180deg, #222 0%, #050505 100%);
+            border-radius: 6px; z-index: 4; border: 1px solid #333;
+            box-shadow: inset 0 2px 3px rgba(255,255,255,0.1), 0 5px 5px rgba(0,0,0,0.5);
+            animation: floatArm 3s infinite alternate ease-in-out;
+            display: flex; justify-content: center; align-items: flex-end; padding-bottom: 3px;
+        }
+        .bot-arm.left { left: 8px; transform: rotate(15deg); }
+        .bot-arm.right { right: 8px; transform: rotate(-15deg); animation-delay: 0.5s;}
+
+        .bot-arm::after {
+            content: ''; width: 7px; height: 4px; background: #0077ff;
+            border-radius: 2px; box-shadow: 0 0 4px #00e5ff;
+        }
+
+        /* Tooltip */
         .ai-tooltip {
-            position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
-            background: var(--accent-gradient); color: #000; padding: 5px 10px;
-            border-radius: 10px; font-size: 11px; font-weight: 900; font-family: 'Orbitron';
+            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+            background: #00e5ff; color: #000; padding: 4px 8px;
+            border-radius: 8px; font-size: 9px; font-weight: 900; font-family: 'Orbitron';
             white-space: nowrap; opacity: 0; pointer-events: none;
-            animation: showTooltip 8s infinite;
+            animation: showTooltip 8s infinite; z-index: 20; box-shadow: 0 3px 10px rgba(0,229,255,0.4);
         }
         .ai-tooltip::after {
-            content: ''; position: absolute; bottom: -4px; left: 50%;
-            transform: translateX(-50%); border-width: 5px 5px 0;
-            border-style: solid; border-color: #ffb703 transparent transparent transparent;
+            content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); 
+            border-width: 4px 4px 0; border-style: solid; border-color: #00e5ff transparent transparent transparent;
         }
 
-        /* 🌟 CSS ANIMATIONS FOR CAT-BOT 🌟 */
-        @keyframes floatAI { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
-        @keyframes lookAround { 
-            0%, 100% { transform: translateX(0); } 
-            25% { transform: translateX(-4px); } 
-            75% { transform: translateX(4px); } 
-        }
-        @keyframes pulseCore { from { transform: scale(0.9); box-shadow: 0 0 5px #00f5d4; } to { transform: scale(1.1); box-shadow: 0 0 15px #00f5d4; } }
-        @keyframes randomMove {
-            0%, 100% { margin-left: 0; margin-bottom: 0; transform: rotate(0deg); }
-            25% { margin-left: 5px; margin-bottom: -5px; transform: rotate(5deg); }
-            50% { margin-left: -5px; margin-bottom: 5px; transform: rotate(-5deg); }
-            75% { margin-left: 5px; margin-bottom: 5px; transform: rotate(3deg); }
-        }
-        @keyframes showTooltip {
-            0%, 80% { opacity: 0; transform: translateX(-50%) translateY(10px); }
-            85%, 95% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-        }
+        /* 🌟 NORMAL ANIMATIONS 🌟 */
+        @keyframes hoverFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes floatArm { 0% { transform: translateY(0) rotate(15deg); } 100% { transform: translateY(-3px) rotate(25deg); } }
+        @keyframes neonFlicker { 0%, 100% { opacity: 1; } 98% { opacity: 0.8; } 99% { opacity: 0.4; } }
+        @keyframes pulseCore { from { transform: scale(0.9); box-shadow: 0 0 4px #00e5ff; } to { transform: scale(1.1); box-shadow: 0 0 10px #00e5ff; } }
+        @keyframes showTooltip { 0%, 80% { opacity: 0; transform: translateX(-50%) translateY(5px); } 85%, 95% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(-5px); } }
 
-        /* EMOTES */
-        .cat-bot-talking .cat-mouth { border-radius: 5px; height: 8px; border: none; background: #00f5d4; animation: talkAnim 0.3s infinite alternate; }
-        @keyframes talkAnim { from { transform: scaleY(0.5); } to { transform: scaleY(1.2); } }
-        .cat-bot-happy .cat-eye { border-radius: 0; height: 4px; border-bottom: 4px solid #00f5d4; background: transparent; transform: rotate(-15deg); margin-top: 4px;}
-        .cat-bot-happy .cat-eyes > div:nth-child(2) { transform: rotate(15deg); }
-
-        /* =========================================
-           🤖 AI CAT-BOT ARMS & LEGS (NEW)
-           ========================================= */
-        .cat-limb {
-            position: absolute; background: #fff; border: 2px solid #222;
-            border-radius: 10px; z-index: 0; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
+        /* Emotes */
+        .cat-bot-talking .cat-mouth { 
+            height: 13px; border-radius: 5px 5px 25px 25px; 
+            background: repeating-linear-gradient(0deg, #00e5ff, #00e5ff 1px, transparent 1px, transparent 3px);
+            animation: talkingMouth 0.15s infinite alternate; 
         }
-        .cat-arm { width: 8px; height: 20px; top: 48px; }
-        .cat-arm.left { left: 14px; transform-origin: top right; }
-        .cat-arm.right { right: 14px; transform-origin: top left; }
+        @keyframes talkingMouth { from { height: 9px; } to { height: 14px; } }
         
-        .cat-leg { width: 10px; height: 16px; top: 66px; z-index: -1; }
-        .cat-leg.left { left: 22px; transform-origin: top center; }
-        .cat-leg.right { right: 22px; transform-origin: top center; }
+        .cat-bot-happy .cat-eye { border-top: 3px solid #ffb703; box-shadow: 0 -3px 8px rgba(255, 183, 3, 0.9); }
 
-        .ai-cat-bot-container.roaming .cat-arm.left { animation: swingLeftArm 1.5s infinite alternate ease-in-out; }
-        .ai-cat-bot-container.roaming .cat-arm.right { animation: swingRightArm 1.5s infinite alternate ease-in-out; }
-        .ai-cat-bot-container.roaming .cat-leg.left { animation: walkLeg 0.4s infinite alternate ease-in-out; }
-        .ai-cat-bot-container.roaming .cat-leg.right { animation: walkLeg 0.4s infinite alternate-reverse ease-in-out; }
-
-        @keyframes swingLeftArm { 0% { transform: rotate(10deg); } 100% { transform: rotate(45deg); } }
-        @keyframes swingRightArm { 0% { transform: rotate(-10deg); } 100% { transform: rotate(-45deg); } }
-        @keyframes walkLeg { 0% { transform: rotate(-30deg); } 100% { transform: rotate(30deg); } }
+        /* 💃 DANCE ANIMATION FOR "ANI" 💃 */
+        .ai-bot-container.dancing {
+            animation: aniDance 1.2s infinite linear !important;
+        }
+        @keyframes aniDance {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-15px) rotate(-15deg) scale(1.1); }
+            50% { transform: translateY(0) rotate(0deg) scale(1); }
+            75% { transform: translateY(-15px) rotate(15deg) scale(1.1); }
+            100% { transform: translateY(0) rotate(0deg) scale(1); }
+        }
+        .ai-bot-container.dancing .bot-arm { animation: crazyArms 0.4s infinite alternate !important; }
+        @keyframes crazyArms {
+            0% { transform: translateY(-5px) rotate(160deg); }
+            100% { transform: translateY(-5px) rotate(80deg); }
+        }
+        .ai-bot-container.dancing .bot-body { animation: bodyBop 0.6s infinite alternate !important; }
+        @keyframes bodyBop { 0% { transform: scaleY(1); } 100% { transform: scaleY(0.85); } }
 
     </style>
 </head>
@@ -691,15 +722,33 @@
         <div id="reward-ad-bottom" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
     </div>
 
-    <!-- 🤖 ANIMAX MODERN AI UI (PURE CSS 3D CAT-BOT) -->
-    <div class="ai-cat-bot-container roaming" id="ai-cat-bot" onclick="handleCatBotClick(event)">
+    <!-- 🤖 PREMIUM 3D FLOATING AI ROBOT "ANI" (SMALL WIDGET) -->
+    <div class="ai-bot-container roaming" id="ai-cat-bot" onclick="handleCatBotClick(event)">
         <div class="ai-tooltip" id="ai-action-tooltip">Click me & Speak! 🎤</div>
-        <div class="cat-head">
-            <div class="cat-ear left"></div>
-            <div class="cat-ear right"></div>
-            <div class="cat-visor">
+        
+        <!-- Floating Arms -->
+        <div class="bot-arm left"></div>
+        <div class="bot-arm right"></div>
+        
+        <!-- Body -->
+        <div class="bot-body">
+            <div class="bot-core"></div>
+        </div>
+        
+        <!-- Wide UFO Head -->
+        <div class="bot-head-wrapper">
+            <div class="bot-casing"></div>
+            <div class="bot-ear left"></div>
+            <div class="bot-ear right"></div>
+            <div class="bot-antenna left"></div>
+            <div class="bot-antenna right"></div>
+            <div class="bot-side-cone left"></div>
+            <div class="bot-side-cone right"></div>
+            
+            <!-- Face Screen -->
+            <div class="bot-face-screen">
                 <div class="cat-face-inner" id="cat-face-inner">
-                    <div class="cat-eyes">
+                    <div class="bot-eyes">
                         <div class="cat-eye"></div>
                         <div class="cat-eye"></div>
                     </div>
@@ -707,13 +756,6 @@
                 </div>
             </div>
         </div>
-        <div class="cat-limb cat-arm left"></div>
-        <div class="cat-limb cat-arm right"></div>
-        <div class="cat-body">
-            <div class="cat-core"></div>
-        </div>
-        <div class="cat-limb cat-leg left"></div>
-        <div class="cat-limb cat-leg right"></div>
         <div class="ai-notif-pulse" id="ai-notif-badge" style="display:none; right:0; top:0;"></div>
     </div>
 
@@ -902,14 +944,10 @@
         <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
-
-    <!-- 🚀 JS LOGIC 🚀 -->
+ <!-- 🚀 JS LOGIC 🚀 -->
     <script>
-        let appStartupTime = Date.now(); // 🌟 Grace period tracker for Firebase load
+        let appStartupTime = Date.now(); 
 
-        // ==========================================
-        // 🌟 TAB TITLE TIMER SYSTEM 🌟
-        // ==========================================
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
 
@@ -935,9 +973,6 @@
             document.title = originalTitle;
         }
 
-        // ==========================================
-        // 🌟 AVATAR UPLOAD SYSTEM 🌟
-        // ==========================================
         function handleAvatarUpload(event) {
             if(!currentUser) return alert("Please login to change your profile picture!");
             let file = event.target.files[0];
@@ -962,7 +997,7 @@
                     canvas.width = width; canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    let dataUrl = canvas.toDataURL('image/jpeg', 0.6); // Compress to save DB space
+                    let dataUrl = canvas.toDataURL('image/jpeg', 0.6); 
                     
                     document.getElementById('profile-img').style.opacity = '0.5';
                     
@@ -983,9 +1018,6 @@
             reader.readAsDataURL(file);
         }
 
-        // ==========================================
-        // 🌟 INDEXEDDB FOR OFFLINE DOWNLOADS 🌟
-        // ==========================================
         let dbOffline;
         const requestOfflineDB = indexedDB.open("AnimaxOfflineDB", 1);
         
@@ -1028,9 +1060,6 @@
             document.getElementById('dl-toast').classList.remove('show');
         }
 
-        // ==========================================
-        // 🚀 EXISTING JAVASCRIPT START 🚀
-        // ==========================================
         const successSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_success_fanfare.ogg');
         function playSuccessSound() { successSound.play().catch(e => console.log("Audio play blocked by browser")); }
 
@@ -1241,18 +1270,13 @@
         let adsInjected = false;
         let socialBarInterval = null;
 
-        function startGlobalPopunderTimer() {
-            // Disabled Global Invisible Traps
-        }
-        function triggerGlobalPopunder() {
-            // Disabled Global Invisible Traps
-        }
+        function startGlobalPopunderTimer() {}
+        function triggerGlobalPopunder() {}
+        
         function triggerTargetedAd() {
             if(isPremium) return;
-            // 🌟 3 Seconds Grace Period so Ad doesn't fire mistakenly when app opens
             if(Date.now() - appStartupTime < 3000) return;
             
-            // 🌟 Absolute check: If VIP status text says "left" (meaning premium active), do not show ad
             let vipStatusText = document.getElementById('b-vip-status').innerText;
             if(currentUser && vipStatusText.includes('left')) { isPremium = true; return; }
 
@@ -1263,7 +1287,6 @@
             }
         }
 
-        // 🌟 Social Bar Reload Logic
         function loadSocialBarAd() {
             let oldScript = document.getElementById('dynamic-socialbar');
             if(oldScript) oldScript.remove();
@@ -1273,11 +1296,8 @@
             document.body.appendChild(script);
         }
 
-        // 🌟 Popunder & Social Script dynamically added ONLY for Free Users
         function injectFreeAds() {
             if(adsInjected || isPremium) return; 
-            
-            // 🌟 Absolute check again before injecting
             let vipStatusText = document.getElementById('b-vip-status').innerText;
             if(currentUser && vipStatusText.includes('left')) return; 
 
@@ -1292,7 +1312,7 @@
             clearInterval(socialBarInterval);
             socialBarInterval = setInterval(() => {
                 if(!isPremium) loadSocialBarAd();
-            }, 180000); // 3 Minutes Interval
+            }, 180000);
         }
 
         function checkPremium(uid) {
@@ -1321,7 +1341,6 @@
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
                     
-                    // Stop Ads for Premium
                     let popScript = document.getElementById('popunder-ad-manager');
                     if(popScript) popScript.src = "";
 
@@ -1475,7 +1494,7 @@
         }
 
         function copyReferCode() {
-            if(!currentUser) return;
+            if(!currentUser) return alert("Please login to copy refer code.");
             let code = currentUser.uid.substring(0, 8).toUpperCase();
             let msg = `Hey! Join ANIMAX TV using my referral code: ${code} and we both get free VIP points!`;
             navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
@@ -1563,9 +1582,6 @@
             alert(`✅ Thanks for rating! You gave ${stars} stars.`);
         }
 
-        // ==========================================
-        // 🌟 FETCH API DOWNLOAD LOGIC 🌟
-        // ==========================================
         async function handleDownload() {
             if(!isPremium) { 
                 setCatEmote('alert');
@@ -1720,7 +1736,6 @@
                 loadDownloadsList();
             };
         }
-        // ==========================================
 
         let lbTimerInterval = null;
         function getLeaderboardCycle() { return Math.floor((Date.now() + serverTimeOffset) / 1209600000); }
@@ -1735,7 +1750,6 @@
                 document.getElementById('lb-reset-timer').innerText = `Season resets in: ${days}d ${hours}h ${min}m`;
             }, 1000);
 
-            // Leaderboard Fix: startAt(0)
             db.ref(`leaderboard/c_${cycle}`).orderByValue().startAt(0).limitToLast(100).once('value', snap => {
                 if(!snap.exists()) { listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">No users found this season.</div>'; return; }
                 let lbData = []; snap.forEach(child => { lbData.push({ uid: child.key, points: child.val() }); }); lbData.reverse(); 
@@ -2207,7 +2221,6 @@
 
             if(isPremium) return;
             
-            // 🌟 10 Min Ad Tracker
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
                 let timeLeft = Math.ceil(nextAdTime - ct); document.getElementById('ad-warn-text').innerText = `⚠️ Ad break in ${timeLeft}s!`;
@@ -2490,10 +2503,6 @@
         
         function playItemAndCloseSearch(title) { closeSearchOverlay(); let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } }
 
-        // ============================================================
-        // 🤖 ANIMAX AI MANAGER (WITH FIXES & NOTIFICATIONS)
-        // ============================================================
-
         function closeTopNotif() {
             document.getElementById('ai-top-notif').classList.remove('show');
         }
@@ -2543,7 +2552,7 @@
                             document.getElementById('ai-top-notif').classList.add('show');
                             
                             localStorage.setItem('last_top_notif', title);
-                            setTimeout(closeTopNotif, 10000); // Auto hide
+                            setTimeout(closeTopNotif, 10000); 
                         }, 3000); 
                     }
                 });
@@ -2557,24 +2566,19 @@
         
         setInterval(aiShowTopNotification, 600000);
 
-        // ==========================================
-        // 🤖 CAT-BOT AI DRAGGABLE & VOICE LOGIC 
-        // ==========================================
         const catBot = document.getElementById('ai-cat-bot');
         const catFaceInner = document.getElementById('cat-face-inner');
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
         let catMoved = false;
-        let isRoaming = true; // 🌟 NEW: রোমিং ভেরিয়েবল
+        let isRoaming = true; 
 
-        // 🌟 NEW: রোমিং করার লজিক (স্ক্রিনের চারপাশে নিজে নিজে ঘুরবে)
         function roamCatBot() {
             if(!isRoaming || isDraggingCat) return;
             
             let maxX = window.innerWidth - 80;
             let maxY = window.innerHeight - 100;
             
-            // Random পজিশন তৈরি করা
             let randX = Math.max(10, Math.floor(Math.random() * maxX));
             let randY = Math.max(10, Math.floor(Math.random() * maxY));
             
@@ -2585,11 +2589,9 @@
             catBot.style.right = 'auto';
         }
         
-        // ৫.৫ সেকেন্ড পরপর নিজে নিজে জায়গা পরিবর্তন করবে
         setInterval(roamCatBot, 5500);
         setTimeout(roamCatBot, 2000);
 
-        // Drag functionality
         catBot.addEventListener('mousedown', dragStart);
         catBot.addEventListener('touchstart', dragStart, {passive: false});
         document.addEventListener('mousemove', dragMove);
@@ -2619,8 +2621,9 @@
         function dragEnd() {
             if(isDraggingCat) { 
                 isDraggingCat = false; 
-                // ড্র্যাগ ছাড়ার পর রোমিং মুডে থাকলে আবার নরমাল ট্রানজিশন দিয়ে দেওয়া
-                catBot.style.transition = isRoaming ? 'left 5s cubic-bezier(0.4, 0, 0.2, 1), top 5s cubic-bezier(0.4, 0, 0.2, 1)' : '0.3s'; 
+                if(!catBot.classList.contains('dancing')) {
+                    catBot.style.transition = isRoaming ? 'left 5s cubic-bezier(0.4, 0, 0.2, 1), top 5s cubic-bezier(0.4, 0, 0.2, 1)' : '0.3s'; 
+                }
             }
         }
 
@@ -2649,18 +2652,18 @@
             window.speechSynthesis.speak(utter);
         }
 
-        // 🌟 GOOGLE GEMINI API CALL 🌟
+        // 🌟 GOOGLE GEMINI API CALL (SMART AI "ANI") 🌟
         async function callGeminiAPI(userText) {
             const apiKey = "AIzaSyCcBpgyJJppwSYwMG9d4aDLsZYTcd5Z9eQ"; 
             
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
-            const prompt = `You are Animax AI, a super friendly and smart cat-bot assistant for an anime streaming website.
+            const prompt = `Your name is "Ani". You are a highly advanced, super friendly, and cute AI assistant for "ANIMAX TV", a premium anime streaming website.
             Rules:
-            1. Answer whatever the user asks (jokes, math, general info, anime recommendations, etc.).
-            2. ALWAYS reply in the EXACT SAME LANGUAGE the user used in their prompt. If they speak Bengali, reply in Bengali.
-            3. Keep the answer short, conversational, and friendly (like a best friend).
-            4. IF the user asks to find, search, watch, or play a specific anime/cartoon/movie, add this EXACT tag at the very end of your response: [SEARCH: exact_movie_or_anime_name]. Do not add this tag if they are just chatting.
+            1. Be polite and chat normally. If asked "Who are you?", say you are Ani.
+            2. Reply in the EXACT SAME LANGUAGE the user used (e.g., reply in Bengali if asked in Bengali).
+            3. Keep answers short and sweet.
+            4. VERY IMPORTANT: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie (e.g., "play solo leveling season 2", "naruto search koro"), you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name]. Do not add this tag for normal chats.
             
             User said: "${userText}"`;
 
@@ -2698,6 +2701,7 @@
             tooltip.style.animation = "showTooltip 8s infinite";
         }
 
+        // 🌟 AI COMMAND HANDLER 🌟
         function handleCatBotClick(e) {
             if(catMoved) return; 
             
@@ -2713,6 +2717,7 @@
 
             recognition.onstart = () => {
                 setCatEmote('happy');
+                catBot.classList.remove('dancing'); // Stop dance when listening
                 if(tooltip) { tooltip.innerText = "Listening... 🎤"; tooltip.style.opacity = 1; tooltip.style.animation = "none"; }
                 playSuccessSound(); 
             };
@@ -2723,50 +2728,80 @@
                 
                 let lowerTrans = transcript.toLowerCase();
                 
-                // 🌟 Special Voice Commands: STOP / HAVE FUN 🌟
+                // DANCE COMMAND
+                if(lowerTrans.includes('dance') || lowerTrans.includes('নাচ')) {
+                    isRoaming = false;
+                    catBot.classList.add('dancing');
+                    catBot.classList.remove('roaming');
+                    speakLocalized("Look at my moves!", navigator.language);
+                    setCatEmote('happy');
+                    if(tooltip) resetTooltip(tooltip);
+                    return;
+                }
+                
                 if(lowerTrans.includes('stop')) {
                     isRoaming = false;
-                    catBot.classList.remove('roaming'); // অ্যানিমেশন বন্ধ করে দেওয়া (পা নাড়ানো থামবে)
+                    catBot.classList.remove('roaming'); 
+                    catBot.classList.remove('dancing');
                     let rect = catBot.getBoundingClientRect();
-                    catBot.style.transition = 'none'; // ঐ জায়গাতেই ফিক্স করে দেওয়া
+                    catBot.style.transition = 'none'; 
                     catBot.style.left = rect.left + 'px';
                     catBot.style.top = rect.top + 'px';
                     
                     speakLocalized("Okay boss, I will stand right here.", navigator.language);
                     setCatEmote('neutral');
                     if(tooltip) resetTooltip(tooltip);
-                    return; // API কল থেকে বের হয়ে যাবে
+                    return; 
                 }
                 
                 if(lowerTrans.includes('have fun') || lowerTrans.includes('move')) {
                     isRoaming = true;
-                    catBot.classList.add('roaming'); // পা নাড়ানো আবার শুরু হবে
+                    catBot.classList.remove('dancing');
+                    catBot.classList.add('roaming'); 
                     speakLocalized("Yay! Time to roam around!", navigator.language);
                     setCatEmote('happy');
                     if(tooltip) resetTooltip(tooltip);
-                    roamCatBot(); // আবার ঘোরাঘুরি শুরু
-                    return; // API কল থেকে বের হয়ে যাবে
+                    roamCatBot(); 
+                    return; 
                 }
                 
-                // Normal AI Chatting logic
                 let aiResponse = await callGeminiAPI(transcript);
                 
                 if(aiResponse) {
-                    let searchText = null;
-                    const searchRegex = /\[SEARCH:\s*(.*?)\]/i;
-                    const match = aiResponse.match(searchRegex);
+                    let playText = null;
+                    const playRegex = /\[PLAY:\s*(.*?)\]/i;
+                    const match = aiResponse.match(playRegex);
                     if(match) {
-                        searchText = match[1].trim();
-                        aiResponse = aiResponse.replace(searchRegex, '').trim(); 
+                        playText = match[1].trim().toLowerCase();
+                        aiResponse = aiResponse.replace(playRegex, '').trim(); 
                     }
 
                     setCatEmote('happy');
                     speakLocalized(aiResponse, navigator.language);
                     if(tooltip) resetTooltip(tooltip);
                     
-                    if(searchText) {
-                        document.getElementById('header-search-wrapper').click();
-                        setTimeout(() => { executeSearch(searchText); }, 1500);
+                    // 🚀 SMART SEARCH/PLAY REDIRECT
+                    if(playText) {
+                        let cleanQuery = playText.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
+                        let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery);
+                        
+                        if(!foundItem) {
+                            foundItem = allContentList.find(item => item.title.toLowerCase().includes(cleanQuery) || cleanQuery.includes(item.title.toLowerCase()));
+                        }
+
+                        setTimeout(() => {
+                            if(foundItem) {
+                                if(foundItem.type === 'anime') {
+                                    openFolder(foundItem.folder);
+                                } else {
+                                    let sid = foundItem.data.id || foundItem.data.title;
+                                    playVideo(foundItem.title, foundItem.data.url, sid, foundItem.data.type === 'premium', foundItem.type, -1);
+                                }
+                            } else {
+                                document.getElementById('header-search-wrapper').click();
+                                setTimeout(() => { executeSearch(cleanQuery); }, 1500);
+                            }
+                        }, 1800); 
                     }
                 } else {
                     setCatEmote('neutral');
