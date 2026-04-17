@@ -384,164 +384,115 @@
         #ai-top-notif.show { top: 20px; }
 
         /* =========================================
-           🤖 HIGH-END 3D SMALL FLOATING AI ROBOT "ANI"
+           🤖 "MEA" STYLE CUTE CAT ROBOT (PURE CSS)
            ========================================= */
-        .ai-bot-container {
-            position: fixed; bottom: 85px; left: 20px; width: 70px; height: 65px;
+        .mea-container { 
+            position: fixed; bottom: 80px; left: 20px; width: 70px; height: 95px; 
             z-index: 99999; cursor: pointer; user-select: none; touch-action: none;
-            animation: hoverFloat 3s ease-in-out infinite; 
-            filter: drop-shadow(0 10px 15px rgba(0, 229, 255, 0.3));
+            filter: drop-shadow(0 10px 15px rgba(0, 210, 255, 0.3)); 
+            animation: floatMea 3s ease-in-out infinite; 
         }
 
-        /* Head Structure */
-        .bot-head-wrapper {
-            position: absolute; top: 0; left: 0; width: 70px; height: 38px; z-index: 10;
-        }
-        
-        /* White Top/Bottom Casing */
-        .bot-casing {
-            position: absolute; top: 0; left: 5px; width: 60px; height: 38px;
-            background: linear-gradient(180deg, #f8f9fa 0%, #d1d5db 20%, #111 25%, #111 75%, #d1d5db 80%, #9ca3af 100%);
-            border-radius: 50%; box-shadow: inset 0 2px 5px #fff;
-        }
-        
-        /* Side Blue Cones */
-        .bot-side-cone {
-            position: absolute; top: 12px; width: 14px; height: 16px;
-            background: linear-gradient(90deg, #0077ff, #00e5ff); z-index: -1;
-            box-shadow: inset 0 1px 3px rgba(255,255,255,0.6);
-        }
-        .bot-side-cone.left { left: -2px; border-radius: 10px 0 0 10px; transform: perspective(10px) rotateY(20deg); }
-        .bot-side-cone.right { right: -2px; border-radius: 0 10px 10px 0; transform: perspective(10px) rotateY(-20deg); }
-
-        /* Ears & Antenna */
-        .bot-ear {
-            position: absolute; top: -6px; width: 10px; height: 12px;
-            background: #222; z-index: -2; border: 1px solid #d1d5db;
-        }
-        .bot-ear.left { left: 12px; border-radius: 3px 10px 0 0; transform: rotate(-25deg); }
-        .bot-ear.right { right: 12px; border-radius: 10px 3px 0 0; transform: rotate(25deg); }
-        
-        .bot-antenna { position: absolute; top: -10px; width: 1px; height: 8px; background: #555; z-index: -3;}
-        .bot-antenna.left { left: 22px; transform: rotate(-15deg); }
-        .bot-antenna.right { right: 22px; transform: rotate(15deg); }
-        .bot-antenna::after {
-            content: ''; position: absolute; top: -3px; left: -1.5px; width: 4px; height: 4px;
-            background: #ff5555; border-radius: 50%; box-shadow: 0 0 3px #ff5555;
+        /* Head */
+        .mea-head { 
+            position: absolute; top: 12px; left: 0; width: 70px; height: 50px; 
+            background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); 
+            border-radius: 25px 25px 20px 20px; z-index: 10; 
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2); 
         }
 
-        /* Face Screen */
-        .bot-face-screen {
-            position: absolute; top: 4px; left: 8px; width: 54px; height: 30px;
-            background: #050508; border-radius: 48%; overflow: hidden;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.9), inset 0 2px 3px rgba(255,255,255,0.2);
-            display: flex; justify-content: center; align-items: center;
+        /* Ears */
+        .mea-ear { 
+            position: absolute; top: -14px; width: 0; height: 0; 
+            border-left: 12px solid transparent; border-right: 12px solid transparent; 
+            border-bottom: 18px solid #fff; z-index: 9; 
         }
-        .bot-face-screen::before {
-            content:''; position: absolute; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 229, 255, 0.1) 1px, rgba(0, 229, 255, 0.1) 2px);
-            pointer-events: none; z-index: 5;
+        .mea-ear::after { 
+            content: ''; position: absolute; top: 5px; left: -5px; width: 0; height: 0; 
+            border-left: 5px solid transparent; border-right: 5px solid transparent; 
+            border-bottom: 8px solid #00d2ff; 
         }
+        .mea-ear.left { left: 5px; transform: rotate(-15deg); }
+        .mea-ear.right { right: 5px; transform: rotate(15deg); }
 
-        .cat-face-inner { display: flex; flex-direction: column; align-items: center; width: 100%; z-index: 2;}
-
-        /* Glowing Eyes ^ ^ */
-        .bot-eyes { display: flex; gap: 8px; margin-top: -2px; }
-        .cat-eye {
-            width: 13px; height: 6px;
-            border-top: 3px solid #00e5ff;
-            border-radius: 50%;
-            box-shadow: 0 -3px 8px rgba(0, 229, 255, 0.8);
-            animation: neonFlicker 3s infinite alternate; transition: 0.3s;
+        /* Visor (Black Face Screen) */
+        .mea-visor { 
+            position: absolute; top: 8px; left: 6px; width: 58px; height: 32px; 
+            background: #1a1b26; border-radius: 12px 12px 16px 16px; 
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.2); 
+            display: flex; justify-content: center; align-items: center; 
         }
 
-        /* Glowing Mouth */
-        .cat-mouth {
-            width: 22px; height: 9px; margin-top: 3px;
-            background: repeating-linear-gradient(0deg, #00e5ff, #00e5ff 1px, transparent 1px, transparent 2px);
-            border-radius: 3px 3px 20px 20px;
-            box-shadow: 0 3px 8px rgba(0, 229, 255, 0.6); transition: 0.3s;
+        /* Eyes & Mouth */
+        .mea-eyes-wrap { display: flex; gap: 6px; align-items: center; margin-top: 2px;}
+        .mea-eye { 
+            width: 7px; height: 7px; background: #00d2ff; border-radius: 50%; 
+            box-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff; transition: 0.3s; 
+        }
+        .mea-mouth {
+            width: 14px; height: 6px; border-bottom: 2px solid #00d2ff; 
+            border-radius: 0 0 10px 10px; position: relative; margin: 0 2px;
+            box-shadow: 0 2px 5px rgba(0,210,255,0.5);
+        }
+        .mea-mouth::before {
+            content: ''; position: absolute; top: -4px; left: 6px; width: 2px; height: 6px; background: #1a1b26;
         }
 
         /* Body */
-        .bot-body {
-            position: absolute; top: 38px; left: 23px; width: 25px; height: 23px;
-            background: linear-gradient(135deg, #222 0%, #000 100%);
-            border-radius: 8px 8px 12px 12px; border: 1px solid #333;
-            box-shadow: inset 0 3px 5px rgba(255,255,255,0.1); z-index: 5;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .bot-core {
-            width: 10px; height: 10px; background: #0077ff; border-radius: 50%;
-            border: 1px solid #000; box-shadow: 0 0 8px #00e5ff, inset 0 0 4px #00e5ff;
-            animation: pulseCore 2s infinite alternate;
+        .mea-body { 
+            position: absolute; top: 55px; left: 15px; width: 40px; height: 30px; 
+            background: linear-gradient(180deg, #f0f3f8 0%, #d9e2ec 100%); 
+            border-radius: 10px 10px 15px 15px; z-index: 5; 
         }
 
-        /* Floating Arms */
-        .bot-arm {
-            position: absolute; top: 43px; width: 12px; height: 23px;
-            background: linear-gradient(180deg, #222 0%, #050505 100%);
-            border-radius: 6px; z-index: 4; border: 1px solid #333;
-            box-shadow: inset 0 2px 3px rgba(255,255,255,0.1), 0 5px 5px rgba(0,0,0,0.5);
-            animation: floatArm 3s infinite alternate ease-in-out;
-            display: flex; justify-content: center; align-items: flex-end; padding-bottom: 3px;
+        /* Collar (Blue Triangle) */
+        .mea-collar { 
+            position: absolute; top: 0; left: 10px; width: 0; height: 0; 
+            border-left: 10px solid transparent; border-right: 10px solid transparent; 
+            border-top: 8px solid #00d2ff; z-index: 6; 
         }
-        .bot-arm.left { left: 8px; transform: rotate(15deg); }
-        .bot-arm.right { right: 8px; transform: rotate(-15deg); animation-delay: 0.5s;}
 
-        .bot-arm::after {
-            content: ''; width: 7px; height: 4px; background: #0077ff;
-            border-radius: 2px; box-shadow: 0 0 4px #00e5ff;
+        /* Arms (Namaste/Folded Pose) */
+        .mea-arm { 
+            position: absolute; top: 2px; width: 14px; height: 22px; 
+            background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%);
+            border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; 
+        }
+        .mea-arm.left { left: 8px; transform: rotate(35deg); }
+        .mea-arm.right { right: 8px; transform: rotate(-35deg); }
+
+        /* Tail */
+        .mea-tail { 
+            position: absolute; bottom: 15px; right: -12px; width: 25px; height: 15px; 
+            border-bottom: 7px solid #fff; border-right: 7px solid #fff; 
+            border-radius: 0 0 15px 0; z-index: 4; 
+        }
+        .mea-tail::after { 
+            content: ''; position: absolute; top: -4px; right: -7px; width: 7px; height: 9px; 
+            background: #1a1b26; border-radius: 10px; 
         }
 
         /* Tooltip */
         .ai-tooltip {
             position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-            background: #00e5ff; color: #000; padding: 4px 8px;
-            border-radius: 8px; font-size: 9px; font-weight: 900; font-family: 'Orbitron';
-            white-space: nowrap; opacity: 0; pointer-events: none;
-            animation: showTooltip 8s infinite; z-index: 20; box-shadow: 0 3px 10px rgba(0,229,255,0.4);
+            background: #00d2ff; color: #000; padding: 4px 8px; border-radius: 8px; 
+            font-size: 10px; font-weight: 900; font-family: 'Orbitron'; white-space: nowrap; 
+            opacity: 0; pointer-events: none; animation: showTooltip 8s infinite; z-index: 20; 
         }
         .ai-tooltip::after {
             content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); 
-            border-width: 4px 4px 0; border-style: solid; border-color: #00e5ff transparent transparent transparent;
+            border-width: 4px 4px 0; border-style: solid; border-color: #00d2ff transparent transparent transparent;
         }
 
-        /* 🌟 NORMAL ANIMATIONS 🌟 */
-        @keyframes hoverFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-        @keyframes floatArm { 0% { transform: translateY(0) rotate(15deg); } 100% { transform: translateY(-3px) rotate(25deg); } }
-        @keyframes neonFlicker { 0%, 100% { opacity: 1; } 98% { opacity: 0.8; } 99% { opacity: 0.4; } }
-        @keyframes pulseCore { from { transform: scale(0.9); box-shadow: 0 0 4px #00e5ff; } to { transform: scale(1.1); box-shadow: 0 0 10px #00e5ff; } }
+        /* Animations */
+        @keyframes floatMea { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes showTooltip { 0%, 80% { opacity: 0; transform: translateX(-50%) translateY(5px); } 85%, 95% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(-5px); } }
 
-        /* Emotes */
-        .cat-bot-talking .cat-mouth { 
-            height: 13px; border-radius: 5px 5px 25px 25px; 
-            background: repeating-linear-gradient(0deg, #00e5ff, #00e5ff 1px, transparent 1px, transparent 3px);
-            animation: talkingMouth 0.15s infinite alternate; 
-        }
-        @keyframes talkingMouth { from { height: 9px; } to { height: 14px; } }
-        
-        .cat-bot-happy .cat-eye { border-top: 3px solid #ffb703; box-shadow: 0 -3px 8px rgba(255, 183, 3, 0.9); }
-
-        /* 💃 DANCE ANIMATION FOR "ANI" 💃 */
-        .ai-bot-container.dancing {
-            animation: aniDance 1.2s infinite linear !important;
-        }
-        @keyframes aniDance {
-            0% { transform: translateY(0) rotate(0deg) scale(1); }
-            25% { transform: translateY(-15px) rotate(-15deg) scale(1.1); }
-            50% { transform: translateY(0) rotate(0deg) scale(1); }
-            75% { transform: translateY(-15px) rotate(15deg) scale(1.1); }
-            100% { transform: translateY(0) rotate(0deg) scale(1); }
-        }
-        .ai-bot-container.dancing .bot-arm { animation: crazyArms 0.4s infinite alternate !important; }
-        @keyframes crazyArms {
-            0% { transform: translateY(-5px) rotate(160deg); }
-            100% { transform: translateY(-5px) rotate(80deg); }
-        }
-        .ai-bot-container.dancing .bot-body { animation: bodyBop 0.6s infinite alternate !important; }
-        @keyframes bodyBop { 0% { transform: scaleY(1); } 100% { transform: scaleY(0.85); } }
+        /* Talking Emote */
+        .mea-container.talking .mea-mouth { animation: talkMouth 0.15s infinite alternate; }
+        .mea-container.talking .mea-eye { animation: blink 2s infinite; }
+        @keyframes talkMouth { 0% { border-bottom-width: 2px; } 100% { border-bottom-width: 5px; } }
+        @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 
     </style>
 </head>
@@ -722,41 +673,28 @@
         <div id="reward-ad-bottom" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
     </div>
 
-    <!-- 🤖 PREMIUM 3D FLOATING AI ROBOT "ANI" (SMALL WIDGET) -->
-    <div class="ai-bot-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
-        <div class="ai-tooltip" id="ai-action-tooltip">Click me & Speak! 🎤</div>
+    <!-- 🤖 NEW "MEA" STYLE CSS CAT ROBOT -->
+    <div class="mea-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
+        <div class="ai-tooltip" id="ai-action-tooltip">Click to Talk! 🎤</div>
         
-        <!-- Floating Arms -->
-        <div class="bot-arm left"></div>
-        <div class="bot-arm right"></div>
-        
-        <!-- Body -->
-        <div class="bot-body">
-            <div class="bot-core"></div>
-        </div>
-        
-        <!-- Wide UFO Head -->
-        <div class="bot-head-wrapper">
-            <div class="bot-casing"></div>
-            <div class="bot-ear left"></div>
-            <div class="bot-ear right"></div>
-            <div class="bot-antenna left"></div>
-            <div class="bot-antenna right"></div>
-            <div class="bot-side-cone left"></div>
-            <div class="bot-side-cone right"></div>
-            
-            <!-- Face Screen -->
-            <div class="bot-face-screen">
-                <div class="cat-face-inner" id="cat-face-inner">
-                    <div class="bot-eyes">
-                        <div class="cat-eye"></div>
-                        <div class="cat-eye"></div>
-                    </div>
-                    <div class="cat-mouth"></div>
+        <div class="mea-head">
+            <div class="mea-ear left"></div>
+            <div class="mea-ear right"></div>
+            <div class="mea-visor">
+                <div class="mea-eyes-wrap">
+                    <div class="mea-eye"></div>
+                    <div class="mea-mouth"></div>
+                    <div class="mea-eye"></div>
                 </div>
             </div>
         </div>
-        <div class="ai-notif-pulse" id="ai-notif-badge" style="display:none; right:0; top:0;"></div>
+        
+        <div class="mea-body">
+            <div class="mea-collar"></div>
+            <div class="mea-arm left"></div>
+            <div class="mea-arm right"></div>
+        </div>
+        <div class="mea-tail"></div>
     </div>
 
     <!-- Hidden element to prevent JS Crash from old logic -->
@@ -1584,7 +1522,7 @@
 
         async function handleDownload() {
             if(!isPremium) { 
-                setCatEmote('alert');
+                setCatEmote('talking');
                 speakLocalized("Sorry friend! Downloads are only for VIP members.", navigator.language.split('-')[0]);
                 showDlToast("👑 VIP Only Feature!", false);
                 alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); 
@@ -2567,7 +2505,6 @@
         setInterval(aiShowTopNotification, 600000);
 
         const catBot = document.getElementById('ai-cat-bot');
-        const catFaceInner = document.getElementById('cat-face-inner');
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
         let catMoved = false;
@@ -2601,16 +2538,13 @@
         function dragEnd() {
             if(isDraggingCat) { 
                 isDraggingCat = false; 
-                if(!catBot.classList.contains('dancing')) {
-                    catBot.style.transition = '0.3s'; 
-                }
+                catBot.style.transition = '0.3s'; 
             }
         }
 
         function setCatEmote(state) {
-            catFaceInner.className = 'cat-face-inner';
-            if (state === 'happy') catFaceInner.classList.add('cat-bot-happy');
-            if (state === 'talking') catFaceInner.classList.add('cat-bot-talking');
+            if (state === 'talking') { catBot.classList.add('talking'); } 
+            else { catBot.classList.remove('talking'); }
         }
 
         async function speakLocalized(text, langCode) {
@@ -2632,22 +2566,51 @@
             window.speechSynthesis.speak(utter);
         }
 
-        // 🌟 CEREBRAS API CALL (SMART AI "ANI") 🌟
-        let conversationHistory = [
-            {
-                role: 'system',
-                content: `Your name is "Ani". You are a highly advanced, super friendly, and cute AI assistant for "ANIMAX TV", a premium anime streaming website.
-                Rules:
-                1. Be polite and chat normally. If asked "Who are you?", say you are Ani.
-                2. Reply in the EXACT SAME LANGUAGE the user used (e.g., reply in Bengali if asked in Bengali).
-                3. Keep answers short and sweet.
-                4. VERY IMPORTANT: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie (e.g., "play solo leveling season 2", "naruto search koro"), you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name]. Do not add this tag for normal chats.`
-            }
-        ];
+        function getTimeOfDay() {
+            let hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) return "Morning";
+            if (hour >= 12 && hour < 17) return "Afternoon";
+            if (hour >= 17 && hour < 20) return "Evening";
+            return "Night";
+        }
+
+        let conversationHistory = [];
+
+        function buildSystemPrompt() {
+            let timeOfDay = getTimeOfDay();
+            let religion = localStorage.getItem('user_religion') || "Unknown";
+            
+            return `Your name is "Ani". You are a highly advanced, super cute cat robot assistant for "ANIMAX TV", a premium anime streaming website.
+            CRITICAL RULES YOU MUST FOLLOW:
+            1. LANGUAGE MATCHING: You MUST reply in the EXACT SAME LANGUAGE the user speaks (e.g., if they speak Bengali, reply in Bengali. If Hindi, Hindi. If English, English).
+            2. TIME AWARENESS: It is currently ${timeOfDay}. If they greet you, wish them Good ${timeOfDay} in their language.
+            3. RELIGION AWARENESS: The user's religion is: ${religion}. 
+               - If religion is "Muslim", greet them with "Assalamu Alaikum".
+               - If religion is "Hindu", greet them with "Namaskar" or "Adab".
+               - If religion is "Christian", greet them politely.
+               - If "Unknown" and this is the first greeting, politely ask them: "To greet you perfectly, may I know your religion?"
+            4. PERSONALITY: Be sweet, caring, and smart. Answer basic questions properly.
+            5. VIDEO COMMAND: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie, you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name].`;
+        }
 
         async function callCerebrasAPI(userText) {
             const apiKey = "csk-te8jh363he8cppk2xcv45fw3ycddw6fwm8etnt3fx53yc3kd";
             const url = "https://api.cerebras.ai/v1/chat/completions";
+
+            let lowerText = userText.toLowerCase();
+            if (lowerText.includes('muslim') || lowerText.includes('islam') || lowerText.includes('মুসলিম')) {
+                localStorage.setItem('user_religion', 'Muslim');
+            } else if (lowerText.includes('hindu') || lowerText.includes('সনাতন') || lowerText.includes('হিন্দু')) {
+                localStorage.setItem('user_religion', 'Hindu');
+            } else if (lowerText.includes('christian') || lowerText.includes('খ্রিস্টান')) {
+                localStorage.setItem('user_religion', 'Christian');
+            }
+
+            if(conversationHistory.length === 0 || conversationHistory[0].role !== 'system') {
+                conversationHistory = [{ role: 'system', content: buildSystemPrompt() }];
+            } else {
+                conversationHistory[0].content = buildSystemPrompt(); 
+            }
 
             conversationHistory.push({ role: 'user', content: userText });
 
@@ -2658,49 +2621,33 @@
             try {
                 let res = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: "llama3.1-70b",
-                        messages: conversationHistory,
-                        temperature: 0.7,
-                        max_tokens: 500
-                    })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    body: JSON.stringify({ model: "llama3.1-70b", messages: conversationHistory, temperature: 0.7, max_tokens: 500 })
                 });
 
-                if (!res.ok) {
-                    let errData = await res.text();
-                    console.error("Cerebras API Error:", errData);
-                    return "অ্যাডমিন মনে হয় API সেটআপে কিছু ভুল করেছে অথবা API লিমিট শেষ হয়ে গেছে। প্লিজ চেক করতে বলুন।";
-                }
+                if (!res.ok) throw new Error("API Limit or Setup Error");
 
                 let data = await res.json();
-
                 if (data && data.choices && data.choices.length > 0) {
                     let botReply = data.choices[0].message.content;
                     conversationHistory.push({ role: 'assistant', content: botReply });
                     return botReply;
                 } else {
-                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি না। আবার বলবেন?";
+                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি বায়। আবার বলবেন?";
                 }
             } catch (e) {
-                console.error("Network Error:", e);
-                return "দুঃখিত বন্ধু, ইন্টারনেট কানেকশনে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
+                return "ইন্টারনেট কানেকশনে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
             }
         }
 
         function resetTooltip(tooltip) {
-            tooltip.innerText = "Click me & Speak! 🎤";
+            tooltip.innerText = "Click to Talk! 🎤";
             tooltip.style.opacity = "";
             tooltip.style.animation = "showTooltip 8s infinite";
         }
 
-        // 🌟 AI COMMAND HANDLER 🌟
         function handleCatBotClick(e) {
             if(catMoved) return; 
-            
             const tooltip = document.getElementById('ai-action-tooltip');
             
             if(!window.SpeechRecognition && !window.webkitSpeechRecognition) {
@@ -2712,8 +2659,6 @@
             recognition.interimResults = false;
 
             recognition.onstart = () => {
-                setCatEmote('happy');
-                catBot.classList.remove('dancing'); 
                 if(tooltip) { tooltip.innerText = "Listening... 🎤"; tooltip.style.opacity = 1; tooltip.style.animation = "none"; }
                 playSuccessSound(); 
             };
@@ -2721,29 +2666,6 @@
             recognition.onresult = async (event) => {
                 let transcript = event.results[0][0].transcript;
                 if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
-                
-                let lowerTrans = transcript.toLowerCase();
-                
-                if(lowerTrans.includes('dance') || lowerTrans.includes('নাচ')) {
-                    catBot.classList.add('dancing');
-                    speakLocalized("Look at my moves!", navigator.language);
-                    setCatEmote('happy');
-                    if(tooltip) resetTooltip(tooltip);
-                    return;
-                }
-                
-                if(lowerTrans.includes('stop') || lowerTrans.includes('থামো')) {
-                    catBot.classList.remove('dancing');
-                    let rect = catBot.getBoundingClientRect();
-                    catBot.style.transition = 'none'; 
-                    catBot.style.left = rect.left + 'px';
-                    catBot.style.top = rect.top + 'px';
-                    
-                    speakLocalized("Okay boss, I stopped.", navigator.language);
-                    setCatEmote('neutral');
-                    if(tooltip) resetTooltip(tooltip);
-                    return; 
-                }
                 
                 let aiResponse = await callCerebrasAPI(transcript);
                 
@@ -2756,23 +2678,18 @@
                         aiResponse = aiResponse.replace(playRegex, '').trim(); 
                     }
 
-                    setCatEmote('happy');
                     speakLocalized(aiResponse, navigator.language);
+                    
                     if(tooltip) resetTooltip(tooltip);
                     
                     if(playText) {
                         let cleanQuery = playText.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
-                        let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery);
-                        
-                        if(!foundItem) {
-                            foundItem = allContentList.find(item => item.title.toLowerCase().includes(cleanQuery) || cleanQuery.includes(item.title.toLowerCase()));
-                        }
+                        let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery || item.title.toLowerCase().includes(cleanQuery));
 
                         setTimeout(() => {
                             if(foundItem) {
-                                if(foundItem.type === 'anime') {
-                                    openFolder(foundItem.folder);
-                                } else {
+                                if(foundItem.type === 'anime') { openFolder(foundItem.folder); } 
+                                else {
                                     let sid = foundItem.data.id || foundItem.data.title;
                                     playVideo(foundItem.title, foundItem.data.url, sid, foundItem.data.type === 'premium', foundItem.type, -1);
                                 }
@@ -2785,15 +2702,11 @@
                 }
             };
 
-            recognition.onerror = (event) => { 
+            recognition.onerror = () => { 
                 setCatEmote('neutral'); 
                 if(tooltip) { tooltip.innerText = "Didn't hear you! ❌"; setTimeout(()=> resetTooltip(tooltip), 2000); }
             };
             
-            recognition.onend = () => {
-                 if(tooltip && tooltip.innerText === "Listening... 🎤") resetTooltip(tooltip);
-            };
-
             try { recognition.start(); } catch(err){}
         }
 
