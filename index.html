@@ -723,7 +723,7 @@
     </div>
 
     <!-- 🤖 PREMIUM 3D FLOATING AI ROBOT "ANI" (SMALL WIDGET) -->
-    <div class="ai-bot-container roaming" id="ai-cat-bot" onclick="handleCatBotClick(event)">
+    <div class="ai-bot-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
         <div class="ai-tooltip" id="ai-action-tooltip">Click me & Speak! 🎤</div>
         
         <!-- Floating Arms -->
@@ -2571,26 +2571,6 @@
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
         let catMoved = false;
-        let isRoaming = true; 
-
-        function roamCatBot() {
-            if(!isRoaming || isDraggingCat) return;
-            
-            let maxX = window.innerWidth - 80;
-            let maxY = window.innerHeight - 100;
-            
-            let randX = Math.max(10, Math.floor(Math.random() * maxX));
-            let randY = Math.max(10, Math.floor(Math.random() * maxY));
-            
-            catBot.style.transition = 'left 5s cubic-bezier(0.4, 0, 0.2, 1), top 5s cubic-bezier(0.4, 0, 0.2, 1)';
-            catBot.style.left = randX + 'px';
-            catBot.style.top = randY + 'px';
-            catBot.style.bottom = 'auto';
-            catBot.style.right = 'auto';
-        }
-        
-        setInterval(roamCatBot, 5500);
-        setTimeout(roamCatBot, 2000);
 
         catBot.addEventListener('mousedown', dragStart);
         catBot.addEventListener('touchstart', dragStart, {passive: false});
@@ -2622,7 +2602,7 @@
             if(isDraggingCat) { 
                 isDraggingCat = false; 
                 if(!catBot.classList.contains('dancing')) {
-                    catBot.style.transition = isRoaming ? 'left 5s cubic-bezier(0.4, 0, 0.2, 1), top 5s cubic-bezier(0.4, 0, 0.2, 1)' : '0.3s'; 
+                    catBot.style.transition = '0.3s'; 
                 }
             }
         }
@@ -2669,12 +2649,10 @@
             const apiKey = "csk-te8jh363he8cppk2xcv45fw3ycddw6fwm8etnt3fx53yc3kd";
             const url = "https://api.cerebras.ai/v1/chat/completions";
 
-            // Add user message to history
             conversationHistory.push({ role: 'user', content: userText });
 
-            // Keep history manageable
             if (conversationHistory.length > 11) {
-                conversationHistory = [conversationHistory[0], ...conversationHistory.slice(conversationHistory.length - 10)];
+                conversationHistory = [conversationHistory[0], ...conversationHistory.slice(-10)];
             }
 
             try {
@@ -2692,24 +2670,24 @@
                     })
                 });
 
-                let data = await res.json();
-
                 if (!res.ok) {
-                    console.error("Cerebras API Error:", data);
-                    return null;
+                    let errData = await res.text();
+                    console.error("Cerebras API Error:", errData);
+                    return "অ্যাডমিন মনে হয় API সেটআপে কিছু ভুল করেছে অথবা API লিমিট শেষ হয়ে গেছে। প্লিজ চেক করতে বলুন।";
                 }
+
+                let data = await res.json();
 
                 if (data && data.choices && data.choices.length > 0) {
                     let botReply = data.choices[0].message.content;
-                    // Save bot reply to history
                     conversationHistory.push({ role: 'assistant', content: botReply });
                     return botReply;
                 } else {
-                    return null;
+                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি না। আবার বলবেন?";
                 }
             } catch (e) {
                 console.error("Network Error:", e);
-                return null;
+                return "দুঃখিত বন্ধু, ইন্টারনেট কানেকশনে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
             }
         }
 
@@ -2735,7 +2713,7 @@
 
             recognition.onstart = () => {
                 setCatEmote('happy');
-                catBot.classList.remove('dancing'); // Stop dance when listening
+                catBot.classList.remove('dancing'); 
                 if(tooltip) { tooltip.innerText = "Listening... 🎤"; tooltip.style.opacity = 1; tooltip.style.animation = "none"; }
                 playSuccessSound(); 
             };
@@ -2746,40 +2724,24 @@
                 
                 let lowerTrans = transcript.toLowerCase();
                 
-                // DANCE COMMAND
                 if(lowerTrans.includes('dance') || lowerTrans.includes('নাচ')) {
-                    isRoaming = false;
                     catBot.classList.add('dancing');
-                    catBot.classList.remove('roaming');
                     speakLocalized("Look at my moves!", navigator.language);
                     setCatEmote('happy');
                     if(tooltip) resetTooltip(tooltip);
                     return;
                 }
                 
-                if(lowerTrans.includes('stop')) {
-                    isRoaming = false;
-                    catBot.classList.remove('roaming'); 
+                if(lowerTrans.includes('stop') || lowerTrans.includes('থামো')) {
                     catBot.classList.remove('dancing');
                     let rect = catBot.getBoundingClientRect();
                     catBot.style.transition = 'none'; 
                     catBot.style.left = rect.left + 'px';
                     catBot.style.top = rect.top + 'px';
                     
-                    speakLocalized("Okay boss, I will stand right here.", navigator.language);
+                    speakLocalized("Okay boss, I stopped.", navigator.language);
                     setCatEmote('neutral');
                     if(tooltip) resetTooltip(tooltip);
-                    return; 
-                }
-                
-                if(lowerTrans.includes('have fun') || lowerTrans.includes('move')) {
-                    isRoaming = true;
-                    catBot.classList.remove('dancing');
-                    catBot.classList.add('roaming'); 
-                    speakLocalized("Yay! Time to roam around!", navigator.language);
-                    setCatEmote('happy');
-                    if(tooltip) resetTooltip(tooltip);
-                    roamCatBot(); 
                     return; 
                 }
                 
@@ -2798,7 +2760,6 @@
                     speakLocalized(aiResponse, navigator.language);
                     if(tooltip) resetTooltip(tooltip);
                     
-                    // 🚀 SMART SEARCH/PLAY REDIRECT
                     if(playText) {
                         let cleanQuery = playText.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
                         let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery);
@@ -2821,10 +2782,6 @@
                             }
                         }, 1800); 
                     }
-                } else {
-                    setCatEmote('neutral');
-                    if(tooltip) resetTooltip(tooltip);
-                    speakLocalized("Sorry friend, my brain is a bit slow right now. Please try again.", 'en-US');
                 }
             };
 
