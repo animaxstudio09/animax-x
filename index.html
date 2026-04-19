@@ -1930,12 +1930,37 @@
             let cmGrid = document.getElementById('cartoon-movie-grid'); if(cmGrid) cmGrid.innerHTML = htmlCartoonMoviesFromMoviesNode + htmlCartoonMoviesFromCartoonsNode;
         }
 
+        let hasCheckedSharedLink = false;
+        function checkSharedLink() {
+            if(hasCheckedSharedLink) return;
+            const urlParams = new URLSearchParams(window.location.search);
+            const playTitle = urlParams.get('play');
+            const playType = urlParams.get('type');
+            if(playTitle) {
+                hasCheckedSharedLink = true;
+                setTimeout(() => {
+                    let data = findDataByTitle(playTitle);
+                    if(data) {
+                        if(data.type === 'anime') { openFolder(data.folder); } 
+                        else { playVideo(playTitle, data.url, data.id || playTitle, data.isPremium, data.type, -1); }
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else if (playType === 'anime' && window.animeData && window.animeData[playTitle]) {
+                        openFolder(playTitle);
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else {
+                        alert("দুঃখিত! শেয়ার করা ভিডিওটি খুঁজে পাওয়া যায়নি।");
+                    }
+                }, 1500);
+            }
+        }
+
         function buildSearchIndex() {
             allContentList = [];
             if(window.animeData) { Object.keys(window.animeData).forEach(name => allContentList.push({title: name, type: 'anime', folder: name})); }
             if(window.movieData) { window.movieData.forEach(m => allContentList.push({title: m.title, type: 'movie', data: m})); }
             if(window.cartoonData) { window.cartoonData.forEach(c => allContentList.push({title: c.title, type: 'cartoon', data: c})); }
             startPlaceholderAnimation();
+            checkSharedLink();
         }
 
         let isDataLoaded = false;
@@ -2357,7 +2382,13 @@
         function hideShorts() { document.getElementById('shorts-view').style.display='none'; document.querySelectorAll('#shorts-container video').forEach(v => v.pause()); if(shortsObserver) shortsObserver.disconnect(); }
         function initShortsObserver() { if(shortsObserver) shortsObserver.disconnect(); let o = {root: document.getElementById('shorts-view'), threshold: 0.6}; shortsObserver = new IntersectionObserver((entries) => { entries.forEach(i => { let v = i.target.querySelector('video'); if(i.isIntersecting) { v.play().catch(e=>{}); } else { v.pause(); } }); }, o); document.querySelectorAll('.short-item').forEach(e => shortsObserver.observe(e)); }
 
-        function shareContent() { const videoTitle = document.getElementById('player-title').innerText; const siteUrl = window.location.href.split('?')[0]; const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${siteUrl}`; navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", siteUrl); }); }
+        function shareContent() { 
+            const videoTitle = document.getElementById('player-title').innerText; 
+            const baseUrl = window.location.href.split('?')[0].split('#')[0]; 
+            const shareUrl = `${baseUrl}?play=${encodeURIComponent(videoTitle)}&type=${encodeURIComponent(currentPlayType)}`;
+            const textToCopy = `🎬 Watch "${videoTitle}" on Animax TV for free!\n🌐 Link: ${shareUrl}`; 
+            navigator.clipboard.writeText(textToCopy).then(() => { alert("🔗 Link Copied! Share it with your friends."); }).catch(err => { prompt("Copy this link:", shareUrl); }); 
+        }
 
         function openHistory() { 
             if(!currentUser) { alert("Please login first."); return; }
@@ -2639,7 +2670,7 @@
                     geminiHistory.push({ role: 'model', parts: [{ text: botReply }] });
                     return botReply;
                 } else {
-                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি না। আবার বলবেন?";
+                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি মস্তিষ্ক কাজ করছে না। আবার বলবেন?";
                 }
             } catch (e) {
                 geminiHistory.pop();
