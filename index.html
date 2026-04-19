@@ -2543,6 +2543,21 @@
         
         setInterval(aiShowTopNotification, 600000);
 
+        // 🌟 WELCOME GREETING LOGIC 🌟
+        let hasWelcomed = false;
+        function initWelcomeGreeting() {
+            if(!hasWelcomed && window.speechSynthesis) {
+                hasWelcomed = true;
+                setTimeout(() => {
+                    speakLocalized("Welcome to Animax TV! How can I help you today?", "en");
+                }, 1000);
+                document.removeEventListener('click', initWelcomeGreeting);
+                document.removeEventListener('touchstart', initWelcomeGreeting);
+            }
+        }
+        document.addEventListener('click', initWelcomeGreeting);
+        document.addEventListener('touchstart', initWelcomeGreeting, {passive: true});
+
         const catBot = document.getElementById('ai-cat-bot');
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
@@ -2605,76 +2620,75 @@
             window.speechSynthesis.speak(utter);
         }
 
-        function getTimeOfDay() {
-            let hour = new Date().getHours();
-            if (hour >= 5 && hour < 12) return "Morning";
-            if (hour >= 12 && hour < 17) return "Afternoon";
-            if (hour >= 17 && hour < 20) return "Evening";
-            return "Night";
-        }
-
-        let geminiHistory = [];
-
-        function buildSystemPrompt() {
-            let timeOfDay = getTimeOfDay();
-            let religion = localStorage.getItem('user_religion') || "Unknown";
+        // 🌟 NEW OFFLINE STATIC COMMAND SYSTEM 🌟
+        function processLocalVoiceCommand(text) {
+            let t = text.toLowerCase().trim();
+            let reply = "";
+            let action = null;
             
-            return `Your name is "Ani". You are a highly advanced, super cute cat robot assistant for "ANIMAX TV", a premium anime streaming website.
-            CRITICAL RULES YOU MUST FOLLOW:
-            1. LANGUAGE MATCHING: You MUST reply in the EXACT SAME LANGUAGE the user speaks (e.g., if they speak Bengali, reply in Bengali. If Hindi, Hindi. If English, English).
-            2. TIME AWARENESS: It is currently ${timeOfDay}. If they greet you, wish them Good ${timeOfDay} in their language.
-            3. RELIGION AWARENESS: The user's religion is: ${religion}. 
-               - If religion is "Muslim", greet them with "Assalamu Alaikum".
-               - If religion is "Hindu", greet them with "Namaskar" or "Adab".
-               - If religion is "Christian", greet them politely.
-               - If "Unknown" and this is the first greeting, politely ask them: "To greet you perfectly, may I know your religion?"
-            4. PERSONALITY: Be sweet, caring, and smart. Answer basic questions properly.
-            5. VIDEO COMMAND: IF the user asks to PLAY, WATCH, SEARCH, or FIND a specific anime, cartoon, or movie, you MUST add this EXACT tag at the very end of your reply: [PLAY: exact_content_name].`;
+            let playMatch = t.match(/(?:play|watch)\s+(.+)/);
+            let searchMatch = t.match(/search\s+(.+)/);
+
+            if (t.includes("how are you")) {
+                reply = "I am fine! Ready to find the best anime for you.";
+            } else if (t.includes("who are you")) {
+                reply = "I am Ani, your robotic assistant for Animax TV.";
+            } else if (t.includes("hello") || t.includes("hi") || t.includes("hey")) {
+                reply = "Hello friend! What do you want to watch today?";
+            } else if (t.includes("profile")) {
+                reply = "Opening your profile.";
+                action = () => switchTab('profile');
+            } else if (t.includes("home")) {
+                reply = "Going to homepage.";
+                action = () => switchTab('home');
+            } else if (t.includes("download")) {
+                reply = "Opening downloads page.";
+                action = () => switchTab('downloads');
+            } else if (t.includes("spin") || t.includes("wheel") || t.includes("lucky")) {
+                reply = "Opening lucky spin. Good luck!";
+                action = () => openSpinWheel();
+            } else if (t.includes("leaderboard") || t.includes("rank")) {
+                reply = "Showing the leaderboard.";
+                action = () => openLeaderboard();
+            } else if (t.includes("history")) {
+                reply = "Opening your watch history.";
+                action = () => { if(currentUser) openHistory(); else alert("Login required!"); };
+            } else if (t.includes("claim") || t.includes("reward") || t.includes("bonus")) {
+                reply = "Opening daily reward.";
+                action = () => openRewardPage();
+            } else if (t.includes("close") || t.includes("back") || t.includes("stop")) {
+                reply = "Closing video.";
+                action = () => closePlayer();
+            } else if (playMatch) {
+                let query = playMatch[1].trim();
+                reply = `Playing ${query}`;
+                action = () => executeVoicePlayCommand(query);
+            } else if (searchMatch) {
+                let query = searchMatch[1].trim();
+                reply = `Searching for ${query}`;
+                action = () => {
+                    document.getElementById('header-search-wrapper').click();
+                    setTimeout(() => executeSearch(query), 500);
+                };
+            } else {
+                reply = "Sorry, I didn't understand. Try saying play, search, or open profile.";
+            }
+            return { reply, action };
         }
 
-        async function callGeminiAPI(userText) {
-            const apiKey = "AIzaSyDVH_T6nVkDTyTdv3hjxxWpxQcirNxFHpw";
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        function executeVoicePlayCommand(query) {
+            let cleanQuery = query.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
+            let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery || item.title.toLowerCase().includes(cleanQuery));
 
-            let lowerText = userText.toLowerCase();
-            if (lowerText.includes('muslim') || lowerText.includes('islam') || lowerText.includes('মুসলিম')) {
-                localStorage.setItem('user_religion', 'Muslim');
-            } else if (lowerText.includes('hindu') || lowerText.includes('সনাতন') || lowerText.includes('হিন্দু')) {
-                localStorage.setItem('user_religion', 'Hindu');
-            } else if (lowerText.includes('christian') || lowerText.includes('খ্রিস্টান')) {
-                localStorage.setItem('user_religion', 'Christian');
-            }
-
-            geminiHistory.push({ role: 'user', parts: [{ text: userText }] });
-
-            if (geminiHistory.length > 10) {
-                geminiHistory = geminiHistory.slice(-10);
-            }
-
-            try {
-                let res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
-                        contents: geminiHistory,
-                        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
-                    })
-                });
-
-                if (!res.ok) throw new Error("API Limit or Setup Error");
-
-                let data = await res.json();
-                if (data && data.candidates && data.candidates.length > 0) {
-                    let botReply = data.candidates[0].content.parts[0].text;
-                    geminiHistory.push({ role: 'model', parts: [{ text: botReply }] });
-                    return botReply;
-                } else {
-                    return "দুঃখিত, আমি ঠিক বুঝতে পারছি মস্তিষ্ক কাজ করছে না। আবার বলবেন?";
+            if(foundItem) {
+                if(foundItem.type === 'anime') { openFolder(foundItem.folder); } 
+                else {
+                    let sid = foundItem.data.id || foundItem.data.title;
+                    playVideo(foundItem.title, foundItem.data.url, sid, foundItem.data.type === 'premium', foundItem.type, -1);
                 }
-            } catch (e) {
-                geminiHistory.pop();
-                return "ইন্টারনেট কানেকশনে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।";
+            } else {
+                document.getElementById('header-search-wrapper').click();
+                setTimeout(() => { executeSearch(cleanQuery); }, 1500);
             }
         }
 
@@ -2705,38 +2719,13 @@
                 let transcript = event.results[0][0].transcript;
                 if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
                 
-                let aiResponse = await callGeminiAPI(transcript);
+                let result = processLocalVoiceCommand(transcript);
+                speakLocalized(result.reply, "en"); // Command replies are in English
                 
-                if(aiResponse) {
-                    let playText = null;
-                    const playRegex = /\[PLAY:\s*(.*?)\]/i;
-                    const match = aiResponse.match(playRegex);
-                    if(match) {
-                        playText = match[1].trim().toLowerCase();
-                        aiResponse = aiResponse.replace(playRegex, '').trim(); 
-                    }
-
-                    speakLocalized(aiResponse, navigator.language);
-                    
-                    if(tooltip) resetTooltip(tooltip);
-                    
-                    if(playText) {
-                        let cleanQuery = playText.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
-                        let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery || item.title.toLowerCase().includes(cleanQuery));
-
-                        setTimeout(() => {
-                            if(foundItem) {
-                                if(foundItem.type === 'anime') { openFolder(foundItem.folder); } 
-                                else {
-                                    let sid = foundItem.data.id || foundItem.data.title;
-                                    playVideo(foundItem.title, foundItem.data.url, sid, foundItem.data.type === 'premium', foundItem.type, -1);
-                                }
-                            } else {
-                                document.getElementById('header-search-wrapper').click();
-                                setTimeout(() => { executeSearch(cleanQuery); }, 1500);
-                            }
-                        }, 1800); 
-                    }
+                if(tooltip) resetTooltip(tooltip);
+                
+                if(result.action) {
+                    setTimeout(() => { result.action(); }, 1500); // Execute action after it starts speaking
                 }
             };
 
