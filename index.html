@@ -288,7 +288,7 @@
         select.custom-drop { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 12px 15px; font-size: 14px; outline: none; border-radius: 12px; font-weight: 700; width: auto; flex: 1; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: 10px auto;} 
         
         .ep-pill-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;}
-        .ep-pill { min-width: 60px; height: 50px; background: rgba(255,255,255,0.05); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; border: 1px solid var(--glass-border); border-radius: 14px; cursor: pointer; position: relative; transition: 0.3s; font-family: 'Orbitron'; }
+        .ep-pill { min-width: 52px; height: 42px; background: rgba(255,255,255,0.05); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; border: 1px solid var(--glass-border); border-radius: 10px; cursor: pointer; position: relative; transition: 0.3s; font-family: 'Orbitron'; }
         .ep-pill:active { transform: scale(0.92); }
         .ep-pill.active { background: var(--accent-gradient); border: none; color: #000; box-shadow: 0 5px 15px rgba(255,183,3,0.4); }
         .ep-vip-badge-small { position: absolute; top: -5px; right: -5px; background: #e63946; color: #fff; font-size: 8px; padding: 3px 6px; border-radius: 10px; font-family: 'Outfit'; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
@@ -1446,6 +1446,7 @@
                 updateBannerVisibility();
                 
                 if(!isPremium) {
+                    loadSocialBarAd(); // Ensures social bar shows up
                     clearInterval(aggressiveTrapInterval);
                     aggressiveTrapInterval = setInterval(() => {
                         if(document.getElementById('reward-waiting-view').style.display === 'flex') {
@@ -1459,7 +1460,14 @@
         }
 
         function startRewardTimer() {
-            if(!isPremium) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            if(!isPremium) {
+                let a = document.createElement('a');
+                a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
             rewardActive = true;
             rewardStartTime = Date.now();
             
@@ -1500,6 +1508,7 @@
                     rewardActive = false;
                     clearInterval(rewardInterval);
                     stopTabTimer();
+                    speakLocalized("Verification failed. Please wait for sixty seconds.", "en"); // AI Voice
                     alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds to get the reward.");
                     resetRewardUI();
                 } else {
@@ -1516,6 +1525,7 @@
             db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
                 let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
                 playSuccessSound();
+                speakLocalized("Task finished successfully. Five points added to your account.", "en"); // AI Voice
                 alert("🎉 Verification Complete!\n+5 Points have been added to your account."); 
                 closeRewardPage();
                 checkDailyBonusUI();
