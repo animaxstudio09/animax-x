@@ -384,7 +384,7 @@
         #ai-top-notif.show { top: 20px; }
 
         /* =========================================
-           🤖 "MEA" STYLE CUTE CAT ROBOT (PURE CSS)
+           🤖 "MEA" STYLE CUTE CAT ROBOT (UPDATED VISOR)
            ========================================= */
         .mea-container { 
             position: fixed; bottom: 80px; left: 20px; width: 70px; height: 95px; 
@@ -397,37 +397,42 @@
         .mea-head { 
             position: absolute; top: 12px; left: 0; width: 70px; height: 50px; 
             background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); 
-            border-radius: 25px 25px 20px 20px; z-index: 10; 
+            border-radius: 30px 30px 22px 22px; z-index: 10; 
             box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2); 
         }
 
         /* Ears */
         .mea-ear { 
             position: absolute; top: -14px; width: 0; height: 0; 
-            border-left: 12px solid transparent; border-right: 12px solid transparent; 
-            border-bottom: 18px solid #fff; z-index: 9; 
+            border-left: 14px solid transparent; border-right: 14px solid transparent; 
+            border-bottom: 22px solid #fff; z-index: 9; 
         }
         .mea-ear::after { 
-            content: ''; position: absolute; top: 5px; left: -5px; width: 0; height: 0; 
-            border-left: 5px solid transparent; border-right: 5px solid transparent; 
-            border-bottom: 8px solid #00d2ff; 
+            content: ''; position: absolute; top: 6px; left: -6px; width: 0; height: 0; 
+            border-left: 6px solid transparent; border-right: 6px solid transparent; 
+            border-bottom: 10px solid #00d2ff; 
         }
-        .mea-ear.left { left: 5px; transform: rotate(-15deg); }
-        .mea-ear.right { right: 5px; transform: rotate(15deg); }
+        .mea-ear.left { left: 4px; transform: rotate(-15deg); }
+        .mea-ear.right { right: 4px; transform: rotate(15deg); }
 
         /* Visor (Black Face Screen) */
         .mea-visor { 
-            position: absolute; top: 8px; left: 6px; width: 58px; height: 32px; 
-            background: #1a1b26; border-radius: 12px 12px 16px 16px; 
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.2); 
+            position: absolute; top: 7px; left: 4px; width: 62px; height: 36px; 
+            background: #111; border-radius: 14px 14px 18px 18px; 
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1); 
             display: flex; justify-content: center; align-items: center; 
+        }
+        /* Cute Visor Reflection */
+        .mea-visor::after {
+            content: ''; position: absolute; top: 4px; left: 8px; width: 12px; height: 4px; 
+            background: rgba(255,255,255,0.3); border-radius: 4px; transform: rotate(-5deg);
         }
 
         /* Eyes & Mouth */
-        .mea-eyes-wrap { display: flex; gap: 6px; align-items: center; margin-top: 2px;}
+        .mea-eyes-wrap { display: flex; gap: 8px; align-items: center; margin-top: 4px;}
         .mea-eye { 
-            width: 7px; height: 7px; background: #00d2ff; border-radius: 50%; 
-            box-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff; transition: 0.3s; 
+            width: 8px; height: 8px; background: #00d2ff; border-radius: 50%; 
+            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; transition: 0.3s; 
         }
         .mea-mouth {
             width: 14px; height: 6px; border-bottom: 2px solid #00d2ff; 
@@ -435,7 +440,7 @@
             box-shadow: 0 2px 5px rgba(0,210,255,0.5);
         }
         .mea-mouth::before {
-            content: ''; position: absolute; top: -4px; left: 6px; width: 2px; height: 6px; background: #1a1b26;
+            content: ''; position: absolute; top: -4px; left: 6px; width: 2px; height: 6px; background: #111;
         }
 
         /* Body */
@@ -447,8 +452,8 @@
 
         /* Collar (Blue Triangle) */
         .mea-collar { 
-            position: absolute; top: 0; left: 10px; width: 0; height: 0; 
-            border-left: 10px solid transparent; border-right: 10px solid transparent; 
+            position: absolute; top: 0; left: 8px; width: 0; height: 0; 
+            border-left: 12px solid transparent; border-right: 12px solid transparent; 
             border-top: 8px solid #00d2ff; z-index: 6; 
         }
 
@@ -469,7 +474,7 @@
         }
         .mea-tail::after { 
             content: ''; position: absolute; top: -4px; right: -7px; width: 7px; height: 9px; 
-            background: #1a1b26; border-radius: 10px; 
+            background: #111; border-radius: 10px; 
         }
 
         /* Tooltip */
@@ -493,6 +498,31 @@
         .mea-container.talking .mea-eye { animation: blink 2s infinite; }
         @keyframes talkMouth { 0% { border-bottom-width: 2px; } 100% { border-bottom-width: 5px; } }
         @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+        /* Dance Animation & Companion Bot */
+        @keyframes danceMove {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(-15deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-20px) rotate(15deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .mea-container.dancing { animation: danceMove 1s infinite !important; }
+        
+        #ai-cat-bot-2 { display: none; left: 100px; filter: drop-shadow(0 10px 15px rgba(255, 0, 85, 0.3)); }
+        #ai-cat-bot-2 .mea-eye { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        #ai-cat-bot-2 .mea-mouth { border-bottom-color: #ff0055; box-shadow: 0 2px 5px rgba(255,0,85,0.5); }
+        #ai-cat-bot-2 .mea-collar { border-top-color: #ff0055; }
+        #ai-cat-bot-2 .mea-ear::after { border-bottom-color: #ff0055; }
+
+        /* 🌟 AI GUIDE MODAL */
+        #ai-guide-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at center, rgba(0, 210, 255, 0.05), transparent 60%); z-index: 8000; overflow-y: auto; padding-bottom: 30px; font-family: 'Outfit', sans-serif;}
+        .guide-box { background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; margin: 15px; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,210,255,0.05); }
+        .guide-cmd { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .guide-cmd:last-child { border-bottom: none; }
+        .guide-cmd i { font-size: 20px; color: #00d2ff; width: 30px; text-align: center; }
+        .guide-cmd-text strong { color: var(--text-main); font-size: 15px; display: block; margin-bottom: 4px; font-family: 'Orbitron'; letter-spacing: 1px;}
+        .guide-cmd-text span { color: var(--text-muted); font-size: 13px; }
 
     </style>
 </head>
@@ -639,6 +669,9 @@
                     </div>
 
                     <div class="b-list-group">
+                        <!-- 🌟 NEW AI GUIDE BUTTON 🌟 -->
+                        <div class="b-list-item" onclick="openAIGuide()"><div class="b-list-item-left"><i class="fas fa-robot" style="color:#00d2ff;"></i> AI Voice Commands</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
+
                         <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy"></i> Point Leaderboard</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-bookmark" style="color:#00f5d4;"></i> My List</div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:var(--text-main); font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-heart" style="color:#ff0055;"></i> My Likes</div><div class="b-list-item-right"><span style="color:var(--text-main); font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
@@ -676,7 +709,6 @@
     <!-- 🤖 NEW "MEA" STYLE CSS CAT ROBOT -->
     <div class="mea-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
         <div class="ai-tooltip" id="ai-action-tooltip">Click to Talk! 🎤</div>
-        
         <div class="mea-head">
             <div class="mea-ear left"></div>
             <div class="mea-ear right"></div>
@@ -688,18 +720,56 @@
                 </div>
             </div>
         </div>
-        
-        <div class="mea-body">
-            <div class="mea-collar"></div>
-            <div class="mea-arm left"></div>
-            <div class="mea-arm right"></div>
+        <div class="mea-body"><div class="mea-collar"></div><div class="mea-arm left"></div><div class="mea-arm right"></div></div>
+        <div class="mea-tail"></div>
+    </div>
+
+    <!-- 🤖 SECOND BOT FOR DANCE -->
+    <div class="mea-container companion-bot" id="ai-cat-bot-2">
+        <div class="mea-head">
+            <div class="mea-ear left"></div>
+            <div class="mea-ear right"></div>
+            <div class="mea-visor">
+                <div class="mea-eyes-wrap">
+                    <div class="mea-eye"></div>
+                    <div class="mea-mouth"></div>
+                    <div class="mea-eye"></div>
+                </div>
+            </div>
         </div>
+        <div class="mea-body"><div class="mea-collar"></div><div class="mea-arm left"></div><div class="mea-arm right"></div></div>
         <div class="mea-tail"></div>
     </div>
 
     <!-- Hidden element to prevent JS Crash from old logic -->
     <div id="ai-chat-modern" style="display:none !important;">
         <div id="ai-chat-list"></div>
+    </div>
+
+    <!-- 🌟 AI GUIDE MODAL 🌟 -->
+    <div id="ai-guide-modal">
+        <div class="so-header"><i class="fas fa-arrow-left so-back" onclick="closeAIGuide()"></i><div class="lb-title" style="color:#00d2ff;">AI ASSISTANT</div></div>
+        
+        <div style="text-align: center; margin: 30px 0 10px 0;">
+            <div style="width: 80px; height: 80px; background: rgba(0, 210, 255, 0.1); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; border: 2px solid #00d2ff; font-size: 35px; color: #00d2ff; box-shadow: 0 0 20px rgba(0,210,255,0.4);">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h2 style="color: var(--text-main); font-family: 'Orbitron'; font-weight: 900; margin-top: 15px;">Meet Ani!</h2>
+            <p style="color: var(--text-muted); font-size: 14px; font-weight: 500; max-width: 280px; margin: 10px auto;">Click the cute cat robot at the bottom left of your screen and speak into your microphone.</p>
+        </div>
+
+        <div class="guide-box">
+            <h3 style="color: #00d2ff; font-size: 15px; font-weight: 800; font-family: 'Orbitron'; margin-bottom: 15px; text-transform: uppercase;">Voice Commands</h3>
+            
+            <div class="guide-cmd"><i class="fas fa-play"></i><div class="guide-cmd-text"><strong>"Play [Name]"</strong><span>Instantly plays the requested anime or movie.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-search"></i><div class="guide-cmd-text"><strong>"Search [Name]"</strong><span>Searches the entire Animax library for you.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-dharmachakra"></i><div class="guide-cmd-text"><strong>"Spin the wheel"</strong><span>Opens the lucky spin wheel page.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-trophy"></i><div class="guide-cmd-text"><strong>"Show Leaderboard"</strong><span>Shows the top ranked users.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-gift"></i><div class="guide-cmd-text"><strong>"Claim Bonus"</strong><span>Opens the daily reward page.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-history"></i><div class="guide-cmd-text"><strong>"Open History"</strong><span>Shows your recently watched videos.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-music"></i><div class="guide-cmd-text"><strong>"Dance"</strong><span>Watch Ani show off some cool moves!</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-comment-dots"></i><div class="guide-cmd-text"><strong>"What is your name?"</strong><span>Say hello and chat with Ani.</span></div></div>
+        </div>
     </div>
 
     <!-- SPIN WHEEL MODAL -->
@@ -1130,6 +1200,7 @@
             try { closeLeaderboard(); } catch(e) {}
             try { closeSpinWheel(); } catch(e) {}
             try { closeRewardPage(); } catch(e) {}
+            try { closeAIGuide(); } catch(e) {}
 
             const searchWrapper = document.getElementById('header-search-wrapper');
             
@@ -2611,6 +2682,10 @@
         document.addEventListener('click', initWelcomeGreeting);
         document.addEventListener('touchstart', initWelcomeGreeting, {passive: true});
 
+        // 🌟 AI GUIDE MODAL LOGIC 🌟
+        function openAIGuide() { document.getElementById('ai-guide-modal').style.display = 'block'; }
+        function closeAIGuide() { document.getElementById('ai-guide-modal').style.display = 'none'; }
+
         const catBot = document.getElementById('ai-cat-bot');
         let isDraggingCat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
@@ -2674,6 +2749,31 @@
             window.speechSynthesis.speak(utter);
         }
 
+        function executeDanceRoutine() {
+            const bot1 = document.getElementById('ai-cat-bot');
+            const bot2 = document.getElementById('ai-cat-bot-2');
+            
+            let rect = bot1.getBoundingClientRect();
+            let screenWidth = window.innerWidth;
+            
+            let targetLeft = rect.left + 80;
+            if(targetLeft > screenWidth - 80) targetLeft = rect.left - 80;
+
+            bot2.style.left = targetLeft + 'px';
+            bot2.style.top = rect.top + 'px';
+            bot2.style.bottom = 'auto';
+            
+            bot2.style.display = 'block';
+            bot1.classList.add('dancing');
+            bot2.classList.add('dancing');
+            
+            setTimeout(() => {
+                bot1.classList.remove('dancing');
+                bot2.classList.remove('dancing');
+                bot2.style.display = 'none';
+            }, 8000); 
+        }
+
         // 🌟 NEW OFFLINE STATIC COMMAND SYSTEM 🌟
         function processLocalVoiceCommand(text) {
             let t = text.toLowerCase().trim();
@@ -2685,8 +2785,8 @@
 
             if (t.includes("how are you")) {
                 reply = "I am fine! Ready to find the best anime for you.";
-            } else if (t.includes("who are you")) {
-                reply = "I am Ani, your robotic assistant for Animax TV.";
+            } else if (t.includes("who are you") || t.includes("your name") || t.includes("what is your name")) {
+                reply = "Hello! My name is Ani. I am your professional AI assistant for Animax TV. How can I help you today?";
             } else if (t.includes("hello") || t.includes("hi") || t.includes("hey")) {
                 reply = "Hello friend! What do you want to watch today?";
             } else if (t.includes("profile")) {
@@ -2713,6 +2813,9 @@
             } else if (t.includes("close") || t.includes("back") || t.includes("stop")) {
                 reply = "Closing video.";
                 action = () => closePlayer();
+            } else if (t.includes("dance")) {
+                reply = "Oh, I love dancing! Let's hit the dance floor!";
+                action = () => executeDanceRoutine();
             } else if (playMatch) {
                 let query = playMatch[1].trim();
                 reply = `Playing ${query}`;
