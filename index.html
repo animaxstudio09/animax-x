@@ -340,7 +340,10 @@
         .comment-input-container { display: flex; gap: 12px; align-items: center; background: rgba(0,0,0,0.4); padding: 8px 12px; border: 1px solid var(--glass-border); margin-bottom: 25px; border-radius: 20px;}
         .comment-input-container input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; font-size: 14px; outline:none; font-family: 'Outfit';}
         .comment-send-btn { background: var(--accent-gradient); border: none; width: 45px; height: 45px; color: #000; border-radius: 50%; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(255,183,3,0.3);}
-        .comment-box-unique { display: flex; gap: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); }
+        
+        /* 🌟 VIP GLOWING COMMENT BOX 🌟 */
+        .comment-box-unique { display: flex; gap: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); transition: 0.3s; }
+        .comment-box-vip { border: 1px solid var(--accent-glow) !important; box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); background: rgba(255, 183, 3, 0.05); }
 
         #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at center, rgba(0,255,0,0.05), transparent 60%); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Outfit', sans-serif;}
         .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: var(--glass-bg); backdrop-filter: blur(20px); padding: 40px 25px; border-radius: 30px; border: 1px solid rgba(0,255,0,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; z-index:100002; }
@@ -639,7 +642,7 @@
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">GUEST</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     
                     <div class="b-banner-alert" onclick="openRewardPage()">
-                        <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+5 PTS)</span>
+                        <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+2 PTS)</span>
                     </div>
 
                     <div class="b-card" onclick="openPremiumHub()">
@@ -696,7 +699,7 @@
             <i class="fas fa-times reward-close" onclick="closeRewardPage()"></i>
             <h2 class="reward-title">DAILY REWARD</h2>
             <p class="reward-desc" id="reward-desc-text" style="color:var(--text-muted); font-size:14px; margin-bottom:25px; line-height:1.6; font-weight:500;">Click the button below to start. You MUST stay on the ad page for exactly 60 seconds to get points.</p>
-            <button id="main-reward-btn" class="reward-claim-btn" onclick="startRewardTimer()">CLAIM 5 POINTS</button>
+            <button id="main-reward-btn" class="reward-claim-btn" onclick="startRewardTimer()">CLAIM 2 POINTS</button>
             <div id="reward-timer-section" style="display:none;">
                 <p class="reward-desc" style="color:var(--text-muted); font-size:14px; margin-bottom:15px; font-weight:600;">Verifying your activity... Please wait <span id="reward-sec" style="color:#00ff87; font-weight:900; font-size:22px; font-family:'Orbitron';">60</span>s.</p>
                 <div class="reward-progress-box"><div id="reward-progress-fill" class="reward-progress-fill"></div></div>
@@ -984,6 +987,20 @@
             clearInterval(tabTimerInterval);
             document.title = originalTitle;
         }
+
+        // --- 🌟 NEW: ANTI AD-BLOCKER SYSTEM 🌟 ---
+        let isAdblockerActive = false;
+        function checkAdBlocker() {
+            let bait = document.createElement('div');
+            bait.innerHTML = '&nbsp;';
+            bait.className = 'adsbox';
+            document.body.appendChild(bait);
+            window.setTimeout(function() {
+                if (bait.offsetHeight === 0) { isAdblockerActive = true; }
+                bait.remove();
+            }, 100);
+        }
+        checkAdBlocker(); // Run on startup
 
         function handleAvatarUpload(event) {
             if(!currentUser) return alert("Please login to change your profile picture!");
@@ -1418,7 +1435,7 @@
                 let lastDate = s.val();
                 let txt = document.getElementById('daily-bonus-text');
                 if(lastDate === today) { txt.innerText = "BONUS CLAIMED TODAY ✓"; txt.parentElement.style.opacity = "0.5"; txt.parentElement.style.pointerEvents = "none"; } 
-                else { txt.innerText = "CLAIM DAILY BONUS (+5 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
+                else { txt.innerText = "CLAIM DAILY BONUS (+2 PTS)"; txt.parentElement.style.opacity = "1"; txt.parentElement.style.pointerEvents = "auto"; }
             });
         }
 
@@ -1521,12 +1538,12 @@
 
         function executeRewardClaim() {
             let today = new Date().toLocaleDateString();
-            let newPoints = userPoints + 5;
+            let newPoints = userPoints + 2; // Updated to 2 points
             db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
                 let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
                 playSuccessSound();
-                speakLocalized("Task finished successfully. Five points added to your account.", "en"); // AI Voice
-                alert("🎉 Verification Complete!\n+5 Points have been added to your account."); 
+                speakLocalized("Task finished successfully. Two points added to your account.", "en"); // AI Voice
+                alert("🎉 Verification Complete!\n+2 Points have been added to your account."); 
                 closeRewardPage();
                 checkDailyBonusUI();
             });
@@ -1553,6 +1570,13 @@
         }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
+        // 🌟 NEW: VIP CELEBRATION LOGIC 🌟
+        function triggerVIPCelebration() {
+            playSuccessSound();
+            speakLocalized("Wow! Congratulations! You are now an exclusive VIP member of Animax TV! Thank you so much for your support. Let's enjoy an ad-free anime journey together!", "en");
+            executeDanceRoutine();
+        }
+
         function executeRealSpin() {
             if(!currentUser) return;
             if(userPoints < 2) return alert("❌ Not enough points to spin!");
@@ -1600,14 +1624,15 @@
                     setTimeout(() => { wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)'; }, 50);
 
                     if(wonPrize === 'VIP') {
-                        playSuccessSound();
-                        alert("🎉 JACKPOT! You spent 2 points and won 7 Days VIP Premium!");
                         let actualTime = Date.now() + serverTimeOffset;
                         db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                             let currentExp = snap.val() || 0;
                             let baseTime = (currentExp > actualTime) ? currentExp : actualTime; 
                             let newExp = baseTime + (7 * 24 * 60 * 60 * 1000);
-                            db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp });
+                            db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => {
+                                triggerVIPCelebration();
+                                closeSpinWheel();
+                            });
                         });
                     } else if(wonPrize > 0) {
                         playSuccessSound();
@@ -1854,8 +1879,7 @@
                 db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                     let currentExp = snap.val() || 0; let baseTime = (currentExp > actualTime) ? currentExp : actualTime; let newExp = baseTime + (hours * 60 * 60 * 1000);
                     db.ref(`users/${currentUser.uid}`).update({ points: userPoints - cost, premiumExpiry: newExp }).then(() => { 
-                        playSuccessSound();
-                        alert(`🎉 Success! Premium extended by ${hours} hours!`); 
+                        triggerVIPCelebration(); 
                     });
                 });
             } else { alert("❌ Not enough points!"); }
@@ -1988,9 +2012,8 @@
                             let daysToAdd = codeData.days ? parseInt(codeData.days) : 30; let newExp = baseTime + (daysToAdd * 24 * 60 * 60 * 1000);
                             db.ref(`premium_codes/${c}`).update({ status:'used', usedBy: currentUser.email || currentUser.uid, usedAt: actualTime }).then(() => {
                                 db.ref(`users/${currentUser.uid}`).update({ premiumExpiry: newExp }).then(() => { 
-                                    playSuccessSound();
-                                    alert(`🎉 SUCCESS! VIP ACTIVATED FOR ${daysToAdd} DAYS!`); 
-                                    inputEl.value = ""; location.reload(); 
+                                    triggerVIPCelebration(); 
+                                    inputEl.value = "";
                                 });
                             });
                         });
@@ -2198,6 +2221,18 @@
         let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; let midRollTaskActive = false; let midRollTaskStart = 0;
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
+            // 🌟 NETFLIX GUEST LIMIT SYSTEM 🌟
+            if (!currentUser) {
+                let guestCount = parseInt(localStorage.getItem('guest_watch_count') || '0');
+                if (guestCount >= 2) {
+                    speakLocalized("Please create a free account to continue watching!", "en");
+                    alert("🔒 Guest Limit Reached!\n\nPlease register or login to watch unlimited anime for free.");
+                    showLoginForm();
+                    return;
+                }
+                localStorage.setItem('guest_watch_count', guestCount + 1);
+            }
+
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
             if(!isPremium && idx !== -1) triggerTargetedAd();
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
@@ -2222,6 +2257,16 @@
                     if (currentPlayingEpisodeData.url) langSelect.innerHTML += '<option value="original">Original Audio</option>';
                     if (currentPlayingEpisodeData.url_hin) langSelect.innerHTML += '<option value="hindi">Hindi Audio</option>';
                     if (currentPlayingEpisodeData.url_eng) langSelect.innerHTML += '<option value="english">English Dub</option>';
+                    
+                    let savedLang = localStorage.getItem('preferred_language');
+                    if (savedLang) {
+                        let options = Array.from(langSelect.options).map(o => o.value);
+                        if (options.includes(savedLang)) {
+                            langSelect.value = savedLang;
+                            if(savedLang === 'hindi') u = currentPlayingEpisodeData.url_hin;
+                            if(savedLang === 'english') u = currentPlayingEpisodeData.url_eng;
+                        }
+                    }
                 }
             }
             
@@ -2257,6 +2302,8 @@
                         { src: 'logo.png', type: 'image/png' }
                     ]
                 });
+                navigator.mediaSession.setActionHandler('seekforward', function() { skipTime(10); });
+                navigator.mediaSession.setActionHandler('seekbackward', function() { skipTime(-10); });
             }
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
@@ -2397,6 +2444,7 @@
         }
 
         function changeLanguage(lang) {
+            localStorage.setItem('preferred_language', lang); // 🌟 SMART MEMORY HOOK 🌟
             const v = document.getElementById('main-video'); if(!currentPlayingEpisodeData) return; 
             let newUrl = currentPlayingEpisodeData.url; 
             if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng; else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
@@ -2414,7 +2462,8 @@
                 s.forEach(child => {
                     const c = child.val(); 
                     let crownHtml = c.isVIP ? `<i class="fas fa-crown" style="color:var(--accent-glow); margin-left:5px; font-size:12px;"></i>` : '';
-                    l.innerHTML = `<div class="comment-box-unique"><div class="c-body-unique"><div class="c-user-name" style="color:var(--text-main);font-weight:800; font-family:'Orbitron';">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:var(--text-muted);font-size:13px; margin-top:5px;">${c.text}</div></div></div>` + l.innerHTML; 
+                    let vipClass = c.isVIP ? 'comment-box-vip' : '';
+                    l.innerHTML = `<div class="comment-box-unique ${vipClass}"><div class="c-body-unique"><div class="c-user-name" style="color:var(--text-main);font-weight:800; font-family:'Orbitron';">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:var(--text-muted);font-size:13px; margin-top:5px;">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
         }
@@ -2843,6 +2892,24 @@
             return { reply, action };
         }
 
+        // 🌟 1-DAY AI FREE TRIAL CHECK 🌟
+        function checkAITrial() {
+            if (!currentUser) return true; // Guests can use AI
+            if (isPremium) return true; // VIPs can always use AI
+
+            let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
+            if(creationTime === 0) return true; 
+
+            let now = Date.now();
+            if (now - creationTime > 24 * 60 * 60 * 1000) {
+                speakLocalized("Sorry friend! Your 24-hour free trial has ended. Please upgrade to VIP to keep talking to me!", "en");
+                alert("👑 AI Trial Ended!\n\nPlease purchase VIP to unlock Unlimited AI Assistant access.");
+                openPremiumHub();
+                return false;
+            }
+            return true;
+        }
+
         function executeVoicePlayCommand(query) {
             let cleanQuery = query.replace(/in hindi|hindi|in english|english|dub/gi, "").trim();
             let foundItem = allContentList.find(item => item.title.toLowerCase() === cleanQuery || item.title.toLowerCase().includes(cleanQuery));
@@ -2867,6 +2934,10 @@
 
         function handleCatBotClick(e) {
             if(catMoved) return; 
+            
+            // Checking AI Trial before listening
+            if(!checkAITrial()) return;
+
             const tooltip = document.getElementById('ai-action-tooltip');
             
             if(!window.SpeechRecognition && !window.webkitSpeechRecognition) {
@@ -2887,12 +2958,12 @@
                 if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
                 
                 let result = processLocalVoiceCommand(transcript);
-                speakLocalized(result.reply, "en"); // Command replies are in English
+                speakLocalized(result.reply, "en"); 
                 
                 if(tooltip) resetTooltip(tooltip);
                 
                 if(result.action) {
-                    setTimeout(() => { result.action(); }, 1500); // Execute action after it starts speaking
+                    setTimeout(() => { result.action(); }, 1500); 
                 }
             };
 
