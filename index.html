@@ -1038,6 +1038,7 @@
         <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
+   
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
@@ -1264,13 +1265,14 @@
             } else { regForm.classList.remove('active'); regForm.classList.add('hidden'); loginForm.classList.remove('hidden'); loginForm.classList.add('active'); }
         }
 
+        // --- 🌟 UPDATE: Added 'name' to also be updated when user changes username ---
         function editUsername() {
             if(!currentUser) return;
             let currentName = document.getElementById('b-profile-name').innerText.replace('GUEST', '').trim();
             let newName = prompt("Enter your new username:", currentName);
             if(newName && newName.trim() !== "" && newName.trim().length > 2) {
                 let safeName = newName.trim().substring(0, 20); 
-                db.ref(`users/${currentUser.uid}`).update({ username: safeName }).then(() => {
+                db.ref(`users/${currentUser.uid}`).update({ username: safeName, name: safeName }).then(() => {
                     db.ref(`lb_users/${currentUser.uid}`).update({ name: safeName.toUpperCase() });
                     currentUser.username = safeName; 
                     document.getElementById('b-profile-name').innerHTML = safeName.toUpperCase() + ' <i class="fas fa-edit" id="edit-name-icon" style="font-size:14px; color:var(--text-muted); cursor:pointer;" onclick="editUsername()"></i>';
@@ -2246,11 +2248,12 @@
             }
         }
 
+        // --- 🌟 UPDATE: Added 'name' and 'email' for Admin Panel 🌟 ---
         function handleAuth(t) { 
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value; const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
             if(t === 'reg') {
                 const n = document.getElementById('rname-in').value.trim(); if(!n || !e || !p) return alert("Please fill all details.");
-                auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n }); }); }).catch(err=>alert(err.message)); 
+                auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n, name: n, email: e }); }); }).catch(err=>alert(err.message)); 
             } else { if(!e || !p) return alert("Please fill details."); auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); }
         }
 
@@ -2663,7 +2666,7 @@
                     v = Math.floor(Math.random() * 16) + 50; // 50-65 likes
                     db.ref(`likes/${safeId}/count`).set(v);
                 }
-                document.getElementById('like-count').innerText = formatNumber(v); 
+                 document.getElementById('like-count').innerText = formatNumber(v); 
             });
 
             currentViewsRef=db.ref(`views/${safeId}`); 
