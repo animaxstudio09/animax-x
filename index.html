@@ -38,18 +38,56 @@
 
     <style>
         /* =========================================
-           🚀 PREMIUM GLASSMORPHISM & NEON THEME 🚀
+           🚀 DEFAULT THEME (FOR FREE USERS) 🚀
            ========================================= */
         :root { 
             --primary-bg: #050508;
-            --accent-glow: #ffb703;
+            --accent-glow: #ffb703; /* Orange/Gold Glow */
             --accent-gradient: linear-gradient(135deg, #ffb703, #fb8500);
             --glass-bg: rgba(25, 25, 35, 0.4);
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8f9fa;
             --text-muted: #adb5bd;
         }
+
+        /* =========================================
+           🚀 VIP CYBER-ELITE THEME (FOR VIP/TRIAL USERS) 🚀
+           ========================================= */
+        body.vip-cyber-theme {
+            --primary-bg: #050408; /* Deep Cyber Dark */
+            --accent-glow: #b14bff; /* Neon Purple */
+            --accent-gradient: linear-gradient(135deg, #ff007f, #7000ff); /* Pink to Purple */
+            --glass-bg: rgba(15, 10, 25, 0.85);
+            --glass-border: rgba(177, 75, 255, 0.2);
+            background-image: 
+                radial-gradient(circle at top right, rgba(255, 0, 127, 0.08), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(112, 0, 255, 0.08), transparent 40%);
+        }
         
+        body.vip-cyber-theme .logo, body.vip-cyber-theme .sec-title-text { 
+            background: linear-gradient(to right, #ff007f, #b14bff, #00f5d4);
+            -webkit-background-clip: text; color: transparent; text-shadow: 0 0 10px rgba(177, 75, 255, 0.3);
+        }
+        body.vip-cyber-theme .logo span { background: var(--accent-gradient); color: #fff; box-shadow: 0 2px 10px rgba(255, 0, 127, 0.5); }
+        body.vip-cyber-theme header { box-shadow: 0 8px 32px rgba(177, 75, 255, 0.15); border-bottom: 1px solid rgba(177, 75, 255, 0.4); }
+        body.vip-cyber-theme nav { background: rgba(5, 4, 8, 0.95); box-shadow: 0 0 30px rgba(177, 75, 255, 0.2); border: 1px solid var(--glass-border); }
+        body.vip-cyber-theme nav i.active { color: #fff; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5); }
+        
+        body.vip-cyber-theme .b-card {
+            background: linear-gradient(145deg, rgba(20, 10, 30, 0.7), rgba(5, 4, 8, 0.9));
+            border: 1px solid rgba(177, 75, 255, 0.25);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        body.vip-cyber-theme .b-card-icon { background: rgba(177, 75, 255, 0.1); color: #ff007f; border: 1px solid rgba(177, 75, 255, 0.3); }
+        body.vip-cyber-theme .b-list-item-left i { color: #b14bff; text-shadow: 0 0 10px rgba(177, 75, 255, 0.5); }
+        body.vip-cyber-theme .cat-tab.active { background: var(--accent-gradient); color: #fff; font-weight: 900; box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); border: none; }
+        body.vip-cyber-theme #tab-vault { display: inline-block; background: rgba(177, 75, 255, 0.1); color: #b14bff; border: 1px solid #b14bff; }
+        body.vip-cyber-theme #tab-vault.active { background: var(--accent-gradient); color: #fff; border: none; }
+        body.vip-cyber-theme .auth-btn, body.vip-cyber-theme .b-btn-primary { background: var(--accent-gradient); color: #fff; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4); border: none; }
+        body.vip-cyber-theme .card-vip-badge { background: var(--accent-gradient) !important; color: #fff !important; box-shadow: 0 2px 10px rgba(255, 0, 127, 0.5); border: none; }
+        body.vip-cyber-theme .avatar-img-real { border-color: #b14bff; box-shadow: 0 0 15px rgba(177, 75, 255, 0.4); }
+        /* ========================================= */
+
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body { 
@@ -61,20 +99,17 @@
             overflow-x: hidden; 
             padding-bottom: 90px; 
             min-height: 100vh;
+            transition: all 0.4s ease;
         }
 
         /* 🌟 FLOATING HEADER */
         header { 
             background: var(--glass-bg); 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 12px 20px; 
-            display: flex; align-items: center; justify-content: space-between; 
-            border: 1px solid var(--glass-border); 
-            border-radius: 20px;
-            position: sticky; top: 10px; z-index: 100; 
-            margin: 10px 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; 
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            position: sticky; top: 10px; z-index: 100; margin: 10px 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
         }
         .logo { font-size: 24px; font-weight: 900; color: transparent; background: var(--accent-gradient); -webkit-background-clip: text; cursor: pointer; font-family: 'Orbitron'; letter-spacing: 2px; text-shadow: 0px 4px 15px rgba(255, 183, 3, 0.3);}
         .logo span { color: #000; font-size: 12px; background: var(--accent-gradient); padding: 3px 8px; border-radius: 6px; font-family: 'Outfit'; font-weight: 800; vertical-align: middle; margin-left: 5px; box-shadow: 0 2px 10px rgba(255, 183, 3, 0.4);}
@@ -85,13 +120,11 @@
         .search-icon-pos { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-main); pointer-events: none; font-size: 16px; transition: 0.3s;}
 
         /* 🌟 CATEGORY TABS (PILL DESIGN) */
-        .category-tabs { 
-            background: transparent; padding: 5px 15px; display: flex; align-items: center; gap: 10px; 
-            margin: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
-        }
+        .category-tabs { background: transparent; padding: 5px 15px; display: flex; align-items: center; gap: 10px; margin: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .category-tabs::-webkit-scrollbar { display: none; }
         .cat-tab { color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron'; letter-spacing: 1px; padding: 8px 16px; border-radius: 30px; border: 1px solid transparent; transition: 0.3s ease;}
         .cat-tab.active { color: #000; background: var(--accent-gradient); border-color: rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3); transform: translateY(-2px);}
+        #tab-vault { display: none; }
 
         /* 🌟 SUB TABS */
         .sub-tabs { display: flex; gap: 15px; margin: 0 15px 20px 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;}
@@ -137,6 +170,7 @@
             display: flex; justify-content: space-around; align-items: center; padding: 12px 0; 
             border-radius: 40px; border: 1px solid var(--glass-border); 
             z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+            transition: all 0.4s ease;
         }
         nav i { font-size: 20px; color: var(--text-muted); padding: 10px 20px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px;}
         nav i.active { color: #000; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4); transform: translateY(-5px);}
@@ -186,6 +220,10 @@
         .b-card-right { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 14px;}
         .b-badge { background: var(--accent-gradient); color: #000; padding: 4px 10px; border-radius: 20px; font-size: 11px; display: flex; align-items: center; gap: 4px; font-weight: 800;}
         
+        /* 🌟 FEATURE 1: UI Language Selector 🌟 */
+        .lang-select-box { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 10px; outline: none; font-family: 'Outfit'; font-weight: 600; font-size: 12px;}
+        .lang-select-box option { background: var(--primary-bg); color: #fff; }
+
         .b-list-group { background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--glass-border); overflow: hidden;}
         .b-list-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.3s;}
         .b-list-item:active { background: rgba(255,255,255,0.05); }
@@ -341,9 +379,14 @@
         .comment-input-container input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; font-size: 14px; outline:none; font-family: 'Outfit';}
         .comment-send-btn { background: var(--accent-gradient); border: none; width: 45px; height: 45px; color: #000; border-radius: 50%; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(255,183,3,0.3);}
         
-        /* 🌟 VIP GLOWING COMMENT BOX 🌟 */
+        /* 🌟 FEATURE 8: VIP GLOWING COMMENT BOX & RAINBOW TEXT 🌟 */
         .comment-box-unique { display: flex; gap: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); transition: 0.3s; }
         .comment-box-vip { border: 1px solid var(--accent-glow) !important; box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); background: rgba(255, 183, 3, 0.05); }
+        .rainbow-text {
+            background: linear-gradient(to right, #ff3366, #ff9933, #ffff00, #33cc33, #3399ff, #cc33cc);
+            -webkit-background-clip: text; color: transparent; animation: rainbow-ani 4s linear infinite; background-size: 300%;
+        }
+        @keyframes rainbow-ani { 0% {background-position: 0% 50%;} 100% {background-position: 100% 50%;} }
 
         #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at center, rgba(0,255,0,0.05), transparent 60%); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Outfit', sans-serif;}
         .reward-main-content { width: 90%; max-width: 400px; text-align: center; background: var(--glass-bg); backdrop-filter: blur(20px); padding: 40px 25px; border-radius: 30px; border: 1px solid rgba(0,255,0,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; z-index:100002; }
@@ -387,7 +430,7 @@
         #ai-top-notif.show { top: 20px; }
 
         /* =========================================
-           🤖 "MEA" STYLE CUTE CAT ROBOT (UPDATED VISOR)
+           🤖 "MEA" STYLE CUTE CAT ROBOT
            ========================================= */
         .mea-container { 
             position: fixed; bottom: 80px; left: 20px; width: 70px; height: 95px; 
@@ -526,10 +569,28 @@
         .guide-cmd i { font-size: 20px; color: #00d2ff; width: 30px; text-align: center; }
         .guide-cmd-text strong { color: var(--text-main); font-size: 15px; display: block; margin-bottom: 4px; font-family: 'Orbitron'; letter-spacing: 1px;}
         .guide-cmd-text span { color: var(--text-muted); font-size: 13px; }
+        
+        /* 🌟 FEATURE 6: Anti-AdBlocker Guard 🌟 */
+        #adblock-guard {
+            display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.98); backdrop-filter: blur(20px); z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; font-family: 'Outfit';
+        }
+        #adblock-guard i { font-size: 60px; color: #e63946; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(230,57,70,0.5)); }
+        #adblock-guard h2 { font-size: 24px; font-family: 'Orbitron'; color: #fff; margin-bottom: 15px; font-weight: 900; }
+        #adblock-guard p { color: var(--text-muted); font-size: 14px; margin-bottom: 30px; line-height: 1.6; }
+        #adblock-guard button { background: var(--accent-gradient); border: none; padding: 15px 30px; border-radius: 30px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        #adblock-guard button:active { transform: scale(0.95); }
 
     </style>
 </head>
-<body>
+<body class="vip-cyber-theme">
+
+    <!-- 🌟 FEATURE 6: ANTI-ADBLOCKER OVERLAY 🌟 -->
+    <div id="adblock-guard">
+        <i class="fas fa-shield-alt"></i>
+        <h2 data-i18n="adblockTitle">AdBlock Detected!</h2>
+        <p data-i18n="adblockDesc">Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.</p>
+        <button onclick="location.reload()" data-i18n="adblockBtn">I HAVE DISABLED IT</button>
+    </div>
 
     <!-- 🌟 NEW AI TOP NOTIFICATION BAR 🌟 -->
     <div id="ai-top-notif">
@@ -574,38 +635,43 @@
     <div id="main-app" class="app-view" style="display:block;">
         
         <div id="continue-watching-section" style="display:none; margin-bottom:15px;">
-            <div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);">CONTINUE WATCHING</div></div>
+            <div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);" data-i18n="cwTitle">CONTINUE WATCHING</div></div>
             <div class="b-history-scroll" id="cw-grid" style="padding:0 15px;"></div>
         </div>
 
         <div id="banner-slider"><div id="banner-slides-container"></div></div>
 
         <div class="category-tabs">
-            <div style="font-weight:900; color:var(--text-main); margin-right:10px; font-family:'Orbitron';">MENU</div>
-            <div class="cat-tab active" onclick="filterHomeCategory('trending', this)">LATEST</div>
+            <div style="font-weight:900; color:var(--text-main); margin-right:10px; font-family:'Orbitron';" data-i18n="menu">MENU</div>
+            <div class="cat-tab active" onclick="filterHomeCategory('trending', this)" data-i18n="latest">LATEST</div>
             <div class="cat-tab" onclick="filterHomeCategory('anime', this)">ANIME</div>
             <div class="cat-tab" onclick="filterHomeCategory('cartoon', this)">CARTOON</div>
             <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIE</div>
+            <!-- 🌟 FEATURE 3: THE SECRET VAULT 🌟 -->
+            <div class="cat-tab" id="tab-vault" onclick="filterHomeCategory('vault', this)"><i class="fas fa-gem"></i> VAULT</div>
         </div>
         
-        <div id="section-trending" style="display:block;"><div class="section-header"><div class="sec-title-text">TRENDING NOW</div></div><div id="trending-grid" class="grid-container"></div></div>
+        <div id="section-trending" style="display:block;"><div class="section-header"><div class="sec-title-text" data-i18n="trendingNow">TRENDING NOW</div></div><div id="trending-grid" class="grid-container"></div></div>
         
         <div id="section-anime" style="display:none;">
-            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('anime', 'series', this)">SERIES</div><div class="sub-tab" onclick="switchSubTab('anime', 'movie', this)">MOVIES</div></div>
+            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('anime', 'series', this)" data-i18n="series">SERIES</div><div class="sub-tab" onclick="switchSubTab('anime', 'movie', this)" data-i18n="movies">MOVIES</div></div>
             <div id="anime-series-wrapper"><div id="anime-grid" class="grid-container"></div></div><div id="anime-movie-wrapper" style="display:none;"><div id="anime-movie-grid" class="grid-container"></div></div>
         </div>
 
         <div id="section-cartoon" style="display:none;">
-            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)">SERIES</div><div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)">MOVIES</div></div>
+            <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)" data-i18n="series">SERIES</div><div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)" data-i18n="movies">MOVIES</div></div>
             <div id="cartoon-series-wrapper"><div id="cartoon-grid" class="grid-container"></div></div><div id="cartoon-movie-wrapper" style="display:none;"><div id="cartoon-movie-grid" class="grid-container"></div></div>
         </div>
 
-        <div id="section-movie" style="display:none;"><div class="section-header"><div class="sec-title-text">ALL MOVIES</div></div><div id="movie-grid" class="grid-container"></div></div>
+        <div id="section-movie" style="display:none;"><div class="section-header"><div class="sec-title-text" data-i18n="allMovies">ALL MOVIES</div></div><div id="movie-grid" class="grid-container"></div></div>
+        
+        <!-- SECRET VAULT SECTION -->
+        <div id="section-vault" style="display:none;"><div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);">SECRET VAULT (VIP)</div></div><div id="vault-grid" class="grid-container"></div></div>
     </div>
 
     <!-- 🌟 DOWNLOADS VIEW 🌟 -->
     <div id="downloads-view" class="app-view">
-        <div class="dl-header"><i class="fas fa-download" style="color:var(--accent-glow);"></i> Offline Downloads</div>
+        <div class="dl-header"><i class="fas fa-download" style="color:var(--accent-glow);"></i> <span data-i18n="offlineDownloads">Offline Downloads</span></div>
         <div id="downloads-list-container">
             <div class="empty-dl">Loading downloads...</div>
         </div>
@@ -632,7 +698,7 @@
                     <div class="prof-avatar-section">
                         <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()" style="cursor:pointer;" title="Change Profile Picture">
                             <img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real">
-                            <div style="position:absolute; bottom:0; right:0; background:var(--accent-gradient); width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:3px solid var(--primary-bg); color:#000; font-size:13px; box-shadow:0 2px 10px rgba(0,0,0,0.5);"><i class="fas fa-camera"></i></div>
+                            <div style="position:absolute; bottom:0; right:0; background:var(--accent-gradient); width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:3px solid var(--primary-bg); color:#fff; font-size:13px; box-shadow:0 2px 10px rgba(0,0,0,0.5);"><i class="fas fa-camera"></i></div>
                         </div>
                         <input type="file" id="avatar-upload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
                     </div>
@@ -645,13 +711,26 @@
                         <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+2 PTS)</span>
                     </div>
 
+                    <!-- 🌟 FEATURE 1: UI Language Selector 🌟 -->
+                    <div class="b-card" style="padding: 15px 20px;">
+                        <div class="b-card-left"><div class="b-card-icon" style="background:rgba(255,255,255,0.1); color:#fff;"><i class="fas fa-language"></i></div>
+                        <div><div class="b-card-title" data-i18n="appLang">App Language</div><div class="b-card-sub" data-i18n="langDesc">Choose UI & AI Language</div></div></div>
+                        <select class="lang-select-box" id="ui-lang-select" onchange="changeAppUI_Lang(this.value)">
+                            <option value="en">English (EN)</option><option value="bn">Bengali (BN)</option>
+                            <option value="hi">Hindi (HI)</option><option value="ja">Japanese (JA)</option>
+                            <option value="es">Spanish (ES)</option><option value="fr">French (FR)</option>
+                            <option value="pt">Portuguese (PT)</option><option value="ur">Urdu (UR)</option>
+                            <option value="ar">Arabic (AR)</option><option value="ko">Korean (KO)</option>
+                        </select>
+                    </div>
+
                     <div class="b-card" onclick="openPremiumHub()">
-                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-crown"></i></div><div><div class="b-card-title">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
-                        <div class="b-card-right"><div class="b-badge"><i class="fas fa-star" style="font-size:10px; color:#000;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
+                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-crown"></i></div><div><div class="b-card-title" data-i18n="vipStatus">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
+                        <div class="b-card-right"><div class="b-badge"><i class="fas fa-star" style="font-size:10px; color:#fff;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
                     </div>
                     
                     <div class="b-card" onclick="copyReferCode()">
-                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-user-plus"></i></div><div><div class="b-card-title">Refer & Earn</div><div class="b-card-sub">Invite friends & get +5 points</div></div></div>
+                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-user-plus"></i></div><div><div class="b-card-title" data-i18n="referEarn">Refer & Earn</div><div class="b-card-sub" data-i18n="inviteFriends">Invite friends & get +5 points</div></div></div>
                         <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
                     </div>
 
@@ -659,27 +738,26 @@
                         <div class="b-card-left">
                             <div class="b-card-icon" style="color: #ff0055; background: rgba(255,0,85,0.1);"><i class="fas fa-dharmachakra"></i></div>
                             <div>
-                                <div class="b-card-title">Lucky Spin 🎰</div>
-                                <div class="b-card-sub">Cost 2 Pts • Win up to 10 Pts / VIP</div>
+                                <div class="b-card-title" data-i18n="luckySpin">Lucky Spin 🎰</div>
+                                <div class="b-card-sub" data-i18n="spinDesc">Cost 2 Pts • Win up to 10 Pts / VIP</div>
                             </div>
                         </div>
                         <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
                     </div>
 
                     <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')">
-                        <div class="b-card-left"><div class="b-card-icon" style="color: #00f5d4; background: rgba(0,245,212,0.1);"><i class="fas fa-paper-plane"></i></div><div><div class="b-card-title">Request Content</div><div class="b-card-sub">Join Telegram to request</div></div></div>
-                        <div class="b-card-right"><span style="background:rgba(255,255,255,0.1); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:800; color:var(--text-main);">Request</span></div>
+                        <div class="b-card-left"><div class="b-card-icon" style="color: #00f5d4; background: rgba(0,245,212,0.1);"><i class="fas fa-paper-plane"></i></div><div><div class="b-card-title" data-i18n="requestContent">Request Content</div><div class="b-card-sub" data-i18n="joinTelegram">Join Telegram to request</div></div></div>
+                        <div class="b-card-right"><span style="background:rgba(255,255,255,0.1); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:800; color:var(--text-main);" data-i18n="requestBtn">Request</span></div>
                     </div>
 
                     <div class="b-list-group">
-                        <!-- 🌟 NEW AI GUIDE BUTTON 🌟 -->
-                        <div class="b-list-item" onclick="openAIGuide()"><div class="b-list-item-left"><i class="fas fa-robot" style="color:#00d2ff;"></i> AI Voice Commands</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="openAIGuide()"><div class="b-list-item-left"><i class="fas fa-robot" style="color:#00d2ff;"></i> <span data-i18n="aiVoiceCommands">AI Voice Commands</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
 
-                        <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy"></i> Point Leaderboard</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-bookmark" style="color:#00f5d4;"></i> My List</div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:var(--text-main); font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-heart" style="color:#ff0055;"></i> My Likes</div><div class="b-list-item-right"><span style="color:var(--text-main); font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy"></i> <span data-i18n="leaderboard">Point Leaderboard</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-bookmark" style="color:#00f5d4;"></i> <span data-i18n="myList">My List</span></div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:var(--text-main); font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-heart" style="color:#ff0055;"></i> <span data-i18n="myLikes">My Likes</span></div><div class="b-list-item-right"><span style="color:var(--text-main); font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-history-section">
-                            <div class="b-list-item" style="padding: 15px 0 10px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history" style="color:var(--text-muted);"></i> Watch History</div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
+                            <div class="b-list-item" style="padding: 15px 0 10px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history" style="color:var(--text-muted);"></i> <span data-i18n="watchHistory">Watch History</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
                             <div class="b-history-scroll" id="b-recent-history-scroll"></div>
                         </div>
                     </div>
@@ -711,7 +789,7 @@
 
     <!-- 🤖 NEW "MEA" STYLE CSS CAT ROBOT -->
     <div class="mea-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
-        <div class="ai-tooltip" id="ai-action-tooltip">Click to Talk! 🎤</div>
+        <div class="ai-tooltip" id="ai-action-tooltip" data-i18n="clickToTalk">Click to Talk! 🎤</div>
         <div class="mea-head">
             <div class="mea-ear left"></div>
             <div class="mea-ear right"></div>
@@ -765,13 +843,14 @@
             <h3 style="color: #00d2ff; font-size: 15px; font-weight: 800; font-family: 'Orbitron'; margin-bottom: 15px; text-transform: uppercase;">Voice Commands</h3>
             
             <div class="guide-cmd"><i class="fas fa-play"></i><div class="guide-cmd-text"><strong>"Play [Name]"</strong><span>Instantly plays the requested anime or movie.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-pause"></i><div class="guide-cmd-text"><strong>"Pause / Play Video"</strong><span>Controls video playback directly.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-expand"></i><div class="guide-cmd-text"><strong>"Fullscreen"</strong><span>Enters or exits fullscreen mode.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-search"></i><div class="guide-cmd-text"><strong>"Search [Name]"</strong><span>Searches the entire Animax library for you.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-dharmachakra"></i><div class="guide-cmd-text"><strong>"Spin the wheel"</strong><span>Opens the lucky spin wheel page.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-trophy"></i><div class="guide-cmd-text"><strong>"Show Leaderboard"</strong><span>Shows the top ranked users.</span></div></div>
-            <div class="guide-cmd"><i class="fas fa-gift"></i><div class="guide-cmd-text"><strong>"Claim Bonus"</strong><span>Opens the daily reward page.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-history"></i><div class="guide-cmd-text"><strong>"Open History"</strong><span>Shows your recently watched videos.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-music"></i><div class="guide-cmd-text"><strong>"Dance"</strong><span>Watch Ani show off some cool moves!</span></div></div>
-            <div class="guide-cmd"><i class="fas fa-comment-dots"></i><div class="guide-cmd-text"><strong>"What is your name?"</strong><span>Say hello and chat with Ani.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-comment-dots"></i><div class="guide-cmd-text"><strong>"Be my friend"</strong><span>Say hello and chat with Ani.</span></div></div>
         </div>
     </div>
 
@@ -895,13 +974,13 @@
         <div class="player-meta-container">
             <div class="meta-title" id="player-title">Loading...</div>
             <div class="meta-info">
-                <span style="background:var(--accent-gradient); color:#000; padding:3px 8px; border-radius:6px; font-weight:800; font-size:11px; font-family:'Orbitron';" id="content-type-badge">ANIME</span>
+                <span style="background:var(--accent-gradient); color:#fff; padding:3px 8px; border-radius:6px; font-weight:800; font-size:11px; font-family:'Orbitron';" id="content-type-badge">ANIME</span>
                 <span id="star-rating-ui" style="color:var(--text-muted); cursor:pointer; font-size:14px; margin-left:5px;">
                     <i class="fas fa-star" onclick="rateVideo(1)"></i><i class="fas fa-star" onclick="rateVideo(2)"></i><i class="fas fa-star" onclick="rateVideo(3)"></i><i class="fas fa-star" onclick="rateVideo(4)"></i><i class="fas fa-star" onclick="rateVideo(5)"></i>
                 </span>
                 <span id="avg-rating-text" style="color:var(--text-main); font-weight:800;">4.8</span>
                 <span style="margin-left:auto;"><i class="fas fa-eye" style="color:var(--text-muted); margin-right:5px;"></i> <span id="view-count">0</span></span>
-                <span style="margin-left:15px;"><i class="fas fa-heart" style="color:#ff0055; margin-right:5px;"></i> <span id="like-count">0</span></span>
+                <span style="margin-left:15px;"><i class="fas fa-heart" style="color:#ff007f; margin-right:5px;"></i> <span id="like-count">0</span></span>
             </div>
             
             <div class="action-buttons-row">
@@ -936,7 +1015,7 @@
         <div id="shorts-comments-modal" style="display:none; position:fixed; bottom:0; left:0; width:100vw; height:65vh; background:rgba(10,10,15,0.95); backdrop-filter:blur(20px); border-top:1px solid var(--glass-border); padding:25px; z-index:10000; border-radius:30px 30px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); font-family:'Outfit';">
             <div class="sc-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px;"><span class="sc-title" style="color:var(--text-main); font-family:'Orbitron'; font-weight:900; font-size:18px;">COMMENTS</span><i class="fas fa-times sc-close" style="cursor:pointer; color:var(--text-muted); font-size:22px;" onclick="closeShortComments()"></i></div>
             <div id="shorts-comments-list" style="height:calc(100% - 90px); overflow-y:auto; margin-bottom:15px;"></div>
-            <div class="sc-input-area" style="display:flex; gap:12px; position:absolute; bottom:25px; width:calc(100% - 50px);"><input type="text" id="short-comment-in" placeholder="Write a comment..." style="flex:1; padding:15px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.5); color:#fff; border-radius:15px; outline:none; font-family:'Outfit';" onkeypress="if(event.key === 'Enter') postShortComment();"><button onclick="postShortComment()" style="background:var(--accent-gradient); border:none; width:50px; height:50px; color:#000; cursor:pointer; border-radius:15px; font-size:18px;"><i class="fas fa-paper-plane"></i></button></div>
+            <div class="sc-input-area" style="display:flex; gap:12px; position:absolute; bottom:25px; width:calc(100% - 50px);"><input type="text" id="short-comment-in" placeholder="Write a comment..." style="flex:1; padding:15px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.5); color:#fff; border-radius:15px; outline:none; font-family:'Outfit';" onkeypress="if(event.key === 'Enter') postShortComment();"><button onclick="postShortComment()" style="background:var(--accent-gradient); border:none; width:50px; height:50px; color:#fff; cursor:pointer; border-radius:15px; font-size:18px;"><i class="fas fa-paper-plane"></i></button></div>
         </div>
     </div>
 
@@ -949,22 +1028,58 @@
     <!-- SEARCH OVERLAY -->
     <div id="search-overlay-view">
         <div class="so-header"><i class="fas fa-arrow-left so-back" onclick="closeSearchOverlay()"></i><div class="so-input-box"><i class="fas fa-search" style="color:var(--text-muted); font-size:16px; margin-right:8px;"></i><input type="text" id="overlay-search-input" placeholder="Search anime, movies..." oninput="handleOverlaySearch(this.value)"></div></div>
-        <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff0055;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
+        <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff007f;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
     </div>
 
-    <!-- 🌟 BOTTOM NAVIGATION (4 BUTTONS) 🌟 -->
+    <!-- 🌟 BOTTOM NAVIGATION 🌟 -->
     <nav id="main-nav">
         <i class="fas fa-home active" onclick="switchTab('home')"></i>
         <i class="fas fa-bolt" onclick="showShorts()"></i>
         <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
-<!-- 🚀 JS LOGIC 🚀 -->
+    <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
-
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
+
+        // 🌟 FEATURE 1: 10-LANGUAGE UI & AI 🌟
+        const langDict = {
+            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Welcome to Animax TV! How can I help you today?", aiError:"Sorry, I didn't understand. Try saying play, search, or open profile.", aiTrialOver:"Sorry friend! Your 7-day free trial has ended. Please upgrade to VIP to keep talking to me!"},
+            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ৭ দিনের ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI भाषा चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 7-दिवसीय निःशुल्क परीक्षण समाप्त हो गया है।"},
+            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"7日間の無料トライアルが終了しました。VIPにアップグレードしてください。"},
+            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 7 días ha terminado! Actualiza a VIP."},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mes J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 7 jours est terminé! Passez au VIP."},
+            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 7 dias acabou! Atualize para VIP."},
+            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 7 دن کا فری ٹرائل ختم ہو گیا ہے۔"},
+            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت فترة التجربة المجانية 7 أيام! يرجى الترقية."},
+            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", spinDesc:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"7일 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요."}
+        };
+
+        const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
+        let currentAppLang = localStorage.getItem('animax_ui_lang') || 'en';
+
+        function changeAppUI_Lang(lang) {
+            currentAppLang = lang;
+            localStorage.setItem('animax_ui_lang', lang);
+            let d = langDict[lang] || langDict['en'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                let key = el.getAttribute('data-i18n');
+                if(d[key]) {
+                    if(el.tagName === 'INPUT') el.placeholder = d[key];
+                    else el.innerHTML = d[key];
+                }
+            });
+            speakLocalized(d.aiWelcome, lang);
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            let s = document.getElementById('ui-lang-select');
+            if(s) s.value = currentAppLang;
+            changeAppUI_Lang(currentAppLang);
+        });
 
         function startTabTimer(seconds) {
             clearInterval(tabTimerInterval);
@@ -988,7 +1103,7 @@
             document.title = originalTitle;
         }
 
-        // --- 🌟 NEW: ANTI AD-BLOCKER SYSTEM 🌟 ---
+        // --- 🌟 FEATURE 6: ANTI AD-BLOCKER SYSTEM 🌟 ---
         let isAdblockerActive = false;
         function checkAdBlocker() {
             let bait = document.createElement('div');
@@ -1000,7 +1115,7 @@
                 bait.remove();
             }, 100);
         }
-        checkAdBlocker(); // Run on startup
+        checkAdBlocker();
 
         function handleAvatarUpload(event) {
             if(!currentUser) return alert("Please login to change your profile picture!");
@@ -1108,7 +1223,7 @@
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
             let isLoginFormVisible = document.getElementById('guest-login-content').style.display === 'block';
             
-            if (isPremium) {
+            if (isPremium || isTrialActive) {
                 bannerWrap.style.display = 'none'; 
                 if(rewardTop) rewardTop.innerHTML = "";
                 if(rewardBottom) rewardBottom.innerHTML = "";
@@ -1172,13 +1287,40 @@
             }
             if(element) element.classList.add('active');
             
-            let sTrending = document.getElementById('section-trending'); if(sTrending) sTrending.style.display = 'none';
-            let sAnime = document.getElementById('section-anime'); if(sAnime) sAnime.style.display = 'none';
-            let sCartoon = document.getElementById('section-cartoon'); if(sCartoon) sCartoon.style.display = 'none';
-            let sMovie = document.getElementById('section-movie'); if(sMovie) sMovie.style.display = 'none';
+            let sections = ['trending', 'anime', 'cartoon', 'movie', 'vault'];
+            sections.forEach(s => {
+                let sec = document.getElementById('section-' + s);
+                if(sec) sec.style.display = 'none';
+            });
             
             let targetSection = document.getElementById('section-' + cat);
             if(targetSection) targetSection.style.display = 'block';
+
+            if(cat === 'vault') {
+                loadSecretVault();
+            }
+        }
+
+        /* 🌟 FEATURE 3: SECRET VAULT LOADER 🌟 */
+        function loadSecretVault() {
+            const grid = document.getElementById('vault-grid');
+            if(!grid) return;
+            grid.innerHTML = "";
+            let html = "";
+            if(window.animeData) {
+                Object.keys(window.animeData).forEach(name => {
+                    if(window.animeData[name][0].type === 'premium') {
+                        html += generateCardHtml({title: name, type: 'anime', folder: name, data: window.animeData[name][0]});
+                    }
+                });
+            }
+            if(window.movieData) {
+                window.movieData.forEach(m => {
+                    if(m.type === 'premium') html += generateCardHtml({title: m.title, type: 'movie', data: m, id: m.id || m.title, url: m.url, thumbnail: m.thumbnail});
+                });
+            }
+            if(html === "") html = "<div style='color:var(--text-muted); padding:20px; grid-column:1/-1; text-align:center;'>Vault is empty right now.</div>";
+            grid.innerHTML = html;
         }
 
         function switchSubTab(parent, type, el) {
@@ -1247,7 +1389,7 @@
             
             if(t==='profile' && !currentUser) {
                 removePopunders();
-            } else if (!isPremium) {
+            } else if (!isPremium && !isTrialActive) {
                 injectFreeAds();
             }
             updateBannerVisibility();
@@ -1261,6 +1403,7 @@
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null, currentEpIndex = -1; 
         let allContentList = [];
+        let isTrialActive = false;
 
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
@@ -1285,7 +1428,7 @@
                 });
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
-                currentUser = null; isPremium = false; 
+                currentUser = null; isPremium = false; isTrialActive = false;
                 
                 document.getElementById('guest-login-content').style.display = 'none'; 
                 document.getElementById('user-profile-content').style.display = 'block'; 
@@ -1308,6 +1451,8 @@
 
                 if(userProfileRef) { userProfileRef.off(); userProfileRef = null; }
                 if(vipTimerInterval) clearInterval(vipTimerInterval); injectFreeAds(); 
+                document.body.classList.remove('vip-cyber-theme');
+                document.getElementById('tab-vault').style.display = 'none';
             }
             loadContent(); loadContinueWatching(); updateBannerVisibility();
         });
@@ -1315,25 +1460,20 @@
         let adsInjected = false;
         let socialBarInterval = null;
 
-        function startGlobalPopunderTimer() {}
-        function triggerGlobalPopunder() {}
-        
+        // 🌟 FEATURE 5: SMART AD LOCKS 🌟
         function triggerTargetedAd() {
-            if(isPremium) return;
+            if(isPremium || isTrialActive) return;
             if(Date.now() - appStartupTime < 3000) return;
+            
+            let lastSmartlinkTime = localStorage.getItem('last_smartlink') || 0;
+            if (Date.now() - lastSmartlinkTime < 600000) return; // 10 minutes lock
             
             let isLoginVisible = document.getElementById('guest-login-content').style.display === 'block';
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
             if(!currentUser && isProfileTab && isLoginVisible) return;
-            
-            let vipStatusText = document.getElementById('b-vip-status').innerText;
-            if(currentUser && vipStatusText.includes('left')) { isPremium = true; return; }
 
-            if(!window.targetAdCooldown) {
-                window.targetAdCooldown = true;
-                setTimeout(() => { window.targetAdCooldown = false; }, 30000);
-                window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            }
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            localStorage.setItem('last_smartlink', Date.now());
         }
 
         function loadSocialBarAd() {
@@ -1346,29 +1486,31 @@
         }
 
         function injectFreeAds() {
-            if(adsInjected || isPremium) return; 
+            if(adsInjected || isPremium || isTrialActive) return; 
             
             let isLoginVisible = document.getElementById('guest-login-content').style.display === 'block';
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
             if(!currentUser && isProfileTab && isLoginVisible) return;
 
-            let vipStatusText = document.getElementById('b-vip-status').innerText;
-            if(currentUser && vipStatusText.includes('left')) return; 
-
             adsInjected = true;
             
-            let popScript = document.getElementById('popunder-ad-manager');
-            if(popScript) {
-                popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+            let lastPopTime = localStorage.getItem('last_popunder') || 0;
+            if(Date.now() - lastPopTime > 60000) { // 1 minute lock
+                let popScript = document.getElementById('popunder-ad-manager');
+                if(popScript) {
+                    popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+                    localStorage.setItem('last_popunder', Date.now());
+                }
             }
 
             loadSocialBarAd();
             clearInterval(socialBarInterval);
             socialBarInterval = setInterval(() => {
-                if(!isPremium) loadSocialBarAd();
+                if(!isPremium && !isTrialActive) loadSocialBarAd();
             }, 180000);
         }
 
+        // 🌟 UPDATED: 1-Day VIP Trial & 7-Day AI Trial Logic 🌟
         function checkPremium(uid) {
             if(userProfileRef) userProfileRef.off(); userProfileRef = db.ref(`users/${uid}`);
             userProfileRef.on('value', s => {
@@ -1378,7 +1520,6 @@
                 currentUser.username = d.username || currentUser.email.split('@')[0];
                 
                 document.getElementById('b-profile-name').innerHTML = currentUser.username.toUpperCase() + ' <i class="fas fa-edit" id="edit-name-icon" style="font-size:14px; color:var(--text-muted); cursor:pointer;" onclick="editUsername()"></i>';
-                
                 document.getElementById('task-un').innerText = currentUser.username;
                 document.getElementById('b-profile-id').innerText = "ID: " + uid.substring(0, 10).toUpperCase();
                 let dpImg = d.avatar ? d.avatar : "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
@@ -1386,18 +1527,20 @@
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
 
-                let cycle = getLeaderboardCycle();
-                db.ref(`leaderboard/c_${cycle}/${uid}`).once('value', lSnap => { if(lSnap.val() !== userPoints) { db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints); } });
-
                 const actualServerTime = Date.now() + serverTimeOffset;
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
+                let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
+                let vipTrialTimeLeft = (creationTime + (1 * 24 * 60 * 60 * 1000)) - actualServerTime; // 1 DAY VIP
+                isTrialActive = (vipTrialTimeLeft > 0);
+
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
                     isPremium = true; 
+                    document.body.classList.add('vip-cyber-theme');
+                    document.getElementById('tab-vault').style.display = 'inline-block';
                     
                     let popScript = document.getElementById('popunder-ad-manager');
                     if(popScript) popScript.src = "";
-
                     clearInterval(socialBarInterval);
                     let dynamicSocial = document.getElementById('dynamic-socialbar');
                     if(dynamicSocial) dynamicSocial.remove();
@@ -1408,19 +1551,69 @@
                         if(timeLeft <= 0) {
                             clearInterval(vipTimerInterval); isPremium = false;
                             updateBannerVisibility();
-                            document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "var(--text-muted)"; injectFreeAds();
+                            document.body.classList.remove('vip-cyber-theme');
+                            document.getElementById('tab-vault').style.display = 'none';
+                            injectFreeAds();
                         } else {
-                            let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24)); let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                            document.getElementById('b-vip-status').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s left`; document.getElementById('b-vip-status').style.color = "var(--accent-glow)";
+                            let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24)); let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            document.getElementById('b-vip-status').innerText = `Paid VIP: ${days}d ${hours}h left`; document.getElementById('b-vip-status').style.color = "#ff007f";
                         }
                     }, 1000); 
                 } else { 
                     isPremium = false; 
                     updateBannerVisibility();
-                    document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "var(--text-muted)";
-                    injectFreeAds(); if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) { db.ref(`users/${uid}/premiumExpiry`).remove(); }
+                    
+                    if (isTrialActive) {
+                        document.body.classList.add('vip-cyber-theme');
+                        document.getElementById('tab-vault').style.display = 'inline-block';
+                        
+                        vipTimerInterval = setInterval(() => {
+                            let now = Date.now() + serverTimeOffset; let timeLeft = (creationTime + (1 * 24 * 60 * 60 * 1000)) - now;
+                            if(timeLeft <= 0) {
+                                clearInterval(vipTimerInterval); isTrialActive = false;
+                                document.body.classList.remove('vip-cyber-theme');
+                                document.getElementById('tab-vault').style.display = 'none';
+                                document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "var(--text-muted)";
+                                injectFreeAds();
+                            } else {
+                                let hours = Math.floor(timeLeft / (1000 * 60 * 60)); let mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                                document.getElementById('b-vip-status').innerText = `Free Trial: ${hours}h ${mins}m left`; document.getElementById('b-vip-status').style.color = "#b14bff";
+                            }
+                        }, 1000);
+                        
+                    } else {
+                        document.body.classList.remove('vip-cyber-theme');
+                        document.getElementById('tab-vault').style.display = 'none';
+                        document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "var(--text-muted)";
+                        injectFreeAds(); 
+                    }
+
+                    if(d.premiumExpiry && d.premiumExpiry <= actualServerTime) { db.ref(`users/${uid}/premiumExpiry`).remove(); }
                 }
             });
+        }
+
+        // 🌟 7-DAY AI FREE TRIAL CHECK 🌟
+        function checkAITrial() {
+            if (!currentUser) {
+                alert("🔒 Please create a free account to talk to Ani!");
+                showLoginForm();
+                return false; 
+            }
+            if (isPremium) return true;
+
+            let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
+            if(creationTime === 0) return true; 
+
+            let now = Date.now();
+            if (now - creationTime > 7 * 24 * 60 * 60 * 1000) {
+                let d = langDict[currentAppLang] || langDict['en'];
+                speakLocalized(d.aiTrialOver, currentAppLang);
+                alert("🤖 AI Trial Ended!\n\nYour 7-Day Free AI Assistant trial has expired. Please purchase VIP to continue talking to Ani.");
+                openPremiumHub();
+                return false;
+            }
+            return true;
         }
 
         let rewardActive = false;
@@ -1440,7 +1633,7 @@
         }
 
         function triggerPopunderTrap() {
-            if(isPremium) return;
+            if(isPremium || isTrialActive) return;
             document.getElementById('reward-popunder-trap').style.display = 'none';
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
         }
@@ -1462,8 +1655,8 @@
                 resetRewardUI();
                 updateBannerVisibility();
                 
-                if(!isPremium) {
-                    loadSocialBarAd(); // Ensures social bar shows up
+                if(!isPremium && !isTrialActive) {
+                    loadSocialBarAd(); 
                     clearInterval(aggressiveTrapInterval);
                     aggressiveTrapInterval = setInterval(() => {
                         if(document.getElementById('reward-waiting-view').style.display === 'flex') {
@@ -1477,7 +1670,7 @@
         }
 
         function startRewardTimer() {
-            if(!isPremium) {
+            if(!isPremium && !isTrialActive) {
                 let a = document.createElement('a');
                 a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
                 a.target = '_blank';
@@ -1525,7 +1718,7 @@
                     rewardActive = false;
                     clearInterval(rewardInterval);
                     stopTabTimer();
-                    speakLocalized("Verification failed. Please wait for sixty seconds.", "en"); // AI Voice
+                    speakLocalized("Verification failed. Please wait for sixty seconds.", "en"); 
                     alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds to get the reward.");
                     resetRewardUI();
                 } else {
@@ -1538,11 +1731,11 @@
 
         function executeRewardClaim() {
             let today = new Date().toLocaleDateString();
-            let newPoints = userPoints + 2; // Updated to 2 points
+            let newPoints = userPoints + 2; 
             db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
                 let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
                 playSuccessSound();
-                speakLocalized("Task finished successfully. Two points added to your account.", "en"); // AI Voice
+                speakLocalized("Task finished successfully. Two points added to your account.", "en"); 
                 alert("🎉 Verification Complete!\n+2 Points have been added to your account."); 
                 closeRewardPage();
                 checkDailyBonusUI();
@@ -1570,7 +1763,6 @@
         }
         function closeSpinWheel() { document.getElementById('spin-modal').style.display = 'none'; }
         
-        // 🌟 NEW: VIP CELEBRATION LOGIC 🌟
         function triggerVIPCelebration() {
             playSuccessSound();
             speakLocalized("Wow! Congratulations! You are now an exclusive VIP member of Animax TV! Thank you so much for your support. Let's enjoy an ad-free anime journey together!", "en");
@@ -1655,9 +1847,10 @@
         }
 
         async function handleDownload() {
-            if(!isPremium) { 
+            if(!isPremium && !isTrialActive) { 
                 setCatEmote('talking');
-                speakLocalized("Sorry friend! Downloads are only for VIP members.", "en");
+                let d = langDict[currentAppLang];
+                speakLocalized(d.aiTrialOver, currentAppLang);
                 showDlToast("👑 VIP Only Feature!", false);
                 alert("👑 DOWNLOADS ARE FOR VIP MEMBERS ONLY!\n\nPlease purchase VIP or complete tasks to unlock downloads."); 
                 switchTab('profile'); 
@@ -1930,7 +2123,7 @@
         
         function startEpUnlockAd() {
             if(epUnlockActive) return;
-            if(!isPremium) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             epUnlockActive = true;
             epUnlockStart = Date.now();
             let btn = document.getElementById('ep-unlock-btn');
@@ -1956,7 +2149,7 @@
                     alert("❌ Verification Failed!\n\nYou returned too early. Please wait at least 5 seconds on the ad page to unlock the episode.");
                     btn.innerText = "VERIFY TO UNLOCK";
                     btn.style.background = "var(--accent-gradient)";
-                    btn.style.color = "#000";
+                    btn.style.color = "#fff";
                 }
             }
         }
@@ -1983,6 +2176,7 @@
             checkEpUnlockStatus();
         });
 
+        // 🌟 FEATURE 11: PiP Control Enhancements 🌟
         async function togglePiP() {
             const v = document.getElementById('main-video');
             if (document.pictureInPictureElement) {
@@ -2142,26 +2336,26 @@
                 
                 Object.keys(folders).forEach(name => {
                     let firstEp = folders[name][0]; let thumb = firstEp.thumbnail; let epCount = folders[name].length;
-                    let premBadge = firstEp.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>';
+                    let premBadge = firstEp.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : '<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;">SUB</div>';
                     let cardHTML = `<div class="folder-card" onclick="openFolder('${name.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${thumb}">${premBadge}</div><div class="folder-title">${name}</div><div class="folder-ep">Episode ${epCount}</div></div>`;
                     
                     let category = (firstEp.category || "anime").toLowerCase();
                     if(category.includes('anime') || category === '') animeGrid.innerHTML += cardHTML;
                     if(category.includes('trending')) trendingAnimeHTML += cardHTML;
-                }); updateTrendingGrid(); buildSearchIndex();
+                }); updateTrendingGrid(); buildSearchIndex(); loadSecretVault();
             });
 
             db.ref('movies').on('value', snap => { 
                 const grid = document.getElementById('movie-grid'); grid.innerHTML = ""; trendingMoviesHTML = ""; htmlAnimeMoviesFromMoviesNode = ""; htmlCartoonMoviesFromMoviesNode = ""; window.movieData=[]; 
                 snap.forEach(c=>{ 
                     let d=c.val(), sid=d.id||d.title; window.movieData.push(d); 
-                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : '<div class="card-vip-badge">MOVIE</div>';
+                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : '<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;">MOVIE</div>';
                     let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'movie', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
                     let category = (d.category || "movie").toLowerCase(); grid.innerHTML += cardHTML; 
                     if(category.includes('anime')) htmlAnimeMoviesFromMoviesNode += cardHTML;
                     if(category.includes('cartoon')) htmlCartoonMoviesFromMoviesNode += cardHTML;
                     if(category.includes('trending')) trendingMoviesHTML += cardHTML;
-                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex();
+                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex(); loadSecretVault();
             });
 
             db.ref('cartoons').on('value', snap => { 
@@ -2169,18 +2363,18 @@
                 snap.forEach(c=>{ 
                     let d=c.val(), sid=d.id||d.title; window.cartoonData.push(d);
                     let category = (d.category || "cartoon").toLowerCase(); let isMovie = category.includes('movie');
-                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : (isMovie ? '<div class="card-vip-badge">MOVIE</div>' : '<div class="card-vip-badge">DUB</div>');
+                    let premBadge = d.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : (isMovie ? '<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;">MOVIE</div>' : '<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;">DUB</div>');
                     let cardHTML = `<div class="folder-card" onclick="playVideo('${d.title.replace(/'/g, "\\'")}','${d.url}','${sid.replace(/'/g, "\\'")}',${d.type === 'premium'}, 'cartoon', -1)"><div class="img-wrapper"><img src="${d.thumbnail}">${premBadge}</div><div class="folder-title">${d.title}</div></div>`;
                     if(isMovie) htmlCartoonMoviesFromCartoonsNode += cardHTML; else grid.innerHTML += cardHTML;
                     if(category.includes('trending')) trendingCartoonsHTML += cardHTML;
-                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex();
+                }); updateTrendingGrid(); updateSubGrids(); buildSearchIndex(); loadSecretVault();
             });
         }
 
         function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
 
         function openFolder(n) { 
-            if(!isPremium) triggerTargetedAd();
+            if(!isPremium && !isTrialActive) triggerTargetedAd();
             currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
             const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
             let folderElement = document.getElementById('season-select');
@@ -2221,7 +2415,13 @@
         let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; let midRollTaskActive = false; let midRollTaskStart = 0;
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
-            // 🌟 NETFLIX GUEST LIMIT SYSTEM 🌟
+            // 🌟 FEATURE 6: ADBLOCK GUARD 🌟
+            if(isAdblockerActive && !isPremium && !isTrialActive) {
+                document.getElementById('adblock-guard').style.display = 'flex';
+                return;
+            }
+
+            // 🌟 FEATURE 10: NETFLIX GUEST LIMIT SYSTEM 🌟
             if (!currentUser) {
                 let guestCount = parseInt(localStorage.getItem('guest_watch_count') || '0');
                 if (guestCount >= 2) {
@@ -2234,7 +2434,7 @@
             }
 
             if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
-            if(!isPremium && idx !== -1) triggerTargetedAd();
+            if(!isPremium && !isTrialActive && idx !== -1) triggerTargetedAd();
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
             let isEpisodeChange = (document.getElementById('player-view').style.display === 'block');
@@ -2278,7 +2478,7 @@
 
             bufferUI.style.display = 'none'; 
             v.onwaiting = () => { };
-            v.onplaying = () => { if(adEnforced && !isPremium) v.pause(); };
+            v.onplaying = () => { if(adEnforced && !isPremium && !isTrialActive) v.pause(); };
             v.oncanplay = () => { };
             v.onloadeddata = () => { };
             v.onerror = () => { };
@@ -2293,6 +2493,7 @@
             else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
             else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
 
+            // 🌟 FEATURE 11: PiP & Lockscreen Controls via MediaSession 🌟
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: t,
@@ -2302,19 +2503,21 @@
                         { src: 'logo.png', type: 'image/png' }
                     ]
                 });
+                navigator.mediaSession.setActionHandler('play', function() { v.play(); });
+                navigator.mediaSession.setActionHandler('pause', function() { v.pause(); });
                 navigator.mediaSession.setActionHandler('seekforward', function() { skipTime(10); });
                 navigator.mediaSession.setActionHandler('seekbackward', function() { skipTime(-10); });
             }
 
             window.startVideoPlayback = () => { if(prevTime > 0) v.currentTime = prevTime; let playPromise = v.play(); if (playPromise !== undefined) playPromise.catch(error => console.warn("Autoplay blocked.")); };
             
-            if(!isPremium && isEpisodeChange) {
+            if(!isPremium && !isTrialActive && isEpisodeChange) {
                 document.getElementById('ep-unlock-overlay').style.display = 'flex';
                 pendingEpPlayback = window.startVideoPlayback;
                 let btn = document.getElementById('ep-unlock-btn');
                 btn.innerText = "VERIFY TO UNLOCK"; 
                 btn.style.background = "var(--accent-gradient)";
-                btn.style.color = "#000";
+                btn.style.color = "#fff";
             } else { 
                 window.startVideoPlayback(); 
             }
@@ -2368,7 +2571,7 @@
                 localStorage.setItem('cw_' + currentSafeVideoId, JSON.stringify(progress));
             }
 
-            if(isPremium) return;
+            if(isPremium || isTrialActive) return;
             
             if(ct >= (nextAdTime - 10) && ct < nextAdTime) {
                 if(!adWarningShown) { adWarningShown = true; document.getElementById('ad-warning-overlay').style.display = 'flex'; }
@@ -2418,7 +2621,7 @@
 
         function startMidRollAd() {
             if(midRollTaskActive) return;
-            if(!isPremium) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             midRollTaskActive = true; midRollTaskStart = Date.now();
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
             
@@ -2432,28 +2635,47 @@
                     midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
                     nextAdTime = Infinity; 
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
                     document.getElementById('main-video').play().catch(e=>{});
                 } else if (elapsed > 2000) { 
                     midRollTaskActive = false; 
                     stopTabTimer();
                     alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#000";
+                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
                 }
             }
         }
 
         function changeLanguage(lang) {
-            localStorage.setItem('preferred_language', lang); // 🌟 SMART MEMORY HOOK 🌟
+            localStorage.setItem('preferred_language', lang);
             const v = document.getElementById('main-video'); if(!currentPlayingEpisodeData) return; 
             let newUrl = currentPlayingEpisodeData.url; 
             if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng; else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
+        // 🌟 FEATURE 7 & 8: SOCIAL PROOF & VIP COMMENTS 🌟
         function loadSocialData(safeId) {
-            currentLikesCountRef = db.ref(`likes/${safeId}/count`); currentLikesCountRef.on('value', s => { document.getElementById('like-count').innerText=formatNumber(s.val()||0); });
-            currentViewsRef=db.ref(`views/${safeId}`); currentViewsRef.on('value', s=> { document.getElementById('view-count').innerText=formatNumber(s.val()||0); });
+            currentLikesCountRef = db.ref(`likes/${safeId}/count`); 
+            currentLikesCountRef.on('value', s => { 
+                let v = s.val();
+                if(!v && v !== 0) { // Fake Stats Injection
+                    v = Math.floor(Math.random() * 16) + 50; // 50-65 likes
+                    db.ref(`likes/${safeId}/count`).set(v);
+                }
+                document.getElementById('like-count').innerText = formatNumber(v); 
+            });
+
+            currentViewsRef=db.ref(`views/${safeId}`); 
+            currentViewsRef.on('value', s=> { 
+                let v = s.val();
+                if(!v || v < 300) { // Fake Stats Injection
+                    v = Math.floor(Math.random() * 51) + 300; // 300-350 views
+                    db.ref(`views/${safeId}`).set(v);
+                }
+                document.getElementById('view-count').innerText = formatNumber(v); 
+            });
+
             if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
@@ -2461,9 +2683,10 @@
                 document.getElementById('tab-btn-comments').innerText = `Comments (${s.numChildren()})`; l.innerHTML = ""; 
                 s.forEach(child => {
                     const c = child.val(); 
-                    let crownHtml = c.isVIP ? `<i class="fas fa-crown" style="color:var(--accent-glow); margin-left:5px; font-size:12px;"></i>` : '';
+                    let crownHtml = c.isVIP ? `<i class="fas fa-crown" style="color:#b14bff; margin-left:5px; font-size:12px;"></i>` : '';
                     let vipClass = c.isVIP ? 'comment-box-vip' : '';
-                    l.innerHTML = `<div class="comment-box-unique ${vipClass}"><div class="c-body-unique"><div class="c-user-name" style="color:var(--text-main);font-weight:800; font-family:'Orbitron';">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:var(--text-muted);font-size:13px; margin-top:5px;">${c.text}</div></div></div>` + l.innerHTML; 
+                    let nameClass = c.isVIP ? 'rainbow-text' : ''; // Rainbow Name for VIP
+                    l.innerHTML = `<div class="comment-box-unique ${vipClass}"><div class="c-body-unique"><div class="c-user-name ${nameClass}" style="color:var(--text-main);font-weight:800; font-family:'Orbitron';">${c.user.toUpperCase()} ${crownHtml}</div><div class="c-text-content" style="color:var(--text-muted);font-size:13px; margin-top:5px;">${c.text}</div></div></div>` + l.innerHTML; 
                 });
             });
         }
@@ -2485,13 +2708,13 @@
         
         function generateCardHtml(item) {
             if(item.type === 'anime') {
-                let f = item.data; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : '<div class="card-vip-badge">SUB</div>';
+                let f = item.data; let premBadge = f.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : '<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;border:1px solid rgba(255,255,255,0.1);box-shadow:none;">SUB</div>';
                 return `<div class="folder-card" onclick="openFolder('${item.folder.replace(/'/g, "\\'")}')"><div class="img-wrapper"><img src="${f.thumbnail}">${premBadge}</div><div class="folder-title">${item.title}</div></div>`;
             } else {
                 let m = item; let sid = m.id || m.title;
                 let pType = currentPlayType === 'cartoon' ? 'cartoon' : 'movie';
                 let tBadge = pType === 'cartoon' ? 'DUB' : 'MOVIE';
-                let premBadge = m.type === 'premium' ? '<div class="card-vip-badge" style="background:#e63946;color:#fff;">VIP</div>' : `<div class="card-vip-badge">${tBadge}</div>`;
+                let premBadge = m.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : `<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;border:1px solid rgba(255,255,255,0.1);box-shadow:none;">${tBadge}</div>`;
                 return `<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, '${pType}', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`;
             }
         }
@@ -2732,7 +2955,8 @@
             if(!hasWelcomed && window.speechSynthesis) {
                 hasWelcomed = true;
                 setTimeout(() => {
-                    speakLocalized("Welcome to Animax TV! How can I help you today?", "en");
+                    let d = langDict[currentAppLang] || langDict['en'];
+                    speakLocalized(d.aiWelcome, currentAppLang);
                 }, 1000);
                 document.removeEventListener('click', initWelcomeGreeting);
                 document.removeEventListener('touchstart', initWelcomeGreeting);
@@ -2794,13 +3018,15 @@
             let utter = new SpeechSynthesisUtterance(text);
             
             let voices = window.speechSynthesis.getVoices();
-            let femaleVoice = voices.find(v => (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('victoria')) && v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
-            let targetVoice = femaleVoice || voices.find(v => v.lang.toLowerCase().startsWith(langCode.toLowerCase()));
+            let targetCode = ttsLangMap[langCode] || 'en-US';
+            let targetVoice = voices.find(v => (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha')) && v.lang.startsWith(targetCode.split('-')[0])) 
+                              || voices.find(v => v.lang.startsWith(targetCode.split('-')[0]));
+            
             if(targetVoice) utter.voice = targetVoice;
             
-            utter.lang = langCode;
-            utter.rate = 1.05;
-            utter.pitch = 1.6; 
+            utter.lang = targetCode;
+            utter.rate = 1.0;
+            utter.pitch = 1.5; 
             
             utter.onstart = () => setCatEmote('talking');
             utter.onend = () => setCatEmote('neutral');
@@ -2833,21 +3059,49 @@
             }, 8000); 
         }
 
-        // 🌟 NEW OFFLINE STATIC COMMAND SYSTEM 🌟
+        // 🌟 FEATURE 9: Advanced Voice Commands 🌟
         function processLocalVoiceCommand(text) {
             let t = text.toLowerCase().trim();
             let reply = "";
             let action = null;
             
-            let playMatch = t.match(/(?:play|watch)\s+(.+)/);
-            let searchMatch = t.match(/search\s+(.+)/);
+            let playMatch = t.match(/(?:play|watch|চলা|चलाओ)\s+(.+)/);
+            let searchMatch = t.match(/(?:search|find|খুঁজে দাও|खोजो)\s+(.+)/);
 
-            if (t.includes("how are you")) {
-                reply = "I am fine! Ready to find the best anime for you.";
+            if (t.includes("how are you") || t.includes("কেমন আছো") || t.includes("कैसे हो")) {
+                reply = currentAppLang === 'bn' ? "আমি ভালো আছি! আপনার জন্য সেরা অ্যানিমে খুঁজতে তৈরি।" : 
+                        currentAppLang === 'hi' ? "मैं ठीक हूँ! आपके लिए सबसे अच्छा एनीमे खोजने के लिए तैयार हूँ।" :
+                        "I am fine! Ready to find the best anime for you.";
+            } else if (t.includes("friend") || t.includes("বন্ধু") || t.includes("दोस्त")) {
+                reply = currentAppLang === 'bn' ? "হ্যাঁ! আমি আপনার নতুন এআই বন্ধু। চলুন একসাথে অ্যানিমে দেখি!" : 
+                        currentAppLang === 'hi' ? "हाँ! मैं आपका नया एआई दोस्त हूँ। चलो साथ में एनीमे देखें!" :
+                        "Yes! I am your new AI friend. Let's watch anime together!";
+            } else if (t.includes("pause") || t.includes("থামাও") || t.includes("रोको")) {
+                let v = document.getElementById('main-video');
+                if(v && !v.paused) {
+                    v.pause();
+                    reply = currentAppLang === 'bn' ? "ভিডিও থামানো হলো।" : currentAppLang === 'hi' ? "वीडियो रोका गया।" : "Video paused.";
+                } else { reply = "Video is already paused."; }
+            } else if (t.includes("play video") || t.includes("চালু করো") || t.includes("चालू करो")) {
+                let v = document.getElementById('main-video');
+                if(v && v.paused) {
+                    v.play();
+                    reply = currentAppLang === 'bn' ? "ভিডিও চালু করা হলো।" : currentAppLang === 'hi' ? "वीडियो शुरू किया गया।" : "Video playing.";
+                } else { reply = "Video is already playing."; }
+            } else if (t.includes("mute") || t.includes("মিউট") || t.includes("म्यूट")) {
+                let v = document.getElementById('main-video');
+                if(v) { v.muted = !v.muted; reply = v.muted ? "Muted." : "Unmuted."; }
+            } else if (t.includes("fullscreen") || t.includes("ফুলস্ক্রিন") || t.includes("फुलस्क्रीन")) {
+                let v = document.getElementById('main-video');
+                if(v) {
+                    if (v.requestFullscreen) { v.requestFullscreen(); }
+                    else if (v.webkitRequestFullscreen) { v.webkitRequestFullscreen(); }
+                    reply = "Entering fullscreen.";
+                }
             } else if (t.includes("who are you") || t.includes("your name") || t.includes("what is your name")) {
-                reply = "Hello! My name is Ani. I am your professional AI assistant for Animax TV. How can I help you today?";
-            } else if (t.includes("hello") || t.includes("hi") || t.includes("hey")) {
-                reply = "Hello friend! What do you want to watch today?";
+                reply = currentAppLang === 'bn' ? "হ্যালো! আমার নাম আনি। আমি আপনার পার্সোনাল এআই অ্যাসিস্ট্যান্ট।" : 
+                        currentAppLang === 'hi' ? "नमस्ते! मेरा नाम एनी है। मैं आपकी एआई असिस्टेंट हूँ।" :
+                        "Hello! My name is Ani. I am your professional AI assistant for Animax TV.";
             } else if (t.includes("profile")) {
                 reply = "Opening your profile.";
                 action = () => switchTab('profile');
@@ -2887,27 +3141,10 @@
                     setTimeout(() => executeSearch(query), 500);
                 };
             } else {
-                reply = "Sorry, I didn't understand. Try saying play, search, or open profile.";
+                let d = langDict[currentAppLang] || langDict['en'];
+                reply = d.aiError;
             }
             return { reply, action };
-        }
-
-        // 🌟 1-DAY AI FREE TRIAL CHECK 🌟
-        function checkAITrial() {
-            if (!currentUser) return true; // Guests can use AI
-            if (isPremium) return true; // VIPs can always use AI
-
-            let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
-            if(creationTime === 0) return true; 
-
-            let now = Date.now();
-            if (now - creationTime > 24 * 60 * 60 * 1000) {
-                speakLocalized("Sorry friend! Your 24-hour free trial has ended. Please upgrade to VIP to keep talking to me!", "en");
-                alert("👑 AI Trial Ended!\n\nPlease purchase VIP to unlock Unlimited AI Assistant access.");
-                openPremiumHub();
-                return false;
-            }
-            return true;
         }
 
         function executeVoicePlayCommand(query) {
@@ -2927,7 +3164,8 @@
         }
 
         function resetTooltip(tooltip) {
-            tooltip.innerText = "Click to Talk! 🎤";
+            let d = langDict[currentAppLang] || langDict['en'];
+            tooltip.innerText = d.clickToTalk || "Click to Talk! 🎤";
             tooltip.style.opacity = "";
             tooltip.style.animation = "showTooltip 8s infinite";
         }
@@ -2946,6 +3184,7 @@
             }
 
             let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = ttsLangMap[currentAppLang] || 'en-US';
             recognition.interimResults = false;
 
             recognition.onstart = () => {
@@ -2958,7 +3197,7 @@
                 if(tooltip) { tooltip.innerText = "Thinking... 🧠"; }
                 
                 let result = processLocalVoiceCommand(transcript);
-                speakLocalized(result.reply, "en"); 
+                speakLocalized(result.reply, currentAppLang); 
                 
                 if(tooltip) resetTooltip(tooltip);
                 
