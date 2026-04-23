@@ -200,7 +200,7 @@
         .prof-cover-area::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--primary-bg) 0%, transparent 100%); border-radius: 0 0 30px 30px;}
         .prof-avatar-section { position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%); z-index: 2; }
         .avatar-circle-glow { width: 110px; height: 110px; border-radius: 50%; padding: 4px; background: var(--primary-bg); position: relative; display: flex; justify-content: center; align-items: center;}
-        .avatar-circle-glow::before { content:''; position:absolute; inset: 0; border-radius: 50%; background: var(--accent-gradient); z-index: -1; filter: blur(8px); opacity: 0.8;}
+        .avatar-circle-glow::before { content:'position:absolute; inset: 0; border-radius: 50%; background: var(--accent-gradient); z-index: -1; filter: blur(8px); opacity: 0.8;}
         .avatar-img-real { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-bg); }
         
         .b-content-pad { padding: 60px 15px 15px 15px; }
@@ -776,10 +776,10 @@
         <div class="reward-main-content">
             <i class="fas fa-times reward-close" onclick="closeRewardPage()"></i>
             <h2 class="reward-title">DAILY REWARD</h2>
-            <p class="reward-desc" id="reward-desc-text" style="color:var(--text-muted); font-size:14px; margin-bottom:25px; line-height:1.6; font-weight:500;">Click the button below to start. You MUST stay on the ad page for exactly 60 seconds to get points.</p>
+            <p class="reward-desc" id="reward-desc-text" style="color:var(--text-muted); font-size:14px; margin-bottom:25px; line-height:1.6; font-weight:500;">Click the button below to start. You MUST stay on the ad page for exactly 30 seconds to get points.</p>
             <button id="main-reward-btn" class="reward-claim-btn" onclick="startRewardTimer()">CLAIM 2 POINTS</button>
             <div id="reward-timer-section" style="display:none;">
-                <p class="reward-desc" style="color:var(--text-muted); font-size:14px; margin-bottom:15px; font-weight:600;">Verifying your activity... Please wait <span id="reward-sec" style="color:#00ff87; font-weight:900; font-size:22px; font-family:'Orbitron';">60</span>s.</p>
+                <p class="reward-desc" style="color:var(--text-muted); font-size:14px; margin-bottom:15px; font-weight:600;">Verifying your activity... Please wait <span id="reward-sec" style="color:#00ff87; font-weight:900; font-size:22px; font-family:'Orbitron';">30</span>s.</p>
                 <div class="reward-progress-box"><div id="reward-progress-fill" class="reward-progress-fill"></div></div>
             </div>
         </div>
@@ -1038,7 +1038,7 @@
         <i class="fas fa-download" onclick="switchTab('downloads')"></i>
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
-   
+    
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
@@ -1516,12 +1516,21 @@
             }, 180000);
         }
 
+        // 🌟 FEATURE UPDATE: LEADERBOARD SYNC ON LOGIN 🌟
         function checkPremium(uid) {
             if(userProfileRef) userProfileRef.off(); userProfileRef = db.ref(`users/${uid}`);
             userProfileRef.on('value', s => {
                 if(!currentUser || currentUser.uid !== uid) return; 
                 const d = s.val() || {};
-                userPoints = d.points || 0; document.getElementById('task-coin-balance').innerText = userPoints; updateRedeemButtonsUI();
+                
+                userPoints = d.points || 0; 
+                document.getElementById('task-coin-balance').innerText = userPoints; 
+                updateRedeemButtonsUI();
+                
+                // FORCE Leaderboard Sync immediately so it never shows empty points
+                let cycle = getLeaderboardCycle();
+                db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints);
+
                 currentUser.username = d.username || currentUser.email.split('@')[0];
                 
                 document.getElementById('b-profile-name').innerHTML = currentUser.username.toUpperCase() + ' <i class="fas fa-edit" id="edit-name-icon" style="font-size:14px; color:var(--text-muted); cursor:pointer;" onclick="editUsername()"></i>';
@@ -1532,11 +1541,10 @@
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
 
-                // 🌟 UPDATE: Load User Language from DB on Login 🌟
                 if(d.appLang && d.appLang !== currentAppLang) {
                     let selBox = document.getElementById('ui-lang-select');
                     if(selBox) selBox.value = d.appLang;
-                    changeAppUI_Lang(d.appLang, true); // true = avoid voice spam on login
+                    changeAppUI_Lang(d.appLang, true);
                 }
 
                 const actualServerTime = Date.now() + serverTimeOffset;
@@ -1643,8 +1651,9 @@
             });
         }
 
+        // 🌟 UPDATE: Daily Bonus VIP Restrictions Removed 🌟
         function triggerPopunderTrap() {
-            if(isPremium || isTrialActive) return;
+            // Removed: if(isPremium || isTrialActive) return;
             document.getElementById('reward-popunder-trap').style.display = 'none';
             window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
         }
@@ -1653,7 +1662,7 @@
             document.getElementById('main-reward-btn').style.display = 'block';
             document.getElementById('reward-timer-section').style.display = 'none';
             document.getElementById('reward-desc-text').style.display = 'block';
-            document.getElementById('reward-desc-text').innerText = "Click the button below to start. You MUST stay on the ad page for exactly 60 seconds to get points.";
+            document.getElementById('reward-desc-text').innerText = "Click the button below to start. You MUST stay on the ad page for exactly 30 seconds to get points.";
         }
 
         function openRewardPage() {
@@ -1666,39 +1675,38 @@
                 resetRewardUI();
                 updateBannerVisibility();
                 
-                if(!isPremium && !isTrialActive) {
-                    loadSocialBarAd(); 
-                    clearInterval(aggressiveTrapInterval);
-                    aggressiveTrapInterval = setInterval(() => {
-                        if(document.getElementById('reward-waiting-view').style.display === 'flex') {
-                            document.getElementById('reward-popunder-trap').style.display = 'block';
-                        } else {
-                            clearInterval(aggressiveTrapInterval);
-                        }
-                    }, 2000); 
-                }
+                // Removed: if(!isPremium && !isTrialActive)
+                loadSocialBarAd(); 
+                clearInterval(aggressiveTrapInterval);
+                aggressiveTrapInterval = setInterval(() => {
+                    if(document.getElementById('reward-waiting-view').style.display === 'flex') {
+                        document.getElementById('reward-popunder-trap').style.display = 'block';
+                    } else {
+                        clearInterval(aggressiveTrapInterval);
+                    }
+                }, 2000); 
             });
         }
 
         function startRewardTimer() {
-            if(!isPremium && !isTrialActive) {
-                let a = document.createElement('a');
-                a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
-                a.target = '_blank';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
+            // Removed: if(!isPremium && !isTrialActive)
+            let a = document.createElement('a');
+            a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
             rewardActive = true;
             rewardStartTime = Date.now();
             
-            startTabTimer(60); 
+            startTabTimer(30); // Reduced to 30s
 
             document.getElementById('main-reward-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
             document.getElementById('reward-desc-text').style.display = 'none';
 
-            let timeLeft = 60;
+            let timeLeft = 30; // Reduced to 30s
             document.getElementById('reward-sec').innerText = timeLeft;
             document.getElementById('reward-progress-fill').style.width = '0%';
             
@@ -1706,18 +1714,16 @@
             rewardInterval = setInterval(() => {
                 if(!rewardActive) return;
                 let elapsed = Date.now() - rewardStartTime;
-                let actualTimeLeft = Math.max(60 - Math.floor(elapsed / 1000), 0);
-                let progress = Math.min((elapsed / 60000) * 100, 100);
+                let actualTimeLeft = Math.max(30 - Math.floor(elapsed / 1000), 0);
+                let progress = Math.min((elapsed / 30000) * 100, 100);
                 
                 document.getElementById('reward-sec').innerText = actualTimeLeft;
                 document.getElementById('reward-progress-fill').style.width = progress + '%';
                 
                 if(actualTimeLeft <= 0) {
-                    if(!document.hidden) {
-                        rewardActive = false;
-                        clearInterval(rewardInterval);
-                        executeRewardClaim();
-                    }
+                    rewardActive = false;
+                    clearInterval(rewardInterval);
+                    executeRewardClaim();
                 }
             }, 1000);
         }
@@ -1725,12 +1731,14 @@
         function checkRewardReturn() {
             if (rewardActive) {
                 let elapsed = Date.now() - rewardStartTime;
-                if (elapsed < 60000) {
+                if (elapsed < 500) return; // Prevent split-second focus bug
+
+                if (elapsed < 30000) { // Reduced to 30s check
                     rewardActive = false;
                     clearInterval(rewardInterval);
                     stopTabTimer();
-                    speakLocalized("Verification failed. Please wait for sixty seconds.", "en"); 
-                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 60 seconds to get the reward.");
+                    speakLocalized("Verification failed. Please wait for thirty seconds.", "en"); 
+                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 30 seconds to get the reward.");
                     resetRewardUI();
                 } else {
                     rewardActive = false;
@@ -1751,14 +1759,6 @@
                 closeRewardPage();
                 checkDailyBonusUI();
             });
-        }
-
-        function closeRewardPage() {
-            document.getElementById('reward-waiting-view').style.display = 'none';
-            clearInterval(rewardInterval);
-            clearInterval(aggressiveTrapInterval);
-            stopTabTimer();
-            rewardActive = false;
         }
 
         function copyReferCode() {
@@ -2089,6 +2089,7 @@
             } else { alert("❌ Not enough points!"); }
         }
 
+        // 🌟 UPDATE: Task Exploit Fixed (Strict 30s Rules) 🌟
         let activeTask = null; let activeInterval = null;
         function startWebTask(taskId, btnEl, adLink) {
             if(!currentUser) return alert("Login required!"); if(activeTask) return alert("Please finish or cancel your current task first!");
@@ -2107,16 +2108,21 @@
         }
 
         function checkTaskStatus() {
-            if (!activeTask) return; let elapsed = Date.now() - activeTask.startTime; if (elapsed < 2000) return; 
+            if (!activeTask) return; 
+            let elapsed = Date.now() - activeTask.startTime; 
+            if (elapsed < 500) return; // Prevent split-second focus bug from triggering fail
+            
             if (elapsed < 30000 && !activeTask.completed) {
                 clearInterval(activeInterval);
                 stopTabTimer(); 
-                alert(`❌ Task Failed!\n\nYou returned after ${Math.floor(elapsed/1000)} seconds.\nYou must view the ad for full 30 seconds!`);
+                alert(`❌ Task Failed!\n\nYou returned too early. You must view the ad for full 30 seconds!`);
                 activeTask.btnEl.innerText = "Get Now"; activeTask.btnEl.classList.remove('running');
                 let tId = activeTask.id; let el = activeTask.btnEl;
                 el.onclick = function() { startWebTask(tId, el, 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871'); };
                 activeTask = null;
-            } else if (elapsed >= 30000 && !activeTask.completed) { completeTaskSuccess(); }
+            } else if (elapsed >= 30000 && !activeTask.completed) { 
+                completeTaskSuccess(); 
+            }
         }
 
         function completeTaskSuccess() {
@@ -2148,13 +2154,15 @@
         function checkEpUnlockStatus() {
             if(epUnlockActive) {
                 let elapsed = Date.now() - epUnlockStart;
+                if (elapsed < 500) return;
+                
                 let btn = document.getElementById('ep-unlock-btn');
                 if (elapsed >= 5000) {
                     epUnlockActive = false;
                     document.getElementById('ep-unlock-overlay').style.display = 'none';
                     if(pendingEpPlayback) pendingEpPlayback();
                     pendingEpPlayback = null;
-                } else if (elapsed > 1000) { 
+                } else { 
                     epUnlockActive = false;
                     stopTabTimer();
                     alert("❌ Verification Failed!\n\nYou returned too early. Please wait at least 5 seconds on the ad page to unlock the episode.");
@@ -2638,14 +2646,17 @@
 
         function checkMidRollStatus() {
             if(midRollTaskActive) {
-                let elapsed = Date.now() - midRollTaskStart; let btn = document.getElementById('mid-roll-btn');
+                let elapsed = Date.now() - midRollTaskStart; 
+                if (elapsed < 500) return;
+                
+                let btn = document.getElementById('mid-roll-btn');
                 if(elapsed >= 10000) { 
                     midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
                     nextAdTime = Infinity; 
                     document.getElementById('ad-enforce-overlay').style.display = 'none';
                     btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
                     document.getElementById('main-video').play().catch(e=>{});
-                } else if (elapsed > 2000) { 
+                } else { 
                     midRollTaskActive = false; 
                     stopTabTimer();
                     alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
