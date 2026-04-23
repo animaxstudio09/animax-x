@@ -1062,9 +1062,16 @@
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
         let currentAppLang = localStorage.getItem('animax_ui_lang') || 'en';
 
-        function changeAppUI_Lang(lang) {
+        // 🌟 UPDATE: Change App Language System (Now saves to User DB) 🌟
+        function changeAppUI_Lang(lang, autoLoad = false) {
             currentAppLang = lang;
             localStorage.setItem('animax_ui_lang', lang);
+            
+            // Save to Firebase database if user is logged in
+            if(currentUser && !autoLoad) {
+                db.ref(`users/${currentUser.uid}`).update({ appLang: lang });
+            }
+
             let d = langDict[lang] || langDict['en'];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 let key = el.getAttribute('data-i18n');
@@ -1073,13 +1080,13 @@
                     else el.innerHTML = d[key];
                 }
             });
-            speakLocalized(d.aiWelcome, lang);
+            if(!autoLoad) { speakLocalized(d.aiWelcome, lang); }
         }
         
         window.addEventListener('DOMContentLoaded', () => {
             let s = document.getElementById('ui-lang-select');
             if(s) s.value = currentAppLang;
-            changeAppUI_Lang(currentAppLang);
+            changeAppUI_Lang(currentAppLang, true); // Don't speak on initial DOM load
         });
 
         function startTabTimer(seconds) {
@@ -1302,7 +1309,6 @@
             }
         }
 
-        /* 🌟 FEATURE 3: SECRET VAULT LOADER 🌟 */
         function loadSecretVault() {
             const grid = document.getElementById('vault-grid');
             if(!grid) return;
@@ -1525,6 +1531,13 @@
                 document.getElementById('profile-img').src = dpImg; document.getElementById('task-av').src = dpImg;
                 db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
+
+                // 🌟 UPDATE: Load User Language from DB on Login 🌟
+                if(d.appLang && d.appLang !== currentAppLang) {
+                    let selBox = document.getElementById('ui-lang-select');
+                    if(selBox) selBox.value = d.appLang;
+                    changeAppUI_Lang(d.appLang, true); // true = avoid voice spam on login
+                }
 
                 const actualServerTime = Date.now() + serverTimeOffset;
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
@@ -2413,13 +2426,11 @@
         let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; let midRollTaskActive = false; let midRollTaskStart = 0;
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
-            // 🌟 FEATURE 6: ADBLOCK GUARD 🌟
             if(isAdblockerActive && !isPremium && !isTrialActive) {
                 document.getElementById('adblock-guard').style.display = 'flex';
                 return;
             }
 
-            // 🌟 FEATURE 10: NETFLIX GUEST LIMIT SYSTEM 🌟
             if (!currentUser) {
                 let guestCount = parseInt(localStorage.getItem('guest_watch_count') || '0');
                 if (guestCount >= 2) {
@@ -2491,7 +2502,6 @@
             else if(type === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === t); if(match) hThumb = match.thumbnail; }
             else if(type === 'cartoon' && window.cartoonData) { let match = window.cartoonData.find(c => c.title === t); if(match) hThumb = match.thumbnail; }
 
-            // 🌟 FEATURE 11: PiP & Lockscreen Controls via MediaSession 🌟
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: t,
