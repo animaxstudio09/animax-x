@@ -668,7 +668,12 @@
         <!-- SECRET VAULT SECTION -->
         <div id="section-vault" style="display:none;"><div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);">SECRET VAULT (VIP)</div></div><div id="vault-grid" class="grid-container"></div></div>
     </div>
+```
 
+---
+
+### 📌 Part - 2 (Paste exactly below Part-1)
+```html
     <!-- 🌟 DOWNLOADS VIEW 🌟 -->
     <div id="downloads-view" class="app-view">
         <div class="dl-header"><i class="fas fa-download" style="color:var(--accent-glow);"></i> <span data-i18n="offlineDownloads">Offline Downloads</span></div>
@@ -2636,8 +2641,6 @@
         }
 
         function startMidRollAd() {
-            if(midRollTaskActive) return;
-            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
             midRollTaskActive = true; midRollTaskStart = Date.now();
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
             
@@ -3076,13 +3079,34 @@
             else { catBot.classList.remove('talking'); }
         }
 
+        // 🌟 UPDATE: AI Voice Fix for Android App WebView 🌟
         async function speakLocalized(text, langCode) {
+            let targetCode = ttsLangMap[langCode] || 'en-US';
+            let shortLang = targetCode.split('-')[0];
+
+            try {
+                // WebView-এর জন্য সরাসরি অডিও সিস্টেম
+                let url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${shortLang}&client=tw-ob`;
+                let audio = new Audio(url);
+                
+                audio.onplay = () => setCatEmote('talking');
+                audio.onended = () => setCatEmote('neutral');
+                
+                audio.play().catch(err => {
+                    speakWithOriginalTTS(text, targetCode);
+                });
+            } catch (e) {
+                speakWithOriginalTTS(text, targetCode);
+            }
+        }
+
+        // ব্রাউজারের জন্য ব্যাকআপ ভয়েস সিস্টেম
+        function speakWithOriginalTTS(text, targetCode) {
             if(!window.speechSynthesis) return;
             window.speechSynthesis.cancel();
             let utter = new SpeechSynthesisUtterance(text);
             
             let voices = window.speechSynthesis.getVoices();
-            let targetCode = ttsLangMap[langCode] || 'en-US';
             let targetVoice = voices.find(v => (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('zira') || v.name.toLowerCase().includes('samantha')) && v.lang.startsWith(targetCode.split('-')[0])) 
                               || voices.find(v => v.lang.startsWith(targetCode.split('-')[0]));
             
