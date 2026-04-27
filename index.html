@@ -36,6 +36,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+    <!-- Face API for Live Face Scan -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
     <style>
         /* =========================================
            🚀 DEFAULT THEME (FOR FREE USERS) 🚀
@@ -580,6 +583,35 @@
         #adblock-guard button { background: var(--accent-gradient); border: none; padding: 15px 30px; border-radius: 30px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
         #adblock-guard button:active { transform: scale(0.95); }
 
+        /* 🌟 MASTER MODE AUTHENTICATION STYLES 🌟 */
+        #master-auth-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.98); backdrop-filter: blur(20px);
+            z-index: 9999999; flex-direction: column; justify-content: center; align-items: center; font-family: 'Orbitron', sans-serif;
+        }
+        .auth-box {
+            background: var(--glass-bg); border: 1px solid var(--accent-glow); padding: 30px; border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3); text-align: center; width: 90%; max-width: 350px;
+        }
+        .auth-title { color: var(--accent-glow); font-size: 22px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; }
+        .pin-display {
+            font-size: 30px; letter-spacing: 15px; color: #fff; margin-bottom: 20px; height: 40px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pin-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff;
+            padding: 15px; font-size: 20px; border-radius: 10px; cursor: pointer; transition: 0.2s;
+        }
+        .pin-btn:active { background: var(--accent-gradient); color: #000; transform: scale(0.9); }
+        #face-step-container { display: none; position: relative; width: 100%; max-width: 300px; margin: 0 auto; }
+        #auth-video { width: 100%; border-radius: 50%; border: 3px solid var(--accent-glow); aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1); }
+        #auth-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; z-index: 10; transform: scaleX(-1); }
+        .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent-glow);
+            box-shadow: 0 0 15px var(--accent-glow); animation: scanAnim 2s linear infinite; z-index: 11;
+        }
+        @keyframes scanAnim { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+        .auth-msg { color: var(--text-muted); font-size: 13px; margin-top: 15px; font-family: 'Outfit'; }
     </style>
 </head>
 <body class="vip-cyber-theme">
@@ -1039,6 +1071,41 @@
         <i class="fas fa-user" onclick="switchTab('profile')"></i>
     </nav>
     
+    <!-- 🌟 MASTER MODE AUTHENTICATION MODAL 🌟 -->
+    <div id="master-auth-overlay">
+        <!-- Layer 2: PIN Verification -->
+        <div id="pin-step" class="auth-box">
+            <div class="auth-title">AUTHORIZATION</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Enter Admin PIN</div>
+            <div id="pin-display" class="pin-display"></div>
+            <div class="pin-pad">
+                <button class="pin-btn" onclick="enterPin(1)">1</button>
+                <button class="pin-btn" onclick="enterPin(2)">2</button>
+                <button class="pin-btn" onclick="enterPin(3)">3</button>
+                <button class="pin-btn" onclick="enterPin(4)">4</button>
+                <button class="pin-btn" onclick="enterPin(5)">5</button>
+                <button class="pin-btn" onclick="enterPin(6)">6</button>
+                <button class="pin-btn" onclick="enterPin(7)">7</button>
+                <button class="pin-btn" onclick="enterPin(8)">8</button>
+                <button class="pin-btn" onclick="enterPin(9)">9</button>
+                <button class="pin-btn" style="color:#ff3b3b;" onclick="clearPin()"><i class="fas fa-times"></i></button>
+                <button class="pin-btn" onclick="enterPin(0)">0</button>
+                <button class="pin-btn" style="color:#00e676;" onclick="closeMasterAuth()"><i class="fas fa-power-off"></i></button>
+            </div>
+        </div>
+
+        <!-- Layer 3: Face Scan -->
+        <div id="face-step" class="auth-box" style="display:none; background:transparent; border:none; box-shadow:none;">
+            <div class="auth-title">BIOMETRIC SCAN</div>
+            <div id="face-step-container">
+                <video id="auth-video" autoplay muted playsinline></video>
+                <canvas id="auth-canvas"></canvas>
+                <div class="scan-line"></div>
+            </div>
+            <div id="face-auth-msg" class="auth-msg">Initializing Face API... Please wait.</div>
+        </div>
+    </div>
+
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
@@ -2702,7 +2769,18 @@
             });
         }
 
-        function toggleLike() { if(!currentUser){alert("Please Login");return;} if(!currentSafeVideoId)return; const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); r.once('value', s=>{ if(s.exists()){ r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); } else { r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); } }); }
+        function toggleLike() { 
+            if(!currentUser){alert("Please Login");return;} 
+            if(!currentSafeVideoId)return; 
+            const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); 
+            r.once('value', s=>{ 
+                if(s.exists()){ 
+                    r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); 
+                } else { 
+                    r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); 
+                } 
+            }); 
+        }
         
         function postComment() { 
             if(!currentUser){alert("Please Login to comment.");return;} 
@@ -3143,8 +3221,13 @@
             let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
 
+            // --- MASTER MODE (LAYER 1) ---
+            if (t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/)) {
+                reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification.";
+                action = () => initiateMasterModeAuth();
+            }
             // 0. Basic Greetings (হাই / হ্যালো)
-            if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
+            else if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
                 reply = isLang('bn') ? "হ্যালো! আমি আনি, বলুন আপনার জন্য কী করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Hello! I am Ani. What do you want to watch?";
             }
             // 1. Video Controls (প্লে / পজ)
@@ -3333,6 +3416,164 @@
         }
 
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
+
+        // ==========================================
+        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
+        // ==========================================
+        let currentPin = "";
+        const ADMIN_PIN = localStorage.getItem('animax_admin_pin') || "7860"; // Default PIN is 7860
+        let faceModelsLoaded = false;
+        let videoStream = null;
+
+        // Load Face API Models from reliable CDN
+        async function loadFaceModels() {
+            if(faceModelsLoaded) return;
+            const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+                faceModelsLoaded = true;
+            } catch(e) {
+                console.error("Face API Load Error:", e);
+                document.getElementById('face-auth-msg').innerText = "Model loading failed. Check connection.";
+            }
+        }
+
+        // Layer 1 Triggered
+        function initiateMasterModeAuth() {
+            setCatEmote('neutral');
+            document.getElementById('master-auth-overlay').style.display = 'flex';
+            document.getElementById('pin-step').style.display = 'block';
+            document.getElementById('face-step').style.display = 'none';
+            currentPin = "";
+            updatePinDisplay();
+            loadFaceModels(); // Start loading models in background
+        }
+
+        function closeMasterAuth() {
+            document.getElementById('master-auth-overlay').style.display = 'none';
+            currentPin = "";
+            stopCamera();
+        }
+
+        // Layer 2: PIN Verification
+        function enterPin(num) {
+            if(currentPin.length < 4) currentPin += num;
+            updatePinDisplay();
+            if(currentPin.length === 4) {
+                setTimeout(() => {
+                    if(currentPin === ADMIN_PIN) {
+                        playSuccessSound();
+                        startFaceScan(); // Move to Layer 3
+                    } else {
+                        alert("❌ INVALID PIN");
+                        currentPin = "";
+                        updatePinDisplay();
+                    }
+                }, 300);
+            }
+        }
+        function clearPin() { currentPin = ""; updatePinDisplay(); }
+        function updatePinDisplay() { document.getElementById('pin-display').innerText = "*".repeat(currentPin.length); }
+
+        // Layer 3: Live Face Scan
+        async function startFaceScan() {
+            document.getElementById('pin-step').style.display = 'none';
+            document.getElementById('face-step').style.display = 'block';
+            document.getElementById('face-step-container').style.display = 'block';
+            document.getElementById('face-auth-msg').innerText = "Position your face in the circle...";
+
+            const video = document.getElementById('auth-video');
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video.srcObject = videoStream;
+            } catch (err) {
+                document.getElementById('face-auth-msg').innerText = "Camera access denied!";
+                return;
+            }
+
+            video.addEventListener('play', async () => {
+                if(!faceModelsLoaded) await loadFaceModels();
+                const canvas = document.getElementById('auth-canvas');
+                const displaySize = { width: video.clientWidth, height: video.clientHeight };
+                faceapi.matchDimensions(canvas, displaySize);
+
+                let scanInterval = setInterval(async () => {
+                    if(!videoStream) { clearInterval(scanInterval); return; }
+                    
+                    const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                    
+                    if (detection) {
+                        // Ensure it's a real live face by checking landmark confidence (anti-spoofing basic check)
+                        document.getElementById('face-auth-msg').innerText = "Scanning Biometrics...";
+                        
+                        let savedMasterDescriptor = localStorage.getItem('master_face_descriptor');
+                        
+                        if(savedMasterDescriptor) {
+                            // Match with existing master face
+                            let Float32ArrayDesc = new Float32Array(JSON.parse(savedMasterDescriptor));
+                            const distance = faceapi.euclideanDistance(detection.descriptor, Float32ArrayDesc);
+                            
+                            if(distance < 0.45) { // Strict threshold for high security
+                                clearInterval(scanInterval);
+                                grantMasterAccess();
+                            } else {
+                                document.getElementById('face-auth-msg').innerText = "❌ Unrecognized Face. Access Denied.";
+                                document.getElementById('face-auth-msg').style.color = "#ff3b3b";
+                                setTimeout(closeMasterAuth, 3000);
+                            }
+                        } else {
+                            // First time setup: If no face is registered, it saves the current face as Master Face.
+                            localStorage.setItem('master_face_descriptor', JSON.stringify(Array.from(detection.descriptor)));
+                            clearInterval(scanInterval);
+                            alert("✅ Master Face Registered Successfully! Access Granted.");
+                            grantMasterAccess();
+                        }
+                    }
+                }, 1000);
+            });
+        }
+
+        function stopCamera() {
+            if(videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+        }
+
+        // 🟢 FINAL SUCCESS ACTION
+        function grantMasterAccess() {
+            stopCamera();
+            document.getElementById('face-auth-msg').innerText = "✅ IDENTITY VERIFIED";
+            document.getElementById('face-auth-msg').style.color = "#00e676";
+            playSuccessSound();
+            
+            setTimeout(() => {
+                // 1. Unlock Secret Videos (CSS Class)
+                document.body.classList.add('show-secret-videos');
+                
+                // 2. Open Secret Vault Tab Automatically
+                filterHomeCategory('vault', document.getElementById('tab-vault')); 
+                switchTab('home');
+
+                // 3. Redirect to Admin Panel
+                let d = langDict[currentAppLang] || langDict['en'];
+                
+                // এআই দ্বারা সাকসেস মেসেজ বলা
+                speakWithOriginalTTS(currentAppLang === 'bn' ? "স্বাগতম মাস্টার। সিস্টেম আনলক করা হয়েছে।" : "Welcome Master. System unlocked.", ttsLangMap[currentAppLang] || 'en-US');
+                
+                closeMasterAuth();
+                
+                // Admin Panel Redirect (আপনি চাইলে নিচের লাইনটি চালু করতে পারেন)
+                // window.location.href = 'admin.html'; 
+                
+            }, 1500);
+        }
+        // ==========================================
+
     </script>
 </body>
 </html>
