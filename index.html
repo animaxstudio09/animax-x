@@ -1337,6 +1337,21 @@
 
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBo9b3qIydZneZI0ktvAcWzMhcSu1DQPCU",
+            authDomain: "myanimeapp-8d079.firebaseapp.com",
+            databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com",
+            projectId: "myanimeapp-8d079",
+            storageBucket: "myanimeapp-8d079.firebasestorage.app",
+            messagingSenderId: "37482342893",
+            appId: "1:37482342893:web:108b24e860175f75725fe4"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        const MAIN_ADMIN_EMAIL = "admin@animax.com";
+        const ALLOWED_SUB_ADMINS = [];
+
         let appStartupTime = Date.now(); 
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
@@ -1352,7 +1367,7 @@
             pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 7 dias acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
             ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 7 دن کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
             ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت فترة التجربة المجانية 7 أيام! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
-            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", spinDesc:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"7일 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
+            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"7일 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
         };
 
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
@@ -1700,8 +1715,6 @@
             }
             updateBannerVisibility();
         }
-
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
         let currentUser = null, isPremium = false, currentVideoId = null, currentSafeVideoId = null, currentPlayType = 'anime';
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
@@ -2622,7 +2635,7 @@
             if(isDataLoaded) return; isDataLoaded = true;
             
             db.ref('shorts').once('value', s => {
-                window.allShortsData = [];
+                window.allShortsData =[];
                 if(s.exists()) { s.forEach(i => { window.allShortsData.push({...i.val(), key: i.key}); }); }
             });
 
@@ -2801,7 +2814,7 @@
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: t,
                     artist: 'ANIMAX TV',
-                    artwork: [
+                    artwork:[
                         { src: hThumb, type: 'image/jpeg' },
                         { src: 'logo.png', type: 'image/png' }
                     ]
@@ -2886,7 +2899,7 @@
         });
 
         function loadContinueWatching() {
-            let cwData = [];
+            let cwData =[];
             for(let i=0; i<localStorage.length; i++) {
                 let key = localStorage.key(i);
                 if(key.startsWith('cw_')) {
@@ -3038,7 +3051,7 @@
             const g = document.getElementById('dynamic-rec-grid'); 
             g.innerHTML = "<div style='text-align:center;width:100%;color:var(--text-muted);grid-column:1/-1;padding:20px;font-weight:600;'>Loading related videos...</div>"; 
             
-            let pool = [];
+            let pool =[];
             if(currentPlayType === 'movie' && window.movieData) { pool = [...window.movieData]; }
             else if(currentPlayType === 'cartoon' && window.cartoonData) { pool = [...window.cartoonData]; }
             else if(window.animeData) { 
@@ -3053,7 +3066,7 @@
             selected.slice(0, 6).forEach(item => { html += generateCardHtml(item); });
             
             if(window.allShortsData && window.allShortsData.length > 0) {
-                let randomShorts = [...window.allShortsData].sort(() => 0.5 - Math.random()).slice(0, 8); 
+                let randomShorts =[...window.allShortsData].sort(() => 0.5 - Math.random()).slice(0, 8); 
                 html += `<div style="grid-column: 1 / -1; margin: 20px 0;">`;
                 html += `<div style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:15px; font-family:'Orbitron'; display:flex; align-items:center; gap:8px;"><i class="fas fa-bolt" style="color:var(--accent-glow);"></i> TRENDING SHORTS</div>`;
                 html += `<div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:10px; scrollbar-width:none;">`;
@@ -3117,7 +3130,7 @@
             db.ref(`users/${currentUser.uid}/watchlist`).orderByChild('date').limitToLast(30).once('value', s => { 
                 const c = document.getElementById('history-list-container'); c.innerHTML=""; 
                 if(!s.exists()){ c.innerHTML=`<div style="text-align:center; padding-top:50px; color:var(--text-muted); font-weight:600;">No history found.</div>`; return; } 
-                let historyArray = []; s.forEach(i => { historyArray.push(i.val()); }); 
+                let historyArray =[]; s.forEach(i => { historyArray.push(i.val()); }); 
                 historyArray.reverse().forEach(d => { let dateStr = new Date(d.date).toLocaleDateString(); c.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:16px; margin-bottom:12px; border:1px solid var(--glass-border);"><div style="color:var(--text-main); font-size:15px; font-weight:700;">${d.title}</div><div style="color:var(--text-muted); font-size:12px; margin-top:8px; font-family:'Orbitron';">WATCHED: ${dateStr}</div></div>`; }); 
             }); 
         }
@@ -3147,7 +3160,7 @@
             let today = new Date().toLocaleDateString();
             let savedData = localStorage.getItem('dailySearchTags');
             let parsed = savedData ? JSON.parse(savedData) : null;
-            let tags = [];
+            let tags =[];
             if(parsed && parsed.date === today && parsed.tags.length > 0) { tags = parsed.tags; } 
             else {
                 if(allContentList.length > 0) {
@@ -3541,8 +3554,8 @@
                 action = () => executeDanceRoutine();
             }
             else if (t.match(/(joke|funny|মজা|জোকস|কৌতুক|চুটকি|चुटकुला|मजाक)/)) {
-                let jokesEn = ["Why did the anime fan cross the road? To get to the next episode!", "I would tell you an anime joke, but it's filler."];
-                let jokesBn = ["অ্যানিমে ফ্যানরা কেন রাস্তা পার হয়? কারণ ওই পারে নতুন এপিসোড আছে!", "আমি একটা জোকস বলতাম, কিন্তু ওটা ফিলার এপিসোডের মতো বোরিং!"];
+                let jokesEn =["Why did the anime fan cross the road? To get to the next episode!", "I would tell you an anime joke, but it's filler."];
+                let jokesBn =["অ্যানিমে ফ্যানরা কেন রাস্তা পার হয়? কারণ ওই পারে নতুন এপিসোড আছে!", "আমি একটা জোকস বলতাম, কিন্তু ওটা ফিলার এপিসোডের মতো বোরিং!"];
                 reply = isLang('bn') ? jokesBn[Math.floor(Math.random()*jokesBn.length)] : jokesEn[Math.floor(Math.random()*jokesEn.length)];
                 action = () => executeDanceRoutine();
             }
@@ -3879,7 +3892,7 @@
 
         // --- UPLOAD & EDIT FUNCTIONS (Embedded) ---
         function uploadAnime() {
-            let selectedCats = []; document.querySelectorAll('.cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            let selectedCats =[]; document.querySelectorAll('.cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'anime';
             const folder = document.getElementById('an-folder').value.trim(); const title = document.getElementById('an-title').value;
             const thumb = document.getElementById('an-thumb').value; const url = document.getElementById('an-url').value;
@@ -3909,7 +3922,7 @@
         }
 
         function uploadMovie() {
-            let selectedCats = []; document.querySelectorAll('.mv-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            let selectedCats =[]; document.querySelectorAll('.mv-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'movie';
             const title = document.getElementById('mv-title').value; const thumb = document.getElementById('mv-thumb').value;
             const url = document.getElementById('mv-url').value; const key = document.getElementById('mv-key').value; const type = document.getElementById('mv-type').value;
@@ -3927,7 +3940,7 @@
         }
 
         function uploadCartoon() {
-            let selectedCats = []; document.querySelectorAll('.ct-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            let selectedCats =[]; document.querySelectorAll('.ct-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'cartoon';
             const title = document.getElementById('ct-title').value; const thumb = document.getElementById('ct-thumb').value;
             const url = document.getElementById('ct-url').value; const key = document.getElementById('ct-key').value; const type = document.getElementById('ct-type').value; 
@@ -4078,10 +4091,17 @@
             });
             
             db.ref('premium_codes').limitToLast(50).on('value', s => { 
-                const list = document.getElementById('admin-code-list'); list.innerHTML = ""; const codes = []; 
+                const list = document.getElementById('admin-code-list'); list.innerHTML = ""; 
+                const codes = []; 
                 s.forEach(c => codes.unshift({ key: c.key, val: c.val() })); 
                 codes.forEach(c => { 
-                    const data = c.val || {}; const isUnused = data.status === 'unused'; const statusClass = isUnused ? 'unused' : 'used'; const statusText = isUnused ? 'ACTIVE' : 'USED'; const badgeClass = isUnused ? 'st-active' : 'st-used'; const icon = isUnused ? 'fa-check-circle' : 'fa-times-circle'; const usedBy = data.usedBy ? `<div style="font-size:10px; color:#ff3b3b;">User: ${data.usedBy}</div>` : ''; 
+                    const data = c.val || {}; 
+                    const isUnused = data.status === 'unused'; 
+                    const statusClass = isUnused ? 'unused' : 'used'; 
+                    const statusText = isUnused ? 'ACTIVE' : 'USED'; 
+                    const badgeClass = isUnused ? 'st-active' : 'st-used'; 
+                    const icon = isUnused ? 'fa-check-circle' : 'fa-times-circle'; 
+                    const usedBy = data.usedBy ? `<div style="font-size:10px; color:#ff3b3b;">User: ${data.usedBy}</div>` : ''; 
                     list.innerHTML += `<div class="code-card ${statusClass}" onclick="copyToClipboard('${c.key}')" title="Click to Copy"><div><div class="code-status ${badgeClass}">${statusText}</div><div class="code-text"><i class="fas ${icon}"></i> ${c.key}</div><div class="code-days">${data.days || 0} Days Validity</div>${usedBy}</div><div style="text-align:right;"><button class="del-btn" style="padding: 5px 15px;" onclick="deleteCode(event, '${c.key}')">DELETE</button></div></div>`; 
                 }); 
             });
