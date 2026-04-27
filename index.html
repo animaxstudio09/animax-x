@@ -3133,35 +3133,40 @@
 
         // 🌟 FEATURE 9: Advanced Voice Commands (100 Crore+ Combos Handled via Regex) 🌟
         function processLocalVoiceCommand(text) {
-            let t = text.toLowerCase().trim();
+            // ব্রাউজারের দেওয়া দাড়ি, কমা বা যতিচিহ্ন মুছে ফেলা হলো, যাতে কমান্ড ১০০% কাজ করে
+            let t = text.toLowerCase().replace(/[.,!?।]/g, '').trim();
             let reply = "";
             let action = null;
             
             let isLang = (lang) => currentAppLang === lang;
 
-            let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|quiero ver|reproducir|jouer|assistir)\s+(.+)/);
-            let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar|chercher|procurar)\s+(.+)/);
+            let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
+            let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
 
-            // 1. Video Controls
-            if (t.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो|pausa|arrêter|parar)/)) {
+            // 0. Basic Greetings (হাই / হ্যালো)
+            if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
+                reply = isLang('bn') ? "হ্যালো! আমি আনি, বলুন আপনার জন্য কী করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Hello! I am Ani. What do you want to watch?";
+            }
+            // 1. Video Controls (প্লে / পজ)
+            else if (t.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो)/)) {
                 let v = document.getElementById('main-video');
                 if(v && !v.paused) { v.pause(); reply = isLang('bn') ? "ভিডিও থামালাম।" : isLang('hi') ? "वीडियो रोक दिया गया।" : "Video paused."; }
                 else { reply = isLang('bn') ? "আগে থেকেই থামানো আছে।" : "Already paused."; }
             } 
-            else if (t.match(/(play video|resume|চালু করো|আবার চালাও|शुरू करो|फिर से चलाओ|continuar)/)) {
+            else if (t.match(/(play video|resume|চালু করো|আবার চালাও|शुरू करो|continuar)/)) {
                 let v = document.getElementById('main-video');
                 if(v && v.paused) { v.play(); reply = isLang('bn') ? "ভিডিও চালু করলাম।" : isLang('hi') ? "वीडियो शुरू किया।" : "Video resumed."; }
                 else { reply = "Already playing."; }
             }
-            else if (t.match(/(mute|sound off|মিউট|শব্দ বন্ধ|म्यूट|आवाज बंद|silencio)/)) {
+            else if (t.match(/(mute|sound off|মিউট|শব্দ বন্ধ|म्यूट|आवाज बंद)/)) {
                 let v = document.getElementById('main-video');
-                if(v) { v.muted = true; reply = isLang('bn') ? "মিউট করা হয়েছে।" : isLang('hi') ? "म्यूट कर दिया गया।" : "Audio muted."; }
+                if(v) { v.muted = true; reply = isLang('bn') ? "মিউট করা হয়েছে।" : "Audio muted."; }
             }
-            else if (t.match(/(unmute|sound on|আনমিউট|শব্দ চালু|अनम्यूट|आवाज चालू|con sonido)/)) {
+            else if (t.match(/(unmute|sound on|আনমিউট|শব্দ চালু|अनम्यूट|आवाज चालू)/)) {
                 let v = document.getElementById('main-video');
-                if(v) { v.muted = false; reply = isLang('bn') ? "আনমিউট করা হয়েছে।" : isLang('hi') ? "अनम्यूट कर दिया गया।" : "Audio unmuted."; }
+                if(v) { v.muted = false; reply = isLang('bn') ? "আনমিউট করা হয়েছে।" : "Audio unmuted."; }
             }
-            else if (t.match(/(fullscreen|full screen|বড় করো|ফুলস্ক্রিন|बड़ा करो|फुलस्क्रीन|pantalla completa)/)) {
+            else if (t.match(/(fullscreen|full screen|বড় করো|ফুলস্ক্রিন|बड़ा करो|फुलस्क्रीन)/)) {
                 let v = document.getElementById('main-video');
                 if(v) {
                     if (v.requestFullscreen) v.requestFullscreen();
@@ -3169,107 +3174,92 @@
                     reply = isLang('bn') ? "ফুলস্ক্রিন করছি।" : "Entering fullscreen.";
                 }
             }
-            else if (t.match(/(skip|forward|next|সামনে যাও|১০ সেকেন্ড সামনে|স্কিপ|आगे बढ़ाओ|स्किप|adelantar)/)) {
-                reply = isLang('bn') ? "সামনে এগোচ্ছি।" : isLang('hi') ? "आगे बढ़ा रही हूँ।" : "Skipping forward.";
+            else if (t.match(/(skip|forward|next|সামনে যাও|১০ সেকেন্ড সামনে|স্কিপ|आगे बढ़ाओ|स्किप)/)) {
+                reply = isLang('bn') ? "সামনে এগোচ্ছি।" : "Skipping forward.";
                 action = () => skipTime(10);
             }
-            else if (t.match(/(rewind|backward|back|পিছনে যাও|১০ সেকেন্ড পিছনে|पीछे करो|retroceder)/)) {
-                reply = isLang('bn') ? "পিছনে যাচ্ছি।" : isLang('hi') ? "पीछे जा रही हूँ।" : "Rewinding.";
+            else if (t.match(/(rewind|backward|back|পিছনে যাও|১০ সেকেন্ড পিছনে|पीछे करो)/)) {
+                reply = isLang('bn') ? "পিছনে যাচ্ছি।" : "Rewinding.";
                 action = () => skipTime(-10);
             }
-            else if (t.match(/(close video|stop video|back to home|ভিডিও কাটো|ভিডিও বন্ধ করো|वीडियो बंद करो|वीडियो काटो)/)) {
+            else if (t.match(/(close video|stop video|back to home|ভিডিও কাটো|ভিডিও বন্ধ করো|वीडियो बंद करो)/)) {
                 reply = isLang('bn') ? "ভিডিও বন্ধ করছি।" : "Closing video.";
                 action = () => closePlayer();
             }
 
-            // 2. Navigation
-            else if (t.match(/(home|main menu|হোম|মেইন মেনু|होम पेज|inicio)/)) {
-                reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : isLang('hi') ? "होम पेज पर जा रहे हैं।" : "Going to home page.";
+            // 2. Navigation (পেজ পরিবর্তন)
+            else if (t.match(/(home|main menu|হোম|মেইন মেনু|होम पेज)/)) {
+                reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : "Going to home page.";
                 action = () => switchTab('home');
             }
-            else if (t.match(/(profile|account|my account|প্রোফাইল|একাউন্ট|আমার একাউন্ট|प्रोफाइल|खाता|perfil)/)) {
-                reply = isLang('bn') ? "আপনার প্রোফাইল খুলছি।" : isLang('hi') ? "आपकी प्रोफाइल खोल रही हूँ।" : "Opening your profile.";
+            else if (t.match(/(profile|account|my account|প্রোফাইল|একাউন্ট|আমার একাউন্ট|प्रोफाइल)/)) {
+                reply = isLang('bn') ? "আপনার প্রোফাইল খুলছি।" : "Opening your profile.";
                 action = () => switchTab('profile');
             }
-            else if (t.match(/(download|offline|ডাউনলোড|অফলাইন|डाउनलोड|descargas)/)) {
+            else if (t.match(/(download|offline|ডাউনলোড|অফলাইন|डाउनलोड)/)) {
                 reply = isLang('bn') ? "ডাউনলোড পেজ খুলছি।" : "Opening downloads.";
                 action = () => switchTab('downloads');
             }
-            else if (t.match(/(spin|wheel|lucky|চাকা ঘুরাও|স্পিন|स्पिन|पहिया|girar)/)) {
-                reply = isLang('bn') ? "লাকি স্পিন খুলছি! শুভকামনা।" : isLang('hi') ? "लकी स्पिन खोल रही हूँ! शुभकामनाएँ।" : "Opening lucky spin. Good luck!";
+            else if (t.match(/(spin|wheel|lucky|চাকা ঘুরাও|স্পিন|स्पिन|पहिया)/)) {
+                reply = isLang('bn') ? "লাকি স্পিন খুলছি! শুভকামনা।" : "Opening lucky spin. Good luck!";
                 action = () => openSpinWheel();
             }
             else if (t.match(/(leaderboard|rank|top|র‍্যাংক|লিডারবোর্ড|র‍্যাংকিং|रैंक|लीडरबोर्ड)/)) {
                 reply = isLang('bn') ? "লিডারবোর্ড দেখাচ্ছি।" : "Showing the leaderboard.";
                 action = () => openLeaderboard();
             }
-            else if (t.match(/(history|recent|হিস্ট্রি|ইতিহাস|इतिहास|historial)/)) {
+            else if (t.match(/(history|recent|হিস্ট্রি|ইতিহাস|इतिहास)/)) {
                 reply = isLang('bn') ? "আপনার হিস্ট্রি খুলছি।" : "Opening watch history.";
                 action = () => { if(currentUser) openHistory(); else alert("Login required!"); };
             }
-            else if (t.match(/(reward|bonus|claim|বোনাছ|রিওয়ার্ড|ইনাম|इनाम|बोनस)/)) {
-                reply = isLang('bn') ? "ডেইলি রিওয়ার্ড খুলছি।" : "Opening daily reward.";
-                action = () => openRewardPage();
-            }
-            else if (t.match(/(vault|secret|সিক্রেট|ভল্ট|गुप्त|bóveda)/)) {
+            else if (t.match(/(vault|secret|সিক্রেট|ভল্ট|गुप्त)/)) {
                 reply = isLang('bn') ? "সিক্রেট ভল্ট খুলছি।" : "Opening secret vault.";
                 action = () => { filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home'); };
             }
 
-            // 3. AI Chit-chat & Persona
+            // 3. AI Chit-chat (আড্ডা ও বিনোদন)
             else if (t.match(/(who are you|your name|তুমি কে|তোমার নাম কি|তোর নাম কি|तुम कौन हो|तुम्हारा नाम क्या है)/)) {
-                reply = isLang('bn') ? "আমি আনি! অ্যানিম্যাক্স টিভির এআই অ্যাসিস্ট্যান্ট।" : 
-                        isLang('hi') ? "मैं एनी हूँ! एनिमैक्स टीवी की एआई असिस्टेंट।" : 
-                        "I am Ani, your personal AI assistant for Animax TV.";
+                reply = isLang('bn') ? "আমি আনি! অ্যানিম্যাক্স টিভির এআই অ্যাসিস্ট্যান্ট।" : "I am Ani, your personal AI assistant for Animax TV.";
             }
             else if (t.match(/(how are you|কেমন আছো|কি খবর|कैसे हो|क्या हाल है)/)) {
-                reply = isLang('bn') ? "আমি দারুণ আছি! আপনি কেমন আছেন? চলুন মুভি দেখি।" : 
-                        isLang('hi') ? "मैं बहुत अच्छी हूँ! आप कैसे हैं?" : 
-                        "I am doing great! Ready to help you watch anime.";
+                reply = isLang('bn') ? "আমি দারুণ আছি! আপনি কেমন আছেন? চলুন মুভি দেখি।" : "I am doing great! Ready to help you watch anime.";
             }
-            else if (t.match(/(dance|নাচো|ড্যান্স|নাচতে পারো|नाचो|ড্যান্স করো|baile)/)) {
-                reply = isLang('bn') ? "চলুন একটু নেচে নিই!" : isLang('hi') ? "चलो थोड़ा नाचते हैं!" : "Let's hit the dance floor!";
+            else if (t.match(/(dance|নাচো|ড্যান্স|নাচতে পারো|नाचो|ড্যান্স করো)/)) {
+                reply = isLang('bn') ? "চলুন একটু নেচে নিই!" : "Let's hit the dance floor!";
                 action = () => executeDanceRoutine();
             }
             else if (t.match(/(joke|funny|মজা|জোকস|কৌতুক|চুটকি|चुटकुला|मजाक)/)) {
                 let jokesEn = ["Why did the anime fan cross the road? To get to the next episode!", "I would tell you an anime joke, but it's filler."];
                 let jokesBn = ["অ্যানিমে ফ্যানরা কেন রাস্তা পার হয়? কারণ ওই পারে নতুন এপিসোড আছে!", "আমি একটা জোকস বলতাম, কিন্তু ওটা ফিলার এপিসোডের মতো বোরিং!"];
-                let jokesHi = ["एनीमे फैन सड़क क्यों पार करता है? अगले एपिसोड तक पहुँचने के लिए!", "मैं चुटकुला सुनाती, पर वो फिलर एपिसोड जैसा बोरिंग है।"];
-                reply = isLang('bn') ? jokesBn[Math.floor(Math.random()*jokesBn.length)] : 
-                        isLang('hi') ? jokesHi[Math.floor(Math.random()*jokesHi.length)] : 
-                        jokesEn[Math.floor(Math.random()*jokesEn.length)];
+                reply = isLang('bn') ? jokesBn[Math.floor(Math.random()*jokesBn.length)] : jokesEn[Math.floor(Math.random()*jokesEn.length)];
                 action = () => executeDanceRoutine();
             }
-            else if (t.match(/(love you|ভালোবাসি|তোমাকে ভালো লাগে|प्यार करती|te amo)/)) {
-                reply = isLang('bn') ? "আমিও আপনাকে অনেক ভালোবাসি! চলুন অ্যানিমে দেখি।" : 
-                        isLang('hi') ? "मुझे भी आपसे बहुत प्यार है! चलो एनीमे देखते हैं।" : 
-                        "Aww, I love you too! Let's watch some anime.";
+            else if (t.match(/(love you|ভালোবাসি|তোমাকে ভালো লাগে|प्यार करती)/)) {
+                reply = isLang('bn') ? "আমিও আপনাকে অনেক ভালোবাসি! চলুন অ্যানিমে দেখি।" : "Aww, I love you too! Let's watch some anime.";
             }
-            else if (t.match(/(thanks|thank you|ধন্যবাদ|থ্যাংকস|ধন্যবাদ আনি|शुक्रिया|धन्यवाद)/)) {
-                reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : 
-                        isLang('hi') ? "आपका भी धन्यवाद! मैं हमेशा आपकी मदद के लिए यहाँ हूँ।" : 
-                        "You're welcome! I'm always here to help you.";
+            else if (t.match(/(thanks|thank you|ধন্যবাদ|থ্যাংকস|ধন্যবাদ আনি|शुक्रिया)/)) {
+                reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : "You're welcome! I'm always here to help you.";
             }
 
-            // 4. Play and Search Actions (Dynamic)
+            // 4. Play and Search Actions (ডাইনামিক মুভি প্লে এবং সার্চ)
             else if (playMatch) {
                 let query = playMatch[1].trim();
-                reply = isLang('bn') ? `${query} চালু করছি।` : isLang('hi') ? `${query} चला रही हूँ।` : `Playing ${query}`;
+                reply = isLang('bn') ? `${query} চালু করছি।` : `Playing ${query}`;
                 action = () => executeVoicePlayCommand(query);
             }
             else if (searchMatch) {
                 let query = searchMatch[1].trim();
-                reply = isLang('bn') ? `${query} খুঁজছি।` : isLang('hi') ? `${query} खोज रही हूँ।` : `Searching for ${query}`;
+                reply = isLang('bn') ? `${query} খুঁজছি।` : `Searching for ${query}`;
                 action = () => {
                     document.getElementById('header-search-wrapper').click();
                     setTimeout(() => executeSearch(query), 500);
                 };
             }
             
-            // 5. Fallback
+            // 5. Fallback (যদি কোনো কিছুই না মিলে)
             else {
                 let d = langDict[currentAppLang] || langDict['en'];
-                reply = d.aiError;
+                reply = d.aiError || "Sorry, I didn't understand.";
             }
 
             return { reply, action };
@@ -3301,6 +3291,7 @@
         function handleCatBotClick(e) {
             if(catMoved) return; 
             
+            // এআই ট্রায়াল চেক করা হচ্ছে (লগইন করা না থাকলে কাজ করবে না)
             if(!checkAITrial()) return;
 
             const tooltip = document.getElementById('ai-action-tooltip');
