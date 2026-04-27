@@ -51,6 +51,14 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8f9fa;
             --text-muted: #adb5bd;
+            
+            /* Admin Panel Vars */
+            --gold: #D4AF37; 
+            --dark: #0a0a0a; 
+            --panel: #141414; 
+            --red: #ff3b3b; 
+            --green: #00e676; 
+            --cyan: #00f3ff; 
         }
 
         /* =========================================
@@ -612,6 +620,63 @@
         }
         @keyframes scanAnim { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
         .auth-msg { color: var(--text-muted); font-size: 13px; margin-top: 15px; font-family: 'Outfit'; }
+
+        /* =========================================
+           🛡️ MASTER ADMIN PANEL STYLES (SCOPED) 🛡️
+           ========================================= */
+        #master-admin-panel {
+            display: none; position: fixed; inset: 0; z-index: 100000000; background: #000; color: #fff; font-family: 'Outfit', sans-serif; overflow-y: auto; padding-bottom: 50px;
+        }
+        #master-admin-panel header { background: rgba(20,20,20,0.95); padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        #master-admin-panel .brand { font-family: 'Orbitron'; font-size: 20px; font-weight: 900; }
+        #master-admin-panel .brand span { color: var(--gold); }
+        #master-admin-panel .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        #master-admin-panel .switch input { opacity: 0; width: 0; height: 0; }
+        #master-admin-panel .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; border: 1px solid #555; }
+        #master-admin-panel .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 2px; background-color: #888; transition: .4s; border-radius: 50%; }
+        #master-admin-panel input:checked + .slider { background-color: var(--green); border-color: var(--green); }
+        #master-admin-panel input:checked + .slider:before { transform: translateX(18px); background-color: #fff; }
+        #master-admin-panel.no-delete-access .del-btn { opacity: 0.3; cursor: not-allowed; }
+        #master-admin-panel .nav-scroller { overflow-x: auto; white-space: nowrap; padding: 10px; background: #111; border-bottom: 1px solid #222; }
+        #master-admin-panel .nav-btn { display: inline-block; padding: 8px 20px; margin-right: 10px; border-radius: 20px; background: #222; color: #888; font-size: 12px; font-family: 'Orbitron'; cursor: pointer; border: 1px solid #333; transition: 0.3s; }
+        #master-admin-panel .nav-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
+        #master-admin-panel .section-view { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        #master-admin-panel .input-group { background: var(--panel); padding: 20px; border-radius: 10px; border: 1px solid #333; margin-bottom: 20px; }
+        #master-admin-panel .input-group h3 { color: var(--gold); font-family: 'Orbitron'; margin-bottom: 15px; font-size: 16px; }
+        #master-admin-panel input[type="text"], #master-admin-panel input[type="email"], #master-admin-panel input[type="password"], #master-admin-panel input[type="number"], #master-admin-panel select { width: 100%; padding: 14px 12px; margin-bottom: 15px; background: #050505; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 14px; transition: 0.3s; }
+        #master-admin-panel input:focus, #master-admin-panel select:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+        #master-admin-panel input, #master-admin-panel select { user-select: text !important; -webkit-user-select: text !important; }
+        #master-admin-panel .cat-checkboxes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #050505; padding: 15px; border: 1px solid #333; border-radius: 8px; margin-bottom: 15px; }
+        #master-admin-panel .cat-checkboxes label { color: #ddd; font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: 'Orbitron'; font-weight: 500; }
+        #master-admin-panel .cat-checkboxes input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--gold); cursor: pointer; }
+        #master-admin-panel .btn-action { width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; background: linear-gradient(45deg, #b8952b, var(--gold)); color: #000; font-family: 'Orbitron'; font-size: 14px; transition: 0.2s; }
+        #master-admin-panel .btn-action:active { transform: scale(0.98); }
+        #master-admin-panel .btn-action.updating { background: linear-gradient(45deg, #0056b3, #007bff); color: #fff; }
+        #master-admin-panel .data-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
+        #master-admin-panel .data-card { background: #111; border: 1px solid #333; border-radius: 8px; overflow: hidden; position: relative; }
+        #master-admin-panel .data-card img { width: 100%; height: 100px; object-fit: cover; }
+        #master-admin-panel .data-info { padding: 10px; position: relative; }
+        #master-admin-panel .data-title { font-size: 11px; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; user-select: text !important;}
+        #master-admin-panel .data-badge { font-size: 8px; font-weight: bold; padding: 3px 6px; background: #333; color: var(--gold); border-radius: 4px; margin-bottom: 5px; display: inline-block; font-family: 'Orbitron'; }
+        #master-admin-panel .vip-badge-small { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: var(--gold); font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+        #master-admin-panel .star-btn { position: absolute; top: 8px; right: 10px; font-size: 16px; cursor: pointer; text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: 0.3s; z-index: 10; }
+        #master-admin-panel .card-btns { display: flex; gap: 5px; }
+        #master-admin-panel .del-btn, #master-admin-panel .edit-btn { flex: 1; border: none; padding: 6px; font-size: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        #master-admin-panel .del-btn { background: var(--red); color: #fff; }
+        #master-admin-panel .edit-btn { background: #333; color: var(--gold); border: 1px solid var(--gold); }
+        #master-admin-panel .code-card { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #666; transition: 0.2s; }
+        #master-admin-panel .code-card.unused { border-left-color: var(--green); background: rgba(0, 230, 118, 0.05); }
+        #master-admin-panel .code-card.used { border-left-color: var(--red); background: rgba(255, 59, 59, 0.05); opacity: 0.7; }
+        #master-admin-panel .code-text { font-family: 'Courier New', monospace; font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 1px; user-select: text !important;}
+        #master-admin-panel .code-days { font-size: 11px; color: #888; margin-top: 4px; }
+        #master-admin-panel .code-status { font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        #master-admin-panel .st-active { background: rgba(0, 230, 118, 0.2); color: var(--green); }
+        #master-admin-panel .st-used { background: rgba(255, 59, 59, 0.2); color: var(--red); }
+        #master-admin-panel .code-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        #master-admin-panel .folder-header { background: linear-gradient(145deg, #181818, #0f0f0f); padding: 16px 20px; margin-top: 15px; border-radius: 12px; border-left: 5px solid var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border-top: 1px solid #222; border-right: 1px solid #222; border-bottom: 1px solid #222; transition: all 0.3s ease; }
+        #master-admin-panel .folder-header-title { font-family: 'Orbitron'; font-weight: bold; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 12px; flex: 1; padding-right: 15px; }
+        #master-admin-panel .folder-header-meta { font-family: 'Outfit'; font-size: 11px; font-weight: 600; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+        #master-admin-panel .folder-content { display: none; padding: 15px 5px; border-top: none; }
     </style>
 </head>
 <body class="vip-cyber-theme">
@@ -882,7 +947,7 @@
             <div class="guide-cmd"><i class="fas fa-trophy"></i><div class="guide-cmd-text"><strong>"Show Leaderboard"</strong><span>Shows the top ranked users.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-history"></i><div class="guide-cmd-text"><strong>"Open History"</strong><span>Shows your recently watched videos.</span></div></div>
             <div class="guide-cmd"><i class="fas fa-music"></i><div class="guide-cmd-text"><strong>"Dance"</strong><span>Watch Ani show off some cool moves!</span></div></div>
-            <div class="guide-cmd"><i class="fas fa-comment-dots"></i><div class="guide-cmd-text"><strong>"Be my friend"</strong><span>Say hello and chat with Ani.</span></div></div>
+            <div class="guide-cmd"><i class="fas fa-sign-out-alt"></i><div class="guide-cmd-text"><strong>"Master Mode Back"</strong><span>Exits from Master Mode safely.</span></div></div>
         </div>
     </div>
 
@@ -1106,6 +1171,170 @@
         </div>
     </div>
 
+    <!-- 🌟 MASTER ADMIN PANEL OVERLAY 🌟 -->
+    <div id="master-admin-panel">
+        <header>
+            <div class="brand">ANIMAX <span id="admin-role-title">MASTER</span></div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="document.getElementById('master-admin-panel').style.display='none'; filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home');" style="background: var(--gold); color: #000; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; font-weight:bold;">SECRET VAULT</button>
+                <button onclick="closeMasterMode()" style="background: var(--red); color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; font-weight:bold;">CLOSE PANEL</button>
+            </div>
+        </header>
+        
+        <!-- MAIN ADMIN CONTROLS -->
+        <div id="main-admin-controls" style="display:flex; background: #111; padding: 12px 20px; border-bottom: 1px solid #222; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="font-size: 11px; color: var(--gold); font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-trash"></i> DELETE</div>
+                    <label class="switch"><input type="checkbox" id="delete-toggle-checkbox" onchange="togglePermissions()"><span class="slider"></span></label>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="font-size: 11px; color: var(--cyan); font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-key"></i> CODE</div>
+                    <label class="switch"><input type="checkbox" id="code-toggle-checkbox" onchange="togglePermissions()"><span class="slider"></span></label>
+                </div>
+            </div>
+            <!-- 🌟 MASTER PIN CHANGER 🌟 -->
+            <div style="display:flex; align-items:center; gap:10px; border-left: 1px solid #333; padding-left: 15px;">
+                <div style="font-size: 11px; color: #ff007f; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-lock"></i> MASTER PIN:</div>
+                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="4-Digit">
+                <button onclick="updateMasterPin()" style="background: #ff007f; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; transition: 0.2s;">SAVE</button>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="nav-scroller">
+            <div class="nav-btn active" onclick="showAdminTab('anime')">ANIME SERIES</div>
+            <div class="nav-btn" onclick="showAdminTab('movies')">MOVIE BOX</div>
+            <div class="nav-btn" onclick="showAdminTab('cartoons')">CARTOON BOX</div>
+            <div class="nav-btn" onclick="showAdminTab('shorts')">SHORTS</div>
+            <div class="nav-btn" onclick="showAdminTab('banners')">ALL BANNERS</div>
+            <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
+        </div>
+
+        <!-- ANIME SECTION -->
+        <div id="admin-anime" class="section-view" style="display:block;">
+            <div class="input-group">
+                <h3 id="an-head"><i class="fas fa-upload"></i> UPLOAD ANIME EPISODES</h3>
+                <div class="cat-checkboxes">
+                    <label><input type="checkbox" value="anime" class="cat-chk" checked> Anime</label>
+                    <label><input type="checkbox" value="movie" class="cat-chk"> Movie</label>
+                    <label><input type="checkbox" value="trending" class="cat-chk"> Trending</label>
+                </div>
+                <input type="text" id="an-folder" placeholder="Folder/Season Name (e.g. Solo Leveling S1)">
+                <input type="text" id="an-title" placeholder="Episode Title">
+                <input type="text" id="an-thumb" placeholder="Thumbnail Image URL">
+                <input type="text" id="an-url" placeholder="Video URL (Original) - Optional"> 
+                <input type="text" id="an-url-hin" placeholder="Video URL (Hindi) - Optional">
+                <input type="text" id="an-url-eng" placeholder="Video URL (English) - Optional">
+                <select id="an-type">
+                    <option value="free">Free Content</option>
+                    <option value="premium">Premium (VIP Only)</option>
+                </select>
+                <input type="hidden" id="an-key">
+                <button id="an-btn" class="btn-action" onclick="uploadAnime()">UPLOAD ANIME</button>
+                <button id="an-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('anime')">CANCEL EDIT</button>
+            </div>
+            <div id="admin-anime-list"></div> 
+        </div>
+
+        <!-- MOVIE SECTION -->
+        <div id="admin-movies" class="section-view">
+            <div class="input-group" style="border-color:#ff3b3b;">
+                <h3 id="mv-head" style="color:#ff3b3b;"><i class="fas fa-film"></i> UPLOAD MOVIE</h3>
+                <div class="cat-checkboxes">
+                    <label><input type="checkbox" value="movie" class="mv-cat-chk" checked> General Movie</label>
+                    <label><input type="checkbox" value="anime" class="mv-cat-chk"> Anime Movie</label>
+                    <label><input type="checkbox" value="cartoon" class="mv-cat-chk"> Cartoon Movie</label>
+                    <label><input type="checkbox" value="trending" class="mv-cat-chk"> Trending</label>
+                </div>
+                <input type="text" id="mv-title" placeholder="Movie Title">
+                <input type="text" id="mv-thumb" placeholder="Poster Image URL">
+                <input type="text" id="mv-url" placeholder="Movie Link URL">
+                <select id="mv-type" style="border-color:#ff3b3b;">
+                    <option value="free">Free Movie</option>
+                    <option value="premium">Premium Movie (VIP)</option>
+                </select>
+                <input type="hidden" id="mv-key">
+                <button id="mv-btn" class="btn-action" style="background:linear-gradient(45deg, #800000, #ff3b3b); color:#fff;" onclick="uploadMovie()">UPLOAD MOVIE</button>
+                <button id="mv-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('movies')">CANCEL EDIT</button>
+            </div>
+            <div id="admin-movie-list" class="data-list"></div>
+        </div>
+
+        <!-- CARTOON SECTION -->
+        <div id="admin-cartoons" class="section-view">
+            <div class="input-group" style="border-color:var(--cyan);">
+                <h3 id="ct-head" style="color:var(--cyan);"><i class="fas fa-paw"></i> UPLOAD CARTOON</h3>
+                <div class="cat-checkboxes">
+                    <label><input type="checkbox" value="cartoon" class="ct-cat-chk" checked> Cartoon Series</label>
+                    <label><input type="checkbox" value="movie" class="ct-cat-chk"> Cartoon Movie</label>
+                    <label><input type="checkbox" value="trending" class="ct-cat-chk"> Trending</label>
+                </div>
+                <input type="text" id="ct-title" placeholder="Cartoon Title">
+                <input type="text" id="ct-thumb" placeholder="Poster Image URL">
+                <input type="text" id="ct-url" placeholder="Video Link URL">
+                <select id="ct-type" style="border-color:var(--cyan);">
+                    <option value="free">Free Cartoon</option>
+                    <option value="premium">Premium Cartoon (VIP)</option>
+                </select>
+                <input type="hidden" id="ct-key">
+                <button id="ct-btn" class="btn-action" style="background:linear-gradient(45deg, #008b99, var(--cyan)); color:#000;" onclick="uploadCartoon()">UPLOAD CARTOON</button>
+                <button id="ct-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('cartoons')">CANCEL EDIT</button>
+            </div>
+            <div id="admin-cartoon-list" class="data-list"></div>
+        </div>
+
+        <!-- SHORTS SECTION -->
+        <div id="admin-shorts" class="section-view">
+            <div class="input-group">
+                <h3><i class="fas fa-video"></i> ADD SHORT VIDEO</h3>
+                <input type="text" id="sh-url" placeholder="Short Video URL">
+                <button class="btn-action" onclick="uploadShort()">ADD SHORT</button>
+            </div>
+            <div id="admin-shorts-list" class="data-list"></div>
+        </div>
+        
+        <!-- BANNERS SECTION -->
+        <div id="admin-banners" class="section-view">
+            <div class="input-group">
+                <h3 id="bn-head"><i class="fas fa-images"></i> HOME SLIDER BANNER</h3>
+                <input type="text" id="bn-img" placeholder="Banner Image URL">
+                <input type="text" id="bn-folder" placeholder="Folder Name (For Watch Now click)">
+                <input type="hidden" id="bn-key">
+                <button id="bn-btn" class="btn-action" onclick="uploadBanner()">ADD HOME BANNER</button>
+                <button id="bn-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('banners')">CANCEL EDIT</button>
+            </div>
+            <div id="admin-banner-list" class="data-list"></div>
+            
+            <hr style="border: 1px solid #333; margin: 30px 0;">
+            
+            <div class="input-group" style="border-color: #ff3b3b;">
+                <h3 style="color: #ff3b3b;"><i class="fas fa-film"></i> MOVIE BOX BANNER</h3>
+                <input type="text" id="mv-bn-img" placeholder="Movie Banner Image URL">
+                <button class="btn-action" style="background: linear-gradient(45deg, #800000, #ff3b3b); color: #fff;" onclick="uploadMovieBanner()">ADD MOVIE BANNER</button>
+            </div>
+            <div id="admin-movie-banner-list" class="data-list"></div>
+        </div>
+
+        <!-- CODES SECTION -->
+        <div id="admin-codes" class="section-view">
+            <div class="input-group">
+                <h3><i class="fas fa-key"></i> GENERATE VIP CODES</h3>
+                <div class="code-controls">
+                    <input type="number" id="code-days" placeholder="Days (e.g. 30)" style="flex:2">
+                    <input type="number" id="code-qty" placeholder="Qty (1-10)" value="1" min="1" max="10" style="flex:1">
+                </div>
+                <input type="text" id="custom-code" placeholder="Custom Code (Optional - Single only)">
+                <button class="btn-action" onclick="generateCode()">GENERATE LICENSE</button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding:0 5px;">
+                <span style="font-size:12px; color:#888;">RECENT CODES</span>
+                <button onclick="if(confirm('Delete USED codes?')) deleteUsedCodes()" style="background:#333; color:#888; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">CLEAR USED</button>
+            </div>
+            <div id="admin-code-list" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
     <!-- 🚀 JS LOGIC 🚀 -->
     <script>
         let appStartupTime = Date.now(); 
@@ -1154,6 +1383,9 @@
             let s = document.getElementById('ui-lang-select');
             if(s) s.value = currentAppLang;
             changeAppUI_Lang(currentAppLang, true); // Don't speak on initial DOM load
+            
+            // 🌟 FIX: Preload Face Models in Background silently to remove 1 min delay! 🌟
+            setTimeout(loadFaceModels, 2000); 
         });
 
         function startTabTimer(seconds) {
@@ -1469,15 +1701,18 @@
             updateBannerVisibility();
         }
 
-        const firebaseConfig = { apiKey: "AIzaSyBcWE5TCxamMSnJxqSm5X4mgSwSccIXcBI", authDomain: "myanimeapp-8d079.firebaseapp.com", databaseURL: "https://myanimeapp-8d079-default-rtdb.firebaseio.com", projectId: "myanimeapp-8d079" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), db = firebase.database();
 
         let currentUser = null, isPremium = false, currentVideoId = null, currentSafeVideoId = null, currentPlayType = 'anime';
         let currentLikesCountRef, currentUserLikeRef, currentViewsRef, currentCommentsRef;
         let currentFolder = null, currentPlayingEpisodeData = null, currentEpIndex = -1; 
         let allContentList = [];
         let isTrialActive = false;
+
+        // Admin Privileges specific variables
+        let isMainAdmin = false;
+        let subAdminCanDelete = false;
+        let currentAdminEmail = "";
 
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
@@ -1500,6 +1735,15 @@
                         mySessionRef = db.ref(`online_users/${currentUser.uid}`); mySessionRef.onDisconnect().remove(); mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
                     }
                 });
+
+                // Check Admin Access just in case they login with valid admin email
+                const userEmail = user.email.toLowerCase();
+                isMainAdmin = (userEmail === MAIN_ADMIN_EMAIL.toLowerCase());
+                if (isMainAdmin || ALLOWED_SUB_ADMINS.includes(userEmail)) {
+                    currentAdminEmail = user.email;
+                    loadAdminSettings();
+                }
+
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; isTrialActive = false;
@@ -2167,24 +2411,6 @@
                 let elapsed = Date.now() - activeTask.startTime;
                 if(elapsed >= 30000 && !activeTask.completed) completeTaskSuccess();
             }, 1000);
-        }
-
-        function checkTaskStatus() {
-            if (!activeTask) return; 
-            let elapsed = Date.now() - activeTask.startTime; 
-            if (elapsed < 500) return; 
-            
-            if (elapsed < 30000 && !activeTask.completed) {
-                clearInterval(activeInterval);
-                stopTabTimer(); 
-                alert(`❌ Task Failed!\n\nYou returned too early. You must view the ad for full 30 seconds!`);
-                activeTask.btnEl.innerText = "Get Now"; activeTask.btnEl.classList.remove('running');
-                let tId = activeTask.id; let el = activeTask.btnEl;
-                el.onclick = function() { startWebTask(tId, el, 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871'); };
-                activeTask = null;
-            } else if (elapsed >= 30000 && !activeTask.completed) { 
-                completeTaskSuccess(); 
-            }
         }
 
         function completeTaskSuccess() {
@@ -3221,9 +3447,13 @@
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
 
             // --- MASTER MODE (LAYER 1) ---
-            if (t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/)) {
+            if (t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/) && !t.includes("back")) {
                 reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification.";
                 action = () => initiateMasterModeAuth();
+            }
+            else if (t.match(/(master mode back|মাস্টার মোড ব্যাক|exit master mode|close master mode)/)) {
+                reply = isLang('bn') ? "মাস্টার মোড বন্ধ করছি।" : "Closing master mode.";
+                action = () => closeMasterMode();
             }
             // 0. Basic Greetings
             else if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
@@ -3431,9 +3661,7 @@
         // Load Face API Models from a Faster & Reliable Server
         async function loadFaceModels() {
             if(faceModelsLoaded) return;
-            document.getElementById('face-auth-msg').innerText = "Downloading AI Models... Please wait.";
-            document.getElementById('face-auth-msg').style.color = "#ffb703";
-            
+            // Removed UI messages to make it silent on app load
             const MODEL_URL = 'https://vladmandic.github.io/face-api/model/';
             try {
                 await Promise.all([
@@ -3442,12 +3670,8 @@
                     faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
                 ]);
                 faceModelsLoaded = true;
-                document.getElementById('face-auth-msg').innerText = "Position your face in the circle...";
-                document.getElementById('face-auth-msg').style.color = "var(--text-muted)";
             } catch(e) {
                 console.error("Face API Load Error:", e);
-                document.getElementById('face-auth-msg').innerText = "Network Error! Could not load AI.";
-                document.getElementById('face-auth-msg').style.color = "#ff3b3b";
             }
         }
 
@@ -3459,13 +3683,19 @@
             document.getElementById('face-step').style.display = 'none';
             currentPin = "";
             updatePinDisplay();
-            loadFaceModels(); // Start loading models in background
+            loadFaceModels(); // Just in case it failed to load earlier
         }
 
         function closeMasterAuth() {
             document.getElementById('master-auth-overlay').style.display = 'none';
             currentPin = "";
             stopCamera();
+        }
+        
+        function closeMasterMode() {
+            document.getElementById('master-admin-panel').style.display = 'none';
+            document.body.classList.remove('show-secret-videos'); 
+            switchTab('home');
         }
 
         // Layer 2: PIN Verification
@@ -3549,7 +3779,7 @@
                             grantMasterAccess();
                         }
                     }
-                }, 800); // Check every 800ms to reduce mobile freezing
+                }, 300); // 🌟 UPDATED: Fast check every 300ms instead of 800ms
             });
         }
 
@@ -3568,20 +3798,293 @@
             playSuccessSound();
             
             setTimeout(() => {
-                document.body.classList.add('show-secret-videos');
-                filterHomeCategory('vault', document.getElementById('tab-vault')); 
-                switchTab('home');
+                // 🌟 UPDATED: Show Built-in Admin Panel instead of redirecting
+                closeMasterAuth();
+                document.getElementById('master-admin-panel').style.display = 'block';
+                loadAdminAllData(); // Load Admin data into panel
+                showAdminTab('anime');
                 
                 if(currentAppLang === 'bn') {
                     speakWithOriginalTTS("স্বাগতম মাস্টার। সিস্টেম আনলক করা হয়েছে।", "bn-IN");
                 } else {
                     speakWithOriginalTTS("Welcome Master. System unlocked.", "en-US");
                 }
+            }, 1000);
+        }
+
+        // ==============================================================
+        // 🛡️ ADMIN PANEL LOGIC (Embedded Inside Master Mode) 🛡️
+        // ==============================================================
+        
+        function showAdminTab(tab) {
+            document.getElementById('master-admin-panel').querySelectorAll('.section-view').forEach(d => d.style.display = 'none');
+            document.getElementById('admin-' + tab) ? document.getElementById('admin-' + tab).style.display = 'block' : document.getElementById(tab).style.display = 'block';
+            document.getElementById('master-admin-panel').querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if (event && event.currentTarget) { event.currentTarget.classList.add('active'); }
+        }
+
+        function toggleAdminFolder(id) {
+            const el = document.getElementById('admin-folder-' + id); 
+            const icon = document.getElementById('admin-icon-' + id);
+            if(el.style.display === 'none' || el.style.display === '') { 
+                el.style.display = 'block'; if(icon) icon.className = "fas fa-chevron-up"; 
+            } else { 
+                el.style.display = 'none'; if(icon) icon.className = "fas fa-chevron-down"; 
+            }
+        }
+
+        function updateMasterPin() {
+            if(!isMainAdmin) return alert("Only Main Admin can change the PIN!");
+            const newPin = document.getElementById('master-pin-input').value;
+            if(newPin.length < 4) return alert("PIN must be at least 4 digits!");
+            db.ref('admin_settings').update({ master_pin: newPin }).then(() => {
+                alert("✅ Master PIN Updated Successfully!");
+            });
+        }
+
+        function loadAdminSettings() {
+            db.ref('admin_settings').on('value', snap => {
+                const data = snap.val() || {};
+                subAdminCanDelete = data.subAdminCanDelete || false;
+                const subAdminCanCreateCode = data.subAdminCanCreateCode || false;
                 
-                closeMasterAuth();
+                if (data.master_pin) { document.getElementById('master-pin-input').value = data.master_pin; } 
+                else { document.getElementById('master-pin-input').value = "7860"; }
                 
-                // window.location.href = 'admin.html'; // Uncomment to redirect
-            }, 1500);
+                if(isMainAdmin) {
+                    document.getElementById('delete-toggle-checkbox').checked = subAdminCanDelete;
+                    document.getElementById('code-toggle-checkbox').checked = subAdminCanCreateCode;
+                    document.getElementById('nav-codes').style.display = 'inline-block';
+                } else {
+                    document.getElementById('master-admin-panel').classList.toggle('no-delete-access', !subAdminCanDelete);
+                    if(subAdminCanCreateCode) { document.getElementById('nav-codes').style.display = 'inline-block'; } 
+                    else { document.getElementById('nav-codes').style.display = 'none'; }
+                }
+            });
+        }
+
+        function togglePermissions() {
+            if(!isMainAdmin) return;
+            db.ref('admin_settings').update({
+                subAdminCanDelete: document.getElementById('delete-toggle-checkbox').checked,
+                subAdminCanCreateCode: document.getElementById('code-toggle-checkbox').checked
+            });
+        }
+
+        function toggleTrending(path, key, currentCat) {
+            let cats = currentCat.split(',').map(c => c.trim());
+            if(cats.includes('trending')) { cats = cats.filter(c => c !== 'trending'); } else { cats.push('trending'); }
+            let newCat = cats.join(','); db.ref(`${path}/${key}`).update({ category: newCat });
+        }
+
+        // --- UPLOAD & EDIT FUNCTIONS (Embedded) ---
+        function uploadAnime() {
+            let selectedCats = []; document.querySelectorAll('.cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            const category = selectedCats.length > 0 ? selectedCats.join(',') : 'anime';
+            const folder = document.getElementById('an-folder').value.trim(); const title = document.getElementById('an-title').value;
+            const thumb = document.getElementById('an-thumb').value; const url = document.getElementById('an-url').value;
+            const url_hin = document.getElementById('an-url-hin').value; const url_eng = document.getElementById('an-url-eng').value;
+            const type = document.getElementById('an-type').value; const key = document.getElementById('an-key').value;
+            
+            if(!folder || !title || (!url && !url_hin && !url_eng)) return alert("Fill required fields!");
+
+            if (key) {
+                db.ref('anime/' + key).update({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type });
+                cancelEdit('anime'); setTimeout(() => alert("Anime Updated Successfully!"), 10);
+            } else {
+                db.ref('anime').push({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type, timestamp: Date.now(), uploadedBy: currentAdminEmail });
+                clearInputs(['an-title', 'an-url', 'an-url-hin', 'an-url-eng']); setTimeout(() => alert("Anime Uploaded!"), 10);
+            }
+        }
+
+        function editAnime(key, folder, title, thumb, url, type, url_hin, url_eng, categoryStr) {
+            document.getElementById('an-key').value = key; 
+            const catArray = (categoryStr || 'anime').split(','); document.querySelectorAll('.cat-chk').forEach(cb => { cb.checked = catArray.includes(cb.value); });
+            document.getElementById('an-folder').value = folder; document.getElementById('an-title').value = title; 
+            document.getElementById('an-thumb').value = thumb; document.getElementById('an-url').value = url; 
+            document.getElementById('an-url-hin').value = url_hin || ""; document.getElementById('an-url-eng').value = url_eng || ""; 
+            document.getElementById('an-type').value = type;
+            const btn = document.getElementById('an-btn'); btn.innerText = "UPDATE CHANGES"; btn.classList.add('updating');
+            document.getElementById('an-head').innerText = "EDITING MODE"; document.getElementById('an-cancel').style.display = 'block'; 
+        }
+
+        function uploadMovie() {
+            let selectedCats = []; document.querySelectorAll('.mv-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            const category = selectedCats.length > 0 ? selectedCats.join(',') : 'movie';
+            const title = document.getElementById('mv-title').value; const thumb = document.getElementById('mv-thumb').value;
+            const url = document.getElementById('mv-url').value; const key = document.getElementById('mv-key').value; const type = document.getElementById('mv-type').value;
+            if(!title || !url) return alert("Fill all fields!");
+            if(key) { db.ref('movies/' + key).update({ category, title, thumbnail: thumb, url, type }); cancelEdit('movies'); setTimeout(() => alert("Movie Updated!"), 10); } 
+            else { db.ref('movies').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: currentAdminEmail }); clearInputs(['mv-title', 'mv-thumb', 'mv-url']); setTimeout(() => alert("Movie Uploaded!"), 10); }
+        }
+
+        function editMovie(key, title, thumb, url, type, categoryStr) {
+            document.getElementById('mv-key').value = key; document.getElementById('mv-title').value = title;
+            document.getElementById('mv-thumb').value = thumb; document.getElementById('mv-url').value = url; document.getElementById('mv-type').value = type || 'free'; 
+            const catArray = (categoryStr || 'movie').split(','); document.querySelectorAll('.mv-cat-chk').forEach(cb => { cb.checked = catArray.includes(cb.value); });
+            const btn = document.getElementById('mv-btn'); btn.innerText = "UPDATE MOVIE"; btn.classList.add('updating');
+            document.getElementById('mv-head').innerText = "EDITING MOVIE"; document.getElementById('mv-cancel').style.display = 'block'; 
+        }
+
+        function uploadCartoon() {
+            let selectedCats = []; document.querySelectorAll('.ct-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
+            const category = selectedCats.length > 0 ? selectedCats.join(',') : 'cartoon';
+            const title = document.getElementById('ct-title').value; const thumb = document.getElementById('ct-thumb').value;
+            const url = document.getElementById('ct-url').value; const key = document.getElementById('ct-key').value; const type = document.getElementById('ct-type').value; 
+            if(!title || !url) return alert("Fill all fields!");
+            if(key) { db.ref('cartoons/' + key).update({ category, title, thumbnail: thumb, url, type }); cancelEdit('cartoons'); setTimeout(() => alert("Cartoon Updated!"), 10); } 
+            else { db.ref('cartoons').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: currentAdminEmail }); clearInputs(['ct-title', 'ct-thumb', 'ct-url']); setTimeout(() => alert("Cartoon Uploaded!"), 10); }
+        }
+
+        function editCartoon(key, title, thumb, url, type, categoryStr) {
+            document.getElementById('ct-key').value = key; document.getElementById('ct-title').value = title;
+            document.getElementById('ct-thumb').value = thumb; document.getElementById('ct-url').value = url; document.getElementById('ct-type').value = type || 'free'; 
+            const catArray = (categoryStr || 'cartoon').split(','); document.querySelectorAll('.ct-cat-chk').forEach(cb => { cb.checked = catArray.includes(cb.value); });
+            const btn = document.getElementById('ct-btn'); btn.innerText = "UPDATE CARTOON"; btn.classList.add('updating');
+            document.getElementById('ct-head').innerText = "EDITING CARTOON"; document.getElementById('ct-cancel').style.display = 'block';
+        }
+
+        function cancelEdit(type) {
+            if(type === 'anime') {
+                document.getElementById('an-key').value = ""; document.querySelectorAll('.cat-chk').forEach(cb => cb.checked = false); document.querySelector('.cat-chk[value="anime"]').checked = true;
+                clearInputs(['an-folder', 'an-title', 'an-thumb', 'an-url', 'an-url-hin', 'an-url-eng']);
+                const btn = document.getElementById('an-btn'); btn.innerText = "UPLOAD ANIME"; btn.classList.remove('updating');
+                document.getElementById('an-head').innerHTML = '<i class="fas fa-upload"></i> UPLOAD ANIME EPISODES'; document.getElementById('an-cancel').style.display = 'none';
+            } else if(type === 'movies') {
+                document.getElementById('mv-key').value = ""; document.querySelectorAll('.mv-cat-chk').forEach(cb => cb.checked = false); document.querySelector('.mv-cat-chk[value="movie"]').checked = true;
+                clearInputs(['mv-title', 'mv-thumb', 'mv-url']);
+                const btn = document.getElementById('mv-btn'); btn.innerText = "UPLOAD MOVIE"; btn.classList.remove('updating');
+                document.getElementById('mv-head').innerHTML = '<i class="fas fa-film"></i> UPLOAD MOVIE'; document.getElementById('mv-cancel').style.display = 'none';
+            } else if(type === 'cartoons') {
+                document.getElementById('ct-key').value = ""; document.querySelectorAll('.ct-cat-chk').forEach(cb => cb.checked = false); document.querySelector('.ct-cat-chk[value="cartoon"]').checked = true;
+                clearInputs(['ct-title', 'ct-thumb', 'ct-url']);
+                const btn = document.getElementById('ct-btn'); btn.innerText = "UPLOAD CARTOON"; btn.classList.remove('updating');
+                document.getElementById('ct-head').innerHTML = '<i class="fas fa-paw"></i> UPLOAD CARTOON'; document.getElementById('ct-cancel').style.display = 'none';
+            } else if (type === 'banners') {
+                document.getElementById('bn-key').value = ""; clearInputs(['bn-img', 'bn-folder']);
+                const btn = document.getElementById('bn-btn'); btn.innerText = "ADD HOME BANNER"; btn.classList.remove('updating');
+                document.getElementById('bn-head').innerHTML = '<i class="fas fa-images"></i> HOME SLIDER BANNER'; document.getElementById('bn-cancel').style.display = 'none';
+            }
+        }
+
+        function uploadShort() { 
+            const url = document.getElementById('sh-url').value; if(!url) return; 
+            db.ref('shorts').push({ id: Date.now().toString(), url: url, uploadedBy: currentAdminEmail }); 
+            document.getElementById('sh-url').value = ""; setTimeout(() => alert("Short Video Added!"), 10); 
+        }
+        
+        function uploadBanner() {
+            const img = document.getElementById('bn-img').value; const folderName = document.getElementById('bn-folder').value.trim(); const key = document.getElementById('bn-key').value; 
+            if(!img) return alert("Image URL is required!");
+            if(key) { db.ref('banners/' + key).update({ image: img, folderName: folderName }); cancelEdit('banners'); setTimeout(() => alert("Banner Updated Successfully!"), 10); } 
+            else { db.ref('banners').push({ image: img, folderName: folderName, uploadedBy: currentAdminEmail }); document.getElementById('bn-img').value = ""; document.getElementById('bn-folder').value = ""; setTimeout(() => alert("Home Banner Added!"), 10); }
+        }
+        
+        function editBanner(key, img, folderName) { 
+            document.getElementById('bn-key').value = key; document.getElementById('bn-img').value = img; document.getElementById('bn-folder').value = folderName; 
+            const btn = document.getElementById('bn-btn'); btn.innerText = "UPDATE BANNER"; btn.classList.add('updating'); 
+            document.getElementById('bn-head').innerHTML = '<i class="fas fa-edit"></i> EDIT BANNER'; document.getElementById('bn-cancel').style.display = 'block'; 
+        }
+        
+        function uploadMovieBanner() { 
+            const img = document.getElementById('mv-bn-img').value; if(!img) return; 
+            db.ref('movie_banners').push({ image: img, uploadedBy: currentAdminEmail }); 
+            document.getElementById('mv-bn-img').value = ""; setTimeout(() => alert("Movie Banner Added!"), 10); 
+        }
+
+        function generateCode() {
+            const days = parseInt(document.getElementById('code-days').value) || 30; const qty = parseInt(document.getElementById('code-qty').value) || 1; let custom = document.getElementById('custom-code').value.trim();
+            if(custom) { 
+                custom = custom.replace(/[.#$\[\]\s]/g, '').toUpperCase(); 
+                db.ref('premium_codes/' + custom).set({ status: 'unused', days: days, created: Date.now() }).then(() => { alert("Generated Custom Code: " + custom); document.getElementById('custom-code').value = ""; }); 
+            } else {
+                const updates = {}; const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; 
+                for(let k=0; k<qty; k++) { 
+                    let r1 = ''; let r2 = ''; for(let i = 0; i < 4; i++) r1 += chars.charAt(Math.floor(Math.random() * chars.length)); for(let i = 0; i < 4; i++) r2 += chars.charAt(Math.floor(Math.random() * chars.length)); 
+                    const code = `VIP-${r1}-${r2}`; updates[code] = { status: 'unused', days: days, created: Date.now() + k }; 
+                }
+                db.ref('premium_codes').update(updates).then(() => { alert(`Generated ${qty} Codes Successfully!`); });
+            }
+        }
+        
+        function copyToClipboard(text) { 
+            if (navigator.clipboard) { navigator.clipboard.writeText(text).then(() => { alert("Code Copied: " + text); }); } 
+            else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); alert("Code Copied: " + text); } 
+        }
+        
+        function deleteItem(path, key) { 
+            if(!isMainAdmin && !subAdminCanDelete) return alert("❌ Permission Denied!"); 
+            if(confirm("Delete this item permanently?")) { db.ref(path + '/' + key).remove(); }
+        }
+        
+        function deleteCode(e, key) { 
+            e.stopPropagation(); if(!isMainAdmin) return alert("❌ Permission Denied!"); 
+            if(confirm("Delete this code permanently?")) { db.ref('premium_codes/' + key).remove(); } 
+        }
+        
+        function deleteUsedCodes() { 
+            if(!isMainAdmin) return alert("❌ Permission Denied!"); 
+            db.ref('premium_codes').once('value', s => { const updates = {}; s.forEach(c => { if(c.val().status === 'used') updates[c.key] = null; }); db.ref('premium_codes').update(updates); }); 
+        }
+
+        function clearInputs(ids) { ids.forEach(id => document.getElementById(id).value = ""); }
+
+        function loadAdminAllData() {
+            db.ref('anime').on('value', s => {
+                const c = document.getElementById('admin-anime-list'); c.innerHTML = ""; const folders = {}; 
+                s.forEach(d => { const v = d.val(); const fName = v.folder || 'Unknown Folders'; if(!folders[fName]) folders[fName] = []; folders[fName].unshift({k: d.key, v: v}); });
+                for(const f in folders) {
+                    const safeId = f.replace(/[^a-zA-Z0-9]/g, '_');
+                    let html = `<div class="folder-header" onclick="toggleAdminFolder('${safeId}')"><div class="folder-header-title"><i class="fas fa-folder-open" style="color:var(--gold); font-size:18px;"></i> <span>${f}</span></div><div class="folder-header-meta">${folders[f].length} EP <i id="admin-icon-${safeId}" class="fas fa-chevron-down" style="font-size:10px; margin-left:3px;"></i></div></div><div id="admin-folder-${safeId}" class="folder-content"><div class="data-list">`;
+                    folders[f].forEach(item => {
+                        const d = item.v; const safeFolder = (d.folder || "").replace(/'/g, "\\'"); const safeTitle = (d.title || "").replace(/'/g, "\\'"); const safeThumb = (d.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (d.url || "").replace(/'/g, "\\'"); const safeUrlHin = (d.url_hin || "").replace(/'/g, "\\'"); const safeUrlEng = (d.url_eng || "").replace(/'/g, "\\'"); const safeCat = (d.category || "anime").replace(/'/g, "\\'");
+                        const vipLabel = d.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = d.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${d.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                        html += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('anime', '${item.k}', '${safeCat}')"></i><img src="${d.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge">${(d.category || 'anime').toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title">${d.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editAnime('${item.k}', '${safeFolder}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${d.type || 'free'}', '${safeUrlHin}', '${safeUrlEng}', '${safeCat}')">EDIT</button><button class="del-btn" onclick="deleteItem('anime','${item.k}')">DEL</button></div></div></div>`;
+                    }); html += `</div></div>`; c.innerHTML += html;
+                }
+            });
+
+            db.ref('movies').on('value', s => {
+                const c = document.getElementById('admin-movie-list'); c.innerHTML = ""; 
+                s.forEach(d => { 
+                    const val = d.val(); const safeTitle = (val.title || "").replace(/'/g, "\\'"); const safeThumb = (val.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (val.url || "").replace(/'/g, "\\'"); const safeCat = (val.category || "movie").replace(/'/g, "\\'");
+                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                    c.innerHTML += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('movies', '${d.key}', '${safeCat}')"></i><img src="${val.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge">${safeCat.toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title">${val.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editMovie('${d.key}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${val.type || 'free'}', '${safeCat}')">EDIT</button><button class="del-btn" onclick="deleteItem('movies','${d.key}')">DEL</button></div></div></div>`;
+                });
+            });
+
+            db.ref('cartoons').on('value', s => {
+                const c = document.getElementById('admin-cartoon-list'); c.innerHTML = ""; 
+                s.forEach(d => { 
+                    const val = d.val(); const safeTitle = (val.title || "").replace(/'/g, "\\'"); const safeThumb = (val.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (val.url || "").replace(/'/g, "\\'"); const safeCat = (val.category || "cartoon").replace(/'/g, "\\'");
+                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                    c.innerHTML += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('cartoons', '${d.key}', '${safeCat}')"></i><img src="${val.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge" style="color:var(--cyan);">${safeCat.toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title" style="color:var(--cyan)">${val.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editCartoon('${d.key}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${val.type || 'free'}', '${safeCat}')" style="border-color:var(--cyan); color:var(--cyan)">EDIT</button><button class="del-btn" onclick="deleteItem('cartoons','${d.key}')">DEL</button></div></div></div>`;
+                });
+            });
+
+            db.ref('shorts').on('value', s => { 
+                const c = document.getElementById('admin-shorts-list'); c.innerHTML=""; 
+                s.forEach(d => { const val = d.val(); const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><div class="data-info"><div class="data-title">Short Video</div>${uploaderTag}<button class="del-btn" style="margin-top:5px; width:100%;" onclick="deleteItem('shorts','${d.key}')">DELETE</button></div></div>`; }); 
+            });
+            
+            db.ref('banners').on('value', s => { 
+                const c = document.getElementById('admin-banner-list'); c.innerHTML=""; 
+                s.forEach(d => { const val = d.val(); const safeImg = (val.image || "").replace(/'/g, "\\'"); const safeFolder = (val.folderName || "").replace(/'/g, "\\'"); const linkedFolder = val.folderName ? `<span style="color:var(--gold)">Link: ${val.folderName}</span>` : `<span style="color:#666">No Link</span>`; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title">Home Banner<br>${linkedFolder}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editBanner('${d.key}', '${safeImg}', '${safeFolder}')">EDIT</button><button class="del-btn" onclick="deleteItem('banners','${d.key}')">DEL</button></div></div></div>`; }); 
+            });
+            
+            db.ref('movie_banners').on('value', s => { 
+                const c = document.getElementById('admin-movie-banner-list'); c.innerHTML=""; 
+                s.forEach(d => { const val = d.val(); const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title" style="color:#ff3b3b">Movie Banner</div>${uploaderTag}<button class="del-btn" style="margin-top:5px; width:100%;" onclick="deleteItem('movie_banners','${d.key}')">DELETE</button></div></div>`; }); 
+            });
+            
+            db.ref('premium_codes').limitToLast(50).on('value', s => { 
+                const list = document.getElementById('admin-code-list'); list.innerHTML = ""; const codes = []; 
+                s.forEach(c => codes.unshift({ key: c.key, val: c.val() })); 
+                codes.forEach(c => { 
+                    const data = c.val || {}; const isUnused = data.status === 'unused'; const statusClass = isUnused ? 'unused' : 'used'; const statusText = isUnused ? 'ACTIVE' : 'USED'; const badgeClass = isUnused ? 'st-active' : 'st-used'; const icon = isUnused ? 'fa-check-circle' : 'fa-times-circle'; const usedBy = data.usedBy ? `<div style="font-size:10px; color:#ff3b3b;">User: ${data.usedBy}</div>` : ''; 
+                    list.innerHTML += `<div class="code-card ${statusClass}" onclick="copyToClipboard('${c.key}')" title="Click to Copy"><div><div class="code-status ${badgeClass}">${statusText}</div><div class="code-text"><i class="fas ${icon}"></i> ${c.key}</div><div class="code-days">${data.days || 0} Days Validity</div>${usedBy}</div><div style="text-align:right;"><button class="del-btn" style="padding: 5px 15px;" onclick="deleteCode(event, '${c.key}')">DELETE</button></div></div>`; 
+                }); 
+            });
         }
     </script>
 </body>
