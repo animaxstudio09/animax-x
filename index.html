@@ -3211,7 +3211,6 @@
 
         // 🌟 FEATURE 9: Advanced Voice Commands (100 Crore+ Combos Handled via Regex) 🌟
         function processLocalVoiceCommand(text) {
-            // ব্রাউজারের দেওয়া দাড়ি, কমা বা যতিচিহ্ন মুছে ফেলা হলো, যাতে কমান্ড ১০০% কাজ করে
             let t = text.toLowerCase().replace(/[.,!?।]/g, '').trim();
             let reply = "";
             let action = null;
@@ -3226,11 +3225,11 @@
                 reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification.";
                 action = () => initiateMasterModeAuth();
             }
-            // 0. Basic Greetings (হাই / হ্যালো)
+            // 0. Basic Greetings
             else if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
                 reply = isLang('bn') ? "হ্যালো! আমি আনি, বলুন আপনার জন্য কী করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Hello! I am Ani. What do you want to watch?";
             }
-            // 1. Video Controls (প্লে / পজ)
+            // 1. Video Controls
             else if (t.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो)/)) {
                 let v = document.getElementById('main-video');
                 if(v && !v.paused) { v.pause(); reply = isLang('bn') ? "ভিডিও থামালাম।" : isLang('hi') ? "वीडियो रोक दिया गया।" : "Video paused."; }
@@ -3270,7 +3269,7 @@
                 action = () => closePlayer();
             }
 
-            // 2. Navigation (পেজ পরিবর্তন)
+            // 2. Navigation
             else if (t.match(/(home|main menu|হোম|মেইন মেনু|होम पेज)/)) {
                 reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : "Going to home page.";
                 action = () => switchTab('home');
@@ -3300,7 +3299,7 @@
                 action = () => { filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home'); };
             }
 
-            // 3. AI Chit-chat (আড্ডা ও বিনোদন)
+            // 3. AI Chit-chat
             else if (t.match(/(who are you|your name|তুমি কে|তোমার নাম কি|তোর নাম কি|तुम कौन हो|तुम्हारा नाम क्या है)/)) {
                 reply = isLang('bn') ? "আমি আনি! অ্যানিম্যাক্স টিভির এআই অ্যাসিস্ট্যান্ট।" : "I am Ani, your personal AI assistant for Animax TV.";
             }
@@ -3324,7 +3323,7 @@
                 reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : "You're welcome! I'm always here to help you.";
             }
 
-            // 4. Play and Search Actions (ডাইনামিক মুভি প্লে এবং সার্চ)
+            // 4. Play and Search Actions
             else if (playMatch) {
                 let query = playMatch[1].trim();
                 reply = isLang('bn') ? `${query} চালু করছি।` : `Playing ${query}`;
@@ -3339,7 +3338,7 @@
                 };
             }
             
-            // 5. Fallback (যদি কোনো কিছুই না মিলে)
+            // 5. Fallback
             else {
                 let d = langDict[currentAppLang] || langDict['en'];
                 reply = d.aiError || "Sorry, I didn't understand.";
@@ -3373,8 +3372,6 @@
 
         function handleCatBotClick(e) {
             if(catMoved) return; 
-            
-            // এআই ট্রায়াল চেক করা হচ্ছে (লগইন করা না থাকলে কাজ করবে না)
             if(!checkAITrial()) return;
 
             const tooltip = document.getElementById('ai-action-tooltip');
@@ -3418,17 +3415,26 @@
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
 
         // ==========================================
-        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
+        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM (UPDATED)
         // ==========================================
         let currentPin = "";
-        const ADMIN_PIN = localStorage.getItem('animax_admin_pin') || "7860"; // Default PIN is 7860
+        let ADMIN_PIN = "7860"; 
+        
+        // Firebase থেকে অ্যাডমিন প্যানেলের সেট করা পিন নিয়ে আসা
+        db.ref('admin_settings/master_pin').on('value', snap => {
+            if(snap.exists()) { ADMIN_PIN = snap.val(); }
+        });
+
         let faceModelsLoaded = false;
         let videoStream = null;
 
-        // Load Face API Models from reliable CDN
+        // Load Face API Models from a Faster & Reliable Server
         async function loadFaceModels() {
             if(faceModelsLoaded) return;
-            const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+            document.getElementById('face-auth-msg').innerText = "Downloading AI Models... Please wait.";
+            document.getElementById('face-auth-msg').style.color = "#ffb703";
+            
+            const MODEL_URL = 'https://vladmandic.github.io/face-api/model/';
             try {
                 await Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
@@ -3436,9 +3442,12 @@
                     faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
                 ]);
                 faceModelsLoaded = true;
+                document.getElementById('face-auth-msg').innerText = "Position your face in the circle...";
+                document.getElementById('face-auth-msg').style.color = "var(--text-muted)";
             } catch(e) {
                 console.error("Face API Load Error:", e);
-                document.getElementById('face-auth-msg').innerText = "Model loading failed. Check connection.";
+                document.getElementById('face-auth-msg').innerText = "Network Error! Could not load AI.";
+                document.getElementById('face-auth-msg').style.color = "#ff3b3b";
             }
         }
 
@@ -3484,7 +3493,10 @@
             document.getElementById('pin-step').style.display = 'none';
             document.getElementById('face-step').style.display = 'block';
             document.getElementById('face-step-container').style.display = 'block';
-            document.getElementById('face-auth-msg').innerText = "Position your face in the circle...";
+
+            if(!faceModelsLoaded) {
+                document.getElementById('face-auth-msg').innerText = "Loading AI... Please keep looking at camera.";
+            }
 
             const video = document.getElementById('auth-video');
             try {
@@ -3496,7 +3508,9 @@
             }
 
             video.addEventListener('play', async () => {
-                if(!faceModelsLoaded) await loadFaceModels();
+                // Wait for models to finish loading if they haven't already
+                while(!faceModelsLoaded) { await new Promise(r => setTimeout(r, 500)); }
+
                 const canvas = document.getElementById('auth-canvas');
                 const displaySize = { width: video.clientWidth, height: video.clientHeight };
                 faceapi.matchDimensions(canvas, displaySize);
@@ -3504,11 +3518,14 @@
                 let scanInterval = setInterval(async () => {
                     if(!videoStream) { clearInterval(scanInterval); return; }
                     
-                    const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                    document.getElementById('face-auth-msg').innerText = "Detecting Face Features...";
+                    
+                    // Optimized for mobile: Lower scoreThreshold catches face faster
+                    const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.3 });
+                    const detection = await faceapi.detectSingleFace(video, options).withFaceLandmarks().withFaceDescriptor();
                     
                     if (detection) {
-                        // Ensure it's a real live face by checking landmark confidence (anti-spoofing basic check)
-                        document.getElementById('face-auth-msg').innerText = "Scanning Biometrics...";
+                        document.getElementById('face-auth-msg').innerText = "Analyzing Biometrics...";
                         
                         let savedMasterDescriptor = localStorage.getItem('master_face_descriptor');
                         
@@ -3517,23 +3534,22 @@
                             let Float32ArrayDesc = new Float32Array(JSON.parse(savedMasterDescriptor));
                             const distance = faceapi.euclideanDistance(detection.descriptor, Float32ArrayDesc);
                             
-                            if(distance < 0.45) { // Strict threshold for high security
+                            if(distance < 0.5) { // Adjusted threshold slightly for mobile cameras
                                 clearInterval(scanInterval);
                                 grantMasterAccess();
                             } else {
-                                document.getElementById('face-auth-msg').innerText = "❌ Unrecognized Face. Access Denied.";
+                                document.getElementById('face-auth-msg').innerText = "❌ Unrecognized Face. Try again.";
                                 document.getElementById('face-auth-msg').style.color = "#ff3b3b";
-                                setTimeout(closeMasterAuth, 3000);
                             }
                         } else {
-                            // First time setup: If no face is registered, it saves the current face as Master Face.
+                            // First time setup
                             localStorage.setItem('master_face_descriptor', JSON.stringify(Array.from(detection.descriptor)));
                             clearInterval(scanInterval);
                             alert("✅ Master Face Registered Successfully! Access Granted.");
                             grantMasterAccess();
                         }
                     }
-                }, 1000);
+                }, 800); // Check every 800ms to reduce mobile freezing
             });
         }
 
@@ -3552,28 +3568,21 @@
             playSuccessSound();
             
             setTimeout(() => {
-                // 1. Unlock Secret Videos (CSS Class)
                 document.body.classList.add('show-secret-videos');
-                
-                // 2. Open Secret Vault Tab Automatically
                 filterHomeCategory('vault', document.getElementById('tab-vault')); 
                 switchTab('home');
-
-                // 3. Redirect to Admin Panel
-                let d = langDict[currentAppLang] || langDict['en'];
                 
-                // এআই দ্বারা সাকসেস মেসেজ বলা
-                speakWithOriginalTTS(currentAppLang === 'bn' ? "স্বাগতম মাস্টার। সিস্টেম আনলক করা হয়েছে।" : "Welcome Master. System unlocked.", ttsLangMap[currentAppLang] || 'en-US');
+                if(currentAppLang === 'bn') {
+                    speakWithOriginalTTS("স্বাগতম মাস্টার। সিস্টেম আনলক করা হয়েছে।", "bn-IN");
+                } else {
+                    speakWithOriginalTTS("Welcome Master. System unlocked.", "en-US");
+                }
                 
                 closeMasterAuth();
                 
-                // Admin Panel Redirect (আপনি চাইলে নিচের লাইনটি চালু করতে পারেন)
-                // window.location.href = 'admin.html'; 
-                
+                // window.location.href = 'admin.html'; // Uncomment to redirect
             }, 1500);
         }
-        // ==========================================
-
     </script>
 </body>
 </html>
