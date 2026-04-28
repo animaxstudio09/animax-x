@@ -1193,7 +1193,7 @@
             <!-- 🌟 MASTER PIN CHANGER 🌟 -->
             <div style="display:flex; align-items:center; gap:10px; border-left: 1px solid #333; padding-left: 15px;">
                 <div style="font-size: 11px; color: #ff007f; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-lock"></i> MASTER PIN:</div>
-                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="4-Digit">
+                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="6-Digit">
                 <button onclick="updateMasterPin()" style="background: #ff007f; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; transition: 0.2s;">SAVE</button>
             </div>
         </div>
@@ -2641,7 +2641,7 @@
                 s.forEach(b => { 
                     let data = b.val(); 
                     let title = (data.folderName || "").trim(); 
-                    c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="aiPlayBanner('${title.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; 
+                    c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="playBannerAnime('${title.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; 
                 });
                 initSlider();
             });
@@ -2689,10 +2689,23 @@
 
         function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
 
+        // 🌟 FEATURE: VIP FOLDER BLOCK SYSTEM 🌟
         function openFolder(n) { 
+            const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
+            const firstEp = episodes[0]; 
+            
+            // 🛑 AI VIP BLOCK ANNOUNCEMENT
+            if(firstEp.type === 'premium' && !isPremium && !isTrialActive) {
+                setCatEmote('talking');
+                let isBn = (currentAppLang === 'bn');
+                let msg = isBn ? "এই পুরো সিজনটি শুধুমাত্র ভিআইপি মেম্বারদের জন্য। দয়া করে ভিআইপি কিনুন।" : "This entire season is locked for VIP members only. Please upgrade.";
+                speakLocalized(msg, currentAppLang);
+                alert("👑 VIP EXCLUSIVE SEASON!\n\nThis entire season is for premium VIP members only.\nPlease purchase VIP to watch these episodes.");
+                return; // Access Blocked
+            }
+
             if(!isPremium && !isTrialActive) triggerTargetedAd();
-            currentFolder = n; const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
-            const firstEp = episodes[0], epId = firstEp.id?firstEp.id:firstEp.title; 
+            currentFolder = n; const epId = firstEp.id?firstEp.id:firstEp.title; 
             let folderElement = document.getElementById('season-select');
             if(folderElement) { folderElement.innerHTML = `<option value="${n}">${n}</option>`; }
             
@@ -2747,7 +2760,16 @@
                 localStorage.setItem('guest_watch_count', guestCount + 1);
             }
 
-            if(ip && !isPremium) { alert("PREMIUM REQUIRED!"); switchTab('profile'); return; }
+            // 🛑 Individual Video VIP Block protection (Just in case)
+            if(ip && !isPremium && !isTrialActive) { 
+                setCatEmote('talking');
+                let isBn = (currentAppLang === 'bn');
+                speakLocalized(isBn ? "এটি একটি ভিআইপি এপিসোড।" : "This is a VIP episode.", currentAppLang);
+                alert("👑 PREMIUM REQUIRED!\n\nPlease upgrade to VIP to watch this content."); 
+                switchTab('profile'); 
+                return; 
+            }
+
             if(!isPremium && !isTrialActive && idx !== -1) triggerTargetedAd();
             if(currentLikesCountRef) currentLikesCountRef.off(); if(currentUserLikeRef) currentUserLikeRef.off(); if(currentViewsRef) currentViewsRef.off(); if(currentCommentsRef) currentCommentsRef.off();
             
@@ -3664,14 +3686,14 @@
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
 
         // ==========================================
-        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM (FACE SCAN REMOVED)
+        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
         // ==========================================
         let currentPin = "";
-        let ADMIN_PIN = "7860"; 
+        let ADMIN_PIN = "123456"; // Default 6 Digit PIN
         
         // Firebase থেকে অ্যাডমিন প্যানেলের সেট করা পিন নিয়ে আসা
         db.ref('admin_settings/master_pin').on('value', snap => {
-            if(snap.exists()) { ADMIN_PIN = snap.val(); }
+            if(snap.exists()) { ADMIN_PIN = snap.val().toString(); }
         });
 
         // Layer 1 Triggered
@@ -3695,15 +3717,15 @@
             switchTab('home');
         }
 
-        // Layer 2: PIN Verification (Face Scan Completely Bypassed)
+        // Layer 2: PIN Verification 
         function enterPin(num) {
-            if(currentPin.length < 4) currentPin += num;
+            if(currentPin.length < 6) currentPin += num;
             updatePinDisplay();
-            if(currentPin.length === 4) {
+            if(currentPin.length === 6) {
                 setTimeout(() => {
                     if(currentPin === ADMIN_PIN) {
                         playSuccessSound();
-                        grantMasterAccess(); // Directly grant access without face scan!
+                        grantMasterAccess(); 
                     } else {
                         alert("❌ INVALID PIN");
                         currentPin = "";
@@ -3759,7 +3781,7 @@
         function updateMasterPin() {
             if(!isMainAdmin) return alert("Only Main Admin can change the PIN!");
             const newPin = document.getElementById('master-pin-input').value;
-            if(newPin.length < 4) return alert("PIN must be at least 4 digits!");
+            if(newPin.length < 6) return alert("PIN must be at least 6 digits!");
             db.ref('admin_settings').update({ master_pin: newPin }).then(() => {
                 alert("✅ Master PIN Updated Successfully!");
             });
@@ -3772,7 +3794,7 @@
                 const subAdminCanCreateCode = data.subAdminCanCreateCode || false;
                 
                 if (data.master_pin) { document.getElementById('master-pin-input').value = data.master_pin; } 
-                else { document.getElementById('master-pin-input').value = "7860"; }
+                else { document.getElementById('master-pin-input').value = "123456"; }
                 
                 if(isMainAdmin) {
                     document.getElementById('delete-toggle-checkbox').checked = subAdminCanDelete;
@@ -3798,6 +3820,25 @@
             let cats = currentCat.split(',').map(c => c.trim());
             if(cats.includes('trending')) { cats = cats.filter(c => c !== 'trending'); } else { cats.push('trending'); }
             let newCat = cats.join(','); db.ref(`${path}/${key}`).update({ category: newCat });
+        }
+
+        // 🌟 FEATURE: VIP FOLDER TOGGLE 🌟
+        function toggleFolderVIP(folderName, makeVIP) {
+            if(!isMainAdmin && !subAdminCanDelete) return alert("❌ Permission Denied!");
+            if(confirm(`Are you sure you want to make all episodes of "${folderName}" ${makeVIP ? 'VIP/PREMIUM' : 'FREE'}?`)) {
+                db.ref('anime').orderByChild('folder').equalTo(folderName).once('value', s => {
+                    if(s.exists()) {
+                        let updates = {};
+                        let newType = makeVIP ? 'premium' : 'free';
+                        s.forEach(child => {
+                            updates[child.key + '/type'] = newType;
+                        });
+                        db.ref('anime').update(updates).then(() => {
+                            alert(`✅ "${folderName}" is now ${makeVIP ? 'VIP' : 'FREE'}!`);
+                        });
+                    }
+                });
+            }
         }
 
         // --- UPLOAD & EDIT FUNCTIONS (Embedded) ---
@@ -3958,7 +3999,10 @@
                 s.forEach(d => { const v = d.val(); const fName = v.folder || 'Unknown Folders'; if(!folders[fName]) folders[fName] = []; folders[fName].unshift({k: d.key, v: v}); });
                 for(const f in folders) {
                     const safeId = f.replace(/[^a-zA-Z0-9]/g, '_');
-                    let html = `<div class="folder-header" onclick="toggleAdminFolder('${safeId}')"><div class="folder-header-title"><i class="fas fa-folder-open" style="color:var(--gold); font-size:18px;"></i> <span>${f}</span></div><div class="folder-header-meta">${folders[f].length} EP <i id="admin-icon-${safeId}" class="fas fa-chevron-down" style="font-size:10px; margin-left:3px;"></i></div></div><div id="admin-folder-${safeId}" class="folder-content"><div class="data-list">`;
+                    const isFolderVIP = (folders[f][0].v.type === 'premium'); 
+                    const vipBtn = isFolderVIP ? `<button style="background:var(--cyan); color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/'/g, "\\'")}', false)">SET FREE</button>` : `<button style="background:#ffb703; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/'/g, "\\'")}', true)">SET VIP</button>`;
+                    
+                    let html = `<div class="folder-header" onclick="toggleAdminFolder('${safeId}')"><div class="folder-header-title"><i class="fas fa-folder-open" style="color:var(--gold); font-size:18px;"></i> <span>${f}</span></div><div class="folder-header-meta">${vipBtn} ${folders[f].length} EP <i id="admin-icon-${safeId}" class="fas fa-chevron-down" style="font-size:10px; margin-left:3px;"></i></div></div><div id="admin-folder-${safeId}" class="folder-content"><div class="data-list">`;
                     folders[f].forEach(item => {
                         const d = item.v; const safeFolder = (d.folder || "").replace(/'/g, "\\'"); const safeTitle = (d.title || "").replace(/'/g, "\\'"); const safeThumb = (d.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (d.url || "").replace(/'/g, "\\'"); const safeUrlHin = (d.url_hin || "").replace(/'/g, "\\'"); const safeUrlEng = (d.url_eng || "").replace(/'/g, "\\'"); const safeCat = (d.category || "anime").replace(/'/g, "\\'");
                         const vipLabel = d.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = d.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${d.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
