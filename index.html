@@ -42,7 +42,7 @@
            ========================================= */
         :root { 
             --primary-bg: #050508;
-            --accent-glow: #ffb703; /* Orange/Gold Glow */
+            --accent-glow: #ffb703; 
             --accent-gradient: linear-gradient(135deg, #ffb703, #fb8500);
             --glass-bg: rgba(25, 25, 35, 0.4);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -62,9 +62,9 @@
            🚀 VIP CYBER-ELITE THEME (FOR VIP/TRIAL USERS) 🚀
            ========================================= */
         body.vip-cyber-theme {
-            --primary-bg: #050408; /* Deep Cyber Dark */
-            --accent-glow: #b14bff; /* Neon Purple */
-            --accent-gradient: linear-gradient(135deg, #ff007f, #7000ff); /* Pink to Purple */
+            --primary-bg: #050408; 
+            --accent-glow: #b14bff; 
+            --accent-gradient: linear-gradient(135deg, #ff007f, #7000ff); 
             --glass-bg: rgba(15, 10, 25, 0.85);
             --glass-border: rgba(177, 75, 255, 0.2);
             background-image: 
@@ -108,6 +108,8 @@
             padding-bottom: 90px; 
             min-height: 100vh;
             transition: all 0.4s ease;
+            user-select: none; /* Security: Disable text selection */
+            -webkit-user-select: none;
         }
 
         /* 🌟 FLOATING HEADER */
@@ -127,27 +129,26 @@
         .search-glow { width: 100%; padding: 10px 15px; padding-right: 35px; background: transparent; border: none; color: transparent; font-size: 13px; font-family: 'Outfit'; cursor: pointer;}
         .search-icon-pos { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-main); pointer-events: none; font-size: 16px; transition: 0.3s;}
 
-        /* 🌟 CATEGORY TABS (PILL DESIGN) */
+        /* 🌟 CATEGORY TABS */
         .category-tabs { background: transparent; padding: 5px 15px; display: flex; align-items: center; gap: 10px; margin: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
         .category-tabs::-webkit-scrollbar { display: none; }
         .cat-tab { color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron'; letter-spacing: 1px; padding: 8px 16px; border-radius: 30px; border: 1px solid transparent; transition: 0.3s ease;}
         .cat-tab.active { color: #000; background: var(--accent-gradient); border-color: rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3); transform: translateY(-2px);}
         #tab-vault { display: none; }
 
-        /* 🌟 SUB TABS */
         .sub-tabs { display: flex; gap: 15px; margin: 0 15px 20px 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;}
         .sub-tab { font-size: 12px; color: var(--text-muted); font-weight: 700; cursor: pointer; font-family: 'Orbitron'; text-transform: uppercase; transition: 0.3s; position: relative;}
         .sub-tab::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 0%; height: 3px; background: var(--accent-gradient); transition: 0.3s; border-radius: 3px 3px 0 0;}
         .sub-tab.active { color: var(--text-main); }
         .sub-tab.active::after { width: 100%; }
 
-        /* 🌟 GRID & CARDS (PREMIUM CURVES) */
+        /* 🌟 GRID & CARDS */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px 25px 15px; }
         .folder-card { background: transparent; cursor: pointer; display: flex; flex-direction: column; position: relative; transition: transform 0.3s ease; }
         .folder-card:active { transform: scale(0.95); }
         .img-wrapper { position: relative; width: 100%; aspect-ratio: 2/3; border-radius: 14px; overflow: hidden; background: #111; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid var(--glass-border);}
         .img-wrapper::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%); pointer-events: none;}
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; pointer-events: none; }
         .folder-card:hover .img-wrapper img { transform: scale(1.08); }
         
         .card-vip-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); color: var(--accent-glow); font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 20px; border: 1px solid var(--glass-border); z-index: 2;}
@@ -158,11 +159,9 @@
         .sec-title-text { font-size: 16px; font-weight: 800; color: var(--text-main); font-family: 'Orbitron'; display: flex; align-items: center; gap: 8px;}
         .sec-title-text::before { content: ''; display: block; width: 4px; height: 16px; background: var(--accent-gradient); border-radius: 4px; }
 
-        /* CW PROGRESS BAR */
         .cw-progress-bg { position:absolute; bottom: 8px; left: 8px; right: 8px; height: 4px; background: rgba(255,255,255,0.2); z-index: 5; border-radius: 4px; overflow: hidden;}
         .cw-progress-fill { height:100%; background: var(--accent-gradient); box-shadow: 0 0 10px var(--accent-glow);}
 
-        /* 🌟 BANNER SLIDER */
         #banner-slider { width: calc(100% - 30px); height: 200px; margin: 5px auto 20px auto; position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 1px solid var(--glass-border);}
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.8s ease-in-out; background-size: cover; background-position: center; }
         .slide::before { content:''; position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
@@ -170,7 +169,6 @@
         .banner-watch-btn { position: absolute; bottom: 15px; left: 15px; background: var(--accent-gradient); color: #000; padding: 8px 20px; font-weight: 800; font-size: 13px; border-radius: 30px; font-family: 'Orbitron'; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s;}
         .banner-watch-btn:active { transform: scale(0.95); }
 
-        /* 🌟 FLOATING BOTTOM NAVIGATION */
         nav { 
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); 
             width: 95%; max-width: 450px; 
@@ -183,7 +181,6 @@
         nav i { font-size: 20px; color: var(--text-muted); padding: 10px 20px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px;}
         nav i.active { color: #000; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4); transform: translateY(-5px);}
 
-        /* APP VIEW */
         .app-view { display: none; animation: smoothFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes smoothFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
@@ -228,7 +225,6 @@
         .b-card-right { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 14px;}
         .b-badge { background: var(--accent-gradient); color: #000; padding: 4px 10px; border-radius: 20px; font-size: 11px; display: flex; align-items: center; gap: 4px; font-weight: 800;}
         
-        /* 🌟 FEATURE 1: UI Language Selector 🌟 */
         .lang-select-box { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 10px; outline: none; font-family: 'Outfit'; font-weight: 600; font-size: 12px;}
         .lang-select-box option { background: var(--primary-bg); color: #fff; }
 
@@ -250,7 +246,7 @@
         .b-history-type { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); color: var(--accent-glow); font-size: 9px; padding: 3px 6px; border-radius: 6px; font-weight: 800; border: 1px solid rgba(255,255,255,0.1);}
         .b-history-title { font-size: 13px; font-weight: 600; color: var(--text-main); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* 🌟 LEADERBOARD & PREMIUM HUB (MODALS) */
+        /* 🌟 LEADERBOARD & PREMIUM HUB */
         #leaderboard-view, #premium-hub-view, #history-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at top, rgba(255,183,3,0.05), transparent 50%); z-index: 7000; overflow-y: auto; padding-bottom: 30px; font-family: 'Outfit', sans-serif;}
         .lb-header, .task-header, .so-header { display: flex; align-items: center; padding: 20px; background: rgba(5,5,8,0.8); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--glass-border);}
         .lb-back, .task-back, .so-back { font-size: 20px; color: var(--text-main); margin-right: 15px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; transition: 0.3s;}
@@ -269,7 +265,6 @@
         .lb-info { flex: 1; font-weight: 700; color: var(--text-main); font-size: 15px;}
         .lb-points { font-weight: 800; color: var(--accent-glow); font-size: 15px; font-family: 'Orbitron'; background: rgba(255,183,3,0.1); padding: 5px 10px; border-radius: 10px;}
 
-        /* PREMIUM HUB SPECIFICS */
         .task-user-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 15px; }
         .task-u-left { display: flex; align-items: center; gap: 12px;}
         .task-u-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-glow);}
@@ -280,7 +275,7 @@
         .task-section-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background: var(--accent-gradient); }
         .task-sec-title { text-align: center; color: var(--text-main); font-size: 18px; font-weight: 800; margin-bottom: 20px; font-family: 'Orbitron';}
         
-        .prem-inp-hub { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 16px; color: #fff; outline:none; border-radius: 14px; text-align: center; letter-spacing: 2px; font-family: 'Orbitron'; margin-bottom: 15px; font-size: 14px; transition: 0.3s;}
+        .prem-inp-hub { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 16px; color: #fff; outline:none; border-radius: 14px; text-align: center; letter-spacing: 2px; font-family: 'Orbitron'; margin-bottom: 15px; font-size: 14px; transition: 0.3s; user-select: text; -webkit-user-select: text;}
         .prem-inp-hub:focus { border-color: var(--accent-glow); box-shadow: 0 0 15px rgba(255,183,3,0.2);}
         .b-btn-primary { width: 100%; background: var(--accent-gradient); color: #000; padding: 16px; border-radius: 14px; font-weight: 800; border: none; cursor: pointer; font-size: 15px; font-family: 'Orbitron'; transition:0.3s; box-shadow: 0 5px 20px rgba(255,183,3,0.3); text-transform: uppercase;}
         .b-btn-primary:active { transform: scale(0.96); }
@@ -313,7 +308,7 @@
         .ti-btn { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--glass-border); padding: 10px 15px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; min-width: 90px; text-align: center; transition: 0.3s; text-transform: uppercase;}
         .ti-btn.running { background: var(--accent-gradient); color: #000; border: none; animation: pulse 1.5s infinite; box-shadow: 0 0 15px rgba(255,183,3,0.4);}
 
-        /* 🌟 PLAYER VIEW (CINEMATIC) */
+        /* 🌟 PLAYER VIEW */
         #player-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
         video { width: 100%; height: 100%; object-fit: contain; }
@@ -339,15 +334,15 @@
         .ep-pill.active { background: var(--accent-gradient); border: none; color: #000; box-shadow: 0 5px 15px rgba(255,183,3,0.4); }
         .ep-vip-badge-small { position: absolute; top: -5px; right: -5px; background: #e63946; color: #fff; font-size: 8px; padding: 3px 6px; border-radius: 10px; font-family: 'Outfit'; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
         
-        /* 🌟 SEARCH OVERLAY (FIXED POSITION) 🌟 */
+        /* 🌟 SEARCH OVERLAY */
         #search-overlay-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at top right, rgba(255, 183, 3, 0.05), transparent 40%); z-index: 99999; overflow-y: auto; font-family: 'Outfit', sans-serif;}
         .so-input-box { flex: 1; background: rgba(0,0,0,0.4); border-radius: 30px; display: flex; align-items: center; padding: 5px 15px; border: 1px solid var(--glass-border);}
-        .so-input-box input { width: 100%; background: transparent; border: none; color: #fff; padding: 10px; font-size: 15px; outline: none; font-family: 'Outfit';}
+        .so-input-box input { width: 100%; background: transparent; border: none; color: #fff; padding: 10px; font-size: 15px; outline: none; font-family: 'Outfit'; user-select: text; -webkit-user-select: text;}
         .so-search-btn { color: var(--accent-glow); font-weight: 800; font-size: 14px; cursor: pointer; background: rgba(255,183,3,0.1); padding: 8px 15px; border-radius: 20px;}
         .so-tag { background: rgba(255,255,255,0.05); color: var(--text-main); padding: 10px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s;}
         .so-tag:active { background: rgba(255,255,255,0.1); transform: scale(0.95);}
 
-        /* 🌟 SPIN WHEEL (GLOWING) */
+        /* 🌟 SPIN WHEEL */
         .wheel-container { position:relative; width:300px; height:300px; margin-bottom:40px; filter: drop-shadow(0 0 30px rgba(255,183,3,0.3));}
         .wheel { width:100%; height:100%; border-radius:50%; border:8px solid var(--accent-glow); transition:transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); background: conic-gradient(#ffb703 0 45deg, #fb8500 45deg 90deg, #e63946 90deg 135deg, #9c6644 135deg 180deg, #7f4f24 180deg 225deg, #582f0e 225deg 270deg, #333d29 270deg 315deg, #414833 315deg 360deg); position:relative; overflow:hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);}
         .wheel-slice { position: absolute; top: 50%; left: 50%; width: 50%; height: 30px; margin-top: -15px; transform-origin: 0 50%; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; font-weight: 900; color: #fff; font-size: 24px; font-family: 'Orbitron'; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); }
@@ -370,7 +365,7 @@
 
         #shorts-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; overflow-y: scroll; scroll-snap-type: y mandatory; }
         .short-item { width: 100vw; height: 100vh; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000;}
-        .short-item video { width: 100%; height: 100%; object-fit: contain; }
+        .short-item video { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .short-overlay { position: absolute; bottom: 100px; right: 20px; display: flex; flex-direction: column; gap: 25px; z-index: 10; }
         .short-btn { color: #fff; text-align: center; font-size: 30px; cursor: pointer; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8)); transition: 0.3s;}
         .short-btn:active { transform: scale(0.8); }
@@ -384,16 +379,12 @@
         .tab-item.active::after { width: 100%; }
 
         .comment-input-container { display: flex; gap: 12px; align-items: center; background: rgba(0,0,0,0.4); padding: 8px 12px; border: 1px solid var(--glass-border); margin-bottom: 25px; border-radius: 20px;}
-        .comment-input-container input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; font-size: 14px; outline:none; font-family: 'Outfit';}
+        .comment-input-container input { flex: 1; background: transparent; border: none; color: #fff; padding: 10px; font-size: 14px; outline:none; font-family: 'Outfit'; user-select: text; -webkit-user-select: text;}
         .comment-send-btn { background: var(--accent-gradient); border: none; width: 45px; height: 45px; color: #000; border-radius: 50%; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(255,183,3,0.3);}
         
-        /* 🌟 FEATURE 8: VIP GLOWING COMMENT BOX & RAINBOW TEXT 🌟 */
         .comment-box-unique { display: flex; gap: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); transition: 0.3s; }
         .comment-box-vip { border: 1px solid var(--accent-glow) !important; box-shadow: 0 0 15px rgba(255, 183, 3, 0.2); background: rgba(255, 183, 3, 0.05); }
-        .rainbow-text {
-            background: linear-gradient(to right, #ff3366, #ff9933, #ffff00, #33cc33, #3399ff, #cc33cc);
-            -webkit-background-clip: text; color: transparent; animation: rainbow-ani 4s linear infinite; background-size: 300%;
-        }
+        .rainbow-text { background: linear-gradient(to right, #ff3366, #ff9933, #ffff00, #33cc33, #3399ff, #cc33cc); -webkit-background-clip: text; color: transparent; animation: rainbow-ani 4s linear infinite; background-size: 300%; }
         @keyframes rainbow-ani { 0% {background-position: 0% 50%;} 100% {background-position: 100% 50%;} }
 
         #reward-waiting-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at center, rgba(0,255,0,0.05), transparent 60%); z-index: 100000; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 0; font-family: 'Outfit', sans-serif;}
@@ -404,7 +395,7 @@
         .reward-progress-box { width: 100%; height: 16px; background: rgba(0,0,0,0.5); border-radius: 20px; overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .reward-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00ff87, #60efff); box-shadow: 0 0 15px #00ff87; transition: width 1s linear; }
 
-        /* 🌟 NEW: DOWNLOADS VIEW STYLING 🌟 */
+        /* 🌟 DOWNLOADS VIEW 🌟 */
         #downloads-view { padding: 20px; }
         .dl-header { font-size: 24px; font-weight: 800; color: var(--text-main); font-family: 'Orbitron'; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px;}
         .dl-card { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 12px; position: relative;}
@@ -416,16 +407,13 @@
         .dl-del-btn { position: absolute; top: -5px; right: -5px; background: #e63946; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 10px; cursor: pointer; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
         .empty-dl { text-align: center; color: var(--text-muted); font-size: 14px; padding: 50px 20px; font-weight: 600;}
         
-        /* Toast Notification */
         #dl-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--accent-glow); padding: 12px 20px; border-radius: 30px; color: #fff; font-size: 13px; font-weight: bold; z-index: 99999; transition: 0.4s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;}
         #dl-toast.show { transform: translateX(-50%) translateY(0); }
         .dl-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 5px; overflow: hidden; display: none; }
         .dl-progress-fill { height: 100%; background: var(--accent-gradient); width: 0%; transition: width 0.2s;}
 
-        /* AI MODERN STYLES - CHAT BOX COMPLETELY HIDDEN AND DISABLED */
         #ai-chat-modern { display: none !important; }
 
-        /* 🌟 NEW AI TOP NOTIFICATION BAR 🌟 */
         #ai-top-notif {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95);
@@ -446,130 +434,40 @@
             filter: drop-shadow(0 10px 15px rgba(0, 210, 255, 0.3)); 
             animation: floatMea 3s ease-in-out infinite; 
         }
-
-        /* Head */
-        .mea-head { 
-            position: absolute; top: 12px; left: 0; width: 70px; height: 50px; 
-            background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); 
-            border-radius: 30px 30px 22px 22px; z-index: 10; 
-            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2); 
-        }
-
-        /* Ears */
-        .mea-ear { 
-            position: absolute; top: -14px; width: 0; height: 0; 
-            border-left: 14px solid transparent; border-right: 14px solid transparent; 
-            border-bottom: 22px solid #fff; z-index: 9; 
-        }
-        .mea-ear::after { 
-            content: ''; position: absolute; top: 6px; left: -6px; width: 0; height: 0; 
-            border-left: 6px solid transparent; border-right: 6px solid transparent; 
-            border-bottom: 10px solid #00d2ff; 
-        }
+        .mea-head { position: absolute; top: 12px; left: 0; width: 70px; height: 50px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 30px 30px 22px 22px; z-index: 10; box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.2); }
+        .mea-ear { position: absolute; top: -14px; width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 22px solid #fff; z-index: 9; }
+        .mea-ear::after { content: ''; position: absolute; top: 6px; left: -6px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid #00d2ff; }
         .mea-ear.left { left: 4px; transform: rotate(-15deg); }
         .mea-ear.right { right: 4px; transform: rotate(15deg); }
-
-        /* Visor (Black Face Screen) */
-        .mea-visor { 
-            position: absolute; top: 7px; left: 4px; width: 62px; height: 36px; 
-            background: #111; border-radius: 14px 14px 18px 18px; 
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1); 
-            display: flex; justify-content: center; align-items: center; 
-        }
-        /* Cute Visor Reflection */
-        .mea-visor::after {
-            content: ''; position: absolute; top: 4px; left: 8px; width: 12px; height: 4px; 
-            background: rgba(255,255,255,0.3); border-radius: 4px; transform: rotate(-5deg);
-        }
-
-        /* Eyes & Mouth */
+        .mea-visor { position: absolute; top: 7px; left: 4px; width: 62px; height: 36px; background: #111; border-radius: 14px 14px 18px 18px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; }
+        .mea-visor::after { content: ''; position: absolute; top: 4px; left: 8px; width: 12px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 4px; transform: rotate(-5deg); }
         .mea-eyes-wrap { display: flex; gap: 8px; align-items: center; margin-top: 4px;}
-        .mea-eye { 
-            width: 8px; height: 8px; background: #00d2ff; border-radius: 50%; 
-            box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; transition: 0.3s; 
-        }
-        .mea-mouth {
-            width: 14px; height: 6px; border-bottom: 2px solid #00d2ff; 
-            border-radius: 0 0 10px 10px; position: relative; margin: 0 2px;
-            box-shadow: 0 2px 5px rgba(0,210,255,0.5);
-        }
-        .mea-mouth::before {
-            content: ''; position: absolute; top: -4px; left: 6px; width: 2px; height: 6px; background: #111;
-        }
-
-        /* Body */
-        .mea-body { 
-            position: absolute; top: 55px; left: 15px; width: 40px; height: 30px; 
-            background: linear-gradient(180deg, #f0f3f8 0%, #d9e2ec 100%); 
-            border-radius: 10px 10px 15px 15px; z-index: 5; 
-        }
-
-        /* Collar (Blue Triangle) */
-        .mea-collar { 
-            position: absolute; top: 0; left: 8px; width: 0; height: 0; 
-            border-left: 12px solid transparent; border-right: 12px solid transparent; 
-            border-top: 8px solid #00d2ff; z-index: 6; 
-        }
-
-        /* Arms (Namaste/Folded Pose) */
-        .mea-arm { 
-            position: absolute; top: 2px; width: 14px; height: 22px; 
-            background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%);
-            border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; 
-        }
+        .mea-eye { width: 8px; height: 8px; background: #00d2ff; border-radius: 50%; box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; transition: 0.3s; }
+        .mea-mouth { width: 14px; height: 6px; border-bottom: 2px solid #00d2ff; border-radius: 0 0 10px 10px; position: relative; margin: 0 2px; box-shadow: 0 2px 5px rgba(0,210,255,0.5); }
+        .mea-mouth::before { content: ''; position: absolute; top: -4px; left: 6px; width: 2px; height: 6px; background: #111; }
+        .mea-body { position: absolute; top: 55px; left: 15px; width: 40px; height: 30px; background: linear-gradient(180deg, #f0f3f8 0%, #d9e2ec 100%); border-radius: 10px 10px 15px 15px; z-index: 5; }
+        .mea-collar { position: absolute; top: 0; left: 8px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 8px solid #00d2ff; z-index: 6; }
+        .mea-arm { position: absolute; top: 2px; width: 14px; height: 22px; background: linear-gradient(180deg, #ffffff 0%, #e0e5ec 100%); border-radius: 10px; box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.2); z-index: 7; }
         .mea-arm.left { left: 8px; transform: rotate(35deg); }
         .mea-arm.right { right: 8px; transform: rotate(-35deg); }
-
-        /* Tail */
-        .mea-tail { 
-            position: absolute; bottom: 15px; right: -12px; width: 25px; height: 15px; 
-            border-bottom: 7px solid #fff; border-right: 7px solid #fff; 
-            border-radius: 0 0 15px 0; z-index: 4; 
-        }
-        .mea-tail::after { 
-            content: ''; position: absolute; top: -4px; right: -7px; width: 7px; height: 9px; 
-            background: #111; border-radius: 10px; 
-        }
-
-        /* Tooltip */
-        .ai-tooltip {
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-            background: #00d2ff; color: #000; padding: 4px 8px; border-radius: 8px; 
-            font-size: 10px; font-weight: 900; font-family: 'Orbitron'; white-space: nowrap; 
-            opacity: 0; pointer-events: none; animation: showTooltip 8s infinite; z-index: 20; 
-        }
-        .ai-tooltip::after {
-            content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); 
-            border-width: 4px 4px 0; border-style: solid; border-color: #00d2ff transparent transparent transparent;
-        }
-
-        /* Animations */
+        .mea-tail { position: absolute; bottom: 15px; right: -12px; width: 25px; height: 15px; border-bottom: 7px solid #fff; border-right: 7px solid #fff; border-radius: 0 0 15px 0; z-index: 4; }
+        .mea-tail::after { content: ''; position: absolute; top: -4px; right: -7px; width: 7px; height: 9px; background: #111; border-radius: 10px; }
+        .ai-tooltip { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #00d2ff; color: #000; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 900; font-family: 'Orbitron'; white-space: nowrap; opacity: 0; pointer-events: none; animation: showTooltip 8s infinite; z-index: 20; }
+        .ai-tooltip::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); border-width: 4px 4px 0; border-style: solid; border-color: #00d2ff transparent transparent transparent; }
         @keyframes floatMea { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes showTooltip { 0%, 80% { opacity: 0; transform: translateX(-50%) translateY(5px); } 85%, 95% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(-5px); } }
-
-        /* Talking Emote */
         .mea-container.talking .mea-mouth { animation: talkMouth 0.15s infinite alternate; }
         .mea-container.talking .mea-eye { animation: blink 2s infinite; }
         @keyframes talkMouth { 0% { border-bottom-width: 2px; } 100% { border-bottom-width: 5px; } }
         @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-
-        /* Dance Animation & Companion Bot */
-        @keyframes danceMove {
-            0% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(-15deg); }
-            50% { transform: translateY(0) rotate(0deg); }
-            75% { transform: translateY(-20px) rotate(15deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
+        @keyframes danceMove { 0% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-20px) rotate(-15deg); } 50% { transform: translateY(0) rotate(0deg); } 75% { transform: translateY(-20px) rotate(15deg); } 100% { transform: translateY(0) rotate(0deg); } }
         .mea-container.dancing { animation: danceMove 1s infinite !important; }
-        
         #ai-cat-bot-2 { display: none; left: 100px; filter: drop-shadow(0 10px 15px rgba(255, 0, 85, 0.3)); }
         #ai-cat-bot-2 .mea-eye { background: #ff0055; box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
         #ai-cat-bot-2 .mea-mouth { border-bottom-color: #ff0055; box-shadow: 0 2px 5px rgba(255,0,85,0.5); }
         #ai-cat-bot-2 .mea-collar { border-top-color: #ff0055; }
         #ai-cat-bot-2 .mea-ear::after { border-bottom-color: #ff0055; }
 
-        /* 🌟 AI GUIDE MODAL */
         #ai-guide-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); background-image: radial-gradient(circle at center, rgba(0, 210, 255, 0.05), transparent 60%); z-index: 8000; overflow-y: auto; padding-bottom: 30px; font-family: 'Outfit', sans-serif;}
         .guide-box { background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px; margin: 15px; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,210,255,0.05); }
         .guide-cmd { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -578,7 +476,6 @@
         .guide-cmd-text strong { color: var(--text-main); font-size: 15px; display: block; margin-bottom: 4px; font-family: 'Orbitron'; letter-spacing: 1px;}
         .guide-cmd-text span { color: var(--text-muted); font-size: 13px; }
         
-        /* 🌟 FEATURE 6: Anti-AdBlocker Guard 🌟 */
         #adblock-guard {
             display: none; position: fixed; inset: 0; background: rgba(5,5,8,0.98); backdrop-filter: blur(20px); z-index: 999999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; font-family: 'Outfit';
         }
@@ -608,15 +505,6 @@
             padding: 15px; font-size: 20px; border-radius: 10px; cursor: pointer; transition: 0.2s;
         }
         .pin-btn:active { background: var(--accent-gradient); color: #000; transform: scale(0.9); }
-        #face-step-container { display: none; position: relative; width: 100%; max-width: 300px; margin: 0 auto; }
-        #auth-video { width: 100%; border-radius: 50%; border: 3px solid var(--accent-glow); aspect-ratio: 1/1; object-fit: cover; transform: scaleX(-1); }
-        #auth-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; z-index: 10; transform: scaleX(-1); }
-        .scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent-glow);
-            box-shadow: 0 0 15px var(--accent-glow); animation: scanAnim 2s linear infinite; z-index: 11;
-        }
-        @keyframes scanAnim { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
-        .auth-msg { color: var(--text-muted); font-size: 13px; margin-top: 15px; font-family: 'Outfit'; }
 
         /* =========================================
            🛡️ MASTER ADMIN PANEL STYLES (SCOPED) 🛡️
@@ -640,9 +528,8 @@
         #master-admin-panel .section-view { display: none; padding: 20px; animation: fadeIn 0.3s; }
         #master-admin-panel .input-group { background: var(--panel); padding: 20px; border-radius: 10px; border: 1px solid #333; margin-bottom: 20px; }
         #master-admin-panel .input-group h3 { color: var(--gold); font-family: 'Orbitron'; margin-bottom: 15px; font-size: 16px; }
-        #master-admin-panel input[type="text"], #master-admin-panel input[type="email"], #master-admin-panel input[type="password"], #master-admin-panel input[type="number"], #master-admin-panel select { width: 100%; padding: 14px 12px; margin-bottom: 15px; background: #050505; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 14px; transition: 0.3s; }
+        #master-admin-panel input[type="text"], #master-admin-panel input[type="email"], #master-admin-panel input[type="password"], #master-admin-panel input[type="number"], #master-admin-panel select { width: 100%; padding: 14px 12px; margin-bottom: 15px; background: #050505; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 14px; transition: 0.3s; user-select: text; -webkit-user-select: text; }
         #master-admin-panel input:focus, #master-admin-panel select:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
-        #master-admin-panel input, #master-admin-panel select { user-select: text !important; -webkit-user-select: text !important; }
         #master-admin-panel .cat-checkboxes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #050505; padding: 15px; border: 1px solid #333; border-radius: 8px; margin-bottom: 15px; }
         #master-admin-panel .cat-checkboxes label { color: #ddd; font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: 'Orbitron'; font-weight: 500; }
         #master-admin-panel .cat-checkboxes input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--gold); cursor: pointer; }
@@ -651,9 +538,9 @@
         #master-admin-panel .btn-action.updating { background: linear-gradient(45deg, #0056b3, #007bff); color: #fff; }
         #master-admin-panel .data-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 15px; }
         #master-admin-panel .data-card { background: #111; border: 1px solid #333; border-radius: 8px; overflow: hidden; position: relative; }
-        #master-admin-panel .data-card img { width: 100%; height: 100px; object-fit: cover; }
+        #master-admin-panel .data-card img { width: 100%; height: 100px; object-fit: cover; pointer-events: none; }
         #master-admin-panel .data-info { padding: 10px; position: relative; }
-        #master-admin-panel .data-title { font-size: 11px; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; user-select: text !important;}
+        #master-admin-panel .data-title { font-size: 11px; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; user-select: text; -webkit-user-select: text;}
         #master-admin-panel .data-badge { font-size: 8px; font-weight: bold; padding: 3px 6px; background: #333; color: var(--gold); border-radius: 4px; margin-bottom: 5px; display: inline-block; font-family: 'Orbitron'; }
         #master-admin-panel .vip-badge-small { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.8); color: var(--gold); font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
         #master-admin-panel .star-btn { position: absolute; top: 8px; right: 10px; font-size: 16px; cursor: pointer; text-shadow: 0 0 5px rgba(0,0,0,0.8); transition: 0.3s; z-index: 10; }
@@ -664,7 +551,7 @@
         #master-admin-panel .code-card { background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #666; transition: 0.2s; }
         #master-admin-panel .code-card.unused { border-left-color: var(--green); background: rgba(0, 230, 118, 0.05); }
         #master-admin-panel .code-card.used { border-left-color: var(--red); background: rgba(255, 59, 59, 0.05); opacity: 0.7; }
-        #master-admin-panel .code-text { font-family: 'Courier New', monospace; font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 1px; user-select: text !important;}
+        #master-admin-panel .code-text { font-family: 'Courier New', monospace; font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 1px; user-select: text; -webkit-user-select: text;}
         #master-admin-panel .code-days { font-size: 11px; color: #888; margin-top: 4px; }
         #master-admin-panel .code-status { font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
         #master-admin-panel .st-active { background: rgba(0, 230, 118, 0.2); color: var(--green); }
@@ -678,7 +565,48 @@
 </head>
 <body class="vip-cyber-theme">
 
-    <!-- 🌟 FEATURE 6: ANTI-ADBLOCKER OVERLAY 🌟 -->
+    <!-- 🌟 SECURITY SCRIPT: ANTI-HACKER PROTECTION (1000%) 🌟 -->
+    <script>
+        // Disable Right-Click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable Keyboard Shortcuts for Inspect Element, View Source
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) { // F12
+                return false;
+            }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl+Shift+I
+                return false;
+            }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { // Ctrl+Shift+J
+                return false;
+            }
+            if(e.ctrlKey && e.keyCode == 85) { // Ctrl+U
+                return false;
+            }
+            if(e.ctrlKey && e.keyCode == 83) { // Ctrl+S
+                return false;
+            }
+        };
+
+        // Aggressive Anti-DevTools Trap
+        setInterval(function() {
+            let before = new Date().getTime();
+            debugger;
+            let after = new Date().getTime();
+            if (after - before > 100) {
+                document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh; background:#000; color:#ff3b3b; font-family:Orbitron; font-size:24px; text-align:center;'>SECURITY BREACH DETECTED<br>DEVTOOLS BLOCKED</div>";
+                window.location.reload();
+            }
+        }, 1000);
+
+        // Prevent Console Overriding
+        Object.freeze(console);
+    </script>
+
+    <!-- 🌟 ANTI-ADBLOCKER OVERLAY 🌟 -->
     <div id="adblock-guard">
         <i class="fas fa-shield-alt"></i>
         <h2 data-i18n="adblockTitle">AdBlock Detected!</h2>
@@ -686,7 +614,7 @@
         <button onclick="location.reload()" data-i18n="adblockBtn">I HAVE DISABLED IT</button>
     </div>
 
-    <!-- 🌟 NEW AI TOP NOTIFICATION BAR 🌟 -->
+    <!-- 🌟 AI TOP NOTIFICATION BAR 🌟 -->
     <div id="ai-top-notif">
         <div style="display:flex; align-items:center; gap:15px; flex:1;">
             <div style="width:40px; height:40px; background:var(--accent-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:20px; color:#000;">
@@ -703,7 +631,7 @@
         </div>
     </div>
 
-    <!-- 🌟 NEW: DOWNLOAD TOAST 🌟 -->
+    <!-- 🌟 DOWNLOAD TOAST 🌟 -->
     <div id="dl-toast">
         <div class="loading-spinner" id="dl-spinner" style="width:15px;height:15px;border:2px solid transparent;border-top-color:var(--accent-glow);border-radius:50%;animation:spin 1s linear infinite;"></div> 
         <div>
@@ -720,14 +648,11 @@
         </div>
     </header>
 
-    <!-- BANNER AD SECTION (HIDDEN FOR PREMIUM) -->
     <div id="global-banner-ad" style="text-align:center; padding:10px 0; background:transparent; margin-bottom: 10px;">
-        <!-- Container for dynamic injection -->
         <div id="ad-banner-container"></div>
     </div>
 
     <div id="main-app" class="app-view" style="display:block;">
-        
         <div id="continue-watching-section" style="display:none; margin-bottom:15px;">
             <div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);" data-i18n="cwTitle">CONTINUE WATCHING</div></div>
             <div class="b-history-scroll" id="cw-grid" style="padding:0 15px;"></div>
@@ -741,7 +666,6 @@
             <div class="cat-tab" onclick="filterHomeCategory('anime', this)">ANIME</div>
             <div class="cat-tab" onclick="filterHomeCategory('cartoon', this)">CARTOON</div>
             <div class="cat-tab" onclick="filterHomeCategory('movie', this)">MOVIE</div>
-            <!-- 🌟 FEATURE 3: THE SECRET VAULT 🌟 -->
             <div class="cat-tab" id="tab-vault" onclick="filterHomeCategory('vault', this)"><i class="fas fa-gem"></i> VAULT</div>
         </div>
         
@@ -788,7 +712,6 @@
                     <div id="auth-action-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; z-index:10; border: 1px solid var(--glass-border);">
                         <i id="auth-action-icon" class="fas fa-sign-out-alt" style="color:var(--text-main); font-size: 16px;"></i>
                     </div>
-                    <!-- 🌟 AVATAR UPLOAD CLICKABLE AREA 🌟 -->
                     <div class="prof-avatar-section">
                         <div class="avatar-circle-glow" onclick="document.getElementById('avatar-upload').click()" style="cursor:pointer;" title="Change Profile Picture">
                             <img src="https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png" id="profile-img" class="avatar-img-real">
@@ -805,7 +728,6 @@
                         <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+2 PTS)</span>
                     </div>
 
-                    <!-- 🌟 FEATURE 1: UI Language Selector 🌟 -->
                     <div class="b-card" style="padding: 15px 20px;">
                         <div class="b-card-left"><div class="b-card-icon" style="background:rgba(255,255,255,0.1); color:#fff;"><i class="fas fa-language"></i></div>
                         <div><div class="b-card-title" data-i18n="appLang">App Language</div><div class="b-card-sub" data-i18n="langDesc">Choose UI & AI Language</div></div></div>
@@ -864,7 +786,6 @@
     <!-- REWARD SYSTEM WAITING PAGE -->
     <div id="reward-waiting-view">
         <div id="reward-popunder-trap" onclick="triggerPopunderTrap()" style="position:absolute; inset:0; z-index:100001; cursor:pointer;"></div>
-
         <div id="reward-ad-top" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
 
         <div class="reward-main-content">
@@ -881,7 +802,7 @@
         <div id="reward-ad-bottom" class="ad-placement" style="width: 320px; height: 50px; z-index:100002; position:relative;"></div>
     </div>
 
-    <!-- 🤖 NEW "MEA" STYLE CSS CAT ROBOT -->
+    <!-- 🤖 "MEA" STYLE CUTE CAT ROBOT -->
     <div class="mea-container" id="ai-cat-bot" onclick="handleCatBotClick(event)">
         <div class="ai-tooltip" id="ai-action-tooltip" data-i18n="clickToTalk">Click to Talk! 🎤</div>
         <div class="mea-head">
@@ -916,10 +837,7 @@
         <div class="mea-tail"></div>
     </div>
 
-    <!-- Hidden element to prevent JS Crash from old logic -->
-    <div id="ai-chat-modern" style="display:none !important;">
-        <div id="ai-chat-list"></div>
-    </div>
+    <div id="ai-chat-modern" style="display:none !important;"></div>
 
     <!-- 🌟 AI GUIDE MODAL 🌟 -->
     <div id="ai-guide-modal">
@@ -1125,7 +1043,6 @@
         <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff007f;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
     </div>
 
-    <!-- 🌟 BOTTOM NAVIGATION 🌟 -->
     <nav id="main-nav">
         <i class="fas fa-home active" onclick="switchTab('home')"></i>
         <i class="fas fa-bolt" onclick="showShorts()"></i>
@@ -1155,17 +1072,6 @@
                 <button class="pin-btn" style="color:#00e676;" onclick="closeMasterAuth()"><i class="fas fa-power-off"></i></button>
             </div>
         </div>
-
-        <!-- Layer 3: Face Scan -->
-        <div id="face-step" class="auth-box" style="display:none; background:transparent; border:none; box-shadow:none;">
-            <div class="auth-title">BIOMETRIC SCAN</div>
-            <div id="face-step-container">
-                <video id="auth-video" autoplay muted playsinline></video>
-                <canvas id="auth-canvas"></canvas>
-                <div class="scan-line"></div>
-            </div>
-            <div id="face-auth-msg" class="auth-msg">Initializing Face API... Please wait.</div>
-        </div>
     </div>
 
     <!-- 🌟 MASTER ADMIN PANEL OVERLAY 🌟 -->
@@ -1193,7 +1099,7 @@
             <!-- 🌟 MASTER PIN CHANGER 🌟 -->
             <div style="display:flex; align-items:center; gap:10px; border-left: 1px solid #333; padding-left: 15px;">
                 <div style="font-size: 11px; color: #ff007f; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-lock"></i> MASTER PIN:</div>
-                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="6-Digit">
+                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="New PIN">
                 <button onclick="updateMasterPin()" style="background: #ff007f; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; transition: 0.2s;">SAVE</button>
             </div>
         </div>
@@ -1346,8 +1252,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const MAIN_ADMIN_EMAIL = "admin@animax.com";
-        const ALLOWED_SUB_ADMINS = [];
 
         let appStartupTime = Date.now(); 
         let originalTitle = "ANIMAX TV";
@@ -1370,12 +1274,10 @@
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
         let currentAppLang = localStorage.getItem('animax_ui_lang') || 'en';
 
-        // 🌟 UPDATE: Change App Language System (Now saves to User DB) 🌟
         function changeAppUI_Lang(lang, autoLoad = false) {
             currentAppLang = lang;
             localStorage.setItem('animax_ui_lang', lang);
             
-            // Save to Firebase database if user is logged in
             if(currentUser && !autoLoad) {
                 db.ref(`users/${currentUser.uid}`).update({ appLang: lang });
             }
@@ -1394,10 +1296,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             let s = document.getElementById('ui-lang-select');
             if(s) s.value = currentAppLang;
-            changeAppUI_Lang(currentAppLang, true); // Don't speak on initial DOM load
-            
-            // 🌟 FIX: Preload Face Models in Background silently to remove 1 min delay! 🌟
-            setTimeout(loadFaceModels, 2000); 
+            changeAppUI_Lang(currentAppLang, true); 
         });
 
         function startTabTimer(seconds) {
@@ -1410,9 +1309,8 @@
                     document.title = `⏳ ${timeLeft}s - Ad Running`;
                 } else {
                     clearInterval(tabTimerInterval);
-                    document.title = "✅ Reward Ready!";
-                    playSuccessSound();
-                    setTimeout(() => { document.title = originalTitle; }, 4000);
+                    document.title = "✅ Ready!";
+                    setTimeout(() => { document.title = originalTitle; }, 3000);
                 }
             }, 1000);
         }
@@ -1719,10 +1617,9 @@
         let allContentList = [];
         let isTrialActive = false;
 
-        // Admin Privileges specific variables
-        let isMainAdmin = false;
+        // Admin Security Variables
+        window.isMasterAdminLoggedIn = false;
         let subAdminCanDelete = false;
-        let currentAdminEmail = "";
 
         function getSafeId(rawId) { return String(rawId).replace(/[.#$\[\]/]/g, '_').trim(); }
 
@@ -1746,17 +1643,13 @@
                     }
                 });
 
-                // Check Admin Access just in case they login with valid admin email
-                const userEmail = user.email.toLowerCase();
-                isMainAdmin = (userEmail === MAIN_ADMIN_EMAIL.toLowerCase());
-                if (isMainAdmin || ALLOWED_SUB_ADMINS.includes(userEmail)) {
-                    currentAdminEmail = user.email;
-                    loadAdminSettings();
-                }
+                // Load basic admin settings for restrictions, but don't grant access yet
+                loadAdminSettings();
 
             } else { 
                 if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; isTrialActive = false;
+                window.isMasterAdminLoggedIn = false;
                 
                 document.getElementById('guest-login-content').style.display = 'none'; 
                 document.getElementById('user-profile-content').style.display = 'block'; 
@@ -1837,7 +1730,6 @@
             }, 180000);
         }
 
-        // 🌟 FEATURE UPDATE: LEADERBOARD SYNC ON LOGIN 🌟
         function checkPremium(uid) {
             if(userProfileRef) userProfileRef.off(); userProfileRef = db.ref(`users/${uid}`);
             userProfileRef.on('value', s => {
@@ -1848,7 +1740,6 @@
                 document.getElementById('task-coin-balance').innerText = userPoints; 
                 updateRedeemButtonsUI();
                 
-                // FORCE Leaderboard Sync immediately so it never shows empty points
                 let cycle = getLeaderboardCycle();
                 db.ref(`leaderboard/c_${cycle}/${uid}`).set(userPoints);
 
@@ -1956,11 +1847,6 @@
             return true;
         }
 
-        let rewardActive = false;
-        let rewardStartTime = 0;
-        let rewardInterval;
-        let aggressiveTrapInterval;
-
         function checkDailyBonusUI() {
             if(!currentUser) return;
             let today = new Date().toLocaleDateString();
@@ -1984,6 +1870,7 @@
             document.getElementById('reward-desc-text').innerText = "Click the button below to start. You MUST stay on the ad page for exactly 30 seconds to get points.";
         }
 
+        let aggressiveTrapInterval;
         function openRewardPage() {
             if(!currentUser) return alert("Login required!");
             let today = new Date().toLocaleDateString();
@@ -2006,76 +1893,147 @@
             });
         }
 
+        // 🌟 NEW AD VERIFICATION SYSTEM (BUG FIX) 🌟
+        let rewardActive = false; let rewardStartTime = 0;
+        let midRollTaskActive = false; let midRollTaskStart = 0;
+        let epUnlockActive = false; let epUnlockStart = 0;
+        let activeTask = null;
+
         function startRewardTimer() {
             let a = document.createElement('a');
             a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            a.target = '_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
             
             rewardActive = true;
             rewardStartTime = Date.now();
-            
             startTabTimer(30);
 
             document.getElementById('main-reward-btn').style.display = 'none';
             document.getElementById('reward-timer-section').style.display = 'block';
             document.getElementById('reward-desc-text').style.display = 'none';
-
-            let timeLeft = 30;
-            document.getElementById('reward-sec').innerText = timeLeft;
+            document.getElementById('reward-sec').innerText = "30";
             document.getElementById('reward-progress-fill').style.width = '0%';
-            
-            clearInterval(rewardInterval);
-            rewardInterval = setInterval(() => {
-                if(!rewardActive) return;
-                let elapsed = Date.now() - rewardStartTime;
-                let actualTimeLeft = Math.max(30 - Math.floor(elapsed / 1000), 0);
-                let progress = Math.min((elapsed / 30000) * 100, 100);
-                
-                document.getElementById('reward-sec').innerText = actualTimeLeft;
-                document.getElementById('reward-progress-fill').style.width = progress + '%';
-                
-                if(actualTimeLeft <= 0) {
-                    rewardActive = false;
-                    clearInterval(rewardInterval);
-                    executeRewardClaim();
-                }
-            }, 1000);
         }
 
-        function checkRewardReturn() {
-            if (rewardActive) {
-                let elapsed = Date.now() - rewardStartTime;
-                if (elapsed < 500) return; 
+        function startWebTask(taskId, btnEl, adLink) {
+            if(!currentUser) return alert("Login required!"); if(activeTask) return alert("Please finish or cancel your current task first!");
+            let popup = window.open(adLink, '_blank'); if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
+            activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
+            btnEl.innerText = "Verifying..."; btnEl.classList.add('running');
+            startTabTimer(30); 
+        }
 
-                if (elapsed < 30000) { 
-                    rewardActive = false;
-                    clearInterval(rewardInterval);
+        function startMidRollAd() {
+            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            midRollTaskActive = true; midRollTaskStart = Date.now();
+            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
+            startTabTimer(10); 
+        }
+
+        function startEpUnlockAd() {
+            if(epUnlockActive) return;
+            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            epUnlockActive = true; epUnlockStart = Date.now();
+            let btn = document.getElementById('ep-unlock-btn');
+            btn.innerText = "VERIFYING... (WAIT 5s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
+            startTabTimer(5); 
+        }
+
+        // 🌟 CENTRALIZED AD VERIFICATION CHECK 🌟
+        function checkAllAdVerifications() {
+            let now = Date.now();
+            
+            // 1. Reward Check
+            if (rewardActive) {
+                let elapsed = now - rewardStartTime;
+                if (elapsed > 500) { 
+                    rewardActive = false; stopTabTimer();
+                    if (elapsed >= 30000) {
+                        executeRewardClaim();
+                    } else {
+                        speakLocalized("Verification failed.", "en"); 
+                        alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 30 seconds.");
+                        resetRewardUI();
+                    }
+                }
+            }
+
+            // 2. Task Check
+            if (activeTask && !activeTask.completed) {
+                let elapsed = now - activeTask.startTime;
+                if (elapsed > 500) {
                     stopTabTimer();
-                    speakLocalized("Verification failed. Please wait for thirty seconds.", "en"); 
-                    alert("❌ Verification Failed!\n\nYou returned too early. You must stay on the ad page for the full 30 seconds to get the reward.");
-                    resetRewardUI();
-                } else {
-                    rewardActive = false;
-                    clearInterval(rewardInterval);
-                    executeRewardClaim();
+                    if (elapsed >= 30000) {
+                        completeTaskSuccess();
+                    } else {
+                        activeTask.btnEl.innerText = "Get Now"; activeTask.btnEl.classList.remove('running');
+                        alert("❌ Verification Failed! You returned too early. Wait full 30 seconds.");
+                        activeTask = null;
+                    }
+                }
+            }
+
+            // 3. MidRoll Check
+            if (midRollTaskActive) {
+                let elapsed = now - midRollTaskStart;
+                if (elapsed > 500) {
+                    midRollTaskActive = false; stopTabTimer();
+                    let btn = document.getElementById('mid-roll-btn');
+                    if(elapsed >= 10000) {
+                        adEnforced = false; adWarningShown = false; nextAdTime = Infinity; 
+                        document.getElementById('ad-enforce-overlay').style.display = 'none';
+                        btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
+                        document.getElementById('main-video').play().catch(e=>{});
+                    } else {
+                        alert("❌ You returned too early! Stay on the ad page for at least 10 seconds.");
+                        btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
+                    }
+                }
+            }
+
+            // 4. EpUnlock Check
+            if (epUnlockActive) {
+                let elapsed = now - epUnlockStart;
+                if (elapsed > 500) {
+                    epUnlockActive = false; stopTabTimer();
+                    let btn = document.getElementById('ep-unlock-btn');
+                    if (elapsed >= 5000) {
+                        document.getElementById('ep-unlock-overlay').style.display = 'none';
+                        if(pendingEpPlayback) pendingEpPlayback();
+                        pendingEpPlayback = null;
+                    } else {
+                        alert("❌ Verification Failed! You returned too early.");
+                        btn.innerText = "VERIFY TO UNLOCK"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
+                    }
                 }
             }
         }
+
+        document.addEventListener("visibilitychange", () => { 
+            if (!document.hidden) { checkAllAdVerifications(); } 
+            else {
+                const v = document.getElementById('main-video');
+                if (v && !v.paused && document.pictureInPictureElement !== v) { v.pause(); }
+            }
+        }); 
+        window.addEventListener("focus", () => { checkAllAdVerifications(); });
 
         function executeRewardClaim() {
             let today = new Date().toLocaleDateString();
             let newPoints = userPoints + 2; 
             db.ref(`users/${currentUser.uid}`).update({ points: newPoints, lastCheckIn: today }).then(() => {
                 let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints);
-                playSuccessSound();
-                speakLocalized("Task finished successfully. Two points added to your account.", "en"); 
-                alert("🎉 Verification Complete!\n+2 Points have been added to your account."); 
-                closeRewardPage();
-                checkDailyBonusUI();
+                playSuccessSound(); alert("🎉 Verification Complete!\n+2 Points have been added to your account."); 
+                closeRewardPage(); checkDailyBonusUI();
             });
+        }
+
+        function completeTaskSuccess() {
+            let taskId = activeTask.id; activeTask.completed = true;
+            let newPoints = userPoints + 2; db.ref(`users/${currentUser.uid}/points`).set(newPoints);
+            let timeWindow = getCurrentTimeWindow(); db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
+            let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); 
+            playSuccessSound(); alert("✅ Task Completed! You earned 2 points."); activeTask = null;
         }
 
         function copyReferCode() {
@@ -2257,9 +2215,7 @@
                     playSuccessSound(); 
                     loadDownloadsList(); 
                 };
-                tx.onerror = () => {
-                    showDlToast("❌ Storage Error! File too large.", false);
-                };
+                tx.onerror = () => { showDlToast("❌ Storage Error! File too large.", false); };
             }
         }
 
@@ -2325,9 +2281,7 @@
             if(!confirm("Are you sure you want to remove this video from downloads list?")) return;
             let tx = dbOffline.transaction("videos", "readwrite");
             let req = tx.objectStore("videos").delete(id);
-            req.onsuccess = () => {
-                loadDownloadsList();
-            };
+            req.onsuccess = () => { loadDownloadsList(); };
         }
 
         let lbTimerInterval = null;
@@ -2399,99 +2353,10 @@
                 let actualTime = Date.now() + serverTimeOffset;
                 db.ref(`users/${currentUser.uid}/premiumExpiry`).once('value', snap => {
                     let currentExp = snap.val() || 0; let baseTime = (currentExp > actualTime) ? currentExp : actualTime; let newExp = baseTime + (hours * 60 * 60 * 1000);
-                    db.ref(`users/${currentUser.uid}`).update({ points: userPoints - cost, premiumExpiry: newExp }).then(() => { 
-                        triggerVIPCelebration(); 
-                    });
+                    db.ref(`users/${currentUser.uid}`).update({ points: userPoints - cost, premiumExpiry: newExp }).then(() => { triggerVIPCelebration(); });
                 });
             } else { alert("❌ Not enough points!"); }
         }
-
-        let activeTask = null; let activeInterval = null;
-        function startWebTask(taskId, btnEl, adLink) {
-            if(!currentUser) return alert("Login required!"); if(activeTask) return alert("Please finish or cancel your current task first!");
-            let popup = window.open(adLink, '_blank'); if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
-            activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
-            btnEl.innerText = "Verifying..."; btnEl.classList.add('running');
-            
-            startTabTimer(30); 
-            
-            btnEl.onclick = () => { alert("Please stay on the ad page for full 30 seconds!"); };
-            activeInterval = setInterval(() => {
-                if(!activeTask) { clearInterval(activeInterval); return; }
-                let elapsed = Date.now() - activeTask.startTime;
-                if(elapsed >= 30000 && !activeTask.completed) completeTaskSuccess();
-            }, 1000);
-        }
-
-        function completeTaskSuccess() {
-            if(!activeTask) return; let taskId = activeTask.id; activeTask.completed = true; clearInterval(activeInterval);
-            let newPoints = userPoints + 2; db.ref(`users/${currentUser.uid}/points`).set(newPoints);
-            let timeWindow = getCurrentTimeWindow(); db.ref(`users/${currentUser.uid}/tasks_completed/${timeWindow}/${taskId}`).set(true);
-            let cycle = getLeaderboardCycle(); db.ref(`leaderboard/c_${cycle}/${currentUser.uid}`).set(newPoints); 
-            playSuccessSound();
-            alert("✅ Task Completed! You earned 2 points."); activeTask = null;
-        }
-
-        let epUnlockActive = false;
-        let epUnlockStart = 0;
-        let pendingEpPlayback = null;
-        
-        function startEpUnlockAd() {
-            if(epUnlockActive) return;
-            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
-            epUnlockActive = true;
-            epUnlockStart = Date.now();
-            let btn = document.getElementById('ep-unlock-btn');
-            btn.innerText = "VERIFYING... (WAIT 5s)";
-            btn.style.background = "rgba(255,255,255,0.1)";
-            btn.style.color = "#fff";
-            
-            startTabTimer(5); 
-        }
-
-        function checkEpUnlockStatus() {
-            if(epUnlockActive) {
-                let elapsed = Date.now() - epUnlockStart;
-                if (elapsed < 500) return;
-                
-                let btn = document.getElementById('ep-unlock-btn');
-                if (elapsed >= 5000) {
-                    epUnlockActive = false;
-                    document.getElementById('ep-unlock-overlay').style.display = 'none';
-                    if(pendingEpPlayback) pendingEpPlayback();
-                    pendingEpPlayback = null;
-                } else { 
-                    epUnlockActive = false;
-                    stopTabTimer();
-                    alert("❌ Verification Failed!\n\nYou returned too early. Please wait at least 5 seconds on the ad page to unlock the episode.");
-                    btn.innerText = "VERIFY TO UNLOCK";
-                    btn.style.background = "var(--accent-gradient)";
-                    btn.style.color = "#fff";
-                }
-            }
-        }
-
-        document.addEventListener("visibilitychange", () => { 
-            if (!document.hidden) { 
-                checkTaskStatus(); 
-                checkMidRollStatus(); 
-                checkRewardReturn(); 
-                checkEpUnlockStatus();
-            } else {
-                const v = document.getElementById('main-video');
-                if (v && !v.paused) {
-                    if (document.pictureInPictureElement !== v) {
-                        v.pause();
-                    }
-                }
-            }
-        }); 
-        window.addEventListener("focus", () => { 
-            checkTaskStatus(); 
-            checkMidRollStatus(); 
-            checkRewardReturn(); 
-            checkEpUnlockStatus();
-        });
 
         async function togglePiP() {
             const v = document.getElementById('main-video');
@@ -2499,12 +2364,8 @@
                 document.exitPictureInPicture().catch(e => console.log(e));
             } else {
                 if (document.pictureInPictureEnabled) {
-                    v.requestPictureInPicture().catch(e => {
-                        alert("Picture-in-Picture is not supported or blocked on this device.");
-                    });
-                } else {
-                    alert("Picture-in-Picture is not supported on your browser.");
-                }
+                    v.requestPictureInPicture().catch(e => { alert("Picture-in-Picture is not supported or blocked on this device."); });
+                } else { alert("Picture-in-Picture is not supported on your browser."); }
             }
         }
 
@@ -2689,19 +2550,17 @@
 
         function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
 
-        // 🌟 FEATURE: VIP FOLDER BLOCK SYSTEM 🌟
         function openFolder(n) { 
             const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
             const firstEp = episodes[0]; 
             
-            // 🛑 AI VIP BLOCK ANNOUNCEMENT
             if(firstEp.type === 'premium' && !isPremium && !isTrialActive) {
                 setCatEmote('talking');
                 let isBn = (currentAppLang === 'bn');
                 let msg = isBn ? "এই পুরো সিজনটি শুধুমাত্র ভিআইপি মেম্বারদের জন্য। দয়া করে ভিআইপি কিনুন।" : "This entire season is locked for VIP members only. Please upgrade.";
                 speakLocalized(msg, currentAppLang);
                 alert("👑 VIP EXCLUSIVE SEASON!\n\nThis entire season is for premium VIP members only.\nPlease purchase VIP to watch these episodes.");
-                return; // Access Blocked
+                return;
             }
 
             if(!isPremium && !isTrialActive) triggerTargetedAd();
@@ -2741,7 +2600,7 @@
         
         function switchSeason(n) { openFolder(n); }
 
-        let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; let midRollTaskActive = false; let midRollTaskStart = 0;
+        let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; 
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
             if(isAdblockerActive && !isPremium && !isTrialActive) {
@@ -2760,7 +2619,6 @@
                 localStorage.setItem('guest_watch_count', guestCount + 1);
             }
 
-            // 🛑 Individual Video VIP Block protection (Just in case)
             if(ip && !isPremium && !isTrialActive) { 
                 setCatEmote('talking');
                 let isBn = (currentAppLang === 'bn');
@@ -2815,10 +2673,7 @@
             bufferUI.style.display = 'none'; 
             v.onwaiting = () => { };
             v.onplaying = () => { if(adEnforced && !isPremium && !isTrialActive) v.pause(); };
-            v.oncanplay = () => { };
-            v.onloadeddata = () => { };
-            v.onerror = () => { };
-
+            
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
             v.src = u; v.dataset.currentId = id; v.load(); 
@@ -2954,34 +2809,6 @@
             else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
         }
 
-        function startMidRollAd() {
-            midRollTaskActive = true; midRollTaskStart = Date.now();
-            let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
-            
-            startTabTimer(10); 
-        }
-
-        function checkMidRollStatus() {
-            if(midRollTaskActive) {
-                let elapsed = Date.now() - midRollTaskStart; 
-                if (elapsed < 500) return;
-                
-                let btn = document.getElementById('mid-roll-btn');
-                if(elapsed >= 10000) { 
-                    midRollTaskActive = false; adEnforced = false; adWarningShown = false; 
-                    nextAdTime = Infinity; 
-                    document.getElementById('ad-enforce-overlay').style.display = 'none';
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
-                    document.getElementById('main-video').play().catch(e=>{});
-                } else { 
-                    midRollTaskActive = false; 
-                    stopTabTimer();
-                    alert("❌ You returned too early!\n\nPlease stay on the ad page for at least 10 seconds to continue watching.");
-                    btn.innerText = "WATCH AD TO CONTINUE"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
-                }
-            }
-        }
-
         function changeLanguage(lang) {
             localStorage.setItem('preferred_language', lang);
             const v = document.getElementById('main-video'); if(!currentPlayingEpisodeData) return; 
@@ -2990,7 +2817,6 @@
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
         }
 
-        // 🌟 FEATURE 7 & 8: SOCIAL PROOF & VIP COMMENTS 🌟
         function loadSocialData(safeId) {
             currentLikesCountRef = db.ref(`likes/${safeId}/count`); 
             currentLikesCountRef.on('value', s => { 
@@ -3193,7 +3019,6 @@
             tags.forEach(t => { container.innerHTML += `<div class="so-tag" onclick="executeSearch('${t.replace(/'/g, "\\'")}')">${t}</div>`; });
         }
 
-        // --- 🌟 UPDATE: AI Predictive Requesting in Search 🌟 ---
         let lastRequestTime = 0;
 
         function handleOverlaySearch(val) {
@@ -3338,7 +3163,6 @@
         
         setInterval(aiShowTopNotification, 600000);
 
-        // 🌟 WELCOME GREETING LOGIC 🌟
         let hasWelcomed = false;
         function initWelcomeGreeting() {
             if(!hasWelcomed && window.speechSynthesis) {
@@ -3354,7 +3178,6 @@
         document.addEventListener('click', initWelcomeGreeting);
         document.addEventListener('touchstart', initWelcomeGreeting, {passive: true});
 
-        // 🌟 AI GUIDE MODAL LOGIC 🌟
         function openAIGuide() { document.getElementById('ai-guide-modal').style.display = 'block'; }
         function closeAIGuide() { document.getElementById('ai-guide-modal').style.display = 'none'; }
 
@@ -3401,7 +3224,6 @@
             else { catBot.classList.remove('talking'); }
         }
 
-        // 🌟 UPDATE: AI Voice Fix for Android App WebView 🌟
         async function speakLocalized(text, langCode) {
             let targetCode = ttsLangMap[langCode] || 'en-US';
             let shortLang = targetCode.split('-')[0];
@@ -3467,7 +3289,6 @@
             }, 8000); 
         }
 
-        // 🌟 FEATURE 9: Advanced Voice Commands & "ANI" Sarcastic Persona 🌟
         function processLocalVoiceCommand(text) {
             let t = text.toLowerCase().replace(/[.,!?।]/g, '').trim();
             let reply = "";
@@ -3478,7 +3299,6 @@
             let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
 
-            // --- MASTER MODE (LAYER 1) ---
             if (t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/) && !t.includes("back")) {
                 reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification.";
                 action = () => initiateMasterModeAuth();
@@ -3487,11 +3307,9 @@
                 reply = isLang('bn') ? "মাস্টার মোড বন্ধ করছি।" : "Closing master mode. We cool.";
                 action = () => closeMasterMode();
             }
-            // 0. Basic Greetings
             else if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
                 reply = isLang('bn') ? "হ্যালো! আমি আনি। বলুন, আপনার জন্য কী প্লে করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Yo! I'm Ani. What's the vibe today? Ready to binge something?";
             }
-            // 1. Video Controls
             else if (t.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो)/)) {
                 let v = document.getElementById('main-video');
                 if(v && !v.paused) { v.pause(); reply = isLang('bn') ? "ভিডিও থামালাম। যান, পপকর্ন নিয়ে আসুন।" : isLang('hi') ? "वीडियो रोक दिया गया।" : "Paused it. Go grab your snacks, I'll wait."; }
@@ -3530,8 +3348,6 @@
                 reply = isLang('bn') ? "ভিডিও বন্ধ করছি।" : "Killing the video. Going back.";
                 action = () => closePlayer();
             }
-
-            // 2. Navigation
             else if (t.match(/(home|main menu|হোম|মেইন মেনু|होम पेज)/)) {
                 reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : "Teleporting to the home page.";
                 action = () => switchTab('home');
@@ -3560,8 +3376,6 @@
                 reply = isLang('bn') ? "সিক্রেট ভল্ট খুলছি।" : "Opening the secret vault. Keep it lowkey.";
                 action = () => { filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home'); };
             }
-
-            // 3. AI Chit-chat
             else if (t.match(/(who are you|your name|তুমি কে|তোমার নাম কি|তোর নাম কি|तुम कौन हो|तुम्हारा नाम क्या है)/)) {
                 reply = isLang('bn') ? "আমি আনি! আপনার ফেভারিট অ্যানিমে এক্সপার্ট।" : "I'm Ani, the soul of this server and your ultimate anime plug. Def not just some lines of code.";
             }
@@ -3587,8 +3401,6 @@
             else if (t.match(/(thanks|thank you|ধন্যবাদ|থ্যাংকস|ধন্যবাদ আনি|शुक्रिया)/)) {
                 reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : "You're welcome! Catch you later.";
             }
-
-            // 4. Play and Search Actions
             else if (playMatch) {
                 let query = playMatch[1].trim();
                 reply = isLang('bn') ? `${query} চালু করছি।` : `Bet. Playing ${query}. Let's go!`;
@@ -3602,8 +3414,6 @@
                     setTimeout(() => executeSearch(query), 500);
                 };
             }
-            
-            // 5. Fallback Excuses
             else {
                 let d = langDict[currentAppLang] || langDict['en'];
                 let errors = [
@@ -3689,19 +3499,15 @@
         // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
         // ==========================================
         let currentPin = "";
-        let ADMIN_PIN = "123456"; // Default 6 Digit PIN
+        let ADMIN_PIN = "123456"; 
         
-        // Firebase থেকে অ্যাডমিন প্যানেলের সেট করা পিন নিয়ে আসা
         db.ref('admin_settings/master_pin').on('value', snap => {
             if(snap.exists()) { ADMIN_PIN = snap.val().toString(); }
         });
 
-        // Layer 1 Triggered
         function initiateMasterModeAuth() {
             setCatEmote('neutral');
             document.getElementById('master-auth-overlay').style.display = 'flex';
-            document.getElementById('pin-step').style.display = 'block';
-            if(document.getElementById('face-step')) document.getElementById('face-step').style.display = 'none';
             currentPin = "";
             updatePinDisplay();
         }
@@ -3713,16 +3519,14 @@
         
         function closeMasterMode() {
             document.getElementById('master-admin-panel').style.display = 'none';
-            document.body.classList.remove('show-secret-videos'); 
+            window.isMasterAdminLoggedIn = false;
             switchTab('home');
         }
 
-        // Layer 2: PIN Verification (Dynamic Length)
         function enterPin(num) {
             if(currentPin.length < ADMIN_PIN.length) currentPin += num;
             updatePinDisplay();
             
-            // Checking dynamically based on saved PIN length
             if(currentPin.length === ADMIN_PIN.length) {
                 setTimeout(() => {
                     if(currentPin === ADMIN_PIN) {
@@ -3740,9 +3544,9 @@
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() { document.getElementById('pin-display').innerText = "*".repeat(currentPin.length); }
 
-        // 🟢 FINAL SUCCESS ACTION
         function grantMasterAccess() {
             document.getElementById('master-auth-overlay').style.display = 'none';
+            window.isMasterAdminLoggedIn = true;
             playSuccessSound();
             
             setTimeout(() => {
@@ -3760,7 +3564,7 @@
         }
 
         // ==============================================================
-        // 🛡️ ADMIN PANEL LOGIC (Embedded Inside Master Mode) 🛡️
+        // 🛡️ ADMIN PANEL LOGIC 🛡️
         // ==============================================================
         
         function showAdminTab(tab) {
@@ -3781,7 +3585,7 @@
         }
 
         function updateMasterPin() {
-            if(!isMainAdmin) return alert("Only Main Admin can change the PIN!");
+            if(!window.isMasterAdminLoggedIn) return alert("Unauthorized Access!");
             const newPin = document.getElementById('master-pin-input').value;
             if(newPin.length < 6) return alert("PIN must be at least 6 digits!");
             db.ref('admin_settings').update({ master_pin: newPin }).then(() => {
@@ -3798,20 +3602,14 @@
                 if (data.master_pin) { document.getElementById('master-pin-input').value = data.master_pin; } 
                 else { document.getElementById('master-pin-input').value = "123456"; }
                 
-                if(isMainAdmin) {
-                    document.getElementById('delete-toggle-checkbox').checked = subAdminCanDelete;
-                    document.getElementById('code-toggle-checkbox').checked = subAdminCanCreateCode;
-                    document.getElementById('nav-codes').style.display = 'inline-block';
-                } else {
-                    document.getElementById('master-admin-panel').classList.toggle('no-delete-access', !subAdminCanDelete);
-                    if(subAdminCanCreateCode) { document.getElementById('nav-codes').style.display = 'inline-block'; } 
-                    else { document.getElementById('nav-codes').style.display = 'none'; }
-                }
+                // Allow UI to update but restrict execution logic using window.isMasterAdminLoggedIn
+                document.getElementById('delete-toggle-checkbox').checked = subAdminCanDelete;
+                document.getElementById('code-toggle-checkbox').checked = subAdminCanCreateCode;
             });
         }
 
         function togglePermissions() {
-            if(!isMainAdmin) return;
+            if(!window.isMasterAdminLoggedIn) return;
             db.ref('admin_settings').update({
                 subAdminCanDelete: document.getElementById('delete-toggle-checkbox').checked,
                 subAdminCanCreateCode: document.getElementById('code-toggle-checkbox').checked
@@ -3819,14 +3617,14 @@
         }
 
         function toggleTrending(path, key, currentCat) {
+            if(!window.isMasterAdminLoggedIn) return;
             let cats = currentCat.split(',').map(c => c.trim());
             if(cats.includes('trending')) { cats = cats.filter(c => c !== 'trending'); } else { cats.push('trending'); }
             let newCat = cats.join(','); db.ref(`${path}/${key}`).update({ category: newCat });
         }
 
-        // 🌟 FEATURE: VIP FOLDER TOGGLE 🌟
         function toggleFolderVIP(folderName, makeVIP) {
-            if(!isMainAdmin && !subAdminCanDelete) return alert("❌ Permission Denied!");
+            if(!window.isMasterAdminLoggedIn) return alert("❌ Permission Denied!");
             if(confirm(`Are you sure you want to make all episodes of "${folderName}" ${makeVIP ? 'VIP/PREMIUM' : 'FREE'}?`)) {
                 db.ref('anime').orderByChild('folder').equalTo(folderName).once('value', s => {
                     if(s.exists()) {
@@ -3843,8 +3641,8 @@
             }
         }
 
-        // --- UPLOAD & EDIT FUNCTIONS (Embedded) ---
         function uploadAnime() {
+            if(!window.isMasterAdminLoggedIn) return;
             let selectedCats =[]; document.querySelectorAll('.cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'anime';
             const folder = document.getElementById('an-folder').value.trim(); const title = document.getElementById('an-title').value;
@@ -3858,7 +3656,7 @@
                 db.ref('anime/' + key).update({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type });
                 cancelEdit('anime'); setTimeout(() => alert("Anime Updated Successfully!"), 10);
             } else {
-                db.ref('anime').push({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type, timestamp: Date.now(), uploadedBy: currentAdminEmail });
+                db.ref('anime').push({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type, timestamp: Date.now(), uploadedBy: "MasterAdmin" });
                 clearInputs(['an-title', 'an-url', 'an-url-hin', 'an-url-eng']); setTimeout(() => alert("Anime Uploaded!"), 10);
             }
         }
@@ -3875,13 +3673,14 @@
         }
 
         function uploadMovie() {
+            if(!window.isMasterAdminLoggedIn) return;
             let selectedCats =[]; document.querySelectorAll('.mv-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'movie';
             const title = document.getElementById('mv-title').value; const thumb = document.getElementById('mv-thumb').value;
             const url = document.getElementById('mv-url').value; const key = document.getElementById('mv-key').value; const type = document.getElementById('mv-type').value;
             if(!title || !url) return alert("Fill all fields!");
             if(key) { db.ref('movies/' + key).update({ category, title, thumbnail: thumb, url, type }); cancelEdit('movies'); setTimeout(() => alert("Movie Updated!"), 10); } 
-            else { db.ref('movies').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: currentAdminEmail }); clearInputs(['mv-title', 'mv-thumb', 'mv-url']); setTimeout(() => alert("Movie Uploaded!"), 10); }
+            else { db.ref('movies').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: "MasterAdmin" }); clearInputs(['mv-title', 'mv-thumb', 'mv-url']); setTimeout(() => alert("Movie Uploaded!"), 10); }
         }
 
         function editMovie(key, title, thumb, url, type, categoryStr) {
@@ -3893,13 +3692,14 @@
         }
 
         function uploadCartoon() {
+            if(!window.isMasterAdminLoggedIn) return;
             let selectedCats =[]; document.querySelectorAll('.ct-cat-chk:checked').forEach(cb => selectedCats.push(cb.value));
             const category = selectedCats.length > 0 ? selectedCats.join(',') : 'cartoon';
             const title = document.getElementById('ct-title').value; const thumb = document.getElementById('ct-thumb').value;
             const url = document.getElementById('ct-url').value; const key = document.getElementById('ct-key').value; const type = document.getElementById('ct-type').value; 
             if(!title || !url) return alert("Fill all fields!");
             if(key) { db.ref('cartoons/' + key).update({ category, title, thumbnail: thumb, url, type }); cancelEdit('cartoons'); setTimeout(() => alert("Cartoon Updated!"), 10); } 
-            else { db.ref('cartoons').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: currentAdminEmail }); clearInputs(['ct-title', 'ct-thumb', 'ct-url']); setTimeout(() => alert("Cartoon Uploaded!"), 10); }
+            else { db.ref('cartoons').push({ category, title, thumbnail: thumb, url, type, timestamp: Date.now(), uploadedBy: "MasterAdmin" }); clearInputs(['ct-title', 'ct-thumb', 'ct-url']); setTimeout(() => alert("Cartoon Uploaded!"), 10); }
         }
 
         function editCartoon(key, title, thumb, url, type, categoryStr) {
@@ -3934,16 +3734,18 @@
         }
 
         function uploadShort() { 
+            if(!window.isMasterAdminLoggedIn) return;
             const url = document.getElementById('sh-url').value; if(!url) return; 
-            db.ref('shorts').push({ id: Date.now().toString(), url: url, uploadedBy: currentAdminEmail }); 
+            db.ref('shorts').push({ id: Date.now().toString(), url: url, uploadedBy: "MasterAdmin" }); 
             document.getElementById('sh-url').value = ""; setTimeout(() => alert("Short Video Added!"), 10); 
         }
         
         function uploadBanner() {
+            if(!window.isMasterAdminLoggedIn) return;
             const img = document.getElementById('bn-img').value; const folderName = document.getElementById('bn-folder').value.trim(); const key = document.getElementById('bn-key').value; 
             if(!img) return alert("Image URL is required!");
             if(key) { db.ref('banners/' + key).update({ image: img, folderName: folderName }); cancelEdit('banners'); setTimeout(() => alert("Banner Updated Successfully!"), 10); } 
-            else { db.ref('banners').push({ image: img, folderName: folderName, uploadedBy: currentAdminEmail }); document.getElementById('bn-img').value = ""; document.getElementById('bn-folder').value = ""; setTimeout(() => alert("Home Banner Added!"), 10); }
+            else { db.ref('banners').push({ image: img, folderName: folderName, uploadedBy: "MasterAdmin" }); document.getElementById('bn-img').value = ""; document.getElementById('bn-folder').value = ""; setTimeout(() => alert("Home Banner Added!"), 10); }
         }
         
         function editBanner(key, img, folderName) { 
@@ -3953,12 +3755,14 @@
         }
         
         function uploadMovieBanner() { 
+            if(!window.isMasterAdminLoggedIn) return;
             const img = document.getElementById('mv-bn-img').value; if(!img) return; 
-            db.ref('movie_banners').push({ image: img, uploadedBy: currentAdminEmail }); 
+            db.ref('movie_banners').push({ image: img, uploadedBy: "MasterAdmin" }); 
             document.getElementById('mv-bn-img').value = ""; setTimeout(() => alert("Movie Banner Added!"), 10); 
         }
 
         function generateCode() {
+            if(!window.isMasterAdminLoggedIn) return;
             const days = parseInt(document.getElementById('code-days').value) || 30; const qty = parseInt(document.getElementById('code-qty').value) || 1; let custom = document.getElementById('custom-code').value.trim();
             if(custom) { 
                 custom = custom.replace(/[.#$\[\]\s]/g, '').toUpperCase(); 
@@ -3979,17 +3783,17 @@
         }
         
         function deleteItem(path, key) { 
-            if(!isMainAdmin && !subAdminCanDelete) return alert("❌ Permission Denied!"); 
+            if(!window.isMasterAdminLoggedIn) return alert("❌ Permission Denied!"); 
             if(confirm("Delete this item permanently?")) { db.ref(path + '/' + key).remove(); }
         }
         
         function deleteCode(e, key) { 
-            e.stopPropagation(); if(!isMainAdmin) return alert("❌ Permission Denied!"); 
+            e.stopPropagation(); if(!window.isMasterAdminLoggedIn) return alert("❌ Permission Denied!"); 
             if(confirm("Delete this code permanently?")) { db.ref('premium_codes/' + key).remove(); } 
         }
         
         function deleteUsedCodes() { 
-            if(!isMainAdmin) return alert("❌ Permission Denied!"); 
+            if(!window.isMasterAdminLoggedIn) return alert("❌ Permission Denied!"); 
             db.ref('premium_codes').once('value', s => { const updates = {}; s.forEach(c => { if(c.val().status === 'used') updates[c.key] = null; }); db.ref('premium_codes').update(updates); }); 
         }
 
