@@ -3717,11 +3717,13 @@
             switchTab('home');
         }
 
-        // Layer 2: PIN Verification 
+        // Layer 2: PIN Verification (Dynamic Length)
         function enterPin(num) {
-            if(currentPin.length < 6) currentPin += num;
+            if(currentPin.length < ADMIN_PIN.length) currentPin += num;
             updatePinDisplay();
-            if(currentPin.length === 6) {
+            
+            // Checking dynamically based on saved PIN length
+            if(currentPin.length === ADMIN_PIN.length) {
                 setTimeout(() => {
                     if(currentPin === ADMIN_PIN) {
                         playSuccessSound();
