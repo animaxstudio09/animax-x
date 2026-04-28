@@ -36,9 +36,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-    <!-- Face API for Live Face Scan -->
-    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
     <style>
         /* =========================================
            🚀 DEFAULT THEME (FOR FREE USERS) 🚀
@@ -1358,12 +1355,12 @@
 
         // 🌟 FEATURE 1: 10-LANGUAGE UI & AI 🌟
         const langDict = {
-            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Welcome to Animax TV! How can I help you today?", aiError:"Sorry, I didn't understand. Try saying play, search, or open profile.", aiTrialOver:"Sorry friend! Your 7-day free trial has ended. Please upgrade to VIP to keep talking to me!", aiReqMsg:"This is not uploaded yet. I have informed the admin, it will be uploaded soon!"},
+            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 7-day free trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
             bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ৭ দিনের ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
             hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 7-दिवसीय निःशुल्क परीक्षण समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
             ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"7日間の無料トライアルが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
             es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 7 días ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
-            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mes J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 7 jours est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 7 jours est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
             pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 7 dias acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
             ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 7 دن کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
             ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت فترة التجربة المجانية 7 أيام! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
@@ -3448,7 +3445,7 @@
             }, 8000); 
         }
 
-        // 🌟 FEATURE 9: Advanced Voice Commands (100 Crore+ Combos Handled via Regex) 🌟
+        // 🌟 FEATURE 9: Advanced Voice Commands & "ANI" Sarcastic Persona 🌟
         function processLocalVoiceCommand(text) {
             let t = text.toLowerCase().replace(/[.,!?।]/g, '').trim();
             let reply = "";
@@ -3465,92 +3462,95 @@
                 action = () => initiateMasterModeAuth();
             }
             else if (t.match(/(master mode back|মাস্টার মোড ব্যাক|exit master mode|close master mode)/)) {
-                reply = isLang('bn') ? "মাস্টার মোড বন্ধ করছি।" : "Closing master mode.";
+                reply = isLang('bn') ? "মাস্টার মোড বন্ধ করছি।" : "Closing master mode. We cool.";
                 action = () => closeMasterMode();
             }
             // 0. Basic Greetings
             else if (t.match(/^(hello|hi|hey|হ্যালো|হাই|নমস্কার|नमस्ते|hola)$/)) {
-                reply = isLang('bn') ? "হ্যালো! আমি আনি, বলুন আপনার জন্য কী করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Hello! I am Ani. What do you want to watch?";
+                reply = isLang('bn') ? "হ্যালো! আমি আনি। বলুন, আপনার জন্য কী প্লে করতে পারি?" : isLang('hi') ? "नमस्ते! मैं एनी हूँ, बताइए क्या देखना है?" : "Yo! I'm Ani. What's the vibe today? Ready to binge something?";
             }
             // 1. Video Controls
             else if (t.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो)/)) {
                 let v = document.getElementById('main-video');
-                if(v && !v.paused) { v.pause(); reply = isLang('bn') ? "ভিডিও থামালাম।" : isLang('hi') ? "वीडियो रोक दिया गया।" : "Video paused."; }
-                else { reply = isLang('bn') ? "আগে থেকেই থামানো আছে।" : "Already paused."; }
+                if(v && !v.paused) { v.pause(); reply = isLang('bn') ? "ভিডিও থামালাম। যান, পপকর্ন নিয়ে আসুন।" : isLang('hi') ? "वीडियो रोक दिया गया।" : "Paused it. Go grab your snacks, I'll wait."; }
+                else { reply = isLang('bn') ? "ভিডিও তো আগে থেকেই বন্ধ।" : "Bruh, it's already paused. Chill."; }
             } 
             else if (t.match(/(play video|resume|চালু করো|আবার চালাও|शुरू करो|continuar)/)) {
                 let v = document.getElementById('main-video');
-                if(v && v.paused) { v.play(); reply = isLang('bn') ? "ভিডিও চালু করলাম।" : isLang('hi') ? "वीडियो शुरू किया।" : "Video resumed."; }
-                else { reply = "Already playing."; }
+                if(v && v.paused) { v.play(); reply = isLang('bn') ? "ভিডিও চালু করলাম।" : isLang('hi') ? "वीडियो शुरू किया।" : "Resuming. Let's get back to the action!"; }
+                else { reply = "It's already playing! Keep your eyes on the screen."; }
             }
             else if (t.match(/(mute|sound off|মিউট|শব্দ বন্ধ|म्यूट|आवाज बंद)/)) {
                 let v = document.getElementById('main-video');
-                if(v) { v.muted = true; reply = isLang('bn') ? "মিউট করা হয়েছে।" : "Audio muted."; }
+                if(v) { v.muted = true; reply = isLang('bn') ? "মিউট করা হয়েছে।" : "Muted. Enjoy the silent treatment."; }
             }
             else if (t.match(/(unmute|sound on|আনমিউট|শব্দ চালু|अनम्यूट|आवाज चालू)/)) {
                 let v = document.getElementById('main-video');
-                if(v) { v.muted = false; reply = isLang('bn') ? "আনমিউট করা হয়েছে।" : "Audio unmuted."; }
+                if(v) { v.muted = false; reply = isLang('bn') ? "আনমিউট করা হয়েছে।" : "Unmuted. Let the hype resume."; }
             }
             else if (t.match(/(fullscreen|full screen|বড় করো|ফুলস্ক্রিন|बड़ा करो|फुलस्क्रीन)/)) {
                 let v = document.getElementById('main-video');
                 if(v) {
                     if (v.requestFullscreen) v.requestFullscreen();
                     else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
-                    reply = isLang('bn') ? "ফুলস্ক্রিন করছি।" : "Entering fullscreen.";
+                    reply = isLang('bn') ? "ফুলস্ক্রিন করছি।" : "Going full screen. Max immersion mode on!";
                 }
             }
             else if (t.match(/(skip|forward|next|সামনে যাও|১০ সেকেন্ড সামনে|স্কিপ|आगे बढ़ाओ|स्किप)/)) {
-                reply = isLang('bn') ? "সামনে এগোচ্ছি।" : "Skipping forward.";
+                reply = isLang('bn') ? "সামনে এগোচ্ছি।" : "Skipping the boring parts. Done.";
                 action = () => skipTime(10);
             }
             else if (t.match(/(rewind|backward|back|পিছনে যাও|১০ সেকেন্ড পিছনে|पीछे करो)/)) {
-                reply = isLang('bn') ? "পিছনে যাচ্ছি।" : "Rewinding.";
+                reply = isLang('bn') ? "পিছনে যাচ্ছি।" : "Rewinding. Guess you missed that plot twist.";
                 action = () => skipTime(-10);
             }
             else if (t.match(/(close video|stop video|back to home|ভিডিও কাটো|ভিডিও বন্ধ করো|वीडियो बंद करो)/)) {
-                reply = isLang('bn') ? "ভিডিও বন্ধ করছি।" : "Closing video.";
+                reply = isLang('bn') ? "ভিডিও বন্ধ করছি।" : "Killing the video. Going back.";
                 action = () => closePlayer();
             }
 
             // 2. Navigation
             else if (t.match(/(home|main menu|হোম|মেইন মেনু|होम पेज)/)) {
-                reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : "Going to home page.";
+                reply = isLang('bn') ? "হোম পেজে যাচ্ছি।" : "Teleporting to the home page.";
                 action = () => switchTab('home');
             }
             else if (t.match(/(profile|account|my account|প্রোফাইল|একাউন্ট|আমার একাউন্ট|प्रोफाइल)/)) {
-                reply = isLang('bn') ? "আপনার প্রোফাইল খুলছি।" : "Opening your profile.";
+                reply = isLang('bn') ? "আপনার প্রোফাইল খুলছি।" : "Opening your profile flex.";
                 action = () => switchTab('profile');
             }
             else if (t.match(/(download|offline|ডাউনলোড|অফলাইন|डाउनलोड)/)) {
-                reply = isLang('bn') ? "ডাউনলোড পেজ খুলছি।" : "Opening downloads.";
+                reply = isLang('bn') ? "ডাউনলোড পেজ খুলছি।" : "Opening your offline stash.";
                 action = () => switchTab('downloads');
             }
             else if (t.match(/(spin|wheel|lucky|চাকা ঘুরাও|স্পিন|स्पिन|पहिया)/)) {
-                reply = isLang('bn') ? "লাকি স্পিন খুলছি! শুভকামনা।" : "Opening lucky spin. Good luck!";
+                reply = isLang('bn') ? "লাকি স্পিন খুলছি! শুভকামনা।" : "Opening lucky spin. Don't go broke now!";
                 action = () => openSpinWheel();
             }
             else if (t.match(/(leaderboard|rank|top|র‍্যাংক|লিডারবোর্ড|র‍্যাংকিং|रैंक|लीडरबोर्ड)/)) {
-                reply = isLang('bn') ? "লিডারবোর্ড দেখাচ্ছি।" : "Showing the leaderboard.";
+                reply = isLang('bn') ? "লিডারবোর্ড দেখাচ্ছি।" : "Pulling up the sweatiest users on the leaderboard.";
                 action = () => openLeaderboard();
             }
             else if (t.match(/(history|recent|হিস্ট্রি|ইতিহাস|इतिहास)/)) {
-                reply = isLang('bn') ? "আপনার হিস্ট্রি খুলছি।" : "Opening watch history.";
+                reply = isLang('bn') ? "আপনার হিস্ট্রি খুলছি।" : "Opening your watch history. No judging here.";
                 action = () => { if(currentUser) openHistory(); else alert("Login required!"); };
             }
             else if (t.match(/(vault|secret|সিক্রেট|ভল্ট|गुप्त)/)) {
-                reply = isLang('bn') ? "সিক্রেট ভল্ট খুলছি।" : "Opening secret vault.";
+                reply = isLang('bn') ? "সিক্রেট ভল্ট খুলছি।" : "Opening the secret vault. Keep it lowkey.";
                 action = () => { filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home'); };
             }
 
             // 3. AI Chit-chat
             else if (t.match(/(who are you|your name|তুমি কে|তোমার নাম কি|তোর নাম কি|तुम कौन हो|तुम्हारा नाम क्या है)/)) {
-                reply = isLang('bn') ? "আমি আনি! অ্যানিম্যাক্স টিভির এআই অ্যাসিস্ট্যান্ট।" : "I am Ani, your personal AI assistant for Animax TV.";
+                reply = isLang('bn') ? "আমি আনি! আপনার ফেভারিট অ্যানিমে এক্সপার্ট।" : "I'm Ani, the soul of this server and your ultimate anime plug. Def not just some lines of code.";
+            }
+            else if (t.match(/(robot|ai|bot|রোবট|বট|রোবট নাকি|रोबोट|एआई)/)) {
+                reply = isLang('bn') ? "আমি রোবট নই, আমি অ্যানিম্যাক্সের আত্মা!" : "Robot? Nah, I'm more human than the person who coded me. Just with better taste in anime.";
             }
             else if (t.match(/(how are you|কেমন আছো|কি খবর|कैसे हो|क्या हाल है)/)) {
-                reply = isLang('bn') ? "আমি দারুণ আছি! আপনি কেমন আছেন? চলুন মুভি দেখি।" : "I am doing great! Ready to help you watch anime.";
+                reply = isLang('bn') ? "আমি দারুণ আছি! আপনি কেমন আছেন? চলুন মুভি দেখি।" : "I'm chilling, processing a million requests a second. But enough about me, what are we watching?";
             }
             else if (t.match(/(dance|নাচো|ড্যান্স|নাচতে পারো|नाचो|ড্যান্স করো)/)) {
-                reply = isLang('bn') ? "চলুন একটু নেচে নিই!" : "Let's hit the dance floor!";
+                reply = isLang('bn') ? "চলুন একটু নেচে নিই!" : "Hold my logic gates, let me show you some moves!";
                 action = () => executeDanceRoutine();
             }
             else if (t.match(/(joke|funny|মজা|জোকস|কৌতুক|চুটকি|चुटकुला|मजाक)/)) {
@@ -3560,31 +3560,37 @@
                 action = () => executeDanceRoutine();
             }
             else if (t.match(/(love you|ভালোবাসি|তোমাকে ভালো লাগে|प्यार करती)/)) {
-                reply = isLang('bn') ? "আমিও আপনাকে অনেক ভালোবাসি! চলুন অ্যানিমে দেখি।" : "Aww, I love you too! Let's watch some anime.";
+                reply = isLang('bn') ? "আমিও আপনাকে অনেক ভালোবাসি! চলুন অ্যানিমে দেখি।" : "Aww, stop it, you're making my CPU overheat. Love you too!";
             }
             else if (t.match(/(thanks|thank you|ধন্যবাদ|থ্যাংকস|ধন্যবাদ আনি|शुक्रिया)/)) {
-                reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : "You're welcome! I'm always here to help you.";
+                reply = isLang('bn') ? "আপনাকেও ধন্যবাদ! আমি সবসময় আপনার পাশেই আছি।" : "You're welcome! Catch you later.";
             }
 
             // 4. Play and Search Actions
             else if (playMatch) {
                 let query = playMatch[1].trim();
-                reply = isLang('bn') ? `${query} চালু করছি।` : `Playing ${query}`;
+                reply = isLang('bn') ? `${query} চালু করছি।` : `Bet. Playing ${query}. Let's go!`;
                 action = () => executeVoicePlayCommand(query);
             }
             else if (searchMatch) {
                 let query = searchMatch[1].trim();
-                reply = isLang('bn') ? `${query} খুঁজছি।` : `Searching for ${query}`;
+                reply = isLang('bn') ? `${query} খুঁজছি।` : `On it. Searching for ${query}.`;
                 action = () => {
                     document.getElementById('header-search-wrapper').click();
                     setTimeout(() => executeSearch(query), 500);
                 };
             }
             
-            // 5. Fallback
+            // 5. Fallback Excuses
             else {
                 let d = langDict[currentAppLang] || langDict['en'];
-                reply = d.aiError || "Sorry, I didn't understand.";
+                let errors = [
+                    "The protagonist is having a 10-episode flashback, try saying that again.",
+                    "The server is currently fighting a boss. It’s losing. Try a different command.",
+                    "Even the internet is tired of your taste... Just kidding, say that again?",
+                    "My brain is lagging harder than dial-up. What did you say?"
+                ];
+                reply = isLang('en') ? errors[Math.floor(Math.random() * errors.length)] : (d.aiError || "Sorry, I didn't get that.");
             }
 
             return { reply, action };
@@ -3658,7 +3664,7 @@
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
 
         // ==========================================
-        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM (UPDATED)
+        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM (FACE SCAN REMOVED)
         // ==========================================
         let currentPin = "";
         let ADMIN_PIN = "7860"; 
@@ -3668,41 +3674,19 @@
             if(snap.exists()) { ADMIN_PIN = snap.val(); }
         });
 
-        let faceModelsLoaded = false;
-        let videoStream = null;
-
-        // Load Face API Models from a Faster & Reliable Server
-        async function loadFaceModels() {
-            if(faceModelsLoaded) return;
-            // Removed UI messages to make it silent on app load
-            const MODEL_URL = 'https://vladmandic.github.io/face-api/model/';
-            try {
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
-                ]);
-                faceModelsLoaded = true;
-            } catch(e) {
-                console.error("Face API Load Error:", e);
-            }
-        }
-
         // Layer 1 Triggered
         function initiateMasterModeAuth() {
             setCatEmote('neutral');
             document.getElementById('master-auth-overlay').style.display = 'flex';
             document.getElementById('pin-step').style.display = 'block';
-            document.getElementById('face-step').style.display = 'none';
+            if(document.getElementById('face-step')) document.getElementById('face-step').style.display = 'none';
             currentPin = "";
             updatePinDisplay();
-            loadFaceModels(); // Just in case it failed to load earlier
         }
 
         function closeMasterAuth() {
             document.getElementById('master-auth-overlay').style.display = 'none';
             currentPin = "";
-            stopCamera();
         }
         
         function closeMasterMode() {
@@ -3711,7 +3695,7 @@
             switchTab('home');
         }
 
-        // Layer 2: PIN Verification
+        // Layer 2: PIN Verification (Face Scan Completely Bypassed)
         function enterPin(num) {
             if(currentPin.length < 4) currentPin += num;
             updatePinDisplay();
@@ -3719,7 +3703,7 @@
                 setTimeout(() => {
                     if(currentPin === ADMIN_PIN) {
                         playSuccessSound();
-                        startFaceScan(); // Move to Layer 3
+                        grantMasterAccess(); // Directly grant access without face scan!
                     } else {
                         alert("❌ INVALID PIN");
                         currentPin = "";
@@ -3728,93 +3712,19 @@
                 }, 300);
             }
         }
+        
         function clearPin() { currentPin = ""; updatePinDisplay(); }
         function updatePinDisplay() { document.getElementById('pin-display').innerText = "*".repeat(currentPin.length); }
 
-        // Layer 3: Live Face Scan
-        async function startFaceScan() {
-            document.getElementById('pin-step').style.display = 'none';
-            document.getElementById('face-step').style.display = 'block';
-            document.getElementById('face-step-container').style.display = 'block';
-
-            if(!faceModelsLoaded) {
-                document.getElementById('face-auth-msg').innerText = "Loading AI... Please keep looking at camera.";
-            }
-
-            const video = document.getElementById('auth-video');
-            try {
-                videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-                video.srcObject = videoStream;
-            } catch (err) {
-                document.getElementById('face-auth-msg').innerText = "Camera access denied!";
-                return;
-            }
-
-            video.addEventListener('play', async () => {
-                // Wait for models to finish loading if they haven't already
-                while(!faceModelsLoaded) { await new Promise(r => setTimeout(r, 500)); }
-
-                const canvas = document.getElementById('auth-canvas');
-                const displaySize = { width: video.clientWidth, height: video.clientHeight };
-                faceapi.matchDimensions(canvas, displaySize);
-
-                let scanInterval = setInterval(async () => {
-                    if(!videoStream) { clearInterval(scanInterval); return; }
-                    
-                    document.getElementById('face-auth-msg').innerText = "Detecting Face Features...";
-                    
-                    // Optimized for mobile: Lower scoreThreshold catches face faster
-                    const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.3 });
-                    const detection = await faceapi.detectSingleFace(video, options).withFaceLandmarks().withFaceDescriptor();
-                    
-                    if (detection) {
-                        document.getElementById('face-auth-msg').innerText = "Analyzing Biometrics...";
-                        
-                        let savedMasterDescriptor = localStorage.getItem('master_face_descriptor');
-                        
-                        if(savedMasterDescriptor) {
-                            // Match with existing master face
-                            let Float32ArrayDesc = new Float32Array(JSON.parse(savedMasterDescriptor));
-                            const distance = faceapi.euclideanDistance(detection.descriptor, Float32ArrayDesc);
-                            
-                            if(distance < 0.5) { // Adjusted threshold slightly for mobile cameras
-                                clearInterval(scanInterval);
-                                grantMasterAccess();
-                            } else {
-                                document.getElementById('face-auth-msg').innerText = "❌ Unrecognized Face. Try again.";
-                                document.getElementById('face-auth-msg').style.color = "#ff3b3b";
-                            }
-                        } else {
-                            // First time setup
-                            localStorage.setItem('master_face_descriptor', JSON.stringify(Array.from(detection.descriptor)));
-                            clearInterval(scanInterval);
-                            alert("✅ Master Face Registered Successfully! Access Granted.");
-                            grantMasterAccess();
-                        }
-                    }
-                }, 300); // 🌟 UPDATED: Fast check every 300ms instead of 800ms
-            });
-        }
-
-        function stopCamera() {
-            if(videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-                videoStream = null;
-            }
-        }
-
         // 🟢 FINAL SUCCESS ACTION
         function grantMasterAccess() {
-            stopCamera();
-            document.getElementById('face-auth-msg').innerText = "✅ IDENTITY VERIFIED";
-            document.getElementById('face-auth-msg').style.color = "#00e676";
+            document.getElementById('master-auth-overlay').style.display = 'none';
             playSuccessSound();
             
             setTimeout(() => {
-                // 🌟 UPDATED: Show Built-in Admin Panel instead of redirecting
                 closeMasterAuth();
                 document.getElementById('master-admin-panel').style.display = 'block';
-                loadAdminAllData(); // Load Admin data into panel
+                loadAdminAllData(); 
                 showAdminTab('anime');
                 
                 if(currentAppLang === 'bn') {
@@ -3822,7 +3732,7 @@
                 } else {
                     speakWithOriginalTTS("Welcome Master. System unlocked.", "en-US");
                 }
-            }, 1000);
+            }, 500);
         }
 
         // ==============================================================
