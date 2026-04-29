@@ -920,13 +920,13 @@
                 <div class="ben-item"><div class="ben-icon"><i class="fas fa-download"></i></div><span class="ben-text">Downloads</span></div>
             </div>
             <div class="buy-grid-3">
-                <div class="redeem-card"><div class="redeem-days">1 Month</div><div class="redeem-cost">50 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('1 Month', '50 tk')">Buy</button></div>
-                <div class="redeem-card"><div class="redeem-days">3 Month</div><div class="redeem-cost">100 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('3 Month', '100 tk')">Buy</button></div>
-                <div class="redeem-card"><div class="redeem-days">5 Month</div><div class="redeem-cost">200 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('5 Month', '200 tk')">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">1 Month</div><div class="redeem-cost">50 tk</div><button class="buy-btn" onclick="openPaymentModal('1 Month', '50', 30)">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">3 Month</div><div class="redeem-cost">100 tk</div><button class="buy-btn" onclick="openPaymentModal('3 Month', '100', 90)">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">5 Month</div><div class="redeem-cost">200 tk</div><button class="buy-btn" onclick="openPaymentModal('5 Month', '200', 150)">Buy</button></div>
             </div>
             <div class="buy-grid-2">
-                <div class="redeem-card"><div class="redeem-days">12 Month</div><div class="redeem-cost">500 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '500 tk')">Buy Now</button></div>
-                <div class="redeem-card"><div class="redeem-days">24 Month</div><div class="redeem-cost">800 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('24 Month', '800 tk')">Buy Now</button></div>
+                <div class="redeem-card"><div class="redeem-days">12 Month</div><div class="redeem-cost">500 tk</div><button class="buy-btn" onclick="openPaymentModal('12 Month', '500', 365)">Buy Now</button></div>
+                <div class="redeem-card"><div class="redeem-days">24 Month</div><div class="redeem-cost">800 tk</div><button class="buy-btn" onclick="openPaymentModal('24 Month', '800', 730)">Buy Now</button></div>
             </div>
             <div class="or-divider"><span>OR EXCHANGE POINTS</span></div>
             <div class="buy-grid-3">
@@ -941,6 +941,30 @@
             <div style="font-size: 13px; font-weight: 700; color: var(--accent-glow); margin-bottom: 5px; text-align: center;">Tasks refresh every 3 Hours!</div>
             <div style="font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 20px; text-align: center;">Must view AD for 30s to get +2 points</div>
             <div id="dynamic-task-list"></div>
+        </div>
+    </div>
+
+    <!-- MANUAL PAYMENT MODAL -->
+    <div id="manual-payment-modal" style="display:none; position:fixed; inset:0; background:rgba(5,5,8,0.95); backdrop-filter:blur(15px); z-index:99999; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit', sans-serif;">
+        <i class="fas fa-times" style="position:absolute; top:30px; right:30px; font-size:28px; color:var(--text-muted); cursor:pointer; transition:0.3s;" onclick="closePaymentModal()"></i>
+        
+        <div style="background:var(--glass-bg); border:1px solid var(--accent-glow); padding:30px 20px; border-radius:24px; box-shadow:0 10px 40px rgba(255, 0, 127, 0.2); width:90%; max-width:380px; text-align:center; position:relative;">
+            <div style="color:var(--accent-glow); font-size:22px; font-weight:900; font-family:'Orbitron'; margin-bottom:5px; letter-spacing:1px;">VIP SUBSCRIPTION</div>
+            <div id="pay-plan-desc" style="color:var(--text-main); font-size:15px; font-weight:700; margin-bottom:20px;">Plan: -- | Amount: -- TK</div>
+            
+            <div style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); padding:15px; border-radius:16px; margin-bottom:20px;">
+                <div style="color:var(--text-muted); font-size:12px; font-weight:600; margin-bottom:10px;">Send Money to this Personal Number<br><span style="color:#00f5d4; font-size:11px;">(বিকাশ বা নগদ পার্সোনাল নাম্বারে সেন্ড মানি করুন)</span></div>
+                
+                <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:5px;">
+                    <span id="admin-pay-number" style="font-size:24px; font-weight:900; color:#fff; letter-spacing:2px; font-family:'Orbitron';">01600678966</span>
+                    <button onclick="copyPaymentNumber()" style="background:var(--accent-gradient); color:#000; border:none; border-radius:8px; padding:6px 12px; font-weight:800; cursor:pointer; font-size:12px; transition:0.2s;"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div style="color:var(--text-muted); font-size:11px; font-weight:600;">bKash & Nagad (Personal)</div>
+            </div>
+            
+            <input type="text" id="pay-txnid" placeholder="Enter Transaction ID (TxnID)" style="width:100%; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); padding:16px; color:#fff; border-radius:12px; text-align:center; font-family:'Orbitron'; margin-bottom:15px; font-size:14px; outline:none;">
+            
+            <button onclick="submitPayment()" id="pay-submit-btn" style="width:100%; background:var(--accent-gradient); color:#000; padding:16px; border-radius:12px; font-weight:900; border:none; cursor:pointer; font-size:15px; font-family:'Orbitron'; transition:0.3s; box-shadow:0 5px 20px rgba(255, 0, 127, 0.3);">SUBMIT PAYMENT</button>
         </div>
     </div>
 
@@ -1112,6 +1136,7 @@
             <div class="nav-btn" onclick="showAdminTab('shorts')">SHORTS</div>
             <div class="nav-btn" onclick="showAdminTab('banners')">ALL BANNERS</div>
             <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
+            <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions')">SUBSCRIPTIONS</div>
         </div>
 
         <!-- ANIME SECTION -->
@@ -1235,6 +1260,14 @@
                 <button onclick="if(confirm('Delete USED codes?')) deleteUsedCodes()" style="background:#333; color:#888; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">CLEAR USED</button>
             </div>
             <div id="admin-code-list" style="margin-top:10px;"></div>
+        </div>
+
+        <!-- SUBSCRIPTIONS SECTION -->
+        <div id="admin-subscriptions" class="section-view">
+            <div class="input-group">
+                <h3 style="color:var(--cyan);"><i class="fas fa-money-check-alt"></i> PENDING PAYMENTS</h3>
+            </div>
+            <div id="admin-subs-list" style="display:flex; flex-direction:column; gap:12px; margin-top:10px;"></div>
         </div>
     </div>
 
@@ -1533,6 +1566,11 @@
             if(window.movieData) {
                 window.movieData.forEach(m => {
                     if(m.type === 'premium') html += generateCardHtml({title: m.title, type: 'movie', data: m, id: m.id || m.title, url: m.url, thumbnail: m.thumbnail});
+                });
+            }
+            if(window.cartoonData) {
+                window.cartoonData.forEach(c => {
+                    if(c.type === 'premium') html += generateCardHtml({title: c.title, type: 'cartoon', data: c, id: c.id || c.title, url: c.url, thumbnail: c.thumbnail});
                 });
             }
             if(html === "") html = "<div style='color:var(--text-muted); padding:20px; grid-column:1/-1; text-align:center;'>Vault is empty right now.</div>";
@@ -3553,6 +3591,7 @@
                 closeMasterAuth();
                 document.getElementById('master-admin-panel').style.display = 'block';
                 loadAdminAllData(); 
+                loadAdminSubscriptions();
                 showAdminTab('anime');
                 
                 if(currentAppLang === 'bn') {
@@ -3865,6 +3904,125 @@
                     list.innerHTML += `<div class="code-card ${statusClass}" onclick="copyToClipboard('${c.key}')" title="Click to Copy"><div><div class="code-status ${badgeClass}">${statusText}</div><div class="code-text"><i class="fas ${icon}"></i> ${c.key}</div><div class="code-days">${data.days || 0} Days Validity</div>${usedBy}</div><div style="text-align:right;"><button class="del-btn" style="padding: 5px 15px;" onclick="deleteCode(event, '${c.key}')">DELETE</button></div></div>`; 
                 }); 
             });
+        }
+
+        // ==============================================================
+        // 💰 MANUAL PAYMENT SYSTEM LOGIC
+        // ==============================================================
+        let currentPayPlan = { name: '', price: '', days: 0 };
+
+        function openPaymentModal(planName, price, days) {
+            if(!currentUser) return alert("Please login first to buy VIP!");
+            currentPayPlan = { name: planName, price: price, days: days };
+            document.getElementById('pay-plan-desc').innerText = `Plan: ${planName} | Amount: ${price} TK`;
+            document.getElementById('pay-txnid').value = "";
+            document.getElementById('manual-payment-modal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('manual-payment-modal').style.display = 'none';
+        }
+
+        function copyPaymentNumber() {
+            const num = "01600678966";
+            if(navigator.clipboard) {
+                navigator.clipboard.writeText(num).then(() => alert("✅ Number Copied: " + num));
+            } else {
+                const el = document.createElement('textarea');
+                el.value = num; document.body.appendChild(el); el.select();
+                document.execCommand('copy'); document.body.removeChild(el);
+                alert("✅ Number Copied: " + num);
+            }
+        }
+
+        function submitPayment() {
+            const txnId = document.getElementById('pay-txnid').value.trim();
+            if(!txnId) return alert("❌ Please enter the Transaction ID (TxnID)!");
+            
+            const btn = document.getElementById('pay-submit-btn');
+            btn.innerText = "SUBMITTING..."; btn.disabled = true;
+
+            const requestData = {
+                uid: currentUser.uid,
+                email: currentUser.email || "Unknown",
+                name: currentUser.username || "User",
+                txnId: txnId,
+                amount: currentPayPlan.price,
+                planName: currentPayPlan.name,
+                planDays: currentPayPlan.days,
+                status: "pending",
+                timestamp: Date.now() + serverTimeOffset
+            };
+
+            db.ref('payment_requests').push(requestData).then(() => {
+                alert("✅ Request Submitted Successfully!\nAdmin will verify your TxnID and activate your VIP shortly.");
+                closePaymentModal();
+                btn.innerText = "SUBMIT PAYMENT"; btn.disabled = false;
+            }).catch(err => {
+                alert("❌ Error: " + err.message);
+                btn.innerText = "SUBMIT PAYMENT"; btn.disabled = false;
+            });
+        }
+
+        // ==============================================================
+        // 🛡️ ADMIN: MANAGE PAYMENTS
+        // ==============================================================
+        function loadAdminSubscriptions() {
+            db.ref('payment_requests').orderByChild('status').equalTo('pending').on('value', s => {
+                const list = document.getElementById('admin-subs-list');
+                if(!list) return;
+                list.innerHTML = "";
+                
+                if(!s.exists()) {
+                    list.innerHTML = "<div style='color:#666; text-align:center; padding:20px; font-weight:bold;'>No pending requests.</div>";
+                    return;
+                }
+
+                s.forEach(c => {
+                    let d = c.val();
+                    let dateStr = new Date(d.timestamp).toLocaleString();
+                    list.innerHTML += `
+                    <div style="background:#1a1a1a; border-left:4px solid var(--cyan); padding:15px; border-radius:8px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                            <span style="color:#fff; font-weight:bold; font-size:14px;"><i class="fas fa-user"></i> ${d.name} (${d.email})</span>
+                            <span style="color:#888; font-size:10px;">${dateStr}</span>
+                        </div>
+                        <div style="color:var(--gold); font-family:'Orbitron'; font-size:13px; margin-bottom:5px;">
+                            ${d.planName} (${d.planDays} Days) • Amount: <span style="color:#fff;">${d.amount} TK</span>
+                        </div>
+                        <div style="background:#050505; border:1px solid #333; padding:10px; border-radius:6px; color:#fff; font-family:monospace; font-size:14px; margin-bottom:12px; user-select:text; -webkit-user-select:text;">
+                            TxnID: <strong style="color:var(--cyan);">${d.txnId}</strong>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="approvePayment('${c.key}', '${d.uid}', ${d.planDays})" style="flex:1; background:var(--green); color:#000; border:none; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">APPROVE</button>
+                            <button onclick="rejectPayment('${c.key}')" style="flex:1; background:var(--red); color:#fff; border:none; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">REJECT</button>
+                        </div>
+                    </div>`;
+                });
+            });
+        }
+
+        function approvePayment(reqKey, uid, planDays) {
+            if(!window.isMasterAdminLoggedIn) return alert("Permission Denied!");
+            if(!confirm(`Approve this payment and add ${planDays} Days VIP?`)) return;
+            
+            let actualTime = Date.now() + serverTimeOffset;
+            db.ref(`users/${uid}/premiumExpiry`).once('value', snap => {
+                let currentExp = snap.val() || 0; 
+                let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
+                let newExp = baseTime + (planDays * 24 * 60 * 60 * 1000);
+                
+                db.ref(`users/${uid}`).update({ premiumExpiry: newExp }).then(() => {
+                    db.ref(`payment_requests/${reqKey}`).update({ status: 'approved', approvedAt: actualTime });
+                    alert("✅ Payment Approved & VIP Activated!");
+                });
+            });
+        }
+
+        function rejectPayment(reqKey) {
+            if(!window.isMasterAdminLoggedIn) return alert("Permission Denied!");
+            if(!confirm("Are you sure you want to REJECT and delete this payment request?")) return;
+            db.ref(`payment_requests/${reqKey}`).remove();
         }
     </script>
 </body>
