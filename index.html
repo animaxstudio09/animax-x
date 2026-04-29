@@ -919,15 +919,14 @@
                 <div class="ben-item"><div class="ben-icon"><i class="fas fa-tv"></i></div><span class="ben-text">1080p HD</span></div><div class="ben-plus">+</div>
                 <div class="ben-item"><div class="ben-icon"><i class="fas fa-download"></i></div><span class="ben-text">Downloads</span></div>
             </div>
-            <!-- Updated Plan Buttons with new selectPlan logic -->
             <div class="buy-grid-3">
-                <div class="redeem-card"><div class="redeem-days">1 Month</div><div class="redeem-cost">50 tk</div><button class="buy-btn" onclick="selectPlan('1 Month', '50 tk', 30)">Buy</button></div>
-                <div class="redeem-card"><div class="redeem-days">3 Month</div><div class="redeem-cost">100 tk</div><button class="buy-btn" onclick="selectPlan('3 Month', '100 tk', 90)">Buy</button></div>
-                <div class="redeem-card"><div class="redeem-days">5 Month</div><div class="redeem-cost">200 tk</div><button class="buy-btn" onclick="selectPlan('5 Month', '200 tk', 150)">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">1 Month</div><div class="redeem-cost">50 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('1 Month', '50 tk')">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">3 Month</div><div class="redeem-cost">100 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('3 Month', '100 tk')">Buy</button></div>
+                <div class="redeem-card"><div class="redeem-days">5 Month</div><div class="redeem-cost">200 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('5 Month', '200 tk')">Buy</button></div>
             </div>
             <div class="buy-grid-2">
-                <div class="redeem-card"><div class="redeem-days">12 Month</div><div class="redeem-cost">500 tk</div><button class="buy-btn" onclick="selectPlan('12 Month', '500 tk', 365)">Buy Now</button></div>
-                <div class="redeem-card"><div class="redeem-days">24 Month</div><div class="redeem-cost">800 tk</div><button class="buy-btn" onclick="selectPlan('24 Month', '800 tk', 730)">Buy Now</button></div>
+                <div class="redeem-card"><div class="redeem-days">12 Month</div><div class="redeem-cost">500 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('12 Month', '500 tk')">Buy Now</button></div>
+                <div class="redeem-card"><div class="redeem-days">24 Month</div><div class="redeem-cost">800 tk</div><button class="buy-btn" onclick="buyPremiumTelegram('24 Month', '800 tk')">Buy Now</button></div>
             </div>
             <div class="or-divider"><span>OR EXCHANGE POINTS</span></div>
             <div class="buy-grid-3">
@@ -945,28 +944,112 @@
         </div>
     </div>
 
-    <!-- 🌟 MANUAL PAYMENT MODAL 🌟 -->
-    <div id="payment-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:99999; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit', sans-serif;">
-        <div style="background:var(--glass-bg); border:1px solid var(--accent-glow); padding:25px; border-radius:20px; width:90%; max-width:350px; text-align:center; position:relative; box-shadow:0 10px 30px rgba(255,183,3,0.2);">
-            <i class="fas fa-times" style="position:absolute; top:15px; right:15px; font-size:20px; color:var(--text-muted); cursor:pointer;" onclick="document.getElementById('payment-modal').style.display='none'"></i>
-            <h2 style="color:var(--accent-glow); font-family:'Orbitron'; font-weight:900; margin-bottom:10px;">VIP SUBSCRIPTION</h2>
-            <div style="font-size:14px; color:var(--text-main); margin-bottom:15px;">Plan: <strong id="pay-plan-name"></strong> | Price: <strong id="pay-plan-price"></strong></div>
+    <!-- PLAYER VIEW -->
+    <div id="player-view">
+        <div class="video-wrapper">
+            <div style="position:absolute; top:20px; left:20px; z-index:9000;" onclick="closePlayer()">
+                <i class="fas fa-arrow-left" style="color:var(--text-main); background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; font-size:18px; border:1px solid var(--glass-border);"></i>
+            </div>
             
-            <div style="background:rgba(255,59,59,0.1); border:1px solid #ff3b3b; padding:10px; border-radius:10px; margin-bottom:15px;">
-                <div style="font-size:13px; color:#ff3b3b; font-weight:bold; margin-bottom:5px;">⚠️ Send Money (Personal) Only ⚠️</div>
-                <div style="font-size:12px; color:var(--text-main); margin-bottom:8px;">অনুগ্রহ করে নিচের bKash বা Nagad পার্সোনাল নাম্বারে সঠিক পরিমাণ টাকা <b>Send Money</b> করুন।</div>
-                <div style="display:flex; justify-content:center; align-items:center; gap:10px; background:#000; padding:10px; border-radius:8px;">
-                    <span id="pay-number" style="font-size:18px; font-family:'Orbitron'; font-weight:bold; color:#00e676; letter-spacing:1px; user-select:all;">01600678966</span>
-                    <button onclick="copyPaymentNumber()" style="background:var(--glass-border); border:none; color:#fff; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:12px;"><i class="fas fa-copy"></i> Copy</button>
-                </div>
+            <div id="pip-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; color:#fff; z-index:9000; border:1px solid var(--glass-border); font-size:18px; display:flex; justify-content:center; align-items:center; width:45px; height:45px;" onclick="togglePiP()" title="Picture in Picture">
+                <i class="fas fa-clone"></i>
+            </div>
+            
+            <div id="vid-buffering"><div class="loading-spinner"></div></div>
+            
+            <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
+            <div class="dt-zone dt-right" ondblclick="skipTime(10)"></div>
+            
+            <div id="skip-left-anim" class="skip-anim skip-left">-10s <i class="fas fa-backward"></i></div>
+            <div id="skip-right-anim" class="skip-anim skip-right"><i class="fas fa-forward"></i> +10s</div>
+            
+            <div id="skip-intro-btn" onclick="skipTime(85); this.style.display='none';">Skip Intro <i class="fas fa-forward" style="margin-left:5px;"></i></div>
+
+            <div id="autoplay-box" class="autoplay-overlay">Next in <span id="ap-count" style="color:var(--accent-glow);">5</span>s <button onclick="cancelAutoplay()" style="background:rgba(255,255,255,0.1);color:#fff;border:none;margin-left:10px;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:bold;">Cancel</button></div>
+
+            <div id="ad-warning-overlay" style="position:absolute; top:75px; right:20px; background:rgba(230,57,70,0.9); backdrop-filter:blur(5px); color:#fff; padding:10px 15px; border-radius:12px; font-size:13px; font-weight:800; z-index:5005; display:none; border:1px solid #ff7b7b; box-shadow:0 0 20px rgba(230,57,70,0.5);"><span id="ad-warn-text">⚠️ Ad break in 10s!</span></div>
+            
+            <div id="ad-enforce-overlay">
+                <div class="ad-enforce-title">AD BREAK!</div>
+                <div class="ad-enforce-desc">Please support us by viewing a quick ad. Click the button below and wait 10 seconds.</div>
+                <button class="ad-enforce-btn" id="mid-roll-btn" onclick="startMidRollAd()">WATCH AD TO CONTINUE</button>
             </div>
 
-            <input type="text" id="pay-txnid" placeholder="Enter Transaction ID (TxnID)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.5); color:#fff; text-align:center; font-family:'Orbitron'; margin-bottom:15px; outline:none; user-select:text; -webkit-user-select:text;">
+            <div id="ep-unlock-overlay">
+                <div class="ad-enforce-title">EPISODE UNLOCK</div>
+                <div class="ad-enforce-desc">Please support us by verifying to unlock this episode. Wait 5 seconds on the ad page.</div>
+                <button class="ad-enforce-btn" id="ep-unlock-btn" onclick="startEpUnlockAd()">VERIFY TO UNLOCK</button>
+            </div>
+
+            <video id="main-video" controls playsinline webkit-playsinline preload="metadata" x5-video-player-type="h5" x5-playsinline="true" controlsList="nodownload" oncontextmenu="return false;"></video>
+        </div>
+        <div class="player-meta-container">
+            <div class="meta-title" id="player-title">Loading...</div>
+            <div class="meta-info">
+                <span style="background:var(--accent-gradient); color:#fff; padding:3px 8px; border-radius:6px; font-weight:800; font-size:11px; font-family:'Orbitron';" id="content-type-badge">ANIME</span>
+                <span id="star-rating-ui" style="color:var(--text-muted); cursor:pointer; font-size:14px; margin-left:5px;">
+                    <i class="fas fa-star" onclick="rateVideo(1)"></i><i class="fas fa-star" onclick="rateVideo(2)"></i><i class="fas fa-star" onclick="rateVideo(3)"></i><i class="fas fa-star" onclick="rateVideo(4)"></i><i class="fas fa-star" onclick="rateVideo(5)"></i>
+                </span>
+                <span id="avg-rating-text" style="color:var(--text-main); font-weight:800;">4.8</span>
+                <span style="margin-left:auto;"><i class="fas fa-eye" style="color:var(--text-muted); margin-right:5px;"></i> <span id="view-count">0</span></span>
+                <span style="margin-left:15px;"><i class="fas fa-heart" style="color:#ff007f; margin-right:5px;"></i> <span id="like-count">0</span></span>
+            </div>
             
-            <button onclick="submitPayment()" style="width:100%; padding:14px; background:var(--accent-gradient); color:#000; font-family:'Orbitron'; font-weight:900; border:none; border-radius:10px; cursor:pointer; transition:0.3s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'">SUBMIT REQUEST</button>
+            <div class="action-buttons-row">
+                <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
+                <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
+                <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
+            </div>
+            
+            <div class="resources-header">Resources <span>Source: Animax</span></div>
+            <div class="dropdown-row">
+                <select id="language-select" onchange="changeLanguage(this.value)" class="custom-drop"></select>
+                <select id="season-select" onchange="switchSeason(this.value)" class="custom-drop"></select>
+            </div>
+            
+            <div class="ep-pill-row" id="episode-pill-container"></div>
+            
+            <div class="tab-header"><div class="tab-item active" id="tab-btn-foryou" onclick="switchPlayerTab('foryou')">Related</div><div class="tab-item" id="tab-btn-comments" onclick="switchPlayerTab('comments')">Comments</div></div>
+            
+            <div id="tab-content-foryou"><div class="grid-container" id="dynamic-rec-grid" style="margin-top:10px;"></div></div>
+            
+            <div id="tab-content-comments" style="display:none;">
+                <div class="comment-input-container"><input type="text" id="comment-input" placeholder="Add a public comment..." onkeypress="if(event.key === 'Enter') postComment();"><button class="comment-send-btn" onclick="postComment()"><i class="fas fa-paper-plane"></i></button></div>
+                <div id="comments-list"></div>
+            </div>
         </div>
     </div>
 
+    <!-- SHORTS VIEW -->
+    <div id="shorts-view">
+        <div style="position:fixed; top:30px; left:20px; z-index:9999; color:#fff;" onclick="hideShorts()"><i class="fas fa-arrow-left" style="background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:15px; border-radius:50%; cursor:pointer; font-size:18px;"></i></div>
+        <div id="shorts-container" style="width:100vw; height:100vh;"></div>
+        <div id="shorts-comments-modal" style="display:none; position:fixed; bottom:0; left:0; width:100vw; height:65vh; background:rgba(10,10,15,0.95); backdrop-filter:blur(20px); border-top:1px solid var(--glass-border); padding:25px; z-index:10000; border-radius:30px 30px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); font-family:'Outfit';">
+            <div class="sc-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px;"><span class="sc-title" style="color:var(--text-main); font-family:'Orbitron'; font-weight:900; font-size:18px;">COMMENTS</span><i class="fas fa-times sc-close" style="cursor:pointer; color:var(--text-muted); font-size:22px;" onclick="closeShortComments()"></i></div>
+            <div id="shorts-comments-list" style="height:calc(100% - 90px); overflow-y:auto; margin-bottom:15px;"></div>
+            <div class="sc-input-area" style="display:flex; gap:12px; position:absolute; bottom:25px; width:calc(100% - 50px);"><input type="text" id="short-comment-in" placeholder="Write a comment..." style="flex:1; padding:15px; border:1px solid var(--glass-border); background:rgba(0,0,0,0.5); color:#fff; border-radius:15px; outline:none; font-family:'Outfit';" onkeypress="if(event.key === 'Enter') postShortComment();"><button onclick="postShortComment()" style="background:var(--accent-gradient); border:none; width:50px; height:50px; color:#fff; cursor:pointer; border-radius:15px; font-size:18px;"><i class="fas fa-paper-plane"></i></button></div>
+        </div>
+    </div>
+
+    <!-- HISTORY VIEW -->
+    <div id="history-view">
+        <div class="lb-header"><i class="fas fa-arrow-left lb-back" onclick="closeHistory()"></i><div class="lb-title">Watch History</div></div>
+        <div id="history-list-container" style="padding: 20px;"></div>
+    </div>
+
+    <!-- SEARCH OVERLAY -->
+    <div id="search-overlay-view">
+        <div class="so-header"><i class="fas fa-arrow-left so-back" onclick="closeSearchOverlay()"></i><div class="so-input-box"><i class="fas fa-search" style="color:var(--text-muted); font-size:16px; margin-right:8px;"></i><input type="text" id="overlay-search-input" placeholder="Search anime, movies..." oninput="handleOverlaySearch(this.value)"></div></div>
+        <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff007f;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
+    </div>
+
+    <nav id="main-nav">
+        <i class="fas fa-home active" onclick="switchTab('home')"></i>
+        <i class="fas fa-bolt" onclick="showShorts()"></i>
+        <i class="fas fa-download" onclick="switchTab('downloads')"></i>
+        <i class="fas fa-user" onclick="switchTab('profile')"></i>
+    </nav>
+    
     <!-- 🌟 MASTER MODE AUTHENTICATION MODAL 🌟 -->
     <div id="master-auth-overlay">
         <!-- Layer 2: PIN Verification -->
@@ -1029,7 +1112,6 @@
             <div class="nav-btn" onclick="showAdminTab('shorts')">SHORTS</div>
             <div class="nav-btn" onclick="showAdminTab('banners')">ALL BANNERS</div>
             <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
-            <div class="nav-btn" onclick="showAdminTab('payments')">PAYMENTS</div>
         </div>
 
         <!-- ANIME SECTION -->
@@ -1153,14 +1235,6 @@
                 <button onclick="if(confirm('Delete USED codes?')) deleteUsedCodes()" style="background:#333; color:#888; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">CLEAR USED</button>
             </div>
             <div id="admin-code-list" style="margin-top:10px;"></div>
-        </div>
-        
-        <!-- PAYMENTS SECTION -->
-        <div id="admin-payments" class="section-view">
-            <div class="input-group">
-                <h3 style="color:#00e676;"><i class="fas fa-money-check-alt"></i> PENDING SUBSCRIPTION REQUESTS</h3>
-            </div>
-            <div id="admin-payment-list" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
         </div>
     </div>
 
@@ -2244,8 +2318,6 @@
             document.getElementById('premium-hub-view').style.display = 'block'; 
         }
         function closePremiumHub() { document.getElementById('premium-hub-view').style.display = 'none'; }
-        
-        // This function is kept for backward compatibility if needed, but we now use selectPlan
         function buyPremiumTelegram(plan, price) {
             if(!currentUser) return alert("Please login first!"); let email = currentUser.email || "User";
             let msg = `Hi Admin, I want to buy VIP Premium.\nPlan: ${plan}\nPrice: ${price}\nMy Email: ${email}`; window.open(`https://t.me/animax_world09?text=${encodeURIComponent(msg)}`, '_blank');
@@ -2816,7 +2888,7 @@
                 let pType = currentPlayType === 'cartoon' ? 'cartoon' : 'movie';
                 let tBadge = pType === 'cartoon' ? 'DUB' : 'MOVIE';
                 let premBadge = m.type === 'premium' ? '<div class="card-vip-badge">VIP</div>' : `<div class="card-vip-badge" style="background:rgba(0,0,0,0.6);color:#ffb703;border:1px solid rgba(255,255,255,0.1);box-shadow:none;">${tBadge}</div>`;
-                return `<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}')','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, '${pType}', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`;
+                return `<div class="folder-card" onclick="playVideo('${m.title.replace(/'/g, "\\'")}','${m.url}','${sid.replace(/'/g, "\\'")}',${m.type === 'premium'}, '${pType}', -1)"><div class="img-wrapper"><img src="${m.thumbnail}">${premBadge}</div><div class="folder-title">${m.title}</div></div>`;
             }
         }
 
@@ -3794,113 +3866,6 @@
                 }); 
             });
         }
-
-        // ==========================================
-        // 💳 MANUAL PAYMENT SYSTEM (bKash/Nagad)
-        // ==========================================
-        let selectedPlanForPayment = { name: '', price: '', days: 0 };
-
-        function selectPlan(name, price, days) {
-            if(!currentUser) return alert("Please login first!");
-            selectedPlanForPayment = { name, price, days };
-            document.getElementById('pay-plan-name').innerText = name;
-            document.getElementById('pay-plan-price').innerText = price;
-            document.getElementById('pay-txnid').value = "";
-            document.getElementById('payment-modal').style.display = 'flex';
-        }
-
-        function copyPaymentNumber() {
-            if(navigator.clipboard) {
-                navigator.clipboard.writeText("01600678966").then(() => {
-                    alert("✅ Number Copied! Please go to your bKash/Nagad app and 'Send Money' to this number.");
-                });
-            } else {
-                alert("Number is 01600678966. Please copy it manually.");
-            }
-        }
-
-        function submitPayment() {
-            let txnId = document.getElementById('pay-txnid').value.trim();
-            if(!txnId) return alert("❌ Please enter the Transaction ID (TxnID)!");
-            
-            let reqData = {
-                uid: currentUser.uid,
-                email: currentUser.email || "Unknown",
-                username: currentUser.username || "User",
-                planName: selectedPlanForPayment.name,
-                amount: selectedPlanForPayment.price,
-                planDays: selectedPlanForPayment.days,
-                txnId: txnId,
-                status: "pending",
-                timestamp: Date.now()
-            };
-
-            db.ref('payment_requests').push(reqData).then(() => {
-                alert("✅ Request Submitted Successfully!\nAdmin will verify your TxnID and activate your VIP soon.");
-                document.getElementById('payment-modal').style.display = 'none';
-            }).catch(err => {
-                alert("❌ Error: " + err.message);
-            });
-        }
-
-        // Admin Panel Listener for Payments
-        function loadPaymentRequests() {
-            db.ref('payment_requests').orderByChild('status').equalTo('pending').on('value', s => {
-                const list = document.getElementById('admin-payment-list');
-                if(!list) return;
-                list.innerHTML = "";
-                
-                if(!s.exists()) {
-                    list.innerHTML = "<div style='color:#888; text-align:center; padding:20px;'>No pending requests.</div>";
-                    return;
-                }
-                
-                let reqs = [];
-                s.forEach(c => { reqs.unshift({ key: c.key, val: c.val() }); });
-                
-                reqs.forEach(req => {
-                    let d = req.val;
-                    let dateStr = new Date(d.timestamp).toLocaleString();
-                    list.innerHTML += `
-                    <div style="background:#1a1a1a; border-left:4px solid #ffb703; padding:15px; border-radius:8px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <strong style="color:var(--gold); font-family:'Orbitron';">${d.planName} (${d.amount})</strong>
-                            <span style="font-size:11px; color:#888;">${dateStr}</span>
-                        </div>
-                        <div style="font-size:13px; color:#ddd; margin-bottom:5px;">User: ${d.username} (${d.email})</div>
-                        <div style="font-size:14px; color:#fff; margin-bottom:12px; font-family:'Courier New', monospace;">
-                            TxnID: <strong style="color:#00e676; letter-spacing:1px; user-select:text; -webkit-user-select:text;">${d.txnId}</strong>
-                        </div>
-                        <button onclick="approvePayment('${req.key}', '${d.uid}', ${d.planDays})" style="background:#00e676; color:#000; border:none; padding:8px 15px; border-radius:5px; font-weight:bold; font-family:'Orbitron'; cursor:pointer; width:100%;">APPROVE & GIVE VIP</button>
-                    </div>`;
-                });
-            });
-        }
-
-        function approvePayment(reqKey, uid, planDays) {
-            if(!window.isMasterAdminLoggedIn) return alert("❌ Permission Denied!");
-            if(!confirm(`Are you sure you want to approve this payment and give ${planDays} Days VIP?`)) return;
-
-            let actualTime = Date.now() + serverTimeOffset;
-            db.ref(`users/${uid}/premiumExpiry`).once('value', snap => {
-                let currentExp = snap.val() || 0; 
-                let baseTime = (currentExp > actualTime) ? currentExp : actualTime;
-                let newExp = baseTime + (planDays * 24 * 60 * 60 * 1000);
-                
-                db.ref(`users/${uid}`).update({ premiumExpiry: newExp }).then(() => {
-                    db.ref(`payment_requests/${reqKey}`).update({ status: 'approved', approvedAt: actualTime }).then(() => {
-                        alert("✅ Payment Approved! User is now VIP.");
-                    });
-                });
-            });
-        }
-
-        // Hook it into the existing Admin Loader
-        const existingLoadAdminData = loadAdminAllData;
-        loadAdminAllData = function() {
-            existingLoadAdminData();
-            loadPaymentRequests();
-        };
     </script>
 </body>
 </html>
