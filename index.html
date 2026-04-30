@@ -561,6 +561,35 @@
         #master-admin-panel .folder-header-title { font-family: 'Orbitron'; font-weight: bold; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 12px; flex: 1; padding-right: 15px; }
         #master-admin-panel .folder-header-meta { font-family: 'Outfit'; font-size: 11px; font-weight: 600; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
         #master-admin-panel .folder-content { display: none; padding: 15px 5px; border-top: none; }
+
+        /* 🌟 NEW VIP PAYMENT MODAL DESIGN 🌟 */
+        .vip-pay-wrapper { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 15px; margin: auto; padding-top: 10px; }
+        .vip-pay-banner { background: linear-gradient(rgba(10, 10, 15, 0.7), rgba(10, 10, 15, 0.9)), url('https://github.com/animaxstudio09/anime-world/releases/download/1/c7a40af73711b79dc78bcfbd86de1e4e.jpg') center/cover; border: 1px solid rgba(177, 75, 255, 0.3); border-radius: 12px; padding: 25px 15px; text-align: center; box-shadow: 0 0 20px rgba(177, 75, 255, 0.1); }
+        .vip-pay-banner-text { color: #fff; font-size: 16px; font-weight: 800; line-height: 1.5; font-family: 'Outfit', sans-serif; }
+        .vip-pay-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 15px; }
+        .vip-plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 10px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .vpc-title { color: #fff; font-size: 16px; font-weight: 800; margin-bottom: 15px; }
+        .vpc-duration { color: #b14bff; font-size: 28px; font-weight: 900; margin-bottom: 15px; text-shadow: 0 0 15px rgba(177, 75, 255, 0.5); }
+        .vpc-price-box { background: rgba(0, 245, 212, 0.1); border: 1px solid rgba(0, 245, 212, 0.5); color: #00f5d4; padding: 8px 20px; border-radius: 8px; font-size: 22px; font-weight: 900; margin-bottom: 15px; box-shadow: 0 0 10px rgba(0, 245, 212, 0.2); }
+        .vpc-features p { color: #aaa; font-size: 11px; margin: 5px 0; }
+        .vip-step-section { display: flex; flex-direction: column; gap: 10px; }
+        .v-step-title { color: #fff; font-size: 16px; font-weight: 800; text-align: center; }
+        .v-step-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 15px; text-align: center; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .vs-instruction { color: #ddd; font-size: 12px; margin-bottom: 12px; line-height: 1.5; }
+        .vs-number { color: #fff; font-size: 22px; font-weight: 900; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; margin-bottom: 5px; display: block; }
+        .vs-sub-instruction { color: #888; font-size: 11px; margin-bottom: 15px; }
+        .vs-copy-btn { background: transparent; border: 1px solid #00f5d4; color: #00f5d4; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .vs-copy-btn:active { transform: scale(0.95); background: rgba(0, 245, 212, 0.1); }
+        .vs-input { width: 100%; background: transparent; border: 1px solid #00f5d4; padding: 15px; color: #fff; border-radius: 8px; text-align: center; font-size: 15px; outline: none; margin-bottom: 20px; transition: 0.3s; }
+        .vs-input:focus { box-shadow: 0 0 15px rgba(0, 245, 212, 0.2); }
+        .vs-payment-methods { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .vs-method { background: #fff; border-radius: 6px; padding: 6px 15px; display: flex; align-items: center; gap: 5px; font-weight: 900; font-size: 15px; font-family: sans-serif; }
+        .vs-method.bkash { color: #e2136e; }
+        .vs-method.nagad { color: #f7931e; }
+        .vs-submit-btn { width: 100%; background: linear-gradient(90deg, #b14bff, #ff007f); color: #fff; padding: 16px; border-radius: 8px; font-weight: 800; border: none; cursor: pointer; font-size: 16px; transition: 0.3s; box-shadow: 0 5px 20px rgba(177, 75, 255, 0.4); }
+        .vs-submit-btn:active { transform: scale(0.96); }
+        .vip-pay-footer { color: #888; font-size: 11px; text-align: center; margin-top: 10px; text-decoration: underline; cursor: pointer; }
+        @media (max-width: 400px) { .vip-pay-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="vip-cyber-theme">
@@ -945,26 +974,58 @@
     </div>
 
     <!-- MANUAL PAYMENT MODAL -->
-    <div id="manual-payment-modal" style="display:none; position:fixed; inset:0; background:rgba(5,5,8,0.95); backdrop-filter:blur(15px); z-index:99999; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit', sans-serif;">
-        <i class="fas fa-times" style="position:absolute; top:30px; right:30px; font-size:28px; color:var(--text-muted); cursor:pointer; transition:0.3s;" onclick="closePaymentModal()"></i>
+    <div id="manual-payment-modal" style="display:none; position:fixed; inset:0; background:rgba(5,5,8,0.98); backdrop-filter:blur(15px); z-index:99999; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit', sans-serif; overflow-y:auto; padding: 20px;">
+        <i class="fas fa-times" style="position:absolute; top:20px; right:20px; font-size:28px; color:var(--text-muted); cursor:pointer; transition:0.3s; z-index:100;" onclick="closePaymentModal()"></i>
         
-        <div style="background:var(--glass-bg); border:1px solid var(--accent-glow); padding:30px 20px; border-radius:24px; box-shadow:0 10px 40px rgba(255, 0, 127, 0.2); width:90%; max-width:380px; text-align:center; position:relative;">
-            <div style="color:var(--accent-glow); font-size:22px; font-weight:900; font-family:'Orbitron'; margin-bottom:5px; letter-spacing:1px;">VIP SUBSCRIPTION</div>
-            <div id="pay-plan-desc" style="color:var(--text-main); font-size:15px; font-weight:700; margin-bottom:20px;">Plan: -- | Amount: -- TK</div>
-            
-            <div style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); padding:15px; border-radius:16px; margin-bottom:20px;">
-                <div style="color:var(--text-muted); font-size:12px; font-weight:600; margin-bottom:10px;">Send Money to this Personal Number<br><span style="color:#00f5d4; font-size:11px;">(বিকাশ বা নগদ পার্সোনাল নাম্বারে সেন্ড মানি করুন)</span></div>
-                
-                <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:5px;">
-                    <span id="admin-pay-number" style="font-size:24px; font-weight:900; color:#fff; letter-spacing:2px; font-family:'Orbitron';">01600678966</span>
-                    <button onclick="copyPaymentNumber()" style="background:var(--accent-gradient); color:#000; border:none; border-radius:8px; padding:6px 12px; font-weight:800; cursor:pointer; font-size:12px; transition:0.2s;"><i class="fas fa-copy"></i> Copy</button>
+        <div class="vip-pay-wrapper">
+            <!-- Top Banner -->
+            <div class="vip-pay-banner">
+                <div class="vip-pay-banner-text">
+                    আনলক করুন প্রিমিয়াম সামগ্রী:<br>আপনার VIP যাত্রা শুরু করুন
                 </div>
-                <div style="color:var(--text-muted); font-size:11px; font-weight:600;">bKash & Nagad (Personal)</div>
             </div>
-            
-            <input type="text" id="pay-txnid" placeholder="Enter Transaction ID (TxnID)" style="width:100%; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); padding:16px; color:#fff; border-radius:12px; text-align:center; font-family:'Orbitron'; margin-bottom:15px; font-size:14px; outline:none;">
-            
-            <button onclick="submitPayment()" id="pay-submit-btn" style="width:100%; background:var(--accent-gradient); color:#000; padding:16px; border-radius:12px; font-weight:900; border:none; cursor:pointer; font-size:15px; font-family:'Orbitron'; transition:0.3s; box-shadow:0 5px 20px rgba(255, 0, 127, 0.3);">SUBMIT PAYMENT</button>
+
+            <!-- Middle Grid -->
+            <div class="vip-pay-grid">
+                <!-- Left: Plan Info -->
+                <div class="vip-plan-card">
+                    <div class="vpc-title">আপনার প্ল্যান</div>
+                    <div class="vpc-duration" id="pay-plan-name-display">3 মাস</div>
+                    <div class="vpc-price-box" id="pay-plan-price-display">100 TK</div>
+                    <div class="vpc-features">
+                        <p>প্রিমিয়াম সামগ্রীতে সীমাহীন অ্যাক্সেস</p>
+                        <p>এক্সক্লুসিভ ফিচার</p>
+                    </div>
+                </div>
+
+                <!-- Right: Step 1 -->
+                <div class="vip-step-section">
+                    <div class="v-step-title">ধাপ ১: পেমেন্ট করুন</div>
+                    <div class="v-step-box">
+                        <p class="vs-instruction">এই পার্সোনাল নাম্বারে সেন্ড মানি করুন<br><span style="color:#00f5d4;">(বিকাশ বা নগদ)</span></p>
+                        <span class="vs-number" id="admin-pay-number">01600678966</span>
+                        <p class="vs-sub-instruction">বিকাশ ও নগদ (পার্সোনাল)</p>
+                        <button class="vs-copy-btn" onclick="copyPaymentNumber()">কপি করুন <i class="fas fa-clipboard"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom: Step 2 -->
+            <div class="vip-step-section" style="margin-top: 10px;">
+                <div class="v-step-title">ধাপ ২: লেনদেনের তথ্য</div>
+                <div class="v-step-box" style="padding: 25px 20px;">
+                    <input type="text" id="pay-txnid" class="vs-input" placeholder="লেনদেনের আইডি (TxnID) লিখুন">
+                    
+                    <div class="vs-payment-methods">
+                        <div class="vs-method bkash"><img src="https://i.ibb.co/bPDN2c9/bkash.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">bKash</div>
+                        <div class="vs-method nagad"><img src="https://i.ibb.co/3sX8MZW/nagad.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">নগদ</div>
+                    </div>
+
+                    <button class="vs-submit-btn" id="pay-submit-btn" onclick="submitPayment()">নিশ্চিত করুন এবং সাবমিট করুন</button>
+                </div>
+            </div>
+
+            <div class="vip-pay-footer" onclick="window.open('https://t.me/animax_world09', '_blank')">পেমেন্ট সহায়তার জন্য যোগাযোগ করুন</div>
         </div>
     </div>
 
@@ -1294,7 +1355,7 @@
         const langDict = {
             en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 7-day free trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
             bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ৭ দিনের ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 7-दिवसीय निःशुल्क परीक्षण समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 7-दिवसीय निःशुल्क परीक्षण समाप्त हो गया কাশী।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
             ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"7日間の無料トライアルが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
             es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 7 días ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
             fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 7 jours est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
@@ -3914,7 +3975,11 @@
         function openPaymentModal(planName, price, days) {
             if(!currentUser) return alert("Please login first to buy VIP!");
             currentPayPlan = { name: planName, price: price, days: days };
-            document.getElementById('pay-plan-desc').innerText = `Plan: ${planName} | Amount: ${price} TK`;
+            
+            let displayPlanName = planName.replace('Month', 'মাস').replace('Months', 'মাস');
+            document.getElementById('pay-plan-name-display').innerText = displayPlanName;
+            document.getElementById('pay-plan-price-display').innerText = price + " TK";
+            
             document.getElementById('pay-txnid').value = "";
             document.getElementById('manual-payment-modal').style.display = 'flex';
         }
@@ -3957,10 +4022,10 @@
             db.ref('payment_requests').push(requestData).then(() => {
                 alert("✅ Request Submitted Successfully!\nAdmin will verify your TxnID and activate your VIP shortly.");
                 closePaymentModal();
-                btn.innerText = "SUBMIT PAYMENT"; btn.disabled = false;
+                btn.innerText = "নিশ্চিত করুন এবং সাবমিট করুন"; btn.disabled = false;
             }).catch(err => {
                 alert("❌ Error: " + err.message);
-                btn.innerText = "SUBMIT PAYMENT"; btn.disabled = false;
+                btn.innerText = "নিশ্চিত করুন এবং সাবমিট করুন"; btn.disabled = false;
             });
         }
 
