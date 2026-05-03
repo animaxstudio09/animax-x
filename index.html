@@ -1191,7 +1191,8 @@
 
         <!-- TABS -->
         <div class="nav-scroller">
-            <div class="nav-btn active" onclick="showAdminTab('anime')">ANIME SERIES</div>
+            <div class="nav-btn active" onclick="showAdminTab('analytics')">ANALYTICS</div>
+            <div class="nav-btn" onclick="showAdminTab('anime')">ANIME SERIES</div>
             <div class="nav-btn" onclick="showAdminTab('movies')">MOVIE BOX</div>
             <div class="nav-btn" onclick="showAdminTab('cartoons')">CARTOON BOX</div>
             <div class="nav-btn" onclick="showAdminTab('shorts')">SHORTS</div>
@@ -1200,8 +1201,33 @@
             <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions')">SUBSCRIPTIONS</div>
         </div>
 
+        <!-- ANALYTICS SECTION -->
+        <div id="admin-analytics" class="section-view" style="display:block;">
+            <div class="input-group">
+                <h3 style="color:var(--cyan);"><i class="fas fa-chart-line"></i> WEBSITE ANALYTICS</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+                    <div style="background:#1a1a1a; padding:20px; border-radius:10px; text-align:center; border:1px solid #333;">
+                        <div style="font-size:28px; color:var(--green); font-weight:900; font-family:'Orbitron';" id="stat-online">0</div>
+                        <div style="font-size:11px; color:#888; margin-top:5px; font-weight:bold;">ONLINE NOW</div>
+                    </div>
+                    <div style="background:#1a1a1a; padding:20px; border-radius:10px; text-align:center; border:1px solid #333;">
+                        <div style="font-size:28px; color:var(--cyan); font-weight:900; font-family:'Orbitron';" id="stat-total-users">0</div>
+                        <div style="font-size:11px; color:#888; margin-top:5px; font-weight:bold;">TOTAL ACCOUNTS</div>
+                    </div>
+                    <div style="background:#1a1a1a; padding:20px; border-radius:10px; text-align:center; border:1px solid #333;">
+                        <div style="font-size:28px; color:var(--gold); font-weight:900; font-family:'Orbitron';" id="stat-guest-watches">0</div>
+                        <div style="font-size:11px; color:#888; margin-top:5px; font-weight:bold;">GUEST WATCHES</div>
+                    </div>
+                    <div style="background:#1a1a1a; padding:20px; border-radius:10px; text-align:center; border:1px solid #333;">
+                        <div style="font-size:28px; color:#ff007f; font-weight:900; font-family:'Orbitron';" id="stat-total-visits">0</div>
+                        <div style="font-size:11px; color:#888; margin-top:5px; font-weight:bold;">TOTAL VISITS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ANIME SECTION -->
-        <div id="admin-anime" class="section-view" style="display:block;">
+        <div id="admin-anime" class="section-view" style="display:none;">
             <div class="input-group">
                 <h3 id="an-head"><i class="fas fa-upload"></i> UPLOAD ANIME EPISODES</h3>
                 <div class="cat-checkboxes">
@@ -1351,18 +1377,35 @@
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
 
+        // 🌟 Global Session & Traffic Tracking
+        let globalSessionId = sessionStorage.getItem('animax_sess_id');
+        if(!globalSessionId) {
+            globalSessionId = 'guest_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+            sessionStorage.setItem('animax_sess_id', globalSessionId);
+            // Increment total website visits
+            db.ref('metadata/totalVisits').transaction(c => (c || 0) + 1).catch(()=>{});
+        }
+        
+        db.ref('.info/connected').on('value', snap => {
+            if (snap.val() === true) {
+                let allOnlineRef = db.ref(`all_online/${globalSessionId}`);
+                allOnlineRef.onDisconnect().remove();
+                allOnlineRef.set(true);
+            }
+        });
+
         // 🌟 FEATURE 1: 10-LANGUAGE UI & AI 🌟
         const langDict = {
-            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 7-day free trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
-            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ৭ দিনের ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 7-दिवसीय निःशुल्क परीक्षण समाप्त हो गया কাশী।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
-            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"7日間の無料トライアルが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
-            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 7 días ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
-            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 7 jours est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
-            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 7 dias acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
-            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 7 دن کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
-            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت فترة التجربة المجانية 7 أيام! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
-            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"7일 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
+            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-hour free trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
+            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ১২ ঘণ্টার ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-घंटे का निःशुल्क परीक्षण समाप्त हो गया কাশী।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
+            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"12時間の無料トライアルが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
+            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 12 horas ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 12 heures est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
+            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 12 horas acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
+            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12 گھنٹے کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
+            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة مجانية لمدة 12 ساعة! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
+            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"12시간 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
         };
 
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
@@ -1736,17 +1779,7 @@
 
                 checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); checkDailyBonusUI();
                 
-                db.ref('.info/connected').once('value', snap => {
-                    if (snap.val() === true) {
-                        mySessionRef = db.ref(`online_users/${currentUser.uid}`); mySessionRef.onDisconnect().remove(); mySessionRef.set({ username: currentUser.username || currentUser.email.split('@')[0], time: firebase.database.ServerValue.TIMESTAMP });
-                    }
-                });
-
-                // Load basic admin settings for restrictions, but don't grant access yet
-                loadAdminSettings();
-
             } else { 
-                if(mySessionRef) { mySessionRef.remove(); mySessionRef = null; }
                 currentUser = null; isPremium = false; isTrialActive = false;
                 window.isMasterAdminLoggedIn = false;
                 
@@ -1862,7 +1895,7 @@
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
                 let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
-                let vipTrialTimeLeft = (creationTime + (1 * 24 * 60 * 60 * 1000)) - actualServerTime; 
+                let vipTrialTimeLeft = (creationTime + (12 * 60 * 60 * 1000)) - actualServerTime; 
                 isTrialActive = (vipTrialTimeLeft > 0);
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
@@ -1899,7 +1932,7 @@
                         document.getElementById('tab-vault').style.display = 'inline-block';
                         
                         vipTimerInterval = setInterval(() => {
-                            let now = Date.now() + serverTimeOffset; let timeLeft = (creationTime + (1 * 24 * 60 * 60 * 1000)) - now;
+                            let now = Date.now() + serverTimeOffset; let timeLeft = (creationTime + (12 * 60 * 60 * 1000)) - now;
                             if(timeLeft <= 0) {
                                 clearInterval(vipTimerInterval); isTrialActive = false;
                                 document.body.classList.remove('vip-cyber-theme');
@@ -1936,10 +1969,10 @@
             if(creationTime === 0) return true; 
 
             let now = Date.now();
-            if (now - creationTime > 7 * 24 * 60 * 60 * 1000) {
+            if (now - creationTime > 12 * 60 * 60 * 1000) {
                 let d = langDict[currentAppLang] || langDict['en'];
                 speakLocalized(d.aiTrialOver, currentAppLang);
-                alert("🤖 AI Trial Ended!\n\nYour 7-Day Free AI Assistant trial has expired. Please purchase VIP to continue talking to Ani.");
+                alert("🤖 AI Trial Ended!\n\nYour 12-Hour Free AI Assistant trial has expired. Please purchase VIP to continue talking to Ani.");
                 openPremiumHub();
                 return false;
             }
@@ -3653,7 +3686,8 @@
                 document.getElementById('master-admin-panel').style.display = 'block';
                 loadAdminAllData(); 
                 loadAdminSubscriptions();
-                showAdminTab('anime');
+                startLiveAnalytics();
+                showAdminTab('analytics');
                 
                 if(currentAppLang === 'bn') {
                     speakWithOriginalTTS("স্বাগতম মাস্টার। সিস্টেম আনলক করা হয়েছে।", "bn-IN");
@@ -3667,6 +3701,46 @@
         // 🛡️ ADMIN PANEL LOGIC 🛡️
         // ==============================================================
         
+        // 🌟 LIVE ANALYTICS TRACKING SYSTEM 🌟
+        function startLiveAnalytics() {
+            if(!window.isMasterAdminLoggedIn) return;
+            
+            // 1. Live Online Users
+            db.ref('all_online').on('value', s => {
+                document.getElementById('stat-online').innerText = s.numChildren() || 0;
+            });
+            
+            // 2. Total Accounts
+            db.ref('metadata/totalUsers').on('value', s => {
+                document.getElementById('stat-total-users').innerText = s.val() || 0;
+            });
+
+            // 3. Guest Watches Calculation
+            setInterval(() => {
+                if(!window.isMasterAdminLoggedIn) return;
+                let guestCount = parseInt(localStorage.getItem('guest_watch_count') || '0');
+                // We show global guest watches if we had a dedicated node, but since it's local,
+                // we assume we just show an aggregated view. Here, we fetch total guest views from views tree.
+                db.ref('metadata/totalGuestWatches').on('value', s => {
+                    document.getElementById('stat-guest-watches').innerText = s.val() || 0;
+                });
+            }, 5000);
+
+            // 4. Total Website Visits
+            db.ref('metadata/totalVisits').on('value', s => {
+                document.getElementById('stat-total-visits').innerText = s.val() || 0;
+            });
+        }
+        
+        // Update guest watches counter in DB when guest watches video
+        const originalPlayVideo = playVideo;
+        playVideo = function(t, u, id, ip, type, idx, seekTime = 0) {
+            if(!currentUser && !isAdblockerActive && (!ip || isPremium || isTrialActive)) {
+                db.ref('metadata/totalGuestWatches').transaction(c => (c || 0) + 1).catch(()=>{});
+            }
+            originalPlayVideo.apply(this, arguments);
+        }
+
         function showAdminTab(tab) {
             document.getElementById('master-admin-panel').querySelectorAll('.section-view').forEach(d => d.style.display = 'none');
             document.getElementById('admin-' + tab) ? document.getElementById('admin-' + tab).style.display = 'block' : document.getElementById(tab).style.display = 'block';
