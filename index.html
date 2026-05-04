@@ -1187,6 +1187,8 @@
         <div class="nav-scroller">
             <div class="nav-btn active" onclick="showAdminTab('analytics')">ANALYTICS</div>
             <div class="nav-btn" onclick="showAdminTab('settings')">⚙️ SETTINGS</div>
+            <div class="nav-btn" onclick="showAdminTab('admanager')">AD MANAGER</div>
+            <div class="nav-btn" onclick="showAdminTab('aicommds')">AI COMMANDS</div>
             <div class="nav-btn" onclick="showAdminTab('anime')">ANIME SERIES</div>
             <div class="nav-btn" onclick="showAdminTab('movies')">MOVIE BOX</div>
             <div class="nav-btn" onclick="showAdminTab('cartoons')">CARTOON BOX</div>
@@ -1229,7 +1231,7 @@
                 <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Master Mode PIN (6 Digits)</label>
                 <input type="number" id="set-master-pin" placeholder="Enter New PIN">
                 
-                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Master Mode Voice Trigger (e.g. "open admin")</label>
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Master Mode Voice Trigger (e.g. "master mode")</label>
                 <input type="text" id="set-master-trigger" placeholder="Voice command to open Master Mode">
                 
                 <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Payment Number (bKash/Nagad)</label>
@@ -1240,6 +1242,50 @@
                 
                 <button class="btn-action" style="background: #ff007f; color:#fff;" onclick="saveSystemSettings()">SAVE ALL SETTINGS</button>
             </div>
+        </div>
+
+        <!-- AD MANAGER SECTION -->
+        <div id="admin-admanager" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color: #fb8500;">
+                <h3 style="color: #fb8500;"><i class="fas fa-ad"></i> AD MANAGER</h3>
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Popunder Script URL</label>
+                <input type="text" id="set-ad-popunder" placeholder="https://...">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Social Bar Script URL</label>
+                <input type="text" id="set-ad-social" placeholder="https://...">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Smartlink / Direct Link URL</label>
+                <input type="text" id="set-ad-smartlink" placeholder="https://...">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Banner Ad Key</label>
+                <input type="text" id="set-ad-banner" placeholder="9f634c...">
+                
+                <button class="btn-action" style="background: #fb8500; color:#000;" onclick="saveAdSettings()">SAVE AD SETTINGS</button>
+            </div>
+        </div>
+
+        <!-- AI COMMANDS BUILDER SECTION -->
+        <div id="admin-aicommds" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color: #b14bff;">
+                <h3 style="color: #b14bff;"><i class="fas fa-robot"></i> AI COMMAND BUILDER</h3>
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Trigger Words (comma separated)</label>
+                <input type="text" id="ai-cmd-triggers" placeholder="e.g. open telegram, contact admin">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Action Type</label>
+                <select id="ai-cmd-type" style="border-color:#b14bff;">
+                    <option value="reply">Reply with Text</option>
+                    <option value="play">Play Video (Value = Title)</option>
+                    <option value="link">Open Link (Value = URL)</option>
+                </select>
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Value (Response / Video Title / URL)</label>
+                <input type="text" id="ai-cmd-value" placeholder="Enter value based on action type...">
+                
+                <button class="btn-action" style="background: #b14bff; color:#fff;" onclick="saveAICommand()">ADD COMMAND</button>
+            </div>
+            <div id="admin-aicommds-list" class="data-list" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
 
         <!-- ANIME SECTION -->
@@ -1399,6 +1445,13 @@
         let PAYMENT_NUMBER = "01600678966";
         let TELEGRAM_LINK = "https://t.me/animax_world09";
         
+        let AD_POPUNDER = "https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js";
+        let AD_SOCIAL = "https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js";
+        let AD_BANNER = "9f634c6894bc13ff8f0f19de1fcac9f3";
+        let AD_SMARTLINK = "https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871";
+
+        let customAICommands = [];
+        
         // 🌟 AI Memory Storage
         let aiMemory = { name: "" };
 
@@ -1418,18 +1471,39 @@
             }
         });
 
+        // Load AI Commands globally
+        db.ref('ai_commands').on('value', snap => {
+            customAICommands = [];
+            const list = document.getElementById('admin-aicommds-list');
+            if(list) list.innerHTML = "";
+            snap.forEach(child => {
+                let cmd = child.val();
+                cmd.key = child.key;
+                customAICommands.push(cmd);
+                if(list) {
+                    list.innerHTML += `<div style="background:#1a1a1a; padding:15px; border-radius:8px; border-left:4px solid #b14bff; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="color:var(--text-main); font-weight:bold; font-size:14px;">Triggers: <span style="color:#b14bff;">${cmd.triggers}</span></div>
+                            <div style="color:var(--text-muted); font-size:12px; margin-top:5px;">Action: ${cmd.type.toUpperCase()} | Value: ${cmd.value}</div>
+                        </div>
+                        <button onclick="deleteAICommand('${child.key}')" style="background:var(--red); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                }
+            });
+        });
+
         // 🌟 FEATURE 1: 10-LANGUAGE UI & AI 🌟
         const langDict = {
-            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-hour free trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
-            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার ১২ ঘণ্টার ফ্রি ট্রায়াল শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-घंटे का निःशुल्क परीक्षण समाप्त हो गया কাশী।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
-            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"12時間の無料トライアルが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
-            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu prueba gratuita de 12 horas ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
-            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre essai gratuit de 12 heures est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
-            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 12 horas acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
-            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12 گھنٹے کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
-            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة مجانية لمدة 12 ساعة! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
-            ko: { 메뉴:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"12시간 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
+            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-Hour Free Trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
+            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার 12-Hour Free Trial শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI भाषा चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
+            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"あなたの12-Hour Free Trialが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
+            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu 12-Hour Free Trial ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 12-Hour Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
+            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu 12-Hour Free Trial acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
+            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12-Hour Free Trial ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
+            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة 12-Hour Free Trial! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
+            ko: { 메뉴:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"당신의 12-Hour Free Trial이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
         };
 
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
@@ -1610,13 +1684,13 @@
             } else {
                 bannerWrap.style.display = 'block'; 
                 if(adBannerContainer && adBannerContainer.innerHTML === "") {
-                    adBannerContainer.innerHTML = `<script>atOptions = {'key' : '9f634c6894bc13ff8f0f19de1fcac9f3','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr`+`ipt>`;
+                    adBannerContainer.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
                 }
                 if(rewardTop && rewardTop.innerHTML === "") {
-                    rewardTop.innerHTML = `<script>atOptions = {'key' : '9f634c6894bc13ff8f0f19de1fcac9f3','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr`+`ipt>`;
+                    rewardTop.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
                 }
                 if(rewardBottom && rewardBottom.innerHTML === "") {
-                    rewardBottom.innerHTML = `<script>atOptions = {'key' : '9f634c6894bc13ff8f0f19de1fcac9f3','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/9f634c6894bc13ff8f0f19de1fcac9f3/invoke.js"></scr`+`ipt>`;
+                    rewardBottom.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
                 }
             }
         }
@@ -1863,7 +1937,7 @@
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
             if(!currentUser && isProfileTab && isLoginVisible) return;
 
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            window.open(AD_SMARTLINK, '_blank');
             localStorage.setItem('last_smartlink', Date.now());
         }
 
@@ -1872,7 +1946,7 @@
             if(oldScript) oldScript.remove();
             let script = document.createElement('script');
             script.id = 'dynamic-socialbar';
-            script.src = 'https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js';
+            script.src = AD_SOCIAL;
             document.body.appendChild(script);
         }
 
@@ -1889,7 +1963,7 @@
             if(Date.now() - lastPopTime > 60000) { 
                 let popScript = document.getElementById('popunder-ad-manager');
                 if(popScript) {
-                    popScript.src = 'https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js';
+                    popScript.src = AD_POPUNDER;
                     localStorage.setItem('last_popunder', Date.now());
                 }
             }
@@ -2031,7 +2105,7 @@
 
         function triggerPopunderTrap() {
             document.getElementById('reward-popunder-trap').style.display = 'none';
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            window.open(AD_SMARTLINK, '_blank');
         }
 
         function resetRewardUI() {
@@ -2071,7 +2145,7 @@
 
         function startRewardTimer() {
             let a = document.createElement('a');
-            a.href = 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871';
+            a.href = AD_SMARTLINK;
             a.target = '_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
             
             rewardActive = true;
@@ -2087,14 +2161,14 @@
 
         function startWebTask(taskId, btnEl, adLink) {
             if(!currentUser) return alert("Login required!"); if(activeTask) return alert("Please finish or cancel your current task first!");
-            let popup = window.open(adLink, '_blank'); if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
+            let popup = window.open(AD_SMARTLINK, '_blank'); if(!popup) return alert("Popup blocked! Please allow popups to complete tasks.");
             activeTask = { id: taskId, btnEl: btnEl, startTime: Date.now(), completed: false };
             btnEl.innerText = "Verifying..."; btnEl.classList.add('running');
             startTabTimer(30); 
         }
 
         function startMidRollAd() {
-            window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            window.open(AD_SMARTLINK, '_blank');
             midRollTaskActive = true; midRollTaskStart = Date.now();
             let btn = document.getElementById('mid-roll-btn'); btn.innerText = "VERIFYING... (WAIT 10s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
             startTabTimer(10); 
@@ -2102,7 +2176,7 @@
 
         function startEpUnlockAd() {
             if(epUnlockActive) return;
-            if(!isPremium && !isTrialActive) window.open('https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871', '_blank');
+            if(!isPremium && !isTrialActive) window.open(AD_SMARTLINK, '_blank');
             epUnlockActive = true; epUnlockStart = Date.now();
             let btn = document.getElementById('ep-unlock-btn');
             btn.innerText = "VERIFYING... (WAIT 5s)"; btn.style.background = "rgba(255,255,255,0.1)"; btn.style.color = "#fff";
@@ -2499,7 +2573,7 @@
                 container.innerHTML = ""; 
                 dailyTasksData.forEach(task => {
                     let isDone = completedTasks[task.id];
-                    let btnHTML = isDone ? `<button class="ti-btn" style="background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:not-allowed;">Completed</button>` : `<button class="ti-btn" id="btn-${task.id}" onclick="startWebTask('${task.id}', this, 'https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871')">Get Now</button>`;
+                    let btnHTML = isDone ? `<button class="ti-btn" style="background:rgba(255,255,255,0.05);color:var(--text-muted);cursor:not-allowed;">Completed</button>` : `<button class="ti-btn" id="btn-${task.id}" onclick="startWebTask('${task.id}', this, AD_SMARTLINK)">Get Now</button>`;
                     container.innerHTML += `<div class="task-item"><div class="ti-top" style="display:flex; justify-content:space-between; align-items:center;"><div class="ti-info"><img src="${task.img}" class="ti-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/107/107783.png'"><div><div class="ti-name">${task.name}</div><div class="ti-coin-val">Wait 30s <i class="fas fa-arrow-right" style="font-size:10px;color:var(--text-muted);"></i> <i class="fas fa-star" style="color:var(--accent-glow);"></i> +2</div></div></div>${btnHTML}</div></div>`;
                 });
             });
@@ -2768,6 +2842,10 @@
         let nextAdTime = 600; let adWarningShown = false; let adEnforced = false; 
 
         function playVideo(t, u, id, ip, type, idx, seekTime = 0) {
+            if(!currentUser && !isAdblockerActive && (!ip || isPremium || isTrialActive)) {
+                db.ref('metadata/totalGuestWatches').transaction(c => (c || 0) + 1).catch(()=>{});
+            }
+
             if(isAdblockerActive && !isPremium && !isTrialActive) {
                 document.getElementById('adblock-guard').style.display = 'flex';
                 return;
@@ -2782,10 +2860,6 @@
                     return;
                 }
                 localStorage.setItem('guest_watch_count', guestCount + 1);
-            }
-
-            if(!currentUser && !isAdblockerActive && (!ip || isPremium || isTrialActive)) {
-                db.ref('metadata/totalGuestWatches').transaction(c => (c || 0) + 1).catch(()=>{});
             }
 
             if(ip && !isPremium && !isTrialActive) { 
@@ -3465,10 +3539,27 @@
             
             let isLang = (lang) => currentAppLang === lang;
 
+            // 🌟 CHECK DYNAMIC AI COMMANDS FIRST
+            for(let i=0; i<customAICommands.length; i++) {
+                let cmd = customAICommands[i];
+                let triggers = cmd.triggers.split(',').map(tr => tr.trim().toLowerCase());
+                for(let j=0; j<triggers.length; j++) {
+                    if(t.includes(triggers[j]) || t === triggers[j]) {
+                        if(cmd.type === 'reply') {
+                            return { reply: cmd.value, action: null };
+                        } else if(cmd.type === 'play') {
+                            return { reply: "Playing right away!", action: () => executeVoicePlayCommand(cmd.value) };
+                        } else if(cmd.type === 'link') {
+                            return { reply: "Opening link for you.", action: () => window.open(cmd.value, '_blank') };
+                        }
+                    }
+                }
+            }
+
             let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
             
-            // AI Memory Extraction
+            // 🌟 AI Memory Extraction
             let nameMatch = t.match(/(?:my name is|i am|call me|আমার নাম|मेरा नाम)\s+([a-zA-Z\s]+)/i);
 
             if (nameMatch && !t.includes("what")) {
@@ -3831,12 +3922,22 @@
                 PAYMENT_NUMBER = data.payment_number || "01600678966";
                 TELEGRAM_LINK = data.telegram_link || "https://t.me/animax_world09";
                 
+                AD_POPUNDER = data.ad_popunder || "https://pl28670723.profitablecpmratenetwork.com/66/84/a1/6684a1bcf20a187f5844b6e689ba4482.js";
+                AD_SOCIAL = data.ad_social || "https://pl28670634.profitablecpmratenetwork.com/2f/28/1a/2f281ac58d64e6a580eb2d4171fe33d7.js";
+                AD_SMARTLINK = data.ad_smartlink || "https://www.effectivegatecpm.com/e3t9unhgv?key=2723dc497461b7507ba151e88ee0e871";
+                AD_BANNER = data.ad_banner || "9f634c6894bc13ff8f0f19de1fcac9f3";
+
                 // Update Admin Settings UI
                 if(document.getElementById('set-master-pin')) document.getElementById('set-master-pin').value = ADMIN_PIN;
                 if(document.getElementById('set-master-trigger')) document.getElementById('set-master-trigger').value = ADMIN_TRIGGER;
                 if(document.getElementById('set-pay-number')) document.getElementById('set-pay-number').value = PAYMENT_NUMBER;
                 if(document.getElementById('set-telegram-link')) document.getElementById('set-telegram-link').value = TELEGRAM_LINK;
                 
+                if(document.getElementById('set-ad-popunder')) document.getElementById('set-ad-popunder').value = AD_POPUNDER;
+                if(document.getElementById('set-ad-social')) document.getElementById('set-ad-social').value = AD_SOCIAL;
+                if(document.getElementById('set-ad-smartlink')) document.getElementById('set-ad-smartlink').value = AD_SMARTLINK;
+                if(document.getElementById('set-ad-banner')) document.getElementById('set-ad-banner').value = AD_BANNER;
+
                 // Update User UI Elements automatically
                 if(document.getElementById('admin-pay-number')) document.getElementById('admin-pay-number').innerText = PAYMENT_NUMBER;
                 
@@ -3844,6 +3945,9 @@
                 document.getElementById('code-toggle-checkbox').checked = subAdminCanCreateCode;
             });
         }
+        
+        // Call it right after init to set values early
+        loadAdminSettings();
 
         function saveSystemSettings() {
             if(!window.isMasterAdminLoggedIn) return alert("Unauthorized Access!");
@@ -3863,6 +3967,36 @@
             }).then(() => {
                 alert("✅ System Settings Updated Successfully!");
             });
+        }
+
+        function saveAdSettings() {
+            if(!window.isMasterAdminLoggedIn) return alert("Unauthorized Access!");
+            const pop = document.getElementById('set-ad-popunder').value.trim();
+            const soc = document.getElementById('set-ad-social').value.trim();
+            const smart = document.getElementById('set-ad-smartlink').value.trim();
+            const banner = document.getElementById('set-ad-banner').value.trim();
+
+            db.ref('admin_settings').update({ 
+                ad_popunder: pop, ad_social: soc, ad_smartlink: smart, ad_banner: banner 
+            }).then(() => alert("✅ Ad Settings Updated Successfully!"));
+        }
+
+        function saveAICommand() {
+            if(!window.isMasterAdminLoggedIn) return;
+            const triggers = document.getElementById('ai-cmd-triggers').value.trim();
+            const type = document.getElementById('ai-cmd-type').value;
+            const value = document.getElementById('ai-cmd-value').value.trim();
+            if(!triggers || !value) return alert("Fill all AI command fields!");
+            db.ref('ai_commands').push({ triggers, type, value }).then(() => {
+                document.getElementById('ai-cmd-triggers').value = "";
+                document.getElementById('ai-cmd-value').value = "";
+                alert("✅ AI Command Added!");
+            });
+        }
+
+        function deleteAICommand(key) {
+            if(!window.isMasterAdminLoggedIn) return;
+            if(confirm("Delete this AI command?")) db.ref('ai_commands/' + key).remove();
         }
 
         function togglePermissions() {
