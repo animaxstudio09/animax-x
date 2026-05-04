@@ -790,7 +790,7 @@
                         <i class="fas fa-chevron-right" style="color:var(--text-muted);"></i>
                     </div>
 
-                    <div class="b-card" onclick="window.open('https://t.me/animax090', '_blank')">
+                    <div class="b-card" onclick="window.open(TELEGRAM_LINK, '_blank')">
                         <div class="b-card-left"><div class="b-card-icon" style="color: #00f5d4; background: rgba(0,245,212,0.1);"><i class="fas fa-paper-plane"></i></div><div><div class="b-card-title" data-i18n="requestContent">Request Content</div><div class="b-card-sub" data-i18n="joinTelegram">Join Telegram to request</div></div></div>
                         <div class="b-card-right"><span style="background:rgba(255,255,255,0.1); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:800; color:var(--text-main);" data-i18n="requestBtn">Request</span></div>
                     </div>
@@ -938,7 +938,7 @@
             <div class="task-sec-title">Redeem VIP Key</div>
             <input type="text" id="prem-code-hub" class="prem-inp-hub" placeholder="PASTE KEY HERE">
             <button class="b-btn-primary" onclick="redeemCode('prem-code-hub')">ACTIVATE PREMIUM</button>
-            <div style="text-align:center; margin-top:20px; font-size:12px; color:var(--text-muted); font-weight:600;">Don't have a key? <span style="color:var(--accent-glow);cursor:pointer;text-decoration:underline;" onclick="window.open('https://t.me/animax_world09', '_blank')">Get from Admin</span></div>
+            <div style="text-align:center; margin-top:20px; font-size:12px; color:var(--text-muted); font-weight:600;">Don't have a key? <span style="color:var(--accent-glow);cursor:pointer;text-decoration:underline;" onclick="window.open(TELEGRAM_LINK, '_blank')">Get from Admin</span></div>
         </div>
 
         <div class="task-section-box">
@@ -1018,14 +1018,14 @@
                     
                     <div class="vs-payment-methods">
                         <div class="vs-method bkash"><img src="https://i.ibb.co/bPDN2c9/bkash.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">bKash</div>
-                        <div class="vs-method nagad"><img src="https://i.ibb.co/3sX8MZW/nagad.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">নগদ</div>
+                        <div class="vs-method nagad"><img src="https://i.ibb.co/3sX8MZW/nagad.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">ন নগদ</div>
                     </div>
 
                     <button class="vs-submit-btn" id="pay-submit-btn" onclick="submitPayment()">নিশ্চিত করুন এবং সাবমিট করুন</button>
                 </div>
             </div>
 
-            <div class="vip-pay-footer" onclick="window.open('https://t.me/animax_world09', '_blank')">পেমেন্ট সহায়তার জন্য যোগাযোগ করুন</div>
+            <div class="vip-pay-footer" onclick="window.open(TELEGRAM_LINK, '_blank')">পেমেন্ট সহায়তার জন্য যোগাযোগ করুন</div>
         </div>
     </div>
 
@@ -1181,17 +1181,12 @@
                     <label class="switch"><input type="checkbox" id="code-toggle-checkbox" onchange="togglePermissions()"><span class="slider"></span></label>
                 </div>
             </div>
-            <!-- 🌟 MASTER PIN CHANGER 🌟 -->
-            <div style="display:flex; align-items:center; gap:10px; border-left: 1px solid #333; padding-left: 15px;">
-                <div style="font-size: 11px; color: #ff007f; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;"><i class="fas fa-lock"></i> MASTER PIN:</div>
-                <input type="number" id="master-pin-input" style="width: 80px; padding: 5px; margin: 0; font-size: 14px; text-align: center; border-color: #ff007f;" placeholder="New PIN">
-                <button onclick="updateMasterPin()" style="background: #ff007f; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; transition: 0.2s;">SAVE</button>
-            </div>
         </div>
 
         <!-- TABS -->
         <div class="nav-scroller">
             <div class="nav-btn active" onclick="showAdminTab('analytics')">ANALYTICS</div>
+            <div class="nav-btn" onclick="showAdminTab('settings')">⚙️ SETTINGS</div>
             <div class="nav-btn" onclick="showAdminTab('anime')">ANIME SERIES</div>
             <div class="nav-btn" onclick="showAdminTab('movies')">MOVIE BOX</div>
             <div class="nav-btn" onclick="showAdminTab('cartoons')">CARTOON BOX</div>
@@ -1223,6 +1218,27 @@
                         <div style="font-size:11px; color:#888; margin-top:5px; font-weight:bold;">TOTAL VISITS</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS SECTION (NEW) -->
+        <div id="admin-settings" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color: #ff007f;">
+                <h3 style="color: #ff007f;"><i class="fas fa-cogs"></i> SYSTEM SETTINGS</h3>
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Master Mode PIN (6 Digits)</label>
+                <input type="number" id="set-master-pin" placeholder="Enter New PIN">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Master Mode Voice Trigger (e.g. "open admin")</label>
+                <input type="text" id="set-master-trigger" placeholder="Voice command to open Master Mode">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Payment Number (bKash/Nagad)</label>
+                <input type="number" id="set-pay-number" placeholder="017XXXXXXX">
+                
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Telegram Group Link</label>
+                <input type="text" id="set-telegram-link" placeholder="https://t.me/...">
+                
+                <button class="btn-action" style="background: #ff007f; color:#fff;" onclick="saveSystemSettings()">SAVE ALL SETTINGS</button>
             </div>
         </div>
 
@@ -1377,12 +1393,20 @@
         let originalTitle = "ANIMAX TV";
         let tabTimerInterval = null;
 
+        // 🌟 Admin Settings Variables (Dynamic)
+        let ADMIN_PIN = "123456"; 
+        let ADMIN_TRIGGER = "master mode";
+        let PAYMENT_NUMBER = "01600678966";
+        let TELEGRAM_LINK = "https://t.me/animax_world09";
+        
+        // 🌟 AI Memory Storage
+        let aiMemory = { name: "" };
+
         // 🌟 Global Session & Traffic Tracking
         let globalSessionId = sessionStorage.getItem('animax_sess_id');
         if(!globalSessionId) {
             globalSessionId = 'guest_' + Date.now() + '_' + Math.floor(Math.random()*1000);
             sessionStorage.setItem('animax_sess_id', globalSessionId);
-            // Increment total website visits
             db.ref('metadata/totalVisits').transaction(c => (c || 0) + 1).catch(()=>{});
         }
         
@@ -1405,7 +1429,7 @@
             pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu teste de 12 horas acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
             ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12 گھنٹے کا فری ٹرائل ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
             ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة مجانية لمدة 12 ساعة! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
-            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"12시간 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
+            ko: { 메뉴:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", 파라미터:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"12시간 무료 평가판이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!"}
         };
 
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
@@ -1768,6 +1792,15 @@
         let userProfileRef = null; let serverTimeOffset = 0; let mySessionRef = null; let vipTimerInterval = null; let userPoints = 0; 
         db.ref('.info/serverTimeOffset').on('value', snap => { serverTimeOffset = snap.val() || 0; });
 
+        function saveAIMemory(key, value) {
+            aiMemory[key] = value;
+            if(currentUser) {
+                db.ref(`users/${currentUser.uid}/ai_memory/${key}`).set(value);
+            } else {
+                localStorage.setItem(`ai_memory_${key}`, value);
+            }
+        }
+
         auth.onAuthStateChanged(user => {
             if (user) { 
                 currentUser = user; 
@@ -1779,10 +1812,16 @@
 
                 checkPremium(user.uid); loadRecentHistoryUI(); loadDailyTasks(); checkDailyBonusUI();
                 
+                db.ref(`users/${user.uid}/ai_memory`).once('value', s => {
+                    if(s.exists()) { aiMemory = s.val(); }
+                });
+
             } else { 
                 currentUser = null; isPremium = false; isTrialActive = false;
                 window.isMasterAdminLoggedIn = false;
                 
+                aiMemory.name = localStorage.getItem('ai_memory_name') || "";
+
                 document.getElementById('guest-login-content').style.display = 'none'; 
                 document.getElementById('user-profile-content').style.display = 'block'; 
                 
@@ -2025,7 +2064,6 @@
             });
         }
 
-        // 🌟 NEW AD VERIFICATION SYSTEM (BUG FIX) 🌟
         let rewardActive = false; let rewardStartTime = 0;
         let midRollTaskActive = false; let midRollTaskStart = 0;
         let epUnlockActive = false; let epUnlockStart = 0;
@@ -2071,11 +2109,9 @@
             startTabTimer(5); 
         }
 
-        // 🌟 CENTRALIZED AD VERIFICATION CHECK 🌟
         function checkAllAdVerifications() {
             let now = Date.now();
             
-            // 1. Reward Check
             if (rewardActive) {
                 let elapsed = now - rewardStartTime;
                 if (elapsed > 500) { 
@@ -2090,7 +2126,6 @@
                 }
             }
 
-            // 2. Task Check
             if (activeTask && !activeTask.completed) {
                 let elapsed = now - activeTask.startTime;
                 if (elapsed > 500) {
@@ -2105,7 +2140,6 @@
                 }
             }
 
-            // 3. MidRoll Check
             if (midRollTaskActive) {
                 let elapsed = now - midRollTaskStart;
                 if (elapsed > 500) {
@@ -2123,7 +2157,6 @@
                 }
             }
 
-            // 4. EpUnlock Check
             if (epUnlockActive) {
                 let elapsed = now - epUnlockStart;
                 if (elapsed > 500) {
@@ -2749,6 +2782,10 @@
                     return;
                 }
                 localStorage.setItem('guest_watch_count', guestCount + 1);
+            }
+
+            if(!currentUser && !isAdblockerActive && (!ip || isPremium || isTrialActive)) {
+                db.ref('metadata/totalGuestWatches').transaction(c => (c || 0) + 1).catch(()=>{});
             }
 
             if(ip && !isPremium && !isTrialActive) { 
@@ -3430,8 +3467,40 @@
 
             let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
+            
+            // AI Memory Extraction
+            let nameMatch = t.match(/(?:my name is|i am|call me|আমার নাম|मेरा नाम)\s+([a-zA-Z\s]+)/i);
 
-            if (t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/) && !t.includes("back")) {
+            if (nameMatch && !t.includes("what")) {
+                let extractedName = nameMatch[1].trim();
+                saveAIMemory('name', extractedName);
+                reply = isLang('bn') ? `ওকে! আমি মনে রাখবো যে আপনার নাম ${extractedName}।` : `Got it! I will remember your name is ${extractedName}.`;
+            }
+            else if (t.match(/(what is my name|আমার নাম কি|मेरा नाम क्या है)/)) {
+                if(aiMemory.name) {
+                    reply = isLang('bn') ? `আপনার নাম হলো ${aiMemory.name}! আমি ভুলি নাই।` : `Your name is ${aiMemory.name}! I didn't forget.`;
+                } else {
+                    reply = isLang('bn') ? `আপনি তো আমাকে আপনার নাম বলেননি! বলুন 'আমার নাম...'` : `You never told me your name! Tell me by saying 'My name is...'`;
+                }
+            }
+            else if (t.match(/(suggest|what should i watch|সাজেস্ট করো|কী দেখবো|कुछ अच्छा दिखाओ)/)) {
+                if(allContentList.length > 0) {
+                    let randomItem = allContentList[Math.floor(Math.random() * allContentList.length)];
+                    reply = isLang('bn') ? `আমার মনে হয় আপনার "${randomItem.title}" দেখা উচিত! প্লে করছি।` : `I highly recommend "${randomItem.title}"! Playing it now.`;
+                    action = () => {
+                        if(randomItem.type === 'anime') openFolder(randomItem.folder);
+                        else playVideo(randomItem.title, randomItem.data.url, randomItem.data.id || randomItem.title, randomItem.data.type === 'premium', randomItem.type, -1);
+                    };
+                } else {
+                    reply = isLang('bn') ? "এই মুহূর্তে সাজেস্ট করার মতো কিছু পাচ্ছি না।" : "My brain is empty right now. Can't suggest anything.";
+                }
+            }
+            else if (t.match(/(time|কয়টা বাজে|সময় কত|समय क्या है)/)) {
+                let now = new Date();
+                let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                reply = isLang('bn') ? `এখন বাজে ${timeString}।` : `It's currently ${timeString}.`;
+            }
+            else if ((t.includes(ADMIN_TRIGGER) || t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/)) && !t.includes("back")) {
                 reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification.";
                 action = () => initiateMasterModeAuth();
             }
@@ -3631,12 +3700,7 @@
         // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
         // ==========================================
         let currentPin = "";
-        let ADMIN_PIN = "123456"; 
         
-        db.ref('admin_settings/master_pin').on('value', snap => {
-            if(snap.exists()) { ADMIN_PIN = snap.val().toString(); }
-        });
-
         function initiateMasterModeAuth() {
             setCatEmote('neutral');
             document.getElementById('master-auth-overlay').style.display = 'flex';
@@ -3718,9 +3782,6 @@
             // 3. Guest Watches Calculation
             setInterval(() => {
                 if(!window.isMasterAdminLoggedIn) return;
-                let guestCount = parseInt(localStorage.getItem('guest_watch_count') || '0');
-                // We show global guest watches if we had a dedicated node, but since it's local,
-                // we assume we just show an aggregated view. Here, we fetch total guest views from views tree.
                 db.ref('metadata/totalGuestWatches').on('value', s => {
                     document.getElementById('stat-guest-watches').innerText = s.val() || 0;
                 });
@@ -3758,27 +3819,49 @@
             }
         }
 
-        function updateMasterPin() {
-            if(!window.isMasterAdminLoggedIn) return alert("Unauthorized Access!");
-            const newPin = document.getElementById('master-pin-input').value;
-            if(newPin.length < 6) return alert("PIN must be at least 6 digits!");
-            db.ref('admin_settings').update({ master_pin: newPin }).then(() => {
-                alert("✅ Master PIN Updated Successfully!");
-            });
-        }
-
         function loadAdminSettings() {
             db.ref('admin_settings').on('value', snap => {
                 const data = snap.val() || {};
                 subAdminCanDelete = data.subAdminCanDelete || false;
                 const subAdminCanCreateCode = data.subAdminCanCreateCode || false;
                 
-                if (data.master_pin) { document.getElementById('master-pin-input').value = data.master_pin; } 
-                else { document.getElementById('master-pin-input').value = "123456"; }
+                // Load global variables
+                ADMIN_PIN = data.master_pin || "123456";
+                ADMIN_TRIGGER = data.master_trigger || "master mode";
+                PAYMENT_NUMBER = data.payment_number || "01600678966";
+                TELEGRAM_LINK = data.telegram_link || "https://t.me/animax_world09";
                 
-                // Allow UI to update but restrict execution logic using window.isMasterAdminLoggedIn
+                // Update Admin Settings UI
+                if(document.getElementById('set-master-pin')) document.getElementById('set-master-pin').value = ADMIN_PIN;
+                if(document.getElementById('set-master-trigger')) document.getElementById('set-master-trigger').value = ADMIN_TRIGGER;
+                if(document.getElementById('set-pay-number')) document.getElementById('set-pay-number').value = PAYMENT_NUMBER;
+                if(document.getElementById('set-telegram-link')) document.getElementById('set-telegram-link').value = TELEGRAM_LINK;
+                
+                // Update User UI Elements automatically
+                if(document.getElementById('admin-pay-number')) document.getElementById('admin-pay-number').innerText = PAYMENT_NUMBER;
+                
                 document.getElementById('delete-toggle-checkbox').checked = subAdminCanDelete;
                 document.getElementById('code-toggle-checkbox').checked = subAdminCanCreateCode;
+            });
+        }
+
+        function saveSystemSettings() {
+            if(!window.isMasterAdminLoggedIn) return alert("Unauthorized Access!");
+            
+            const newPin = document.getElementById('set-master-pin').value;
+            const newTrigger = document.getElementById('set-master-trigger').value.toLowerCase().trim();
+            const newPayNum = document.getElementById('set-pay-number').value.trim();
+            const newTele = document.getElementById('set-telegram-link').value.trim();
+            
+            if(newPin.length < 6) return alert("PIN must be at least 6 digits!");
+            
+            db.ref('admin_settings').update({ 
+                master_pin: newPin,
+                master_trigger: newTrigger,
+                payment_number: newPayNum,
+                telegram_link: newTele
+            }).then(() => {
+                alert("✅ System Settings Updated Successfully!");
             });
         }
 
@@ -4063,7 +4146,7 @@
         }
 
         function copyPaymentNumber() {
-            const num = "01600678966";
+            const num = PAYMENT_NUMBER;
             if(navigator.clipboard) {
                 navigator.clipboard.writeText(num).then(() => alert("✅ Number Copied: " + num));
             } else {
