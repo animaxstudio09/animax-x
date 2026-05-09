@@ -590,6 +590,15 @@
         .vs-submit-btn:active { transform: scale(0.96); }
         .vip-pay-footer { color: #888; font-size: 11px; text-align: center; margin-top: 10px; text-decoration: underline; cursor: pointer; }
         @media (max-width: 400px) { .vip-pay-grid { grid-template-columns: 1fr; } }
+        
+        /* 🌟 SALE POPUP DESIGN 🌟 */
+        #global-sale-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000000; align-items: center; justify-content: center; padding: 20px; }
+        .sale-box { background: var(--glass-bg); border: 2px solid var(--accent-glow); padding: 25px; border-radius: 24px; text-align: center; width: 100%; max-width: 350px; box-shadow: 0 0 40px rgba(255, 183, 3, 0.2); }
+        .sale-title { font-family: 'Orbitron'; color: var(--accent-glow); font-size: 22px; font-weight: 900; margin-bottom: 15px; }
+        .sale-price { color: var(--text-main); font-size: 32px; font-weight: 900; margin: 10px 0; }
+        .sale-old-price { color: var(--text-muted); text-decoration: line-through; font-size: 18px; }
+        .sale-features { text-align: left; font-size: 13px; color: #ddd; margin: 20px 0; line-height: 1.8; }
+        .sale-features i { color: var(--accent-glow); margin-right: 8px; }
     </style>
 </head>
 <body class="vip-cyber-theme">
@@ -1196,6 +1205,7 @@
             <div class="nav-btn" onclick="showAdminTab('banners')">ALL BANNERS</div>
             <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
             <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions')">SUBSCRIPTIONS</div>
+            <div class="nav-btn" onclick="showAdminTab('sale')">SALE MANAGER</div>
         </div>
 
         <!-- ANALYTICS SECTION -->
@@ -1418,6 +1428,39 @@
             </div>
             <div id="admin-subs-list" style="display:flex; flex-direction:column; gap:12px; margin-top:10px;"></div>
         </div>
+
+        <!-- SALE SECTION -->
+        <div id="admin-sale" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color: var(--accent-glow);">
+                <h3 style="color: var(--accent-glow);"><i class="fas fa-tag"></i> SALE CONFIGURATION</h3>
+                <label style="color:#ddd; font-size:14px; display:flex; align-items:center; gap:10px; cursor:pointer; font-family:'Orbitron'; font-weight:500; margin-bottom:15px;"><input type="checkbox" id="sale-active" style="width:18px; height:18px; accent-color:var(--gold);"> Active Popup</label>
+                <input type="text" id="sale-title-in" placeholder="Headline (e.g. GET ANIMAX TV SCRIPT)">
+                <input type="number" id="sale-price-in" placeholder="New Price (e.g. 45)">
+                <input type="number" id="sale-old-in" placeholder="Old Price (e.g. 49)">
+                <input type="text" id="sale-link-in" placeholder="Telegram Link">
+                <button class="btn-action" style="background:var(--accent-gradient); color:#000;" onclick="saveSaleConfig()">SAVE SALE CONFIG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 DYNAMIC SALE POPUP 🌟 -->
+    <div id="global-sale-overlay">
+        <div class="sale-box">
+            <i class="fas fa-times" style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:20px; color:var(--text-muted);" onclick="document.getElementById('global-sale-overlay').style.display='none'"></i>
+            <div class="sale-title" id="sale-title">GET ANIMAX TV SCRIPT</div>
+            <div class="sale-old-price" id="sale-old-price">$49</div>
+            <div class="sale-price" id="sale-price">$45 USD</div>
+            <div class="sale-features">
+                <p><i class="fas fa-check"></i> 700+ Episodes Pre-Loaded</p>
+                <p><i class="fas fa-check"></i> Master Admin Panel (Full Control)</p>
+                <p><i class="fas fa-check"></i> Easy Adsterra/Ads Control</p>
+                <p><i class="fas fa-check"></i> Custom Payment Method Setup</p>
+                <p><i class="fas fa-check"></i> 1 Month Free Service & Support</p>
+                <p><i class="fas fa-check"></i> One-Time UI/Photo Customization</p>
+            </div>
+            <button class="b-btn-primary" id="sale-buy-btn" onclick="window.open(TELEGRAM_LINK, '_blank')">CONTACT ADMIN TO BUY</button>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:15px; font-weight:bold;">This offer is valid for 15 days only.</div>
+        </div>
     </div>
 
     <!-- 🚀 JS LOGIC 🚀 -->
@@ -1496,10 +1539,10 @@
         const langDict = {
             en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-Hour Free Trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!"},
             bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার 12-Hour Free Trial শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI भाषा चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!"},
             ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"あなたの12-Hour Free Trialが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！"},
             es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu 12-Hour Free Trial ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!"},
-            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 12-Hour Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 12-Hour Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !"},
             pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu 12-Hour Free Trial acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!"},
             ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12-Hour Free Trial ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!"},
             ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة 12-Hour Free Trial! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!"},
@@ -4380,6 +4423,48 @@
             if(!confirm("Are you sure you want to REJECT and delete this payment request?")) return;
             db.ref(`payment_requests/${reqKey}`).remove();
         }
+
+        // ==============================================================
+        // 🌟 SALE POPUP LOGIC 🌟
+        // ==============================================================
+        function saveSaleConfig() {
+            db.ref('sale_config').set({
+                active: document.getElementById('sale-active').checked,
+                title: document.getElementById('sale-title-in').value,
+                price: document.getElementById('sale-price-in').value,
+                oldPrice: document.getElementById('sale-old-in').value,
+                link: document.getElementById('sale-link-in').value
+            }).then(() => alert("Sale updated!"));
+        }
+
+        // Initialize Popup
+        db.ref('sale_config').on('value', s => {
+            const d = s.val() || {};
+            
+            // Sync Admin Panel checkboxes and inputs
+            if(document.getElementById('sale-active')) document.getElementById('sale-active').checked = d.active || false;
+            if(document.getElementById('sale-title-in')) document.getElementById('sale-title-in').value = d.title || '';
+            if(document.getElementById('sale-price-in')) document.getElementById('sale-price-in').value = d.price || '';
+            if(document.getElementById('sale-old-in')) document.getElementById('sale-old-in').value = d.oldPrice || '';
+            if(document.getElementById('sale-link-in')) document.getElementById('sale-link-in').value = d.link || '';
+
+            // Handle Popup Display
+            if(d.active) {
+                setTimeout(() => {
+                    document.getElementById('global-sale-overlay').style.display = 'flex';
+                    document.getElementById('sale-title').innerText = d.title || 'GET ANIMAX TV SCRIPT';
+                    document.getElementById('sale-price').innerText = d.price ? ('$' + d.price + ' USD') : '$45 USD';
+                    document.getElementById('sale-old-price').innerText = d.oldPrice ? ('$' + d.oldPrice) : '$49';
+                    
+                    if(d.link) {
+                        document.getElementById('sale-buy-btn').onclick = () => window.open(d.link, '_blank');
+                    }
+                }, 3000);
+            } else {
+                document.getElementById('global-sale-overlay').style.display = 'none';
+            }
+        });
+
     </script>
 </body>
 </html>
