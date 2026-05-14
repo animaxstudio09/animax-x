@@ -763,8 +763,11 @@
             <div id="jikan-season-section" style="margin-top: 15px;">
                 <div class="section-header"><div class="sec-title-text" style="color:var(--accent-glow);">CURRENT SEASON</div></div>
                 <div id="anime-container" class="grid-container"></div>
+                <!-- Load More Button -->
+                <div style="text-align: center; margin: 15px 0 30px 0;">
+                    <button id="load-more-jikan-btn" onclick="loadMoreJikanAnime()" style="display: none; background: var(--accent-gradient); color: #000; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 800; font-family: 'Orbitron'; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 183, 3, 0.4); transition: 0.3s;">LOAD MORE</button>
+                </div>
             </div>
-        </div>
 
         <div id="section-cartoon" style="display:none;">
             <div class="sub-tabs"><div class="sub-tab active" onclick="switchSubTab('cartoon', 'series', this)" data-i18n="series">SERIES</div><div class="sub-tab" onclick="switchSubTab('cartoon', 'movie', this)" data-i18n="movies">MOVIES</div></div>
@@ -4668,20 +4671,33 @@
         });
 
         // ==============================================================
-        // 🌟 JIKAN API CURRENT SEASON 🌟
+        // 🌟 JIKAN API CURRENT SEASON (WITH LOAD MORE) 🌟
         // ==============================================================
-        async function fetchCurrentSeasonAnime() {
+        let currentJikanPage = 1;
+        let isFetchingJikan = false;
+
+        async function fetchCurrentSeasonAnime(page = 1) {
             const container = document.getElementById('anime-container');
+            const loadBtn = document.getElementById('load-more-jikan-btn');
             if(!container) return;
             
+            if(isFetchingJikan) return;
+            isFetchingJikan = true;
+            
             try {
-                container.innerHTML = "<div style='color:var(--text-muted); text-align:center; grid-column:1/-1; padding: 20px; font-weight: bold;'>Fetching current season anime...</div>";
+                if(page === 1) {
+                    container.innerHTML = "<div style='color:var(--text-muted); text-align:center; grid-column:1/-1; padding: 20px; font-weight: bold;'>Fetching current season anime...</div>";
+                } else {
+                    if(loadBtn) loadBtn.innerText = "LOADING...";
+                }
                 
-                let response = await fetch('https://api.jikan.moe/v4/seasons/now?limit=12');
+                // Fetching without limit to get default 25 per page and enable pagination
+                let response = await fetch(`https://api.jikan.moe/v4/seasons/now?page=${page}`);
                 let data = await response.json();
                 
                 if(data && data.data) {
-                    container.innerHTML = "";
+                    if(page === 1) container.innerHTML = "";
+                    
                     data.data.forEach(anime => {
                         let title = anime.title_english || anime.title;
                         let image = anime.images.jpg.image_url;
@@ -4689,7 +4705,6 @@
                         let eps = anime.episodes ? anime.episodes : '?';
                         let safeTitle = title.replace(/'/g, "\\'");
                         
-                        // Using playVideo with empty url ('') triggers the "Coming Soon" overlay
                         container.innerHTML += `
                         <div class="folder-card" onclick="playVideo('${safeTitle}', '', '${anime.mal_id}', false, 'anime', -1)">
                             <div class="img-wrapper">
@@ -4700,16 +4715,36 @@
                             <div class="folder-ep">Episodes: ${eps}</div>
                         </div>`;
                     });
+
+                    // Show or hide Load More button based on API pagination
+                    if(data.pagination && data.pagination.has_next_page) {
+                        if(loadBtn) {
+                            loadBtn.style.display = "inline-block";
+                            loadBtn.innerText = "LOAD MORE";
+                        }
+                    } else {
+                        if(loadBtn) loadBtn.style.display = "none";
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching Jikan API:", error);
-                container.innerHTML = "<div style='color:var(--red); text-align:center; grid-column:1/-1; padding: 20px;'>Failed to load current season.</div>";
+                if(page === 1) {
+                    container.innerHTML = "<div style='color:var(--red); text-align:center; grid-column:1/-1; padding: 20px;'>Failed to load current season.</div>";
+                }
+                if(loadBtn) loadBtn.innerText = "LOAD MORE";
             }
+            
+            isFetchingJikan = false;
+        }
+
+        function loadMoreJikanAnime() {
+            currentJikanPage++;
+            fetchCurrentSeasonAnime(currentJikanPage);
         }
         
         // Trigger the Jikan API fetch when the DOM loads completely
         window.addEventListener('DOMContentLoaded', () => {
-            fetchCurrentSeasonAnime();
+            fetchCurrentSeasonAnime(1);
         });
 
     </script>
