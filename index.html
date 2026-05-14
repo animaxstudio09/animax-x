@@ -603,6 +603,37 @@
 </head>
 <body class="vip-cyber-theme">
 
+    <!-- 🌟 CRUNCHYROLL STYLE PREMIUM SPLASH SCREEN 🌟 -->
+    <div id="premium-splash" style="position: fixed; inset: 0; background: #050508; z-index: 99999999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;">
+        <div style="font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; letter-spacing: 3px; color: transparent; background: linear-gradient(135deg, #ffb703, #fb8500); -webkit-background-clip: text; animation: pulseLogo 1.5s infinite alternate;">
+            ANIMAX<span style="color: #fff; background: none; font-size: 20px; vertical-align: top;">TV</span>
+        </div>
+        <div style="margin-top: 20px; width: 40px; height: 40px; border: 4px solid rgba(255, 183, 3, 0.2); border-top-color: #ffb703; border-radius: 50%; animation: spinLoad 1s linear infinite;"></div>
+    </div>
+
+    <style>
+        @keyframes pulseLogo {
+            0% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 183, 3, 0.2); }
+            100% { transform: scale(1.1); text-shadow: 0 0 30px rgba(255, 183, 3, 0.8); }
+        }
+        @keyframes spinLoad {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                let splash = document.getElementById('premium-splash');
+                if(splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.style.display = 'none', 500);
+                }
+            }, 1500);
+        });
+    </script>
+    <!-- 🌟 END SPLASH SCREEN 🌟 -->
+
     <!-- 🌟 SECURITY SCRIPT: ANTI-HACKER PROTECTION (1000%) 🌟 -->
     <script>
         // Disable Right-Click
@@ -630,6 +661,8 @@
         };
 
         // Aggressive Anti-DevTools Trap
+        // (COMMENTED OUT TO PREVENT PWA/SPLASH SCREEN FREEZE)
+        /*
         setInterval(function() {
             let before = new Date().getTime();
             debugger;
@@ -639,6 +672,7 @@
                 window.location.reload();
             }
         }, 1000);
+        */
 
         // Prevent Console Overriding
         Object.freeze(console);
