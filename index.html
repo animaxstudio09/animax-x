@@ -184,20 +184,68 @@
         .app-view { display: none; animation: smoothFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes smoothFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* 🌟 LOGIN PAGE */
-        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; width: 100%; background: radial-gradient(circle at center, #1a1a24 0%, #050508 100%); position: relative; padding: 20px;}
-        .auth-container { position: relative; width: 100%; max-width: 380px; background: var(--glass-bg); backdrop-filter: blur(20px); padding: 40px 30px; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 2; }
-        .auth-form { width: 100%; transition: 0.3s; }
-        .auth-form.hidden { display: none !important; }
-        .auth-form.active { display: block !important; animation: smoothFadeIn 0.4s; }
-        .auth-title { color: var(--text-main); font-family: 'Orbitron'; font-size: 28px; text-align: center; margin-bottom: 30px; font-weight: 800;}
+        /* 🌟 PREMIUM LOGIN PAGE DESIGN 🌟 */
+        .login-page-wrapper {
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; width: 100%; 
+            background: linear-gradient(rgba(5, 5, 8, 0.85), rgba(5, 5, 8, 0.95)), url('https://github.com/animaxstudio09/anime-world/releases/download/1/c7a40af73711b79dc78bcfbd86de1e4e.jpg') center/cover fixed; 
+            position: relative; padding: 20px;
+        }
+        .auth-container { 
+            position: relative; width: 100%; max-width: 420px; 
+            background: rgba(15, 10, 25, 0.6); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            padding: 50px 40px; border-radius: 30px; 
+            border: 1px solid rgba(177, 75, 255, 0.25); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(177, 75, 255, 0.1); 
+            z-index: 2; overflow: hidden;
+        }
+        .auth-container::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, var(--accent-glow));
+            animation: rotateGlow 4s linear infinite; z-index: -1; opacity: 0.15;
+        }
+        @keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+        
+        .auth-form { width: 100%; transition: 0.4s ease-in-out; }
+        .auth-form.hidden { display: none !important; opacity: 0; }
+        .auth-form.active { display: block !important; animation: authFadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes authFadeUp { 
+            0% { opacity: 0; transform: translateY(30px); } 
+            100% { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .auth-brand-logo { text-align: center; font-size: 45px; margin-bottom: 5px; filter: drop-shadow(0 0 15px var(--accent-glow)); }
+        
+        .auth-title { color: var(--text-main); font-family: 'Orbitron'; font-size: 32px; text-align: center; margin-bottom: 5px; font-weight: 900; letter-spacing: 1px;}
         .auth-title span { color: transparent; background: var(--accent-gradient); -webkit-background-clip: text;}
-        .auth-input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 16px; border-radius: 12px; color: #fff; margin-bottom: 15px; font-family: 'Outfit'; outline: none; transition: 0.3s; font-size: 14px;}
-        .auth-input:focus { border-color: var(--accent-glow); box-shadow: 0 0 10px rgba(255, 183, 3, 0.2);}
-        .auth-btn { width: 100%; background: var(--accent-gradient); color: #000; font-weight: 800; font-family: 'Orbitron'; padding: 16px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; margin-top: 10px; font-size: 16px; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(255, 183, 3, 0.3);}
-        .auth-btn:active { transform: scale(0.96); }
-        .auth-switch { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); font-family: 'Outfit'; }
-        .auth-switch span { color: var(--accent-glow); cursor: pointer; font-weight: bold; padding: 5px; transition: 0.3s;}
+        .auth-subtitle { text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 35px; font-weight: 500;}
+
+        .input-group-premium { position: relative; margin-bottom: 20px; }
+        .input-group-premium i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; transition: 0.3s; }
+        
+        .auth-input { 
+            width: 100%; background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.05); 
+            padding: 16px 16px 16px 48px; border-radius: 16px; color: #fff; font-family: 'Outfit'; 
+            outline: none; transition: all 0.3s ease; font-size: 14px; font-weight: 500;
+        }
+        .auth-input::placeholder { color: rgba(255,255,255,0.3); }
+        .auth-input:focus { 
+            border-color: var(--accent-glow); background: rgba(0,0,0,0.8);
+            box-shadow: 0 0 20px rgba(177, 75, 255, 0.2); 
+        }
+        .input-group-premium:focus-within i { color: var(--accent-glow); filter: drop-shadow(0 0 5px var(--accent-glow));}
+
+        .auth-btn { 
+            width: 100%; background: var(--accent-gradient); color: #000; font-weight: 900; 
+            font-family: 'Orbitron'; padding: 18px; border-radius: 16px; border: none; cursor: pointer; 
+            transition: 0.3s; margin-top: 10px; font-size: 16px; letter-spacing: 2px; 
+            box-shadow: 0 10px 25px rgba(177, 75, 255, 0.4); text-transform: uppercase;
+        }
+        .auth-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(177, 75, 255, 0.6); }
+        .auth-btn:active { transform: scale(0.96); box-shadow: 0 5px 15px rgba(177, 75, 255, 0.4); }
+        
+        .auth-switch { text-align: center; margin-top: 30px; font-size: 14px; color: var(--text-muted); font-family: 'Outfit'; font-weight: 500;}
+        .auth-switch span { color: var(--accent-glow); cursor: pointer; font-weight: 800; padding: 5px; transition: 0.3s; text-decoration: none; border-bottom: 2px solid transparent;}
+        .auth-switch span:hover { border-bottom: 2px solid var(--accent-glow); text-shadow: 0 0 10px var(--accent-glow); }
 
         /* 🌟 PROFILE DESIGN */
         .b-profile-container { max-width: 600px; margin: 0 auto; padding-bottom: 20px; font-family: 'Outfit', sans-serif;}
@@ -792,10 +840,61 @@
     <div id="profile-view" class="app-view">
         <div id="guest-login-content" style="display:none;">
             <div class="login-page-wrapper">
-                <div style="position:absolute; top:30px; left:30px; color:#fff; font-size:24px; cursor:pointer; z-index:5; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 50%; backdrop-filter: blur(10px);" onclick="switchTab('profile')"><i class="fas fa-arrow-left"></i></div>
+                <!-- Premium Back Button -->
+                <div style="position:absolute; top:25px; left:25px; color:#fff; font-size:18px; cursor:pointer; z-index:5; background: rgba(0,0,0,0.5); padding: 12px 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); transition: 0.3s;" onclick="switchTab('profile')" onmouseover="this.style.background='var(--accent-gradient)'; this.style.color='#000';" onmouseout="this.style.background='rgba(0,0,0,0.5)'; this.style.color='#fff';">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+
                 <div class="auth-container">
-                    <div class="auth-form active" id="login-form-box"><h1 class="auth-title">Welcome <span>Back</span></h1><form onsubmit="event.preventDefault(); handleAuth('login');"><input type="email" id="email-in" class="auth-input" placeholder="Email Address" required><input type="password" id="pass-in" class="auth-input" placeholder="Password" required><button type="submit" class="auth-btn">LOGIN</button></form><p class="auth-switch">Don't have an account? <span onclick="toggleAuthForm()">Sign Up</span></p></div>
-                    <div class="auth-form hidden" id="reg-form-box"><h1 class="auth-title">Join <span>Animax</span></h1><form onsubmit="event.preventDefault(); handleAuth('reg');"><input type="text" id="rname-in" class="auth-input" placeholder="Your Full Name" required><input type="email" id="remail-in" class="auth-input" placeholder="Email Address" required><input type="password" id="rpass-in" class="auth-input" placeholder="Password" required><button type="submit" class="auth-btn">REGISTER</button></form><p class="auth-switch">Already a member? <span onclick="toggleAuthForm()">Login</span></p></div>
+                    <!-- LOGIN FORM -->
+                    <div class="auth-form active" id="login-form-box">
+                        <div class="auth-brand-logo">
+                            <span style="background: var(--accent-gradient); -webkit-background-clip: text; color: transparent;"><i class="fas fa-user-astronaut"></i></span>
+                        </div>
+                        <h1 class="auth-title">Welcome <span>Back</span></h1>
+                        <div class="auth-subtitle">Enter your credentials to access your account</div>
+                        
+                        <form onsubmit="event.preventDefault(); handleAuth('login');">
+                            <div class="input-group-premium">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email-in" class="auth-input" placeholder="Email Address" required>
+                            </div>
+                            <div class="input-group-premium">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="pass-in" class="auth-input" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="auth-btn">LOGIN</button>
+                        </form>
+                        
+                        <p class="auth-switch">Don't have an account? <span onclick="toggleAuthForm()">Sign Up</span></p>
+                    </div>
+
+                    <!-- REGISTER FORM -->
+                    <div class="auth-form hidden" id="reg-form-box">
+                        <div class="auth-brand-logo">
+                            <span style="background: var(--accent-gradient); -webkit-background-clip: text; color: transparent;"><i class="fas fa-user-plus"></i></span>
+                        </div>
+                        <h1 class="auth-title">Join <span>Animax</span></h1>
+                        <div class="auth-subtitle">Create a free account to unlock VIP features</div>
+                        
+                        <form onsubmit="event.preventDefault(); handleAuth('reg');">
+                            <div class="input-group-premium">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="rname-in" class="auth-input" placeholder="Your Full Name" required>
+                            </div>
+                            <div class="input-group-premium">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="remail-in" class="auth-input" placeholder="Email Address" required>
+                            </div>
+                            <div class="input-group-premium">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="rpass-in" class="auth-input" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="auth-btn">REGISTER</button>
+                        </form>
+                        
+                        <p class="auth-switch">Already a member? <span onclick="toggleAuthForm()">Login</span></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1098,7 +1197,7 @@
                     
                     <div class="vs-payment-methods">
                         <div class="vs-method bkash"><img src="https://i.ibb.co/bPDN2c9/bkash.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">bKash</div>
-                        <div class="vs-method nagad"><img src="https://i.ibb.co/3sX8MZW/nagad.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">ন নগদ</div>
+                        <div class="vs-method nagad"><img src="https://i.ibb.co/3sX8MZW/nagad.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">ن নগদ</div>
                     </div>
 
                     <button class="vs-submit-btn" id="pay-submit-btn" onclick="submitPayment()">নিশ্চিত করুন এবং সাবমিট করুন</button>
