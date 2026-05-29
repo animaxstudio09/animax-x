@@ -1953,6 +1953,7 @@
             document.getElementById('user-profile-content').style.display = 'none';
             document.getElementById('guest-login-content').style.display = 'block';
             removePopunders();
+            clearInterval(socialBarInterval);
             updateBannerVisibility();
         }
 
@@ -2091,6 +2092,7 @@
             
             if(t==='profile' && !currentUser) {
                 removePopunders();
+                clearInterval(socialBarInterval);
             } else if (!isPremium && !isTrialActive) {
                 injectFreeAds();
             }
@@ -2177,7 +2179,7 @@
             if(Date.now() - appStartupTime < 3000) return;
             
             let lastSmartlinkTime = localStorage.getItem('last_smartlink') || 0;
-            if (Date.now() - lastSmartlinkTime < 600000) return; 
+            if (Date.now() - lastSmartlinkTime < 900000) return; 
             
             let isLoginVisible = document.getElementById('guest-login-content').style.display === 'block';
             let isProfileTab = document.getElementById('profile-view').style.display === 'block';
@@ -2206,7 +2208,7 @@
             adsInjected = true;
             
             let lastPopTime = localStorage.getItem('last_popunder') || 0;
-            if(Date.now() - lastPopTime > 60000) { 
+            if(Date.now() - lastPopTime > 300000) { 
                 let popScript = document.getElementById('popunder-ad-manager');
                 if(popScript) {
                     popScript.src = AD_POPUNDER;
@@ -2217,8 +2219,10 @@
             loadSocialBarAd();
             clearInterval(socialBarInterval);
             socialBarInterval = setInterval(() => {
-                if(!isPremium && !isTrialActive) loadSocialBarAd();
-            }, 180000);
+                let isLoginCheck = document.getElementById('guest-login-content').style.display === 'block';
+                let isProfileCheck = document.getElementById('profile-view').style.display === 'block';
+                if(!isPremium && !isTrialActive && !(!currentUser && isProfileCheck && isLoginCheck)) loadSocialBarAd();
+            }, 300000);
         }
 
         function checkPremium(uid) {
