@@ -130,7 +130,7 @@
         .search-icon-pos { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-main); pointer-events: none; font-size: 16px; transition: 0.3s;}
 
         /* 🌟 CATEGORY TABS */
-        .category-tabs { background: transparent; padding: 5px 15px; display: flex; align-items: center; gap: 10px; margin: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+        .category-tabs { background: transparent; padding: 5px 15px; display: flex; align-items: center; gap: 10px; margin: 15px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
         .category-tabs::-webkit-scrollbar { display: none; }
         .cat-tab { color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-family: 'Orbitron'; letter-spacing: 1px; padding: 8px 16px; border-radius: 30px; border: 1px solid transparent; transition: 0.3s ease;}
         .cat-tab.active { color: #000; background: var(--accent-gradient); border-color: rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3); transform: translateY(-2px);}
@@ -181,7 +181,7 @@
         nav i { font-size: 20px; color: var(--text-muted); padding: 10px 20px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 30px;}
         nav i.active { color: #000; background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4); transform: translateY(-5px);}
 
-        .app-view { display: none; animation: smoothFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .app-view { display: none; animation: smoothFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes smoothFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         /* 🌟 PREMIUM LOGIN PAGE DESIGN 🌟 */
@@ -358,7 +358,7 @@
 
         /* 🌟 PLAYER VIEW */
         #player-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
-        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
+        .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
         video { width: 100%; height: 100%; object-fit: contain; }
         
         .player-meta-container { padding: 20px 15px; background: linear-gradient(to bottom, var(--primary-bg), #000); min-height: calc(100vh - 56vw);}
@@ -1913,30 +1913,29 @@
 
         function updateBannerVisibility() {
             let bannerWrap = document.getElementById('global-banner-ad');
-            let adBannerContainer = document.getElementById('ad-banner-container');
             let rewardTop = document.getElementById('reward-ad-top');
             let rewardBottom = document.getElementById('reward-ad-bottom');
             
             if (!bannerWrap) return;
-            let isProfileTab = document.getElementById('profile-view').style.display === 'block';
-            let isLoginFormVisible = document.getElementById('guest-login-content').style.display === 'block';
-            
+
+            // 🌟 AD FIX: Global banner is ALWAYS hidden — no banner ads on home / profile / login / downloads.
+            // Ads only run inside the player (via #ad-enforce-overlay mid-roll system).
+            bannerWrap.style.display = 'none';
+
             if (isPremium || isTrialActive) {
-                bannerWrap.style.display = 'none'; 
                 if(rewardTop) rewardTop.innerHTML = "";
                 if(rewardBottom) rewardBottom.innerHTML = "";
-            } else if (!currentUser && isProfileTab && isLoginFormVisible) {
-                bannerWrap.style.display = 'none'; 
             } else {
-                bannerWrap.style.display = 'block'; 
-                if(adBannerContainer && adBannerContainer.innerHTML === "") {
-                    adBannerContainer.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
-                }
-                if(rewardTop && rewardTop.innerHTML === "") {
-                    rewardTop.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
-                }
-                if(rewardBottom && rewardBottom.innerHTML === "") {
-                    rewardBottom.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
+                // Reward-page banner: only inject when the reward flow is actually visible
+                let rewardView = document.getElementById('reward-waiting-view');
+                let isRewardOpen = rewardView && rewardView.style.display !== '' && rewardView.style.display !== 'none';
+                if(isRewardOpen) {
+                    if(rewardTop && rewardTop.innerHTML === "") {
+                        rewardTop.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
+                    }
+                    if(rewardBottom && rewardBottom.innerHTML === "") {
+                        rewardBottom.innerHTML = `<script>atOptions = {'key' : '${AD_BANNER}','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</scr`+`ipt><script src="https://www.highperformanceformat.com/${AD_BANNER}/invoke.js"></scr`+`ipt>`;
+                    }
                 }
             }
         }
@@ -2199,16 +2198,17 @@
         }
 
         function injectFreeAds() {
-            if(adsInjected || isPremium || isTrialActive) return; 
-            
-            let isLoginVisible = document.getElementById('guest-login-content').style.display === 'block';
-            let isProfileTab = document.getElementById('profile-view').style.display === 'block';
-            if(!currentUser && isProfileTab && isLoginVisible) return;
+            if(adsInjected || isPremium || isTrialActive) return;
+
+            // 🌟 AD FIX: Popunder & social bar ONLY activate when the player view is open.
+            // Home page, profile, login page and downloads remain 100% ad-free.
+            let playerView = document.getElementById('player-view');
+            if(!playerView || playerView.style.display !== 'block') return;
 
             adsInjected = true;
-            
+
             let lastPopTime = localStorage.getItem('last_popunder') || 0;
-            if(Date.now() - lastPopTime > 300000) { 
+            if(Date.now() - lastPopTime > 300000) {
                 let popScript = document.getElementById('popunder-ad-manager');
                 if(popScript) {
                     popScript.src = AD_POPUNDER;
@@ -2219,9 +2219,8 @@
             loadSocialBarAd();
             clearInterval(socialBarInterval);
             socialBarInterval = setInterval(() => {
-                let isLoginCheck = document.getElementById('guest-login-content').style.display === 'block';
-                let isProfileCheck = document.getElementById('profile-view').style.display === 'block';
-                if(!isPremium && !isTrialActive && !(!currentUser && isProfileCheck && isLoginCheck)) loadSocialBarAd();
+                let isPlayerCheck = document.getElementById('player-view') && document.getElementById('player-view').style.display === 'block';
+                if(!isPremium && !isTrialActive && isPlayerCheck) loadSocialBarAd();
             }, 300000);
         }
 
@@ -3188,7 +3187,7 @@
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
             v.src = u; v.dataset.currentId = id; v.load(); 
-            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos();
+            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos(); if(!isPremium && !isTrialActive) { adsInjected = false; injectFreeAds(); }
 
             let hThumb = "logo.png";
             if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
@@ -3388,7 +3387,7 @@
             else { document.getElementById('tab-btn-comments').classList.add('active'); document.getElementById('tab-btn-foryou').classList.remove('active'); document.getElementById('tab-content-comments').style.display='block'; document.getElementById('tab-content-foryou').style.display='none'; } 
         }
         
-        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; }
+        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; }
         
         function generateCardHtml(item) {
             if(item.type === 'anime') {
@@ -4851,6 +4850,42 @@
             fetchCurrentSeasonAnime(1);
         });
 
+    </script>
+
+    <!-- 🌟 MOBILE DOUBLE-TAP SEEK — replaces ondblclick (which doesn't fire on touch) -->
+    <script>
+    (function() {
+        var dtLeftLast = 0, dtRightLast = 0;
+        function attachDtTouchSeek() {
+            var dtLeft  = document.querySelector('.dt-left');
+            var dtRight = document.querySelector('.dt-right');
+            if (dtLeft && !dtLeft._dtTouchBound) {
+                dtLeft._dtTouchBound = true;
+                dtLeft.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    var now = Date.now();
+                    if (now - dtLeftLast < 300) { skipTime(-10); dtLeftLast = 0; }
+                    else { dtLeftLast = now; }
+                }, { passive: false });
+            }
+            if (dtRight && !dtRight._dtTouchBound) {
+                dtRight._dtTouchBound = true;
+                dtRight.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    var now = Date.now();
+                    if (now - dtRightLast < 300) { skipTime(10); dtRightLast = 0; }
+                    else { dtRightLast = now; }
+                }, { passive: false });
+            }
+        }
+        // Attach on DOM ready and again when the player opens (openFolder / playVideo call attachDtTouchSeek is not needed —
+        // the elements are already in the DOM; we just bind once after DOMContentLoaded)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attachDtTouchSeek);
+        } else {
+            attachDtTouchSeek();
+        }
+    })();
     </script>
 </body>
 </html>
