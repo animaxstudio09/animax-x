@@ -540,19 +540,16 @@
         }
         .auth-box {
             background: var(--glass-bg); border: 1px solid var(--accent-glow); padding: 30px; border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3); text-align: center; width: 90%; max-width: 350px;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3); text-align: center; width: 90%; max-width: 350px; position: relative;
         }
-        .auth-title { color: var(--accent-glow); font-size: 22px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; }
-        .pin-display {
-            font-size: 30px; letter-spacing: 15px; color: #fff; margin-bottom: 20px; height: 40px;
-            border-bottom: 2px solid var(--glass-border);
+        .auth-title { color: var(--accent-glow); font-size: 22px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+        #otp-input-field {
+            width: 100%; background: rgba(0,0,0,0.6); border: 2px solid var(--glass-border);
+            color: #fff; font-size: 24px; text-align: center; letter-spacing: 12px;
+            padding: 15px; border-radius: 12px; font-family: 'Orbitron'; margin-bottom: 20px; outline: none; transition: 0.3s;
         }
-        .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .pin-btn {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff;
-            padding: 15px; font-size: 20px; border-radius: 10px; cursor: pointer; transition: 0.2s;
-        }
-        .pin-btn:active { background: var(--accent-gradient); color: #000; transform: scale(0.9); }
+        #otp-input-field:focus { border-color: var(--accent-glow); box-shadow: 0 0 15px rgba(177, 75, 255, 0.4); }
+        .otp-timer-display { font-size: 35px; font-weight: 900; color: #00e676; font-family: 'Orbitron'; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 230, 118, 0.4); transition: color 0.3s;}
 
         /* =========================================
            🛡️ MASTER ADMIN PANEL STYLES (SCOPED) 🛡️
@@ -1390,25 +1387,18 @@
     
     <!-- 🌟 MASTER MODE AUTHENTICATION MODAL 🌟 -->
     <div id="master-auth-overlay">
-        <!-- Layer 2: PIN Verification -->
-        <div id="pin-step" class="auth-box">
-            <div class="auth-title">AUTHORIZATION</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Enter Admin PIN</div>
-            <div id="pin-display" class="pin-display"></div>
-            <div class="pin-pad">
-                <button class="pin-btn" onclick="enterPin(1)">1</button>
-                <button class="pin-btn" onclick="enterPin(2)">2</button>
-                <button class="pin-btn" onclick="enterPin(3)">3</button>
-                <button class="pin-btn" onclick="enterPin(4)">4</button>
-                <button class="pin-btn" onclick="enterPin(5)">5</button>
-                <button class="pin-btn" onclick="enterPin(6)">6</button>
-                <button class="pin-btn" onclick="enterPin(7)">7</button>
-                <button class="pin-btn" onclick="enterPin(8)">8</button>
-                <button class="pin-btn" onclick="enterPin(9)">9</button>
-                <button class="pin-btn" style="color:#ff3b3b;" onclick="clearPin()"><i class="fas fa-times"></i></button>
-                <button class="pin-btn" onclick="enterPin(0)">0</button>
-                <button class="pin-btn" style="color:#00e676;" onclick="closeMasterAuth()"><i class="fas fa-power-off"></i></button>
-            </div>
+        <!-- Layer 2: OTP Verification -->
+        <div id="otp-step" class="auth-box">
+            <button style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:var(--red); font-size:20px; cursor:pointer; transition:0.2s;" onclick="closeMasterAuth()" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-times"></i></button>
+            <div class="auth-title">ADMIN LOGIN</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-bottom:20px; font-family:'Outfit';">An OTP has been sent to your Telegram.</div>
+            
+            <div class="otp-timer-display" id="otp-countdown">20s</div>
+            
+            <input type="text" id="otp-input-field" maxlength="6" placeholder="------" autocomplete="off" onkeypress="if(event.key === 'Enter') verifyOTP();">
+            
+            <button class="b-btn-primary" id="otp-verify-btn" onclick="verifyOTP()">VERIFY OTP</button>
+            <button class="b-btn-primary" id="otp-resend-btn" style="display:none; margin-top:12px; background:var(--glass-bg); color:var(--text-muted); border:1px solid var(--glass-border); box-shadow:none;" onclick="resendOTP()" disabled>WAIT 120s TO RESEND</button>
         </div>
     </div>
 
@@ -1830,7 +1820,7 @@
         const langDict = {
             en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-Hour Free Trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!", guideTitle: "GUIDE & RULES", rule1: "🎁 Daily Bonus: Claim +2 points every day.", rule2: "🎰 Lucky Spin: Costs 2 points to spin.", rule3: "👑 VIP Benefits: Zero ads, 1080p HD & Offline Downloads.", rule4: "✅ Tasks: Complete ads to earn points."},
             bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার 12-Hour Free Trial শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!", guideTitle: "নিয়মাবলী ও গাইড", rule1: "🎁 দৈনিক বোনাস: প্রতিদিন +২ পয়েন্ট নিন।", rule2: "🎰 লাকি স্পিন: প্রতিবার ২ পয়েন্ট খরচ হবে।", rule3: "👑 ভিআইপি সুবিধা: কোনো অ্যাড নেই, 1080p HD এবং অফলাইন ডাউনলোড।", rule4: "✅ টাস্ক: অ্যাড দেখে পয়েন্ট আয় করুন।"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI भाषा चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!", guideTitle: "मार्गदर्शिका और नियम", rule1: "🎁 दैनिक बोनस: प्रतिदिन +2 अंक प्राप्त करें।", rule2: "🎰 लकी स्पिन: 2 अंक लगते हैं।", rule3: "👑 वीआईपी लाभ: बिना विज्ञापन, 1080p HD और डाउनलोड।", rule4: "✅ कार्य: अंक कमाने के लिए विज्ञापन देखें।"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!", guideTitle: "मार्गदर्शिका और नियम", rule1: "🎁 दैनिक बोनस: प्रतिदिन +2 अंक प्राप्त करें।", rule2: "🎰 लकी स्पिन: 2 अंक लगते हैं।", rule3: "👑 वीआईपी लाभ: बिना विज्ञापन, 1080p HD और डाउनलोड।", rule4: "✅ कार्य: अंक कमाने के लिए विज्ञापन देखें।"},
             ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"あなたの12-Hour Free Trialが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！", guideTitle: "ガイドとルール", rule1: "🎁 デイリーボーナス: 毎日+2ポイント", rule2: "🎰 ラッキースピン: コスト2ポイント", rule3: "👑 VIP特典: 広告なし、1080p、ダウンロード", rule4: "✅ タスク: 広告を見てポイントを稼ぐ"},
             es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu 12-Hour Free Trial ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!", guideTitle: "GUÍA Y REGLAS", rule1: "🎁 Bono Diario: Reclama +2 puntos cada día.", rule2: "🎰 Giro de Suerte: Cuesta 2 puntos.", rule3: "👑 Beneficios VIP: Sin anuncios, 1080p HD y Descargas.", rule4: "✅ Tareas: Completa anuncios para ganar puntos."},
             fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 12-Hour Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !", guideTitle: "GUIDE ET RÈGLES", rule1: "🎁 Bonus Quotidien: +2 points par jour.", rule2: "🎰 Tour de chance: Coûte 2 points.", rule3: "👑 Avantages VIP: Sans pub, 1080p, Téléchargements.", rule4: "✅ Tâches: Regardez des pubs pour des points."},
@@ -3949,7 +3939,7 @@
                 reply = isLang('bn') ? `এখন ঘড়িতে বাজে ঠিক ${timeString}।` : `Check your watch, bro! Just kidding, it's ${timeString}.`;
             }
             else if ((t.includes(ADMIN_TRIGGER) || t.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/)) && !t.includes("back")) {
-                reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting PIN verification, Boss.";
+                reply = isLang('bn') ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting verification, Boss.";
                 action = () => initiateMasterModeAuth();
             }
             else if (t.match(/(master mode back|মাস্টার মোড ব্যাক|exit master mode|close master mode)/)) {
@@ -4031,7 +4021,7 @@
             else if (t.match(/(robot|ai|bot|রোবট|বট|রোবট নাকি|रोबोट|एआई)/)) {
                 reply = isLang('bn') ? "আমি রোবট নই ভাই, আমি অ্যানিম্যাক্সের আত্মা!" : "Robot? Nah, I'm more human than the person who coded me. Just with much better taste in anime.";
             }
-            else if (t.match(/(how are you|কেমন আছো|কি খবর|कैसे हो|क्या हाल है)/)) {
+            else if (t.match(/(how are you|কেমন আছো|কি খবর|कैसे এন্টি|क्या हाल है)/)) {
                 reply = isLang('bn') ? "আমি দারুণ আছি ব্রাদার! তোমার কি অবস্থা? চলো কিছু দেখি।" : "I'm chilling, processing a million requests a second. But enough about me, what are we watching today?";
             }
             else if (t.match(/(dance|নাচো|ড্যান্স|নাচতে পারো|नाचो|ড্যান্স করো)/)) {
@@ -4145,48 +4135,115 @@
         if(window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); }; }
 
         // ==========================================
-        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM
+        // 🔒 HIGH-SECURITY MASTER MODE SYSTEM (OTP)
         // ==========================================
-        let currentPin = "";
-        
+        let currentOTP = "";
+        let otpTimer = null;
+        let resendTimer = null;
+        let isOtpValid = false;
+
+        const TELEGRAM_BOT_TOKEN = "8886551340:AAG3VP-SL8uirznpQzUtmckb_H6qfs8GU00";
+        const TELEGRAM_CHAT_ID = "6438545807";
+
+        function sendOTPToTelegram(otp) {
+            const message = `🔐 *ANIMAX TV MASTER LOGIN*\n\nYour Admin OTP is: \`${otp}\`\n\n_Valid for 20 seconds only!_`;
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+            fetch(url).catch(err => console.error("OTP Send Error:", err));
+        }
+
         function initiateMasterModeAuth() {
             setCatEmote('neutral');
             document.getElementById('master-auth-overlay').style.display = 'flex';
-            currentPin = "";
-            updatePinDisplay();
+            document.getElementById('otp-input-field').value = "";
+            document.getElementById('otp-input-field').disabled = false;
+            document.getElementById('otp-verify-btn').style.display = 'block';
+            document.getElementById('otp-resend-btn').style.display = 'none';
+            generateAndSendOTP();
+        }
+
+        function generateAndSendOTP() {
+            currentOTP = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit OTP
+            isOtpValid = true;
+            sendOTPToTelegram(currentOTP);
+            
+            let timeLeft = 20;
+            document.getElementById('otp-countdown').innerText = timeLeft + "s";
+            document.getElementById('otp-countdown').style.color = "#00e676";
+            document.getElementById('otp-input-field').focus();
+
+            clearInterval(otpTimer);
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('otp-countdown').innerText = timeLeft + "s";
+                if(timeLeft <= 5) document.getElementById('otp-countdown').style.color = "#ff3b3b";
+                
+                if(timeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    isOtpValid = false;
+                    document.getElementById('otp-countdown').innerText = "EXPIRED";
+                    document.getElementById('otp-input-field').disabled = true;
+                    document.getElementById('otp-verify-btn').style.display = 'none';
+                    startResendTimer();
+                }
+            }, 1000);
+        }
+
+        function startResendTimer() {
+            let resendBtn = document.getElementById('otp-resend-btn');
+            resendBtn.style.display = 'block';
+            resendBtn.disabled = true;
+            
+            let waitTime = 120; // 2 minutes
+            clearInterval(resendTimer);
+            resendTimer = setInterval(() => {
+                waitTime--;
+                resendBtn.innerText = `WAIT ${waitTime}s TO RESEND`;
+                if(waitTime <= 0) {
+                    clearInterval(resendTimer);
+                    resendBtn.disabled = false;
+                    resendBtn.innerText = "RESEND OTP";
+                    resendBtn.style.background = "var(--accent-gradient)";
+                    resendBtn.style.color = "#000";
+                }
+            }, 1000);
+        }
+
+        function resendOTP() {
+            let resendBtn = document.getElementById('otp-resend-btn');
+            resendBtn.disabled = true;
+            resendBtn.style.background = "var(--glass-bg)";
+            resendBtn.style.color = "var(--text-muted)";
+            document.getElementById('otp-input-field').disabled = false;
+            document.getElementById('otp-input-field').value = "";
+            document.getElementById('otp-verify-btn').style.display = 'block';
+            resendBtn.style.display = 'none';
+            generateAndSendOTP();
         }
 
         function closeMasterAuth() {
             document.getElementById('master-auth-overlay').style.display = 'none';
-            currentPin = "";
+            clearInterval(otpTimer);
+            clearInterval(resendTimer);
+            isOtpValid = false;
         }
-        
+
         function closeMasterMode() {
             document.getElementById('master-admin-panel').style.display = 'none';
             window.isMasterAdminLoggedIn = false;
             switchTab('home');
         }
 
-        function enterPin(num) {
-            if(currentPin.length < ADMIN_PIN.length) currentPin += num;
-            updatePinDisplay();
-            
-            if(currentPin.length === ADMIN_PIN.length) {
-                setTimeout(() => {
-                    if(currentPin === ADMIN_PIN) {
-                        playSuccessSound();
-                        grantMasterAccess(); 
-                    } else {
-                        alert("❌ INVALID PIN");
-                        currentPin = "";
-                        updatePinDisplay();
-                    }
-                }, 300);
+        function verifyOTP() {
+            if(!isOtpValid) return alert("❌ OTP has expired! Please wait to resend.");
+            let entered = document.getElementById('otp-input-field').value.trim();
+            if(entered === currentOTP) {
+                clearInterval(otpTimer);
+                playSuccessSound();
+                grantMasterAccess();
+            } else {
+                alert("❌ INVALID OTP!");
             }
         }
-        
-        function clearPin() { currentPin = ""; updatePinDisplay(); }
-        function updatePinDisplay() { document.getElementById('pin-display').innerText = "*".repeat(currentPin.length); }
 
         function grantMasterAccess() {
             document.getElementById('master-auth-overlay').style.display = 'none';
@@ -5226,8 +5283,8 @@
                 data.data.forEach(function(a){
                     var th=(a.images&&a.images.jpg)?a.images.jpg.image_url:'';
                     var eps=a.episodes||'?'; var sc=a.score||'N/A';
-                    h+='<div style="display:flex;gap:11px;background:#1a1a1a;padding:11px;border-radius:9px;border:1px solid #333;cursor:pointer;align-items:center;" onclick="selectAIAnime('+a.mal_id+',''+a.title.replace(/\/g,'\\').replace(/'/g,"\'")+''  ,''+th+'','+(a.episodes||0)+')">';
-                    h+='<img src="'+th+'" style="width:44px;height:62px;object-fit:cover;border-radius:7px;" onerror="this.style.display='none'">';
+                    h+='<div style="display:flex;gap:11px;background:#1a1a1a;padding:11px;border-radius:9px;border:1px solid #333;cursor:pointer;align-items:center;" onclick="selectAIAnime('+a.mal_id+',\''+a.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\',\''+th+'\','+(a.episodes||0)+')">';
+                    h+='<img src="'+th+'" style="width:44px;height:62px;object-fit:cover;border-radius:7px;" onerror="this.style.display=\'none\'">';
                     h+='<div><div style="color:#fff;font-weight:700;font-size:13px;">'+a.title+'</div><div style="color:#666;font-size:11px;margin-top:3px;">'+eps+' episodes | Score: '+sc+'</div></div></div>';
                 });
                 h+='</div>'; res.innerHTML=h;
