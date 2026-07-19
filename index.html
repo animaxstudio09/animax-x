@@ -647,6 +647,58 @@
         .sale-old-price { color: var(--text-muted); text-decoration: line-through; font-size: 18px; }
         .sale-features { text-align: left; font-size: 13px; color: #ddd; margin: 20px 0; line-height: 1.8; }
         .sale-features i { color: var(--accent-glow); margin-right: 8px; }
+
+        /* 🌟 LONG-PRESS PREVIEW MODAL */
+        #lp-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:19999; display:none; align-items:flex-end; justify-content:center; }
+        #lp-overlay.lp-open { display:flex; }
+        #lp-card { width:100%; max-width:480px; background:var(--card-bg,#111); border-radius:24px 24px 0 0; border:1px solid var(--glass-border); overflow:hidden; animation:lpSlideUp 0.32s cubic-bezier(0.4,0,0.2,1); box-shadow:0 -10px 50px rgba(0,0,0,0.9); position:relative; }
+        @keyframes lpSlideUp { from{transform:translateY(100%);opacity:0;} to{transform:translateY(0);opacity:1;} }
+        #lp-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+        #lp-bg { position:absolute; inset:0; background-size:cover; background-position:center; filter:blur(22px) brightness(0.35); transform:scale(1.15); }
+        #lp-thumb { position:relative; z-index:1; width:42%; aspect-ratio:2/3; object-fit:cover; border-radius:14px; box-shadow:0 8px 30px rgba(0,0,0,0.9); border:2px solid rgba(255,255,255,0.15); }
+        #lp-close { position:absolute; top:12px; right:12px; z-index:2; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px); border:1px solid var(--glass-border); color:#fff; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; }
+        #lp-info { padding:18px 20px 28px; }
+        #lp-title { font-size:17px; font-weight:800; color:var(--text-main); font-family:'Outfit',sans-serif; margin-bottom:8px; line-height:1.3; }
+        #lp-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .lp-pill { font-size:11px; font-weight:700; padding:4px 11px; border-radius:20px; font-family:'Orbitron',sans-serif; }
+        .lp-pill-vip { background:var(--accent-gradient); color:#000; }
+        .lp-pill-free { background:rgba(255,255,255,0.08); color:var(--accent-glow); border:1px solid var(--glass-border); }
+        #lp-watch-btn { width:100%; padding:14px; background:var(--accent-gradient); color:#000; border:none; border-radius:14px; font-size:15px; font-weight:900; font-family:'Orbitron',sans-serif; cursor:pointer; letter-spacing:1px; box-shadow:0 4px 20px rgba(255,183,3,0.4); transition:transform 0.15s; }
+        #lp-watch-btn:active { transform:scale(0.97); }
+
+        /* ══ EMOJI REACTIONS ══ */
+        .emoji-reaction-bar{position:absolute;right:14px;bottom:80px;z-index:9002;display:flex;flex-direction:column;gap:7px;}
+        .emo-btn{font-size:20px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s;-webkit-user-select:none;user-select:none;}
+        .emo-btn:active{transform:scale(1.35);}
+        #emoji-float-zone{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:9001;}
+        .float-emo{position:absolute;font-size:26px;animation:emoFloat 2.8s ease-out forwards;pointer-events:none;}
+        @keyframes emoFloat{0%{transform:translateY(0) scale(1);opacity:1;}80%{opacity:.6;}100%{transform:translateY(-230px) scale(.35);opacity:0;}}
+        /* ══ LIVE VIEWER COUNT ══ */
+        #live-viewer-count{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.52);backdrop-filter:blur(8px);border:1px solid var(--glass-border);color:#fff;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;z-index:9000;display:none;font-family:'Orbitron',sans-serif;white-space:nowrap;}
+        /* ══ SHARE SCENE MODAL ══ */
+        #share-scene-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:20000;display:none;align-items:flex-end;justify-content:center;}
+        #share-scene-modal.sopen{display:flex;}
+        #share-scene-card{width:100%;max-width:480px;background:#111;border-radius:24px 24px 0 0;border:1px solid var(--glass-border);padding:22px 20px 36px;animation:lpSlideUp .3s cubic-bezier(.4,0,.2,1);}
+        .share-btn-row{display:flex;gap:10px;margin-top:14px;}
+        .share-app-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 6px;background:rgba(255,255,255,.06);border-radius:13px;border:1px solid var(--glass-border);cursor:pointer;font-size:10px;color:var(--text-muted);font-weight:600;transition:.2s;}
+        .share-app-btn:active{transform:scale(.95);background:rgba(255,255,255,.1);}
+        .share-app-btn i{font-size:22px;}
+        #share-link-box{margin-top:12px;width:100%;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);border-radius:10px;padding:10px 13px;color:var(--text-main);font-size:11px;word-break:break-all;font-family:'Outfit';}
+        /* ══ TRIVIA QUIZ ══ */
+        #quiz-modal{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:20001;display:none;align-items:center;justify-content:center;padding:20px;}
+        #quiz-modal.qopen{display:flex;}
+        #quiz-card{width:100%;max-width:460px;background:#111;border-radius:24px;border:1px solid var(--glass-border);padding:26px 20px;box-shadow:0 20px 60px rgba(0,0,0,.9);animation:lpSlideUp .35s cubic-bezier(.4,0,.2,1);}
+        .quiz-prog-row{display:flex;gap:6px;margin-bottom:18px;}
+        .quiz-pdot{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.13);}
+        .quiz-pdot.done{background:var(--accent-gradient);}
+        .quiz-q{font-size:16px;font-weight:800;color:var(--text-main);font-family:'Outfit';line-height:1.45;margin-bottom:16px;}
+        .quiz-opt{width:100%;padding:13px 15px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:12px;color:var(--text-main);font-size:13px;font-weight:600;cursor:pointer;text-align:left;margin-bottom:9px;transition:.2s;font-family:'Outfit';}
+        .quiz-opt:active{transform:scale(.98);}
+        .quiz-opt.correct{background:rgba(0,200,80,.2);border-color:#00c850;color:#00c850;}
+        .quiz-opt.wrong{background:rgba(230,57,70,.2);border-color:#e63946;color:#e63946;}
+        .quiz-score-big{font-size:46px;font-weight:900;font-family:'Orbitron';color:var(--accent-glow);}
+        /* ══ STREAK BADGE ══ */
+        #streak-badge{display:none;align-items:center;gap:6px;background:rgba(255,100,0,.13);border:1px solid rgba(255,100,0,.4);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:800;color:#ff6a00;font-family:'Orbitron';margin-top:6px;cursor:default;}
     </style>
 </head>
 <body class="vip-cyber-theme">
@@ -916,6 +968,7 @@
                 
                 <div class="b-content-pad">
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">GUEST</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
+                    <div id="streak-badge">🔥 <span id="streak-count">0</span> Day Streak!</div>
                     
                     <div class="b-banner-alert" onclick="openRewardPage()">
                         <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+2 PTS)</span>
@@ -1218,7 +1271,19 @@
             <div id="pip-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; color:#fff; z-index:9000; border:1px solid var(--glass-border); font-size:18px; display:flex; justify-content:center; align-items:center; width:45px; height:45px;" onclick="togglePiP()" title="Picture in Picture">
                 <i class="fas fa-clone"></i>
             </div>
-            
+
+            <!-- 🔥 EMOJI REACTION BAR -->
+            <div class="emoji-reaction-bar" id="emoji-reaction-bar">
+                <div class="emo-btn" onclick="sendReaction('🔥')">🔥</div>
+                <div class="emo-btn" onclick="sendReaction('😂')">😂</div>
+                <div class="emo-btn" onclick="sendReaction('❤️')">❤️</div>
+                <div class="emo-btn" onclick="sendReaction('😱')">😱</div>
+                <div class="emo-btn" onclick="sendReaction('💀')">💀</div>
+            </div>
+            <div id="emoji-float-zone"></div>
+            <!-- 👁 LIVE VIEWER COUNT -->
+            <div id="live-viewer-count">👁 0 জন দেখছে</div>
+
             <div id="vid-buffering"><div class="loading-spinner"></div></div>
             
             <div class="dt-zone dt-left" ondblclick="skipTime(-10)"></div>
@@ -1270,6 +1335,7 @@
             <div class="action-buttons-row">
                 <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
+                <button class="act-btn" onclick="shareCurrentScene()"><i class="fas fa-film"></i> Share Scene</button>
                 <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
             </div>
             
@@ -1388,6 +1454,7 @@
             <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
             <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions')">SUBSCRIPTIONS</div>
             <div class="nav-btn" onclick="showAdminTab('sale')">SALE MANAGER</div>
+            <div class="nav-btn" onclick="showAdminTab('autoimport')">🤖 AUTO-IMPORT</div>
         </div>
 
         <!-- ANALYTICS SECTION -->
@@ -1629,6 +1696,27 @@
                 <h3 style="color:var(--cyan);"><i class="fas fa-money-check-alt"></i> PENDING PAYMENTS</h3>
             </div>
             <div id="admin-subs-list" style="display:flex; flex-direction:column; gap:12px; margin-top:10px;"></div>
+        </div>
+
+
+        <!-- 🤖 AUTO-IMPORT SECTION -->
+        <div id="admin-autoimport" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color:#00ff88;">
+                <h3 style="color:#00ff88;"><i class="fas fa-magic"></i> SMART AUTO-IMPORT</h3>
+                <p style="color:#888;font-size:12px;margin-bottom:15px;">Jikan (MyAnimeList) দিয়ে anime খোঁজো। একটা select করে URL template দিলে সব episode Firebase-এ auto-save হবে।<br>Template-এ <code style="color:#00ff88;">{n}</code> দিলে সেখানে episode number বসবে।<br>Example: <code style="color:#777;">https://gogoanime.cl/embed/one-piece-{n}</code></p>
+                <input type="text" id="ai-search-query" placeholder="Anime খোঁজো... (e.g. Naruto, Attack on Titan)">
+                <button class="btn-action" style="background:#00ff88;color:#000;" onclick="autoImportSearch()">🔍 SEARCH</button>
+                <div id="ai-search-results" style="margin-top:15px;"></div>
+                <div id="ai-import-config" style="display:none;margin-top:15px;border-top:1px solid #333;padding-top:15px;">
+                    <h4 style="color:#00ff88;margin-bottom:10px;" id="ai-selected-title">Selected: —</h4>
+                    <input type="text" id="ai-url-template" placeholder="Original Video URL — {n} = episode no.">
+                    <input type="text" id="ai-url-hin-template" placeholder="Hindi URL Template — Optional">
+                    <input type="text" id="ai-url-eng-template" placeholder="English URL Template — Optional">
+                    <select id="ai-import-type"><option value="free">Free Content</option><option value="premium">Premium (VIP Only)</option></select>
+                    <div id="ai-import-progress" style="color:#00ff88;font-size:13px;margin-bottom:10px;display:none;font-family:'Orbitron';"></div>
+                    <button class="btn-action" style="background:#00ff88;color:#000;" onclick="runAutoImport()">⚡ AUTO-IMPORT ALL EPISODES TO FIREBASE</button>
+                </div>
+            </div>
         </div>
 
         <!-- SALE SECTION -->
@@ -3187,7 +3275,7 @@
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
             v.src = u; v.dataset.currentId = id; v.load(); 
-            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos(); if(!isPremium && !isTrialActive) { adsInjected = false; injectFreeAds(); }
+            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos(); if(!isPremium && !isTrialActive) { adsInjected = false; injectFreeAds(); } startReactionListener(id); startViewerTracking(id); updateWatchStreak();
 
             let hThumb = "logo.png";
             if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
@@ -3387,7 +3475,7 @@
             else { document.getElementById('tab-btn-comments').classList.add('active'); document.getElementById('tab-btn-foryou').classList.remove('active'); document.getElementById('tab-content-comments').style.display='block'; document.getElementById('tab-content-foryou').style.display='none'; } 
         }
         
-        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; }
+        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; stopViewerTracking(); }
         
         function generateCardHtml(item) {
             if(item.type === 'anime') {
@@ -4852,6 +4940,52 @@
 
     </script>
 
+    <!-- 📤 SHARE SCENE MODAL -->
+    <div id="share-scene-modal">
+        <div id="share-scene-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <div style="font-size:15px;font-weight:800;color:var(--text-main);font-family:'Orbitron';">📤 SHARE SCENE</div>
+                <div onclick="closeShareModal()" style="cursor:pointer;color:var(--text-muted);font-size:20px;"><i class="fas fa-times"></i></div>
+            </div>
+            <div id="share-scene-info" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;font-family:'Outfit';"></div>
+            <div class="share-btn-row">
+                <div class="share-app-btn" onclick="shareToApp('whatsapp')"><i class="fab fa-whatsapp" style="color:#25D366;"></i>WhatsApp</div>
+                <div class="share-app-btn" onclick="shareToApp('telegram')"><i class="fab fa-telegram" style="color:#0088cc;"></i>Telegram</div>
+                <div class="share-app-btn" onclick="shareToApp('facebook')"><i class="fab fa-facebook" style="color:#1877F2;"></i>Facebook</div>
+                <div class="share-app-btn" onclick="copyShareLink()"><i class="fas fa-copy" style="color:var(--accent-glow);"></i>Copy Link</div>
+            </div>
+            <div id="share-link-box"></div>
+        </div>
+    </div>
+
+    <!-- 🎯 TRIVIA QUIZ MODAL -->
+    <div id="quiz-modal">
+        <div id="quiz-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <div style="font-size:13px;font-weight:800;color:var(--accent-glow);font-family:'Orbitron';">🎯 ANIME TRIVIA</div>
+                <div onclick="closeQuiz()" style="cursor:pointer;color:var(--text-muted);font-size:18px;"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="quiz-prog-row" id="quiz-prog-row"></div>
+            <div id="quiz-body"></div>
+        </div>
+    </div>
+
+    <!-- 🌟 LONG-PRESS PREVIEW MODAL -->
+    <div id="lp-overlay">
+        <div id="lp-card">
+            <div id="lp-thumb-wrap">
+                <div id="lp-bg"></div>
+                <img id="lp-thumb" src="" alt="">
+                <div id="lp-close" onclick="lpClose()"><i class="fas fa-times"></i></div>
+            </div>
+            <div id="lp-info">
+                <div id="lp-title"></div>
+                <div id="lp-meta"></div>
+                <button id="lp-watch-btn" onclick="lpWatchNow()">▶&nbsp; WATCH NOW</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 🌟 MOBILE DOUBLE-TAP SEEK — replaces ondblclick (which doesn't fire on touch) -->
     <script>
     (function() {
@@ -4885,6 +5019,343 @@
         } else {
             attachDtTouchSeek();
         }
+    })();
+    </script>
+
+
+    <!-- 🌟 VIRAL FEATURES: Reactions · Streak · Viewer Count · Share Scene · Quiz · Auto-Import -->
+    <script>
+    // ════════ FEATURE 2: LIVE EMOJI REACTIONS ════════
+    var _rxRef = null, _rxVid = null;
+    function sendReaction(emoji) {
+        spawnFloatEmoji(emoji);
+        if(!currentSafeVideoId) return;
+        db.ref('reactions/'+currentSafeVideoId).push({e:emoji, t:firebase.database.ServerValue.TIMESTAMP});
+    }
+    function spawnFloatEmoji(emoji) {
+        var zone = document.getElementById('emoji-float-zone');
+        if(!zone) return;
+        var el = document.createElement('div');
+        el.className = 'float-emo';
+        el.textContent = emoji;
+        el.style.left = (8 + Math.random()*74)+'%';
+        zone.appendChild(el);
+        setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 2800);
+    }
+    function startReactionListener(videoId) {
+        if(_rxRef && _rxVid) db.ref('reactions/'+_rxVid).off('child_added');
+        _rxVid = videoId;
+        _rxRef = db.ref('reactions/'+videoId).orderByChild('t').startAt(Date.now());
+        _rxRef.on('child_added', function(snap){
+            var r=snap.val(); if(r&&r.e) spawnFloatEmoji(r.e);
+        });
+    }
+
+    // ════════ FEATURE 4: WATCH STREAK ════════
+    function updateWatchStreak() {
+        var today = new Date().toDateString();
+        var last  = localStorage.getItem('animax_last_watch');
+        var n     = parseInt(localStorage.getItem('animax_streak')||'0');
+        if(last === today){ renderStreakBadge(n); return; }
+        var yest = new Date(); yest.setDate(yest.getDate()-1);
+        n = (last === yest.toDateString()) ? n+1 : 1;
+        localStorage.setItem('animax_last_watch', today);
+        localStorage.setItem('animax_streak', n);
+        if(currentUser) db.ref('users/'+currentUser.uid).update({watchStreak:n, lastStreakDate:today});
+        renderStreakBadge(n);
+        if(n>1) showDlToast((n>=30?'🏆':n>=7?'⚡':'🔥')+' '+n+' দিনের Streak!', false);
+    }
+    function renderStreakBadge(n) {
+        var b=document.getElementById('streak-badge'), c=document.getElementById('streak-count');
+        if(!b||!c) return;
+        c.textContent = n;
+        b.style.display = n>0 ? 'inline-flex' : 'none';
+    }
+
+    // ════════ FEATURE 5: LIVE VIEWER COUNT ════════
+    var _vpRef=null, _vcRef=null, _vVid=null;
+    function startViewerTracking(videoId) {
+        if(_vpRef){_vpRef.remove(); _vpRef.onDisconnect().cancel();}
+        if(_vcRef && _vVid) db.ref('watching/'+_vVid).off('value');
+        _vVid = videoId;
+        _vpRef = db.ref('watching/'+videoId+'/'+globalSessionId);
+        _vpRef.set(true); _vpRef.onDisconnect().remove();
+        _vcRef = db.ref('watching/'+videoId);
+        _vcRef.on('value', function(snap){
+            var c=snap.numChildren();
+            var el=document.getElementById('live-viewer-count');
+            if(el){ el.style.display=c>0?'block':'none'; el.textContent='👁 '+c+' জন দেখছে'; }
+        });
+    }
+    function stopViewerTracking() {
+        if(_vpRef){_vpRef.remove(); _vpRef=null;}
+        if(_vcRef&&_vVid){db.ref('watching/'+_vVid).off('value'); _vcRef=null;}
+        var el=document.getElementById('live-viewer-count'); if(el) el.style.display='none';
+    }
+
+    // ════════ FEATURE 6: SHARE CURRENT SCENE ════════
+    var _shareUrl = '';
+    function shareCurrentScene() {
+        var v   = document.getElementById('main-video');
+        var t   = Math.floor(v.currentTime||0);
+        var vid = currentSafeVideoId||'';
+        var title = document.getElementById('player-title').innerText;
+        _shareUrl = window.location.origin + window.location.pathname + '?play='+encodeURIComponent(vid)+'&t='+t;
+        document.getElementById('share-scene-info').textContent = '🎬 '+title+' ['+(Math.floor(t/60)+':'+(t%60<10?'0':'')+(t%60))+']';
+        document.getElementById('share-link-box').textContent = _shareUrl;
+        var m=document.getElementById('share-scene-modal'); m.style.display='flex'; m.classList.add('sopen');
+    }
+    function closeShareModal() {
+        var m=document.getElementById('share-scene-modal'); m.classList.remove('sopen'); m.style.display='none';
+    }
+    function shareToApp(app) {
+        var u = encodeURIComponent(_shareUrl);
+        var msg = encodeURIComponent('ANIMAX TV-তে এই scene দেখো! 🎬');
+        var urls = {
+            whatsapp:'https://wa.me/?text='+msg+'%0A'+u,
+            telegram:'https://t.me/share/url?url='+u+'&text='+msg,
+            facebook:'https://www.facebook.com/sharer/sharer.php?u='+u
+        };
+        window.open(urls[app],'_blank');
+    }
+    function copyShareLink() {
+        navigator.clipboard.writeText(_shareUrl).then(function(){
+            showDlToast('🔗 লিংক কপি হয়েছে!', false); closeShareModal();
+        }).catch(function(){
+            var ta=document.createElement('textarea'); ta.value=_shareUrl;
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+            showDlToast('🔗 লিংক কপি হয়েছে!', false); closeShareModal();
+        });
+    }
+    // Deep-link handler
+    window.addEventListener('DOMContentLoaded', function(){
+        var p=new URLSearchParams(window.location.search);
+        var pid=p.get('play'), seekT=parseInt(p.get('t')||'0');
+        if(!pid) return;
+        var tries=0;
+        var iv=setInterval(function(){
+            tries++;
+            var data=findDataByTitle(decodeURIComponent(pid));
+            if(data){
+                clearInterval(iv);
+                if(data.type==='anime') openFolder(data.folder);
+                else playVideo(data.title,data.url,data.id||data.title,data.isPremium,data.type,-1);
+                if(seekT>0) setTimeout(function(){ var v=document.getElementById('main-video'); if(v) v.currentTime=seekT; },2000);
+                window.history.replaceState({},'',window.location.pathname);
+            }
+            if(tries>60) clearInterval(iv);
+        },150);
+    });
+
+    // ════════ FEATURE 7: ANIME TRIVIA QUIZ ════════
+    var _qBank = [
+        {q:"Dragon Ball Z-এ কোন চরিত্রটি সবচেয়ে শক্তিশালী Saiyan?",opts:["Vegeta","Goku","Gohan","Broly"],a:1},
+        {q:"One Piece-এ Luffy কোন Devil Fruit খেয়েছিল?",opts:["Flame-Flame","Rubber-Rubber","Darkness","Sand"],a:1},
+        {q:"Naruto কোন village-এর ninja?",opts:["Sand","Sound","Hidden Leaf","Mist"],a:2},
+        {q:"Attack on Titan-এ কারা Titan-দের বিরুদ্ধে লড়াই করে?",opts:["Police Corps","Survey Corps","Royal Guard","Training Corps"],a:1},
+        {q:"Demon Slayer-এ Tanjiro-এর বোনের নাম কী?",opts:["Kanao","Shinobu","Nezuko","Aoi"],a:2},
+        {q:"My Hero Academia-তে 'All Might'-এর real নাম?",opts:["Bakugo","Kirishima","Toshinori Yagi","Aizawa"],a:2},
+        {q:"Death Note-এ Light Yagami-এর alias কী?",opts:["Near","L","Mello","Kira"],a:3},
+        {q:"Sword Art Online-এর hero-র name?",opts:["Klein","Agil","Kirito","Sinon"],a:2},
+        {q:"Fullmetal Alchemist-এ Edward কোন কোন অঙ্গ হারান?",opts:["Right arm only","Left leg only","Right arm & Left leg","Both arms"],a:2},
+        {q:"Hunter x Hunter-এ Gon কোন ধরনের Nen ব্যবহার করে?",opts:["Transmutation","Enhancement","Emission","Conjuration"],a:1},
+        {q:"Tokyo Ghoul-এর main character?",opts:["Ken Kaneki","Touka","Hide","Juuzou"],a:0},
+        {q:"Bleach-এ Ichigo মূলত কী?",opts:["Pure Shinigami","Pure Hollow","Half Shinigami/Hollow","Quincy"],a:2},
+    ];
+    var _qList=[], _qIdx=0, _qScore=0, _qDone=false;
+    function startQuiz() {
+        _qList = _qBank.slice().sort(function(){return Math.random()-.5;}).slice(0,3);
+        _qIdx=0; _qScore=0; _qDone=false;
+        var m=document.getElementById('quiz-modal'); m.style.display='flex'; m.classList.add('qopen');
+        renderQuizQ();
+    }
+    function renderQuizProgress() {
+        var h=''; for(var i=0;i<_qList.length;i++) h+='<div class="quiz-pdot'+(i<_qIdx?' done':'')+'"></div>';
+        document.getElementById('quiz-prog-row').innerHTML=h;
+    }
+    function renderQuizQ() {
+        if(_qIdx>=_qList.length){renderQuizResult();return;}
+        _qDone=false; renderQuizProgress();
+        var q=_qList[_qIdx], opts='';
+        q.opts.forEach(function(o,i){opts+='<button class="quiz-opt" onclick="answerQuiz('+i+')">'+o+'</button>';});
+        document.getElementById('quiz-body').innerHTML='<div class="quiz-q">'+q.q+'</div>'+opts;
+    }
+    function answerQuiz(idx) {
+        if(_qDone) return; _qDone=true;
+        var q=_qList[_qIdx];
+        var btns=document.querySelectorAll('.quiz-opt');
+        btns[q.a].classList.add('correct');
+        if(idx!==q.a) btns[idx].classList.add('wrong'); else _qScore++;
+        setTimeout(function(){_qIdx++; renderQuizQ();},1100);
+    }
+    function renderQuizResult() {
+        renderQuizProgress();
+        var pts=_qScore*2;
+        var msg=_qScore===3?'🔥 Perfect! সত্যিকারের Anime Fan!':_qScore===2?'👏 দারুণ! প্রায় পারফেক্ট!':_qScore===1?'😅 আরেকটু দেখলে পারতে!':'💀 বেশি বেশি Anime দেখো!';
+        document.getElementById('quiz-body').innerHTML='<div style="text-align:center;padding:8px 0"><div class="quiz-score-big">'+_qScore+'/3</div><div style="color:var(--text-muted);margin:10px 0 4px;font-size:13px;">'+msg+'</div>'+(pts>0?'<div style="color:var(--accent-glow);font-size:13px;font-weight:800;margin-top:6px;">+'+pts+' পয়েন্ট!</div>':'')+'<button style="margin-top:18px;width:100%;padding:13px;background:var(--accent-gradient);color:#000;border:none;border-radius:14px;font-size:14px;font-weight:900;font-family:Orbitron,sans-serif;cursor:pointer;" onclick="closeQuizEarn('+pts+')">CLAIM ✅</button></div>';
+    }
+    function closeQuizEarn(pts) {
+        closeQuiz();
+        if(pts>0&&currentUser){
+            db.ref('users/'+currentUser.uid+'/points').transaction(function(c){return (c||0)+pts;});
+            userPoints+=pts; document.getElementById('task-coin-balance').innerText=userPoints;
+            showDlToast('🎉 +'+pts+' পয়েন্ট পেলে!',false);
+        }
+    }
+    function closeQuiz(){ var m=document.getElementById('quiz-modal'); m.classList.remove('qopen'); m.style.display='none'; }
+    // Trigger quiz when video ends
+    document.addEventListener('DOMContentLoaded', function(){
+        var v=document.getElementById('main-video');
+        if(v) v.addEventListener('ended', function(){
+            if(document.getElementById('player-view').style.display==='block') setTimeout(startQuiz, 1200);
+        });
+    });
+
+    // ════════ AUTO-IMPORT (Admin Panel) ════════
+    var _aiData = null;
+    function autoImportSearch() {
+        var q=document.getElementById('ai-search-query').value.trim(); if(!q) return;
+        var res=document.getElementById('ai-search-results');
+        res.innerHTML='<p style="color:#888;font-size:13px;">Searching...</p>';
+        document.getElementById('ai-import-config').style.display='none';
+        fetch('https://api.jikan.moe/v4/anime?q='+encodeURIComponent(q)+'&limit=8')
+            .then(function(r){return r.json();})
+            .then(function(data){
+                if(!data.data||!data.data.length){res.innerHTML='<p style="color:#888;">কোনো ফলাফল পাওয়া যায়নি।</p>';return;}
+                var h='<div style="display:flex;flex-direction:column;gap:9px;">';
+                data.data.forEach(function(a){
+                    var th=(a.images&&a.images.jpg)?a.images.jpg.image_url:'';
+                    var eps=a.episodes||'?'; var sc=a.score||'N/A';
+                    h+='<div style="display:flex;gap:11px;background:#1a1a1a;padding:11px;border-radius:9px;border:1px solid #333;cursor:pointer;align-items:center;" onclick="selectAIAnime('+a.mal_id+',''+a.title.replace(/\/g,'\\').replace(/'/g,"\'")+''  ,''+th+'','+(a.episodes||0)+')">';
+                    h+='<img src="'+th+'" style="width:44px;height:62px;object-fit:cover;border-radius:7px;" onerror="this.style.display='none'">';
+                    h+='<div><div style="color:#fff;font-weight:700;font-size:13px;">'+a.title+'</div><div style="color:#666;font-size:11px;margin-top:3px;">'+eps+' episodes | Score: '+sc+'</div></div></div>';
+                });
+                h+='</div>'; res.innerHTML=h;
+            })
+            .catch(function(){res.innerHTML='<p style="color:#e63946;">Error. Try again.</p>';});
+    }
+    function selectAIAnime(id,title,thumb,eps){
+        _aiData={id:id,title:title,thumb:thumb,eps:eps};
+        document.getElementById('ai-selected-title').textContent='Selected: '+title+' ('+eps+' eps)';
+        document.getElementById('ai-url-template').value='';
+        document.getElementById('ai-import-config').style.display='block';
+        document.getElementById('ai-import-progress').style.display='none';
+        document.getElementById('ai-search-results').innerHTML='<div style="background:#1a1a1a;padding:9px 12px;border-radius:8px;border:1px solid #00ff88;color:#00ff88;font-size:13px;font-weight:700;">✅ '+title+' selected!</div>';
+    }
+    function runAutoImport(){
+        if(!_aiData) return alert('Please select an anime first!');
+        var tpl=document.getElementById('ai-url-template').value.trim();
+        if(!tpl||!tpl.includes('{n}')) return alert('URL template must include {n} for episode number!');
+        var hin=document.getElementById('ai-url-hin-template').value.trim();
+        var eng=document.getElementById('ai-url-eng-template').value.trim();
+        var type=document.getElementById('ai-import-type').value;
+        var eps=_aiData.eps||12;
+        var prog=document.getElementById('ai-import-progress');
+        prog.style.display='block'; prog.textContent='Importing... 0/'+eps;
+        var updates={}, folder=_aiData.title, thumb=_aiData.thumb;
+        for(var i=1;i<=eps;i++){
+            var key=db.ref('anime_data').push().key;
+            updates['anime_data/'+key]={
+                folder:folder, title:folder+' Episode '+i, thumbnail:thumb,
+                url:tpl.replace(/{n}/g,i),
+                url_hin:hin?hin.replace(/{n}/g,i):'',
+                url_eng:eng?eng.replace(/{n}/g,i):'',
+                type:type, order:i
+            };
+        }
+        db.ref().update(updates).then(function(){
+            prog.textContent='✅ Done! '+eps+' episodes imported for "'+folder+'"';
+            showDlToast('✅ '+eps+' episodes auto-imported!',false);
+            _aiData=null;
+            document.getElementById('ai-import-config').style.display='none';
+            document.getElementById('ai-search-query').value='';
+            document.getElementById('ai-search-results').innerHTML='';
+        }).catch(function(e){prog.textContent='❌ Error: '+e.message;});
+    }
+    </script>
+
+    <!-- 🌟 LONG-PRESS PREVIEW LOGIC -->
+    <script>
+    (function () {
+        var lpTimer = null;
+        var lpPendingCard = null;
+        var lpTriggered = false;
+        var lpSavedAction = null;
+        var LP_MS = 520;
+
+        /* ── Show modal ─────────────────────────────────────────── */
+        function lpShow(card) {
+            var thumb  = (card.querySelector('.img-wrapper img') || {}).src || '';
+            var title  = (card.querySelector('.folder-title')   || {}).innerText || '';
+            var epTxt  = (card.querySelector('.folder-ep')      || {}).innerText || '';
+            var badge  = ((card.querySelector('.card-vip-badge') || {}).innerText || '').trim();
+            var action = card.getAttribute('onclick') || '';
+            lpSavedAction = action;
+
+            document.getElementById('lp-bg').style.backgroundImage  = "url('" + thumb + "')";
+            document.getElementById('lp-thumb').src  = thumb;
+            document.getElementById('lp-title').innerText = title;
+
+            var isVip = badge === 'VIP';
+            var meta  = '<span class="lp-pill ' + (isVip ? 'lp-pill-vip' : 'lp-pill-free') + '">' + (badge || 'FREE') + '</span>';
+            if (epTxt) meta += '<span class="lp-pill lp-pill-free">' + epTxt + '</span>';
+            document.getElementById('lp-meta').innerHTML = meta;
+
+            var ov = document.getElementById('lp-overlay');
+            ov.style.display = 'flex';
+            ov.classList.add('lp-open');
+
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        /* ── Close modal ────────────────────────────────────────── */
+        window.lpClose = function () {
+            var ov = document.getElementById('lp-overlay');
+            ov.classList.remove('lp-open');
+            ov.style.display = 'none';
+            lpSavedAction = null;
+        };
+
+        /* ── Watch Now ──────────────────────────────────────────── */
+        window.lpWatchNow = function () {
+            var action = lpSavedAction;
+            window.lpClose();
+            if (action) { try { eval(action); } catch(e) {} }
+        };
+
+        /* ── Tap outside card to close ──────────────────────────── */
+        document.getElementById('lp-overlay').addEventListener('click', function (e) {
+            if (e.target === this) window.lpClose();
+        });
+
+        /* ── Long-press detection (touch) ───────────────────────── */
+        document.addEventListener('touchstart', function (e) {
+            var card = e.target.closest('.folder-card');
+            if (!card) return;
+            lpPendingCard = card;
+            lpTriggered   = false;
+            lpTimer = setTimeout(function () {
+                lpTriggered = true;
+                lpShow(card);
+            }, LP_MS);
+        }, { passive: true });
+
+        document.addEventListener('touchend', function () {
+            if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function () {
+            if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
+        }, { passive: true });
+
+        /* Suppress the click that fires after a long-press touchend */
+        document.addEventListener('click', function (e) {
+            if (lpTriggered) {
+                e.stopPropagation();
+                e.preventDefault();
+                lpTriggered = false;
+            }
+        }, true);
     })();
     </script>
 </body>
