@@ -24,7 +24,7 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({ appId: "fdac3928-a2fc-4bc7-9541-cb85ae026409" });
+        await OneSignal.init({ appId: "2a43ab1f-601f-42ae-a013-f8571598bc01" });
       });
     </script>
     
@@ -1428,23 +1428,25 @@
 
         <!-- TABS -->
         <div class="nav-scroller">
-            <div class="nav-btn active" onclick="showAdminTab('analytics')">ANALYTICS</div>
-            <div class="nav-btn" onclick="showAdminTab('settings')">⚙️ SETTINGS</div>
-            <div class="nav-btn" onclick="showAdminTab('admanager')">AD MANAGER</div>
+            <div class="nav-btn active" onclick="showAdminTab('analytics', this)">ANALYTICS</div>
+            <div class="nav-btn" onclick="showAdminTab('settings', this)">⚙️ SETTINGS</div>
+            <div class="nav-btn" onclick="showAdminTab('admanager', this)">AD MANAGER</div>
             <!-- NEW TABS -->
-            <div class="nav-btn" onclick="showAdminTab('pending'); loadPendingLinks();">PENDING LINKS</div>
-            <div class="nav-btn" onclick="showAdminTab('fetcher')">CONTENT FETCHER</div>
+            <div class="nav-btn" onclick="showAdminTab('pending', this); loadPendingLinks();">PENDING LINKS</div>
+            <div class="nav-btn" onclick="showAdminTab('fetcher', this)">CONTENT FETCHER</div>
 
-            <div class="nav-btn" onclick="showAdminTab('aicommds')">AI COMMANDS</div>
-            <div class="nav-btn" onclick="showAdminTab('anime')">ANIME SERIES</div>
-            <div class="nav-btn" onclick="showAdminTab('movies')">MOVIE BOX</div>
-            <div class="nav-btn" onclick="showAdminTab('cartoons')">CARTOON BOX</div>
-            <div class="nav-btn" onclick="showAdminTab('shorts')">SHORTS</div>
-            <div class="nav-btn" onclick="showAdminTab('banners')">ALL BANNERS</div>
-            <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes')">PREMIUM CODES</div>
-            <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions')">SUBSCRIPTIONS</div>
-            <div class="nav-btn" onclick="showAdminTab('sale')">SALE MANAGER</div>
-            <div class="nav-btn" onclick="showAdminTab('autoimport')">🤖 AUTO-IMPORT</div>
+            <div class="nav-btn" onclick="showAdminTab('aicommds', this)">AI COMMANDS</div>
+            <div class="nav-btn" onclick="showAdminTab('anime', this)">ANIME SERIES</div>
+            <div class="nav-btn" onclick="showAdminTab('movies', this)">MOVIE BOX</div>
+            <div class="nav-btn" onclick="showAdminTab('cartoons', this)">CARTOON BOX</div>
+            <div class="nav-btn" onclick="showAdminTab('shorts', this)">SHORTS</div>
+            <div class="nav-btn" onclick="showAdminTab('banners', this)">ALL BANNERS</div>
+            <div class="nav-btn" id="nav-codes" onclick="showAdminTab('codes', this)">PREMIUM CODES</div>
+            <div class="nav-btn" id="nav-subs" onclick="showAdminTab('subscriptions', this)">SUBSCRIPTIONS</div>
+            <div class="nav-btn" onclick="showAdminTab('users', this); loadAllUsers();">👥 USERS</div>
+            <div class="nav-btn" onclick="showAdminTab('pushnotif', this)">🔔 PUSH NOTIFY</div>
+            <div class="nav-btn" onclick="showAdminTab('sale', this)">SALE MANAGER</div>
+            <div class="nav-btn" onclick="showAdminTab('autoimport', this)">🤖 AUTO-IMPORT</div>
         </div>
 
         <!-- ANALYTICS SECTION -->
@@ -1584,7 +1586,7 @@
         </div>
 
         <!-- MOVIE SECTION -->
-        <div id="admin-movies" class="section-view">
+        <div id="admin-movies" class="section-view" style="display:none;">
             <div class="input-group" style="border-color:#ff3b3b;">
                 <h3 id="mv-head" style="color:#ff3b3b;"><i class="fas fa-film"></i> UPLOAD MOVIE</h3>
                 <div class="cat-checkboxes">
@@ -1608,7 +1610,7 @@
         </div>
 
         <!-- CARTOON SECTION -->
-        <div id="admin-cartoons" class="section-view">
+        <div id="admin-cartoons" class="section-view" style="display:none;">
             <div class="input-group" style="border-color:var(--cyan);">
                 <h3 id="ct-head" style="color:var(--cyan);"><i class="fas fa-paw"></i> UPLOAD CARTOON</h3>
                 <div class="cat-checkboxes">
@@ -1631,7 +1633,7 @@
         </div>
 
         <!-- SHORTS SECTION -->
-        <div id="admin-shorts" class="section-view">
+        <div id="admin-shorts" class="section-view" style="display:none;">
             <div class="input-group">
                 <h3><i class="fas fa-video"></i> ADD SHORT VIDEO</h3>
                 <input type="text" id="sh-url" placeholder="Short Video URL">
@@ -1681,7 +1683,7 @@
         </div>
 
         <!-- SUBSCRIPTIONS SECTION -->
-        <div id="admin-subscriptions" class="section-view">
+        <div id="admin-subscriptions" class="section-view" style="display:none;">
             <div class="input-group">
                 <h3 style="color:var(--cyan);"><i class="fas fa-money-check-alt"></i> PENDING PAYMENTS</h3>
             </div>
@@ -1708,6 +1710,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- USERS LIST SECTION -->
+        <div id="admin-users" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color:#00f3ff;">
+                <h3 style="color:#00f3ff;"><i class="fas fa-users"></i> ALL REGISTERED USERS</h3>
+                <div style="display:flex; gap:10px; margin-bottom:15px; align-items:center;">
+                    <input type="text" id="user-search-input" placeholder="Search by name or email..." style="flex:1; margin-bottom:0;" oninput="filterUserList(this.value)">
+                    <button onclick="loadAllUsers()" style="background:var(--cyan); color:#000; border:none; padding:14px 18px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer; white-space:nowrap; font-size:12px;"><i class="fas fa-sync-alt"></i> REFRESH</button>
+                </div>
+                <div id="user-count-display" style="color:#888; font-size:12px; font-family:'Orbitron'; margin-bottom:10px;">Loading...</div>
+            </div>
+            <div id="admin-users-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+
+        <!-- PUSH NOTIFICATION SECTION -->
+        <div id="admin-pushnotif" class="section-view" style="display:none;">
+            <div class="input-group" style="border-color:#ff007f;">
+                <h3 style="color:#ff007f;"><i class="fas fa-bell"></i> PUSH NOTIFICATION (সব ইউজারকে)</h3>
+                <p style="color:#888; font-size:12px; margin-bottom:15px;">OneSignal দিয়ে সব subscribed ইউজারের কাছে notification পাঠাও।</p>
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Notification Title</label>
+                <input type="text" id="notif-title" placeholder="e.g. New Episode Alert! 🎬">
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">Notification Message</label>
+                <input type="text" id="notif-message" placeholder="e.g. Attack on Titan Episode 90 is now live!">
+                <label style="color:#888; font-size:12px; margin-bottom:5px; display:block;">URL (Optional - click করলে এই লিংকে যাবে)</label>
+                <input type="text" id="notif-url" placeholder="https://... (ফাঁকা রাখলে website home খুলবে)">
+                <div id="notif-status" style="color:#888; font-size:13px; margin-bottom:10px; font-family:'Orbitron'; display:none;"></div>
+                <button class="btn-action" style="background: linear-gradient(45deg, #ff007f, #b10050); color:#fff;" onclick="sendPushNotification()"><i class="fas fa-paper-plane"></i> SEND TO ALL USERS</button>
+            </div>
+            <div class="input-group" style="border-color:#333; margin-top:10px;">
+                <h3 style="color:#888; font-size:13px;"><i class="fas fa-info-circle"></i> OneSignal Info</h3>
+                <div style="color:#555; font-size:12px; line-height:1.8;">
+                    <div>App ID: <span style="color:#00f3ff;">2a43ab1f-601f-42ae-a013-f8571598bc01</span></div>
+                    <div style="margin-top:5px; color:#444;">Notification শুধু তাদের কাছে যাবে যারা browser notification allow করেছে।</div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- SALE SECTION -->
         <div id="admin-sale" class="section-view" style="display:none;">
@@ -4294,11 +4333,17 @@
             });
         }
 
-        function showAdminTab(tab) {
-            document.getElementById('master-admin-panel').querySelectorAll('.section-view').forEach(d => d.style.display = 'none');
-            document.getElementById('admin-' + tab) ? document.getElementById('admin-' + tab).style.display = 'block' : document.getElementById(tab).style.display = 'block';
-            document.getElementById('master-admin-panel').querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if (event && event.currentTarget) { event.currentTarget.classList.add('active'); }
+        function showAdminTab(tab, clickedEl) {
+            var panel = document.getElementById('master-admin-panel');
+            panel.querySelectorAll('.section-view').forEach(function(d){ d.style.display = 'none'; });
+            var targetEl = document.getElementById('admin-' + tab) || document.getElementById(tab);
+            if(targetEl) targetEl.style.display = 'block';
+            panel.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+            // Mark the clicked nav button as active
+            try {
+                if(clickedEl) { clickedEl.classList.add('active'); }
+                else if(window.event && window.event.currentTarget) { window.event.currentTarget.classList.add('active'); }
+            } catch(e) {}
         }
 
         function toggleAdminFolder(id) {
@@ -4878,6 +4923,134 @@
         // ==============================================================
         // 🌟 SALE POPUP LOGIC 🌟
         // ==============================================================
+
+        // ==============================================================
+        // 👥 USERS LIST - ADMIN PANEL
+        // ==============================================================
+        let allUsersData = [];
+        function loadAllUsers() {
+            if(!window.isMasterAdminLoggedIn) return;
+            const list = document.getElementById('admin-users-list');
+            const countEl = document.getElementById('user-count-display');
+            if(!list) return;
+            list.innerHTML = "<div style='color:#666; text-align:center; padding:20px; font-family:Orbitron;'>Loading users...</div>";
+            db.ref('users').once('value', function(s) {
+                allUsersData = [];
+                list.innerHTML = '';
+                if(!s.exists()) {
+                    list.innerHTML = "<div style='color:#666; text-align:center; padding:20px;'>No users found.</div>";
+                    if(countEl) countEl.innerText = 'Total: 0 users';
+                    return;
+                }
+                s.forEach(function(child) {
+                    var d = child.val();
+                    d._uid = child.key;
+                    allUsersData.push(d);
+                });
+                allUsersData.sort(function(a, b) { return (b.createdAt || b.joinedAt || 0) - (a.createdAt || a.joinedAt || 0); });
+                if(countEl) countEl.innerText = 'Total: ' + allUsersData.length + ' registered users';
+                renderUserList(allUsersData);
+            });
+        }
+
+        function renderUserList(users) {
+            var list = document.getElementById('admin-users-list');
+            if(!list) return;
+            list.innerHTML = '';
+            if(users.length === 0) {
+                list.innerHTML = "<div style='color:#666; text-align:center; padding:20px;'>No results found.</div>";
+                return;
+            }
+            var html = '';
+            users.forEach(function(d) {
+                var isPremium = d.premiumExpiry && d.premiumExpiry > Date.now();
+                var vipBadge = isPremium ? '<span style="background:linear-gradient(135deg,#ffb703,#fb8500); color:#000; font-size:10px; padding:3px 8px; border-radius:10px; font-weight:bold; margin-left:8px;">VIP</span>' : '';
+                var joinDate = d.createdAt ? new Date(d.createdAt).toLocaleDateString() : (d.joinedAt ? new Date(d.joinedAt).toLocaleDateString() : 'Unknown');
+                var name = d.name || d.username || 'No Name';
+                var email = d.email || 'No Email';
+                var uid = d._uid || '';
+                var points = d.points || 0;
+                var expiry = isPremium ? ('<div style="color:#00e676; font-size:11px; margin-top:4px;"><i class="fas fa-crown"></i> VIP: ' + new Date(d.premiumExpiry).toLocaleDateString() + '</div>') : '';
+                html += '<div style="background:#1a1a1a; border:1px solid #2a2a2a; border-left:4px solid #00f3ff; padding:14px; border-radius:8px; margin-bottom:8px;">';
+                html += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">';
+                html += '<div style="flex:1;"><div style="color:#fff; font-weight:bold; font-size:14px;">' + name + vipBadge + '</div>';
+                html += '<div style="color:#00f3ff; font-size:12px; margin-top:3px;">' + email + '</div></div>';
+                html += '<div style="text-align:right;"><div style="color:#D4AF37; font-size:11px; font-family:Orbitron;">⭐ ' + points + ' pts</div>';
+                html += '<div style="color:#555; font-size:10px; margin-top:2px;">Joined: ' + joinDate + '</div></div></div>';
+                html += '<div style="color:#555; font-size:10px; font-family:monospace; margin-top:4px; user-select:text; -webkit-user-select:text;">UID: ' + uid + '</div>';
+                html += expiry;
+                html += '</div>';
+            });
+            list.innerHTML = html;
+        }
+
+        function filterUserList(query) {
+            var q = query.toLowerCase().trim();
+            if(!q) { renderUserList(allUsersData); return; }
+            var filtered = allUsersData.filter(function(d) {
+                var name = (d.name || d.username || '').toLowerCase();
+                var email = (d.email || '').toLowerCase();
+                return name.includes(q) || email.includes(q);
+            });
+            var countEl = document.getElementById('user-count-display');
+            if(countEl) countEl.innerText = 'Found: ' + filtered.length + ' / ' + allUsersData.length + ' users';
+            renderUserList(filtered);
+        }
+
+        // ==============================================================
+        // 🔔 PUSH NOTIFICATION - ONESIGNAL REST API
+        // ==============================================================
+        function sendPushNotification() {
+            if(!window.isMasterAdminLoggedIn) return;
+            var title = document.getElementById('notif-title').value.trim();
+            var message = document.getElementById('notif-message').value.trim();
+            var url = document.getElementById('notif-url').value.trim();
+            var statusEl = document.getElementById('notif-status');
+
+            if(!title || !message) return alert('❌ Title এবং Message দুটোই দিতে হবে!');
+
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#888';
+            statusEl.innerText = '⏳ Sending notification to all users...';
+
+            var payload = {
+                app_id: '2a43ab1f-601f-42ae-a013-f8571598bc01',
+                included_segments: ['Total Subscriptions'],
+                headings: { en: title },
+                contents: { en: message }
+            };
+            if(url) payload.url = url;
+
+            fetch('https://onesignal.com/api/v1/notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic os_v2_app_fjb2wh3ad5bk5iat7blrlgf4agidxslm3cse5u44xecy2bum72c5zjb2avpou5p4muvcaqfi3qjlfk4d66tw6zviqbmurqw75qe4a2q'
+                },
+                body: JSON.stringify(payload)
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                if(data.id) {
+                    statusEl.style.color = '#00e676';
+                    statusEl.innerText = '✅ Sent! ID: ' + data.id + ' | Recipients: ' + (data.recipients || 'N/A');
+                    document.getElementById('notif-title').value = '';
+                    document.getElementById('notif-message').value = '';
+                    document.getElementById('notif-url').value = '';
+                } else if(data.errors) {
+                    statusEl.style.color = '#ff3b3b';
+                    statusEl.innerText = '❌ Error: ' + JSON.stringify(data.errors);
+                } else {
+                    statusEl.style.color = '#ff3b3b';
+                    statusEl.innerText = '❌ Unknown error. See console.';
+                    console.error(data);
+                }
+            }).catch(function(e) {
+                statusEl.style.color = '#ff3b3b';
+                statusEl.innerText = '❌ Network error: ' + e.message;
+            });
+        }
+
         function saveSaleConfig() {
             db.ref('sale_config').set({
                 active: document.getElementById('sale-active').checked,
