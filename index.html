@@ -1529,7 +1529,7 @@
         <div id="admin-fetcher" class="section-view" style="display:none;">
             <div class="input-group" style="border-color: #00f3ff;">
                 <h3 style="color:#00f3ff;"><i class="fas fa-cloud-download-alt"></i> CONTENT FETCHER (JIKAN API)</h3>
-                <p style="color:#888; font-size:12px; margin-bottom:15px;">Search for Anime/Movies. Adding them will save to database with an empty video URL (showing "Coming Soon" to users) until you update the link in the Pending Links tab.</p>
+                <p style="color:#888; font-size:12px; margin-bottom:15px;">Anime খোঁজো, Video Embed URL দাও (অথবা Auto-fill করো), Free/VIP বেছে নাও — তারপর সরাসরি Database-এ Add করো। Users সাথে সাথে দেখতে পারবে!</p>
                 <input type="text" id="fetch-query" placeholder="Search Anime/Movie Title...">
                 <button class="btn-action" style="background:#00f3ff; color:#000;" onclick="searchContentAPI()">SEARCH</button>
                 <div id="fetch-results" class="data-list" style="margin-top:15px;"></div>
@@ -4862,61 +4862,145 @@
         }
 
         // ==============================================================
-        // 🌟 NEW: CONTENT FETCHER (JIKAN API) 🌟
+        // 🌟 CONTENT FETCHER (JIKAN API) — UPGRADED 🌟
         // ==============================================================
         async function searchContentAPI() {
-            let query = document.getElementById('fetch-query').value.trim();
-            let resultDiv = document.getElementById('fetch-results');
-            if(!query) return alert("Enter a title to search!");
-            
-            resultDiv.innerHTML = "<div style='color:#666; text-align:center;'>Fetching from Jikan API...</div>";
-            
+            var query = document.getElementById('fetch-query').value.trim();
+            var resultDiv = document.getElementById('fetch-results');
+            if(!query) return alert("Anime-এর নাম লেখো!");
+
+            resultDiv.innerHTML = "<div style='color:#00f3ff; text-align:center; padding:20px; font-family:Orbitron; font-size:12px;'>⏳ Jikan API থেকে খুঁজছি...</div>";
+
             try {
-                let response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=10`);
-                let data = await response.json();
-                
-                if(data.data.length === 0) {
-                    resultDiv.innerHTML = "<div style='color:var(--red); text-align:center;'>No results found.</div>";
+                var response = await fetch('https://api.jikan.moe/v4/anime?q=' + encodeURIComponent(query) + '&limit=12');
+                var data = await response.json();
+
+                if(!data.data || data.data.length === 0) {
+                    resultDiv.innerHTML = "<div style='color:var(--red); text-align:center; padding:20px;'>কিছু পাওয়া যায়নি।</div>";
                     return;
                 }
 
                 resultDiv.innerHTML = "";
-                data.data.forEach(anime => {
-                    let title = anime.title_english || anime.title;
-                    let thumb = anime.images.jpg.image_url;
-                    let safeTitle = title.replace(/'/g, "\\'");
-                    
-                    resultDiv.innerHTML += `
-                    <div class="data-card" style="display:flex; flex-direction:column;">
-                        <img src="${thumb}" style="height:120px;">
-                        <div class="data-info" style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
-                            <div class="data-title" style="white-space:normal; -webkit-line-clamp:2; display:-webkit-box; -webkit-box-orient:vertical;">${title}</div>
-                            <button onclick="addFetchedContent('${safeTitle}', '${thumb}', 'anime')" style="margin-top:10px; background:#00f3ff; color:#000; border:none; padding:8px; border-radius:4px; font-weight:bold; font-family:'Orbitron'; cursor:pointer; width:100%;">ADD TO DATABASE</button>
-                        </div>
-                    </div>`;
+                data.data.forEach(function(anime, idx) {
+                    var title = anime.title_english || anime.title;
+                    var thumb = anime.images.jpg.large_image_url || anime.images.jpg.image_url;
+                    var episodes = anime.episodes || '?';
+                    var year = anime.year || '';
+                    var score = anime.score || '';
+                    var safeId = 'fc_' + idx;
+
+                    // Build gogoanime-style slug from title
+                    var slug = title.toLowerCase()
+                        .replace(/[^a-z0-9\s]/g, '')
+                        .trim()
+                        .replace(/\s+/g, '-');
+
+                    var cardHtml = '<div style="background:#111; border:1px solid #2a2a2a; border-radius:12px; overflow:hidden; margin-bottom:12px;">';
+                    // Header row
+                    cardHtml += '<div style="display:flex; gap:12px; padding:12px;">';
+                    cardHtml += '<img src="' + thumb + '" style="width:70px; height:95px; object-fit:cover; border-radius:8px; flex-shrink:0;">';
+                    cardHtml += '<div style="flex:1;">';
+                    cardHtml += '<div style="color:#fff; font-weight:bold; font-size:13px; margin-bottom:6px; line-height:1.4;">' + title + '</div>';
+                    cardHtml += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">';
+                    if(score) cardHtml += '<span style="background:rgba(212,175,55,0.15); color:#D4AF37; font-size:10px; padding:2px 8px; border-radius:10px; font-family:Orbitron;">⭐ ' + score + '</span>';
+                    if(year) cardHtml += '<span style="background:rgba(0,243,255,0.1); color:#00f3ff; font-size:10px; padding:2px 8px; border-radius:10px; font-family:Orbitron;">' + year + '</span>';
+                    cardHtml += '<span style="background:rgba(255,255,255,0.05); color:#888; font-size:10px; padding:2px 8px; border-radius:10px; font-family:Orbitron;">' + episodes + ' EP</span>';
+                    cardHtml += '</div>';
+                    cardHtml += '</div></div>';
+
+                    // URL input + auto-fill
+                    cardHtml += '<div style="padding:0 12px 12px;">';
+                    cardHtml += '<div style="font-size:11px; color:#888; margin-bottom:6px; font-family:Orbitron;">📹 VIDEO EMBED URL</div>';
+                    cardHtml += '<div style="display:flex; gap:8px; margin-bottom:8px;">';
+                    cardHtml += '<input type="text" id="url_' + safeId + '" placeholder="https://... (embed link paste করো)" style="flex:1; padding:10px; background:#050505; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; margin-bottom:0;">';
+                    cardHtml += '<button onclick="autoFillURL('' + safeId + '', '' + slug + '')" style="background:#b14bff; color:#fff; border:none; padding:10px 12px; border-radius:6px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:11px; white-space:nowrap;">⚡ AUTO</button>';
+                    cardHtml += '</div>';
+
+                    // Folder name
+                    cardHtml += '<div style="font-size:11px; color:#888; margin-bottom:6px; font-family:Orbitron;">📁 FOLDER NAME (Anime Series Name)</div>';
+                    cardHtml += '<input type="text" id="folder_' + safeId + '" value="' + title + '" placeholder="Folder name (same anime-এর সব episode এক folder-এ)" style="width:100%; padding:10px; background:#050505; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; margin-bottom:8px;">';
+
+                    // Episode title
+                    cardHtml += '<div style="font-size:11px; color:#888; margin-bottom:6px; font-family:Orbitron;">📺 EPISODE TITLE</div>';
+                    cardHtml += '<input type="text" id="eptitle_' + safeId + '" value="' + title + ' - Episode 1" placeholder="Episode title" style="width:100%; padding:10px; background:#050505; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; margin-bottom:8px;">';
+
+                    // Free/VIP selector
+                    cardHtml += '<div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">';
+                    cardHtml += '<div style="font-size:11px; color:#888; font-family:Orbitron; white-space:nowrap;">ACCESS:</div>';
+                    cardHtml += '<select id="type_' + safeId + '" style="flex:1; padding:10px; background:#050505; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; margin-bottom:0;">';
+                    cardHtml += '<option value="free">🆓 FREE — সবাই দেখতে পারবে</option>';
+                    cardHtml += '<option value="premium">👑 VIP ONLY — শুধু paid users</option>';
+                    cardHtml += '</select>';
+                    cardHtml += '</div>';
+
+                    // Add button
+                    cardHtml += '<button onclick="addFetchedContent('' + safeId + '', '' + thumb + '')" style="width:100%; padding:12px; background:linear-gradient(45deg, #00f3ff, #007bff); color:#000; border:none; border-radius:8px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:13px;">✅ DATABASE-এ ADD করো</button>';
+                    cardHtml += '</div></div>';
+
+                    resultDiv.innerHTML += cardHtml;
                 });
             } catch(e) {
-                resultDiv.innerHTML = "<div style='color:var(--red); text-align:center;'>API Error. Please try again.</div>";
+                resultDiv.innerHTML = "<div style='color:var(--red); text-align:center; padding:20px;'>API Error: " + e.message + "</div>";
             }
         }
 
-        function addFetchedContent(title, thumb, type) {
-            let category = 'anime'; // Default
+        function autoFillURL(safeId, slug) {
+            // Try to auto-generate a gogoanime embed URL
+            var input = document.getElementById('url_' + safeId);
+            var epTitle = document.getElementById('eptitle_' + safeId);
+            var epMatch = epTitle ? epTitle.value.match(/[Ee]pisode\s*(\d+)/) : null;
+            var epNum = epMatch ? epMatch[1] : '1';
+
+            // Generate gogoanime embed URL
+            var embedUrl = 'https://gogoanime3.co/videos/' + slug + '-episode-' + epNum;
+            input.value = embedUrl;
+            input.style.borderColor = '#b14bff';
+            setTimeout(function(){ input.style.borderColor = '#333'; }, 1500);
+        }
+        function addFetchedContent(safeId, thumb) {
+            if(!window.isMasterAdminLoggedIn) return;
+            var url = document.getElementById('url_' + safeId) ? document.getElementById('url_' + safeId).value.trim() : '';
+            var folder = document.getElementById('folder_' + safeId) ? document.getElementById('folder_' + safeId).value.trim() : '';
+            var epTitle = document.getElementById('eptitle_' + safeId) ? document.getElementById('eptitle_' + safeId).value.trim() : '';
+            var contentType = document.getElementById('type_' + safeId) ? document.getElementById('type_' + safeId).value : 'free';
+
+            if(!folder) return alert('❌ Folder name দাও!');
+            if(!epTitle) return alert('❌ Episode title দাও!');
+
+            // Warn if no URL, but allow "coming soon" mode
+            if(!url) {
+                var proceed = confirm('⚠️ Video URL দাওনি! URL ছাড়া add করলে users "Coming Soon" দেখবে।\nতারপরও add করবে?');
+                if(!proceed) return;
+            }
+
             db.ref('anime').push({
-                category: category,
-                folder: title,
-                title: title + " - Episode 1",
+                category: 'anime',
+                folder: folder,
+                title: epTitle,
                 thumbnail: thumb,
-                url: "", // 🔥 Empty URL will trigger the "Coming Soon" system
-                url_hin: "",
-                url_eng: "",
-                type: "free",
+                url: url,
+                url_hin: '',
+                url_eng: '',
+                type: contentType,
                 timestamp: Date.now(),
-                uploadedBy: "MasterAPI"
-            }).then(() => {
-                alert(`✅ "${title}" Added successfully without a URL!\nIt will show the "Coming Soon" screen until you update it from the Pending Links tab.`);
-                document.getElementById('fetch-results').innerHTML = "";
-                document.getElementById('fetch-query').value = "";
+                uploadedBy: 'MasterFetcher'
+            }).then(function() {
+                var status = url ? '✅ "' + epTitle + '" সফলভাবে add হয়েছে!' : '✅ "' + epTitle + '" add হয়েছে (URL নেই — Coming Soon দেখাবে)।';
+                alert(status);
+                // Remove just this card
+                var card = document.getElementById('url_' + safeId);
+                if(card && card.closest('div[style]')) {
+                    // Go up to the outermost card div
+                    var el = card;
+                    for(var i = 0; i < 6; i++) { if(el.parentElement) el = el.parentElement; }
+                    if(el && el.parentElement && el.parentElement.id === 'fetch-results') {
+                        el.style.opacity = '0.4';
+                        el.style.pointerEvents = 'none';
+                        el.innerHTML += '<div style="text-align:center; padding:8px; color:#00e676; font-family:Orbitron; font-size:11px;">✅ ADDED</div>';
+                    }
+                }
+            }).catch(function(e) {
+                alert('❌ Error: ' + e.message);
             });
         }
 
