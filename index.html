@@ -731,15 +731,23 @@
     </style>
 
     <script>
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                let splash = document.getElementById('premium-splash');
-                if(splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.style.display = 'none', 500);
-                }
-            }, 1500);
+        // BUG FIX: আগে window.load use করত — Firebase/OneSignal slow হলে splash কখনো সরত না।
+        // এখন DOMContentLoaded (DOM ready হলেই) + hard fallback দিয়ে ঠিক করা হয়েছে।
+        function hideSplash() {
+            let splash = document.getElementById('premium-splash');
+            if(splash && splash.style.display !== 'none') {
+                splash.style.opacity = '0';
+                setTimeout(function() { splash.style.display = 'none'; }, 500);
+            }
+        }
+        // Method 1: DOM ready হলে ১ সেকেন্ড পরে hide
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(hideSplash, 1000);
         });
+        // Method 2: Hard fallback — ৩ সেকেন্ডের মধ্যে যা-ই হোক hide করবে
+        setTimeout(hideSplash, 3000);
+        // Method 3: window.load এ সাথে সাথে hide (যদি আগে না হয়)
+        window.addEventListener('load', function() { setTimeout(hideSplash, 300); });
     </script>
     <!-- 🌟 END SPLASH SCREEN 🌟 -->
 
@@ -4932,7 +4940,7 @@
                     cardHtml += '<div style="font-size:11px; color:#888; margin-bottom:6px; font-family:Orbitron;">📹 VIDEO EMBED URL</div>';
                     cardHtml += '<div style="display:flex; gap:8px; margin-bottom:8px;">';
                     cardHtml += '<input type="text" id="url_' + safeId + '" placeholder="https://... (embed link paste করো)" style="flex:1; padding:10px; background:#050505; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; margin-bottom:0;">';
-                    cardHtml += '<button onclick="autoFillURL('' + safeId + '', '' + slug + '')" style="background:#b14bff; color:#fff; border:none; padding:10px 12px; border-radius:6px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:11px; white-space:nowrap;">⚡ AUTO</button>';
+                    cardHtml += '<button onclick="autoFillURL(\'' + safeId + '\', \'' + slug + '\')" style="background:#b14bff; color:#fff; border:none; padding:10px 12px; border-radius:6px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:11px; white-space:nowrap;">⚡ AUTO</button>';
                     cardHtml += '</div>';
 
                     // Folder name
@@ -4953,7 +4961,7 @@
                     cardHtml += '</div>';
 
                     // Add button
-                    cardHtml += '<button onclick="addFetchedContent('' + safeId + '', '' + thumb + '')" style="width:100%; padding:12px; background:linear-gradient(45deg, #00f3ff, #007bff); color:#000; border:none; border-radius:8px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:13px;">✅ DATABASE-এ ADD করো</button>';
+                    cardHtml += '<button onclick="addFetchedContent(\'' + safeId + '\', \'' + thumb + '\')" style="width:100%; padding:12px; background:linear-gradient(45deg, #00f3ff, #007bff); color:#000; border:none; border-radius:8px; font-weight:bold; font-family:Orbitron; cursor:pointer; font-size:13px;">✅ DATABASE-এ ADD করো</button>';
                     cardHtml += '</div></div>';
 
                     resultDiv.innerHTML += cardHtml;
