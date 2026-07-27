@@ -699,7 +699,42 @@
         .quiz-score-big{font-size:46px;font-weight:900;font-family:'Orbitron';color:var(--accent-glow);}
         /* ══ STREAK BADGE ══ */
         #streak-badge{display:none;align-items:center;gap:6px;background:rgba(255,100,0,.13);border:1px solid rgba(255,100,0,.4);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:800;color:#ff6a00;font-family:'Orbitron';margin-top:6px;cursor:default;}
-    </style>
+    
+        /* =========================================
+           🎁 VIP GIFT SYSTEM STYLES
+           ========================================= */
+        #vip-gift-modal { display:none; position:fixed; inset:0; background:rgba(5,5,8,0.97); backdrop-filter:blur(20px); z-index:99998; flex-direction:column; align-items:center; justify-content:flex-start; overflow-y:auto; padding:20px; font-family:'Outfit', sans-serif; }
+        .gift-container { width:100%; max-width:480px; margin:auto; padding-top:20px; padding-bottom:40px; }
+        .gift-header { text-align:center; margin-bottom:25px; }
+        .gift-header h2 { font-family:'Orbitron'; font-size:22px; font-weight:900; background: linear-gradient(135deg, #ff007f, #b14bff, #00f5d4); -webkit-background-clip:text; color:transparent; margin-bottom:5px; }
+        .gift-header p { color:var(--text-muted); font-size:13px; }
+        .gift-search-box { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin-bottom:20px; }
+        .gift-search-box label { color:#fff; font-size:13px; font-weight:700; margin-bottom:8px; display:block; }
+        .gift-search-row { display:flex; gap:10px; align-items:center; }
+        .gift-search-input { flex:1; background:rgba(0,0,0,0.5); border:2px solid rgba(255,255,255,0.08); padding:12px 16px; border-radius:12px; color:#fff; font-family:'Outfit'; font-size:14px; outline:none; transition:0.3s; }
+        .gift-search-input:focus { border-color:#b14bff; box-shadow:0 0 15px rgba(177,75,255,0.2); }
+        .gift-search-btn { background:linear-gradient(135deg,#b14bff,#7000ff); color:#fff; border:none; padding:12px 18px; border-radius:12px; font-weight:800; cursor:pointer; font-family:'Orbitron'; font-size:12px; white-space:nowrap; transition:0.3s; }
+        .gift-user-result { margin-top:15px; background:rgba(177,75,255,0.08); border:1px solid rgba(177,75,255,0.2); border-radius:12px; padding:15px; display:none; align-items:center; gap:12px; }
+        .gift-user-avatar { width:48px; height:48px; border-radius:50%; border:2px solid #b14bff; object-fit:cover; flex-shrink:0; }
+        .gift-user-info { flex:1; }
+        .gift-user-name { color:#fff; font-weight:800; font-size:15px; }
+        .gift-user-status { color:var(--text-muted); font-size:12px; margin-top:2px; }
+        .gift-plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+        .gift-plan-card { background:rgba(255,255,255,0.03); border:2px solid rgba(255,255,255,0.08); border-radius:14px; padding:15px 8px; text-align:center; cursor:pointer; transition:0.3s; }
+        .gift-plan-card.selected { border-color:#b14bff; background:rgba(177,75,255,0.12); box-shadow:0 0 20px rgba(177,75,255,0.3); }
+        .gift-plan-days { color:#b14bff; font-size:20px; font-weight:900; font-family:'Orbitron'; }
+        .gift-plan-label { color:var(--text-muted); font-size:10px; margin-top:3px; }
+        .gift-plan-price { margin-top:8px; background:rgba(0,245,212,0.1); border:1px solid rgba(0,245,212,0.3); color:#00f5d4; font-size:14px; font-weight:900; border-radius:8px; padding:4px 0; }
+        .gift-confirm-btn { width:100%; background:linear-gradient(135deg,#ff007f,#b14bff); color:#fff; font-weight:900; font-family:'Orbitron'; padding:16px; border-radius:14px; border:none; cursor:pointer; font-size:14px; letter-spacing:1px; transition:0.3s; box-shadow:0 10px 25px rgba(177,75,255,0.4); }
+        .gift-confirm-btn:active { transform:scale(0.96); }
+        .gift-confirm-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .gift-note { text-align:center; color:var(--text-muted); font-size:12px; margin-top:15px; line-height:1.6; }
+        .admin-price-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px; }
+        .admin-price-card { background:#111; border:1px solid #333; border-radius:10px; padding:15px; }
+        .admin-price-card label { color:#888; font-size:11px; font-family:'Orbitron'; display:block; margin-bottom:6px; }
+        .admin-price-card input { background:#050505 !important; border:1px solid #444 !important; color:#fff !important; padding:10px !important; border-radius:8px !important; font-size:16px !important; font-weight:700 !important; margin-bottom:0 !important; }
+
+</style>
 </head>
 <body class="vip-cyber-theme">
 
@@ -1095,7 +1130,14 @@
                     </div>
 
                     <div class="b-card" onclick="openPremiumHub()">
-                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-crown"></i></div><div><div class="b-card-title" data-i18n="vipStatus">VIP Premium Status</div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
+                        <div class="b-card-left"><div class="b-card-icon"><i class="fas fa-crown"></i></div><div><div class="b-card-title" data-i18n="vipStatus">VIP Premium Status</div>
+                    <div class="b-card" onclick="openGiftModal()" style="position:relative;">
+                        <div class="b-card-icon" style="background:linear-gradient(135deg,#ff007f,#b14bff);">
+                            <i class="fas fa-gift" style="font-size:16px;"></i>
+                        </div>
+                        <div class="b-card-text">VIP গিফট</div>
+                        <div id="gift-notif-dot" style="display:none;position:absolute;top:8px;right:8px;width:10px;height:10px;background:#ff007f;border-radius:50%;animation:wrGlowPulse 1s infinite;"></div>
+                    </div><div class="b-card-sub" id="b-vip-status">Free User</div></div></div>
                         <div class="b-card-right"><div class="b-badge"><i class="fas fa-star" style="font-size:10px; color:#fff;"></i> VIP</div><i class="fas fa-chevron-right"></i></div>
                     </div>
                     
@@ -1562,6 +1604,8 @@
         <div class="nav-scroller">
             <div class="nav-btn active" onclick="showAdminTab('analytics', this)">ANALYTICS</div>
             <div class="nav-btn" onclick="showAdminTab('settings', this)">⚙️ SETTINGS</div>
+            <div class="nav-btn" onclick="showAdminTab('gifts', this)">🎁 GIFTS</div>
+            <div class="nav-btn" onclick="showAdminTab('pricing', this)">💰 PRICING</div>
             <div class="nav-btn" onclick="showAdminTab('admanager', this)">AD MANAGER</div>
             <!-- NEW TABS -->
             <div class="nav-btn" onclick="showAdminTab('pending', this); loadPendingLinks();">PENDING LINKS</div>
@@ -1606,7 +1650,53 @@
             </div>
         </div>
 
-        <!-- SETTINGS SECTION (NEW) -->
+                <!-- 🎁 GIFT REQUESTS SECTION -->
+        <div id="admin-sec-gifts" class="section-view" style="display:none;">
+            <div class="input-group">
+                <h3><i class="fas fa-gift" style="color:#ff007f;"></i> VIP গিফট অনুরোধ</h3>
+                <p style="color:#888;font-size:13px;margin-bottom:15px;">ইউজারদের পাঠানো VIP গিফট অনুরোধ এখানে দেখুন এবং অনুমোদন করুন।</p>
+                <button class="btn-action" style="background:#ff007f;margin-bottom:15px;" onclick="loadGiftRequests()"><i class="fas fa-sync"></i> রিফ্রেশ করুন</button>
+                <div id="admin-gift-list"><div style="color:#666;text-align:center;padding:20px;">লোড হচ্ছে...</div></div>
+            </div>
+        </div>
+
+        <!-- 💰 PRICING SETTINGS SECTION -->
+        <div id="admin-sec-pricing" class="section-view" style="display:none;">
+            <div class="input-group">
+                <h3><i class="fas fa-tags" style="color:#00f5d4;"></i> VIP মূল্য নির্ধারণ</h3>
+                <p style="color:#888;font-size:12px;margin-bottom:15px;">এখান থেকে যেকোনো সময় VIP প্ল্যানের দাম পরিবর্তন করুন।</p>
+                <div class="admin-price-grid">
+                    <div class="admin-price-card"><label>১ দিনের VIP (টাকা)</label><input type="number" id="price-1day" placeholder="30" min="1"></div>
+                    <div class="admin-price-card"><label>৭ দিনের VIP (টাকা)</label><input type="number" id="price-7day" placeholder="150" min="1"></div>
+                    <div class="admin-price-card"><label>৩০ দিনের VIP (টাকা)</label><input type="number" id="price-30day" placeholder="350" min="1"></div>
+                    <div class="admin-price-card"><label>৬০ দিনের VIP (টাকা)</label><input type="number" id="price-60day" placeholder="600" min="1"></div>
+                    <div class="admin-price-card"><label>৯০ দিনের VIP (টাকা)</label><input type="number" id="price-90day" placeholder="800" min="1"></div>
+                    <div class="admin-price-card"><label>৩৬৫ দিনের VIP (টাকা)</label><input type="number" id="price-365day" placeholder="2000" min="1"></div>
+                </div>
+                <button class="btn-action" style="background:#00f5d4;color:#000;" onclick="saveVIPPrices()"><i class="fas fa-save"></i> VIP মূল্য সেভ করুন</button>
+            </div>
+            <div class="input-group" style="margin-top:20px;">
+                <h3><i class="fas fa-star" style="color:#ffb703;"></i> পয়েন্ট রিওয়ার্ড সেটিংস</h3>
+                <p style="color:#888;font-size:12px;margin-bottom:15px;">Ad দেখলে কত পয়েন্ট পাবে তা সেট করুন।</p>
+                <div class="admin-price-grid">
+                    <div class="admin-price-card"><label>ডেইলি বোনাস পয়েন্ট</label><input type="number" id="reward-daily-pts" placeholder="2" min="1" max="100"></div>
+                    <div class="admin-price-card"><label>Ad টাস্ক পয়েন্ট</label><input type="number" id="reward-task-pts" placeholder="2" min="1" max="100"></div>
+                    <div class="admin-price-card"><label>রেফারেল বোনাস পয়েন্ট</label><input type="number" id="reward-refer-pts" placeholder="5" min="1" max="100"></div>
+                    <div class="admin-price-card"><label>Ep Unlock Ad পয়েন্ট</label><input type="number" id="reward-ep-pts" placeholder="1" min="1" max="100"></div>
+                </div>
+                <button class="btn-action" onclick="saveRewardSettings()"><i class="fas fa-save"></i> রিওয়ার্ড সেটিংস সেভ করুন</button>
+            </div>
+            <div class="input-group" style="margin-top:20px;">
+                <h3><i class="fas fa-video" style="color:#b14bff;"></i> ভিডিও ওয়াচ রিওয়ার্ড সেটিংস</h3>
+                <p style="color:#888;font-size:12px;margin-bottom:15px;">কত মিনিট ভিডিও দেখলে কত পয়েন্ট পাবে তা সেট করুন।</p>
+                <div class="admin-price-card" style="margin-bottom:12px;"><label>কত মিনিটে ১ পয়েন্ট পাবে (মিনিট)</label><input type="number" id="wr-mins-per-pt" placeholder="10" min="1" max="120"></div>
+                <div class="admin-price-card" style="margin-bottom:12px;"><label>কত পয়েন্ট জমলে Claim করা যাবে</label><input type="number" id="wr-min-claim-pts" placeholder="10" min="1" max="100"></div>
+                <div class="admin-price-card" style="margin-bottom:15px;"><label>Claim করতে কত সেকেন্ড Ad দেখতে হবে</label><input type="number" id="wr-claim-secs" placeholder="30" min="10" max="120"></div>
+                <button class="btn-action" style="background:#b14bff;color:#fff;" onclick="saveWatchRewardSettings()"><i class="fas fa-save"></i> ওয়াচ রিওয়ার্ড সেটিংস সেভ করুন</button>
+            </div>
+        </div>
+
+<!-- SETTINGS SECTION (NEW) -->
         <div id="admin-settings" class="section-view" style="display:none;">
             <div class="input-group" style="border-color: #ff007f;">
                 <h3 style="color: #ff007f;"><i class="fas fa-cogs"></i> SYSTEM SETTINGS</h3>
@@ -3713,7 +3803,7 @@
         // ════════ ENHANCED WATCH REWARD SYSTEM ════════
         // ১০ মিনিট real watch = ১ pending point | ১০ পয়েন্ট জমলে Claim করা যাবে (৩০ সেকেন্ড Ad)
         // Anti-scrub: seek করলে block progress রিসেট হয়
-        const WR_SECS_PER_PT = 600;   // 10 মিনিট
+        let WR_SECS_PER_PT = 600;   // 10 মিনিট (can be overridden by admin)
         let _watchCoinInterval = null;
         let _wrBlockSecs    = 0;      // current 10-min block progress
         let _wrPendingPts   = 0;      // জমানো কিন্তু claim না হওয়া পয়েন্ট
@@ -6190,5 +6280,550 @@
         }, true);
     })();
     </script>
+
+    <!-- 🎁 VIP GIFT SYSTEM MODAL -->
+    <div id="vip-gift-modal">
+        <i class="fas fa-times" style="position:absolute;top:20px;right:20px;font-size:28px;color:var(--text-muted);cursor:pointer;z-index:10;" onclick="closeGiftModal()"></i>
+        <div class="gift-container">
+            <div class="gift-header">
+                <div style="font-size:50px;margin-bottom:10px;">🎁</div>
+                <h2>VIP উপহার দিন</h2>
+                <p>আপনার বন্ধুকে VIP সদস্যতা গিফট করুন!</p>
+            </div>
+            <div class="gift-search-box">
+                <label><i class="fas fa-search"></i> বন্ধুর ইউজারনেম লিখুন</label>
+                <div class="gift-search-row">
+                    <input type="text" class="gift-search-input" id="gift-search-input" placeholder="যেমন: Rifat, ABC123..." autocomplete="off">
+                    <button class="gift-search-btn" onclick="searchGiftUser()"><i class="fas fa-search"></i> খুঁজুন</button>
+                </div>
+                <div id="gift-user-result" class="gift-user-result">
+                    <img id="gift-user-avatar" class="gift-user-avatar" src="https://i.ibb.co/Dg6WdQn/default-avatar.png">
+                    <div class="gift-user-info">
+                        <div class="gift-user-name" id="gift-user-name-display">—</div>
+                        <div class="gift-user-status" id="gift-user-status-display">লোড হচ্ছে...</div>
+                    </div>
+                    <div style="color:#00e676;font-size:20px;"><i class="fas fa-check-circle"></i></div>
+                </div>
+                <div id="gift-search-error" style="display:none;color:#ff3b3b;font-size:12px;margin-top:10px;text-align:center;font-weight:600;"></div>
+            </div>
+            <div style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;"><i class="fas fa-crown" style="color:#D4AF37;"></i> কত দিনের VIP গিফট করবেন?</div>
+            <div class="gift-plan-grid">
+                <div class="gift-plan-card" id="gplan-1" onclick="selectGiftPlan(1,this)"><div class="gift-plan-days">১</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-1">— TK</div></div>
+                <div class="gift-plan-card" id="gplan-7" onclick="selectGiftPlan(7,this)"><div class="gift-plan-days">৭</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-7">— TK</div></div>
+                <div class="gift-plan-card" id="gplan-30" onclick="selectGiftPlan(30,this)"><div class="gift-plan-days">৩০</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-30">— TK</div></div>
+                <div class="gift-plan-card" id="gplan-60" onclick="selectGiftPlan(60,this)"><div class="gift-plan-days">৬০</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-60">— TK</div></div>
+                <div class="gift-plan-card" id="gplan-90" onclick="selectGiftPlan(90,this)"><div class="gift-plan-days">৯০</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-90">— TK</div></div>
+                <div class="gift-plan-card" id="gplan-365" onclick="selectGiftPlan(365,this)"><div class="gift-plan-days">৩৬৫</div><div class="gift-plan-label">দিন</div><div class="gift-plan-price" id="gplan-price-365">— TK</div></div>
+            </div>
+            <div style="background:rgba(255,183,3,0.08);border:1px solid rgba(255,183,3,0.2);border-radius:14px;padding:18px;margin-bottom:20px;">
+                <div style="color:#ffb703;font-weight:800;font-size:14px;margin-bottom:10px;"><i class="fas fa-money-bill-wave"></i> পেমেন্ট করুন</div>
+                <p style="color:#ddd;font-size:13px;margin-bottom:10px;line-height:1.6;">নিচের নম্বরে <strong style="color:#ffb703;">বিকাশ / নগদ পার্সোনাল</strong> দিয়ে পেমেন্ট করুন:</p>
+                <div style="background:#111;border:1px solid #333;border-radius:10px;padding:15px;text-align:center;">
+                    <div style="color:#fff;font-size:22px;font-weight:900;font-family:'Orbitron';letter-spacing:1px;" id="gift-pay-number">লোড হচ্ছে...</div>
+                    <div style="color:#888;font-size:11px;margin-top:4px;">বিকাশ ও নগদ (পার্সোনাল)</div>
+                    <button onclick="copyGiftPayNumber()" style="margin-top:10px;background:rgba(255,183,3,0.15);color:#ffb703;border:1px solid rgba(255,183,3,0.3);border-radius:8px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;"><i class="fas fa-copy"></i> কপি করুন</button>
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="color:#ddd;font-size:12px;font-weight:600;display:block;margin-bottom:6px;">ট্রানজেকশন ID (TxnID) লিখুন:</label>
+                    <input type="text" id="gift-txnid" placeholder="যেমন: 8TGH2B9K1P..." style="width:100%;background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.08);padding:12px 16px;border-radius:10px;color:#fff;font-size:14px;outline:none;box-sizing:border-box;">
+                </div>
+            </div>
+            <button class="gift-confirm-btn" id="gift-send-btn" onclick="sendVIPGift()" disabled><i class="fas fa-gift"></i> গিফট পাঠান</button>
+            <div class="gift-note"><i class="fas fa-info-circle"></i> Admin অনুমোদনের পরে বন্ধুর একাউন্টে VIP যোগ হবে।<br>সাধারণত ১-৬ ঘন্টার মধ্যে একটিভ হয়ে যায়।</div>
+        </div>
+    </div>
+
+    <!-- 🎁 GIFT INBOX MODAL -->
+    <div id="gift-inbox-modal" style="display:none;position:fixed;inset:0;background:rgba(5,5,8,0.97);backdrop-filter:blur(20px);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:20px;font-family:'Outfit';">
+        <div style="width:100%;max-width:400px;background:rgba(15,10,25,0.9);border:1px solid rgba(177,75,255,0.3);border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 60px rgba(177,75,255,0.3);">
+            <div style="font-size:60px;margin-bottom:10px;">🎁</div>
+            <h2 style="font-family:'Orbitron';color:#fff;font-size:20px;margin-bottom:10px;">আপনি VIP গিফট পেয়েছেন!</h2>
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;line-height:1.6;" id="gift-inbox-message">কেউ আপনাকে VIP সদস্যতা গিফট করেছে!</p>
+            <div style="background:rgba(0,245,212,0.1);border:1px solid rgba(0,245,212,0.3);border-radius:12px;padding:15px;margin-bottom:20px;">
+                <div style="color:#00f5d4;font-size:24px;font-weight:900;font-family:'Orbitron';" id="gift-inbox-days">? দিন</div>
+                <div style="color:#888;font-size:12px;margin-top:4px;">VIP সদস্যতা</div>
+            </div>
+            <button onclick="closeGiftInbox()" style="width:100%;background:linear-gradient(135deg,#ff007f,#b14bff);color:#fff;font-weight:900;font-family:'Orbitron';padding:14px;border-radius:12px;border:none;cursor:pointer;font-size:14px;">🎉 ধন্যবাদ! বন্ধ করুন</button>
+        </div>
+    </div>
+
+
+    <script>
+    // ════════════════════════════════════════════════════════════
+    // 🎁 VIP GIFT SYSTEM
+    // ════════════════════════════════════════════════════════════
+    let selectedGiftPlan = null;
+    let giftTargetUser = null;
+    let vipPrices = { 1: 30, 7: 150, 30: 350, 60: 600, 90: 800, 365: 2000 };
+    let REWARD_DAILY_PTS = 2, REWARD_TASK_PTS = 2, REWARD_REFER_PTS = 5, REWARD_EP_PTS = 1;
+    let WR_MINS_PER_PT = 10, WR_MIN_CLAIM_PTS = 10, WR_CLAIM_SECS_ADMIN = 30;
+
+    function loadDynamicPrices() {
+        db.ref('admin_settings/vip_prices').on('value', snap => {
+            if(snap.exists()) {
+                let p = snap.val();
+                vipPrices[1]=p.d1||30; vipPrices[7]=p.d7||150; vipPrices[30]=p.d30||350;
+                vipPrices[60]=p.d60||600; vipPrices[90]=p.d90||800; vipPrices[365]=p.d365||2000;
+            }
+            [1,7,30,60,90,365].forEach(d => {
+                let el = document.getElementById('gplan-price-'+d);
+                if(el) el.textContent = vipPrices[d] + ' TK';
+            });
+            ['1','7','30','60','90','365'].forEach(d => {
+                let el = document.getElementById('price-'+d+'day');
+                if(el) el.value = vipPrices[parseInt(d)];
+            });
+        });
+        db.ref('admin_settings/reward_settings').on('value', snap => {
+            if(snap.exists()) {
+                let r = snap.val();
+                REWARD_DAILY_PTS = r.daily||2; REWARD_TASK_PTS = r.task||2;
+                REWARD_REFER_PTS = r.refer||5; REWARD_EP_PTS = r.ep_unlock||1;
+                WR_MINS_PER_PT = r.wr_mins_per_pt||10;
+                WR_MIN_CLAIM_PTS = r.wr_min_claim_pts||10;
+                WR_CLAIM_SECS_ADMIN = r.wr_claim_secs||30;
+                WR_SECS_PER_PT = WR_MINS_PER_PT * 60;
+                let fields = {
+                    'reward-daily-pts': REWARD_DAILY_PTS, 'reward-task-pts': REWARD_TASK_PTS,
+                    'reward-refer-pts': REWARD_REFER_PTS, 'reward-ep-pts': REWARD_EP_PTS,
+                    'wr-mins-per-pt': WR_MINS_PER_PT, 'wr-min-claim-pts': WR_MIN_CLAIM_PTS,
+                    'wr-claim-secs': WR_CLAIM_SECS_ADMIN
+                };
+                Object.keys(fields).forEach(id => { let el=document.getElementById(id); if(el) el.value=fields[id]; });
+            }
+        });
+        let gnEl = document.getElementById('gift-pay-number');
+        if(gnEl && typeof PAYMENT_NUMBER !== 'undefined') gnEl.textContent = PAYMENT_NUMBER;
+        setTimeout(() => {
+            let gnEl2 = document.getElementById('gift-pay-number');
+            if(gnEl2 && typeof PAYMENT_NUMBER !== 'undefined') gnEl2.textContent = PAYMENT_NUMBER;
+        }, 3000);
+    }
+
+    function openGiftModal() {
+        if(!currentUser) { alert('🔒 VIP গিফট করতে প্রথমে লগইন করুন!'); showLoginForm(); return; }
+        document.getElementById('vip-gift-modal').style.display = 'flex';
+        document.getElementById('gift-search-input').value = '';
+        document.getElementById('gift-user-result').style.display = 'none';
+        document.getElementById('gift-search-error').style.display = 'none';
+        document.getElementById('gift-txnid').value = '';
+        selectedGiftPlan = null; giftTargetUser = null;
+        document.getElementById('gift-send-btn').disabled = true;
+        document.querySelectorAll('.gift-plan-card').forEach(c => c.classList.remove('selected'));
+        let gnEl = document.getElementById('gift-pay-number');
+        if(gnEl && typeof PAYMENT_NUMBER !== 'undefined') gnEl.textContent = PAYMENT_NUMBER;
+    }
+    function closeGiftModal() { document.getElementById('vip-gift-modal').style.display = 'none'; }
+
+    function selectGiftPlan(days, el) {
+        document.querySelectorAll('.gift-plan-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedGiftPlan = days;
+        let btn = document.getElementById('gift-send-btn');
+        btn.disabled = !(selectedGiftPlan && giftTargetUser);
+    }
+
+    function searchGiftUser() {
+        let query = document.getElementById('gift-search-input').value.trim();
+        if(!query) return;
+        let queryLower = query.toLowerCase();
+        let errEl = document.getElementById('gift-search-error');
+        let resEl = document.getElementById('gift-user-result');
+        errEl.style.display = 'none'; resEl.style.display = 'none';
+        giftTargetUser = null;
+        document.getElementById('gift-send-btn').disabled = true;
+
+        db.ref('users').once('value', snap => {
+            let found = null;
+            snap.forEach(child => {
+                let d = child.val();
+                let uname = ((d.username || d.name || '')).toLowerCase();
+                if(uname.includes(queryLower) && child.key !== currentUser.uid && !found) {
+                    found = { uid: child.key, ...d };
+                }
+            });
+            if(!found) {
+                errEl.textContent = '❌ "' + query + '" নামের কোনো ইউজার পাওয়া যায়নি!';
+                errEl.style.display = 'block'; return;
+            }
+            giftTargetUser = found;
+            document.getElementById('gift-user-name-display').textContent = (found.username || found.name || 'Unknown').toUpperCase();
+            document.getElementById('gift-user-avatar').src = found.avatar || 'https://i.ibb.co/Dg6WdQn/default-avatar.png';
+            let isVip = found.premiumExpiry && found.premiumExpiry > Date.now();
+            document.getElementById('gift-user-status-display').textContent = isVip
+                ? '👑 VIP একটিভ — ' + new Date(found.premiumExpiry).toLocaleDateString('bn-BD')
+                : '🆓 ফ্রি ইউজার';
+            resEl.style.display = 'flex';
+            document.getElementById('gift-send-btn').disabled = !(selectedGiftPlan && giftTargetUser);
+        });
+    }
+
+    function copyGiftPayNumber() {
+        let num = typeof PAYMENT_NUMBER !== 'undefined' ? PAYMENT_NUMBER : '';
+        if(navigator.clipboard) { navigator.clipboard.writeText(num).then(() => showDlToast('✅ নম্বর কপি হয়েছে: '+num, false)); }
+        else { prompt('কপি করুন:', num); }
+    }
+
+    function sendVIPGift() {
+        if(!currentUser || !giftTargetUser || !selectedGiftPlan) return;
+        let txnId = document.getElementById('gift-txnid').value.trim();
+        if(!txnId) return alert('❌ পেমেন্টের Transaction ID দিন!');
+        let btn = document.getElementById('gift-send-btn');
+        btn.textContent = '⏳ পাঠানো হচ্ছে...'; btn.disabled = true;
+        let giftData = {
+            fromUid: currentUser.uid,
+            fromName: currentUser.username || currentUser.email || 'Unknown',
+            toUid: giftTargetUser.uid,
+            toName: giftTargetUser.username || giftTargetUser.name || 'Unknown',
+            days: selectedGiftPlan, price: vipPrices[selectedGiftPlan], txnId: txnId,
+            status: 'pending', timestamp: Date.now() + (typeof serverTimeOffset!=='undefined'?serverTimeOffset:0)
+        };
+        db.ref('gift_requests').push(giftData).then(() => {
+            btn.textContent = '✅ গিফট অনুরোধ পাঠানো হয়েছে!';
+            btn.style.background = 'linear-gradient(135deg,#00e676,#00c853)';
+            showDlToast('🎁 Admin অনুমোদনের পরে VIP যোগ হবে!', false);
+            setTimeout(() => { closeGiftModal(); btn.textContent = '🎁 গিফট পাঠান'; btn.style.background = ''; }, 3000);
+        }).catch(e => { btn.textContent = '🎁 গিফট পাঠান'; btn.disabled = false; alert('❌ Error: '+e.message); });
+    }
+
+    function loadGiftRequests() {
+        if(!window.isMasterAdminLoggedIn) return;
+        let list = document.getElementById('admin-gift-list');
+        list.innerHTML = '<div style="color:#666;text-align:center;padding:20px;font-family:Orbitron;">লোড হচ্ছে...</div>';
+        db.ref('gift_requests').orderByChild('timestamp').limitToLast(50).once('value', snap => {
+            list.innerHTML = '';
+            if(!snap.exists()) { list.innerHTML = '<div style="color:#666;text-align:center;padding:20px;">কোনো গিফট অনুরোধ নেই।</div>'; return; }
+            let items = [];
+            snap.forEach(c => items.unshift({ key: c.key, ...c.val() }));
+            items.forEach(d => {
+                let isPending = d.status === 'pending';
+                let date = new Date(d.timestamp).toLocaleString('bn-BD');
+                list.innerHTML += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:12px;border-left:4px solid '+(isPending?'#ffb703':'#00e676')+';"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;"><div><span style="color:#fff;font-weight:700;font-size:14px;">🎁 '+(d.fromName||'?')+' → '+(d.toName||'?')+'</span><div style="color:#888;font-size:11px;margin-top:2px;">'+date+'</div></div><span style="background:'+(isPending?'rgba(255,183,3,0.15)':'rgba(0,230,118,0.15)')+';color:'+(isPending?'#ffb703':'#00e676')+';font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;">'+(isPending?'PENDING':'APPROVED')+'</span></div><div style="color:#D4AF37;font-family:Orbitron;font-size:12px;margin-bottom:8px;">'+d.days+' দিন VIP • '+d.price+' TK</div><div style="background:#050505;border:1px solid #333;padding:8px;border-radius:6px;color:#00f5d4;font-family:monospace;font-size:13px;margin-bottom:10px;">TxnID: <strong>'+d.txnId+'</strong></div>'+(isPending?'<div style="display:flex;gap:8px;"><button onclick="approveGiftRequest(''+d.key+'',''+d.toUid+'','+d.days+',''+d.fromUid+'')" style="flex:1;background:#00e676;color:#000;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">✅ অনুমোদন</button><button onclick="rejectGiftRequest(''+d.key+'')" style="flex:1;background:#ff3b3b;color:#fff;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">❌ বাতিল</button></div>':'<div style="color:#888;font-size:11px;">✅ অনুমোদিত</div>')+'</div>';
+            });
+        });
+    }
+
+    function approveGiftRequest(reqKey, toUid, days, fromUid) {
+        if(!window.isMasterAdminLoggedIn) return;
+        if(!confirm(days+' দিনের VIP গিফট অনুমোদন করবেন?')) return;
+        let actualTime = Date.now() + (typeof serverTimeOffset!=='undefined'?serverTimeOffset:0);
+        db.ref('users/'+toUid+'/premiumExpiry').once('value', snap => {
+            let cur = snap.val()||0; let base = (cur>actualTime)?cur:actualTime;
+            let newExp = base + (days*24*60*60*1000);
+            db.ref('users/'+toUid).update({ premiumExpiry: newExp }).then(() => {
+                db.ref('gift_requests/'+reqKey).update({ status:'approved', approvedAt: actualTime });
+                db.ref('users/'+toUid+'/gift_inbox').push({ fromUid, days, approvedAt: actualTime, seen: false });
+                alert('✅ গিফট অনুমোদিত! VIP একটিভ হয়েছে।');
+                loadGiftRequests();
+            });
+        });
+    }
+
+    function rejectGiftRequest(reqKey) {
+        if(!window.isMasterAdminLoggedIn) return;
+        if(!confirm('এই গিফট অনুরোধ বাতিল করবেন?')) return;
+        db.ref('gift_requests/'+reqKey).remove();
+        loadGiftRequests();
+    }
+
+    function checkGiftInbox(uid) {
+        db.ref('users/'+uid+'/gift_inbox').orderByChild('seen').equalTo(false).once('value', snap => {
+            if(!snap.exists()) return;
+            snap.forEach(child => {
+                let g = child.val();
+                db.ref('users/'+uid+'/gift_inbox/'+child.key).update({ seen: true });
+                let days = g.days || 0;
+                document.getElementById('gift-inbox-message').textContent = 'কেউ আপনাকে '+days+' দিনের VIP সদস্যতা গিফট করেছে! আপনার একাউন্ট এখন প্রিমিয়াম!';
+                document.getElementById('gift-inbox-days').textContent = days+' দিন';
+                document.getElementById('gift-inbox-modal').style.display = 'flex';
+                if(typeof playSuccessSound==='function') playSuccessSound();
+            });
+        });
+    }
+    function closeGiftInbox() { document.getElementById('gift-inbox-modal').style.display = 'none'; }
+
+    function saveVIPPrices() {
+        if(!window.isMasterAdminLoggedIn) return alert('Permission Denied!');
+        let prices = {
+            d1: parseInt(document.getElementById('price-1day').value)||30,
+            d7: parseInt(document.getElementById('price-7day').value)||150,
+            d30: parseInt(document.getElementById('price-30day').value)||350,
+            d60: parseInt(document.getElementById('price-60day').value)||600,
+            d90: parseInt(document.getElementById('price-90day').value)||800,
+            d365: parseInt(document.getElementById('price-365day').value)||2000,
+        };
+        db.ref('admin_settings/vip_prices').set(prices).then(() => { alert('✅ VIP মূল্য আপডেট হয়েছে!'); });
+    }
+
+    function saveRewardSettings() {
+        if(!window.isMasterAdminLoggedIn) return alert('Permission Denied!');
+        let s = {
+            daily: parseInt(document.getElementById('reward-daily-pts').value)||2,
+            task: parseInt(document.getElementById('reward-task-pts').value)||2,
+            refer: parseInt(document.getElementById('reward-refer-pts').value)||5,
+            ep_unlock: parseInt(document.getElementById('reward-ep-pts').value)||1,
+            wr_mins_per_pt: parseInt(document.getElementById('wr-mins-per-pt').value)||10,
+            wr_min_claim_pts: parseInt(document.getElementById('wr-min-claim-pts').value)||10,
+            wr_claim_secs: parseInt(document.getElementById('wr-claim-secs').value)||30,
+        };
+        db.ref('admin_settings/reward_settings').set(s).then(() => { alert('✅ রিওয়ার্ড সেটিংস আপডেট হয়েছে!'); });
+    }
+    function saveWatchRewardSettings() { saveRewardSettings(); }
+
+    // ─── Override showAdminTab to handle new sections ──────────
+    window.showAdminTab = function(section, btn) {
+        document.querySelectorAll('#master-admin-panel .section-view').forEach(s => s.style.display='none');
+        document.querySelectorAll('#master-admin-panel .nav-btn').forEach(b => b.classList.remove('active'));
+        let el = document.getElementById('admin-sec-'+section);
+        if(el) el.style.display='block';
+        if(btn) btn.classList.add('active');
+        if(section==='gifts') loadGiftRequests();
+        if(section==='users') { if(typeof loadAllUsers==='function') loadAllUsers(); }
+        if(section==='payments') { if(typeof loadPaymentRequests==='function') loadPaymentRequests(); }
+        if(section==='codes') {
+            if(typeof db!=='undefined') {
+                db.ref('premium_codes').limitToLast(50).once('value', s => {
+                    let list=document.getElementById('admin-code-list'); if(!list) return; list.innerHTML='';
+                    let codes=[]; s.forEach(c=>codes.unshift({key:c.key,val:c.val()}));
+                    codes.forEach(c=>{let d=c.val||{};let isU=d.status==='unused';let sc=isU?'unused':'used';let st=isU?'ACTIVE':'USED';let bc=isU?'st-active':'st-used';let ic=isU?'fa-check-circle':'fa-times-circle';let ub=d.usedBy?'<div style="font-size:10px;color:#ff3b3b;">User: '+d.usedBy+'</div>':'';list.innerHTML+='<div class="code-card '+sc+'" onclick="copyToClipboard(''+c.key+'')" title="Click to Copy"><div><div class="code-status '+bc+'">'+st+'</div><div class="code-text"><i class="fas '+ic+'"></i> '+c.key+'</div><div class="code-days">'+(d.days||0)+' Days Validity</div>'+ub+'</div><div style="text-align:right;"><button class="del-btn" style="padding:5px 15px;" onclick="deleteCode(event,''+c.key+'')">DELETE</button></div></div>';});
+                });
+            }
+        }
+    };
+
+    // Init prices on load
+    loadDynamicPrices();
+
+    // Check gift inbox after auth
+    if(typeof firebase !== 'undefined') {
+        firebase.auth().onAuthStateChanged(function(u) {
+            if(u) { setTimeout(() => checkGiftInbox(u.uid), 3000); }
+        });
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // 🧠 POWERFUL AI BRAIN — All Dialects, Smart Responses
+    // ════════════════════════════════════════════════════════════
+    const _AI_PATTERNS = {
+        greeting: [/কেমন আছ(েন|িস|ে|ো|রে)?|কী খবর|কি খবর|কেমন চলছে|কেমন যাচ্ছে|কি অবস্থা|হ্যালো|হ্যালা|হাই|নমস্কার|আদাব|সালাম|আস-সালামু|হ্যাই/i, /how are you|hello|hi there|hey|what'?s up|wassup|sup bro|good (morning|evening|afternoon|night)/i, /कैसे हो|कैसा चल रहा|हेलो|नमस्ते/i],
+        feeling_bad: [/ভালো নেই|ভাল নেই|খারাপ আছি|মন ভালো নেই|অসুস্থ|কষ্টে|মন খারাপ/i, /not (good|okay|fine|well)|feeling (bad|sad|sick|down)/i],
+        love: [/ভালোবাসি|ভালবাসি|আই লাভ|তুমি সেরা|তুমি বেস্ট/i, /i love you|i like you|you are the best|love ya/i],
+        who_are_you: [/তুমি কে|তুই কে|আপনি কে|তোমার নাম|কে তুমি|who are you|what are you|what'?s your name/i],
+        vip_query: [/ভিআইপি|vip|প্রিমিয়াম|premium|সদস্যতা|subscription|কিনতে চাই|buy vip/i],
+        points_query: [/পয়েন্ট|point|কয় পয়েন্ট|কত পয়েন্ট|balance|how many points/i],
+        help: [/সাহায্য|help|হেল্প|কী করব|কিভাবে|বুঝলাম না|শেখাও/i],
+        funny: [/মজা|হাসি|হাসাও|joke|funny|হাহাহা|lol/i],
+        thanks: [/ধন্যবাদ|থ্যাংকু|থ্যাংকস|thanks|thank you|thnx|ty/i],
+        bye: [/বিদায়|আল্লাহ হাফেজ|দেখা হবে|bye|goodbye|see you|চলি|আসি/i],
+        missing_content: [/নেই কেন|কেন নেই|আপলোড হয়নি|আপলোড করোনি|available নেই|পাচ্ছি না|দেখতে পাচ্ছি না|খুঁজে পাচ্ছি না/i],
+        encourage_watch: [/বোরিং|bored|কিছু নেই|কী দেখব|কি দেখব|একা আছি|সময় কাটাতে চাই/i],
+        gift_vip: [/গিফট|gift|উপহার|বন্ধুকে vip|vip দিতে চাই/i],
+    };
+
+    const _AI_RESP = {
+        greeting: {
+            bn: ["ভাই ভালোই আছি, মাশাআল্লাহ! তোমার জন্য কি করতে পারি? 😊","আলহামদুলিল্লাহ, একদম ঝকঝকে আছি! তুমি কেমন আছো?","ভালো আছি বস! তোমার জন্য সেরা এনিমে রেডি আছে 🎌","হ্যাঁ ভাই, আছি তো! কী চাও বলো, সব ব্যবস্থা করে দেবো 😄","মহাখুশিতে আছি! কোনো এনিমে দেখতে চাও? বলো!"],
+            en: ["I'm doing great, bro! What can I do for you? 😊","Awesome as always! What's on your mind?","All good here! What do you need, boss?"],
+        },
+        feeling_bad: {
+            bn: ["ওহ না! মন খারাপ কেন? এসো একটু এনিমে দেখলে মন ভালো হয়ে যাবে 💜","ইশ, তোমার মন খারাপ শুনে আমারও খারাপ লাগছে। কোনো ভালো এনিমে সাজেস্ট করব?","আরে মন খারাপ করো না! একটু এনিমে দেখলেই সব ভুলে যাবে 🎌"],
+            en: ["Aww, I'm sorry to hear that! A good anime might cheer you up 💜","Hey, I'm here for you! Want me to suggest something to watch?"],
+        },
+        love: {
+            bn: ["হাহাহা আমিও তোমাকে ভালোবাসি বস! তবে প্রথমে এনিমে শেষ করো 😂","থ্যাংক ইউ! তুমিও অনেক ভালো মানুষ। চলো একসাথে এনিমে দেখি 🎌"],
+            en: ["Hahaha, love you too bestie! Now let's find some anime 😂","That's so sweet! I love helping you find great anime 🎌"],
+        },
+        who_are_you: {
+            bn: ["আমি হলো Ani — ANIMAX TV-এর AI সহকারী! আমি সব ধরনের এনিমে, মুভি, এবং কার্টুন সম্পর্কে সাহায্য করতে পারি 🤖✨","আমি Ani! তোমার পার্সোনাল এনিমে বন্ধু। এনিমে খুঁজে দেওয়া, সাজেস্ট করা — সব আমার কাজ!"],
+            en: ["I'm Ani, your personal AI assistant on ANIMAX TV! 🤖✨","Hey! I'm Ani — the AI brain of ANIMAX TV. Ask me anything!"],
+        },
+        vip_query: {
+            bn: ["VIP নিলে পাবে: কোনো বিজ্ঞাপন নেই, 1080p HD ভিডিও, অফলাইন ডাউনলোড এবং আরো অনেক কিছু! VIP কিনতে চাইলে প্রোফাইলে যাও 👑","VIP মানে এনিমে দেখার স্বর্গ! কোনো Ad নেই, সেরা কোয়ালিটি! VIP হাব খুলে দেখো 🌟"],
+            en: ["VIP gives you: No ads, 1080p HD, offline downloads & exclusive content! Check the VIP Hub 👑"],
+        },
+        points_query: {
+            bn: ["তোমার পয়েন্ট দেখতে প্রোফাইলে যাও! পয়েন্ট বাড়াতে প্রতিদিন ডেইলি বোনাস নাও, ভিডিও দেখো 🌟","পয়েন্ট দিয়ে VIP কিনতে পারবে! প্রতিদিন এনিমে দেখলে ওয়াচ রিওয়ার্ড পাবে 💰"],
+            en: ["Check your points on the Profile tab! Earn more by watching videos and daily bonus 🌟"],
+        },
+        help: {
+            bn: ["অবশ্যই সাহায্য করব! তুমি কি জানতে চাও? এনিমে খোঁজা, VIP কেনা, পয়েন্ট বাড়ানো — সব বিষয়ে বলো!","আমি সবসময় সাহায্যের জন্য আছি! কী দরকার বলো বস 😊"],
+            en: ["Of course! I'm here to help. What do you need?","I'm always ready to help! Just ask 😊"],
+        },
+        funny: {
+            bn: ["হাহাহা! শোনো — একটা Otaku ডাক্তারের কাছে গেল। ডাক্তার জিজ্ঞেস করল 'সমস্যা কী?' Otaku বলল 'এনিমে ছাড়া বাঁচতে পারছি না!' ডাক্তার বলল 'আমিও পারি না!' 😂","Naruto Hokage হবে বলে দৌড়াচ্ছে, আর আমি রোজ একটু দৌড়াবো বলে ঘুমিয়ে পড়ি 😂","কেন এনিমে চরিত্র কখনো ঠান্ডা লাগায় না? কারণ তারা সবসময় ফায়ার আর্কে থাকে! 🤣"],
+            en: ["Why did the anime fan get good grades? Because they studied in a different arc! 😂","What do you call a nervous anime fan? Anxious-me! 🤣"],
+        },
+        thanks: {
+            bn: ["আরে ধন্যবাদের কিছু নেই! তোমার সেবায় সবসময় আছি 😊","ওহ থ্যাংকস তোমাকেও! ANIMAX TV ভালোবাসার জন্য 💜"],
+            en: ["No problem at all! I'm always here for you 😊","Thanks to you too for loving ANIMAX TV! 💜"],
+        },
+        bye: {
+            bn: ["আল্লাহ হাফেজ! আবার আসিও, তোমার জন্য নতুন এনিমে অপেক্ষা করছে 🎌","বাই বাই! মিস করব। জলদি ফিরে এসো 😊","দেখা হবে! ততক্ষণে আমি নতুন সাজেশন রেডি করে রাখব 🌟"],
+            en: ["Goodbye! Come back soon, new anime is waiting 🎌","See you later! I'll miss you 😊"],
+        },
+        missing_content: {
+            bn: ["ওহ! তুমি যেটা খুঁজছো সেটা এখনো আপলোড হয়নি 😔 চিন্তা করো না — আমাদের টিম প্রতিদিন নতুন কন্টেন্ট যোগ করছে। Telegram-এ জয়েন করলে আপলোডের আপডেট পাবে! 🎌","সেটা এই মুহূর্তে আমাদের কাছে নেই ভাই। কিন্তু তোমার মন খারাপ করার দরকার নেই — খুব শীঘ্রই আসবে! আমাদের Telegram-এ Join করো 📢","এই কন্টেন্টটা এখনো প্রসেসিং এ আছে। আমাদের টিম সেরা কোয়ালিটিতে দেওয়ার জন্য একটু সময় নিচ্ছে। একটু অপেক্ষা করো! ✨"],
+            en: ["That content isn't uploaded yet! 😔 Our team adds new content daily. Join our Telegram for upload notifications! 🎌","Not available right now, but it's coming very soon! Join our Telegram for updates 📢"],
+        },
+        encourage_watch: {
+            bn: ["বোরিং? এনিমে দুনিয়ায় বোরিং বলে কিছু নেই! এসো আমি তোমাকে এমন একটা এনিমে সাজেস্ট করি যেটা দেখলে সময় ভুলে যাবে 🔥","আরে বোরিং লাগছে? একটু ট্রেন্ডিং সেকশনে যাও — গ্যারান্টি দিচ্ছি মাথা ঘুরে যাবে! আর প্রতি "+WR_MINS_PER_PT+" মিনিটে পয়েন্টও পাবে 🌟","বোরিং মানে দারুণ এনিমে টাইম! চলো নতুন কিছু দেখি 🎌"],
+            en: ["Bored? That means anime time! Let me suggest something that'll blow your mind 🔥","Never be bored with ANIMAX TV! Check trending — guaranteed to hook you! Plus you earn points 🌟"],
+        },
+        gift_vip: {
+            bn: ["বন্ধুকে VIP গিফট করতে চাও? প্রোফাইলে গিয়ে 'VIP গিফট' বাটনে ক্লিক করো! 🎁","গিফট সিস্টেম দিয়ে তুমি যেকোনো বন্ধুকে VIP সদস্যতা গিফট করতে পারবে! প্রোফাইলে যাও 🎁"],
+            en: ["Want to gift VIP to a friend? Go to Profile and click 'VIP Gift' button! 🎁"],
+        },
+        default: {
+            bn: ["ভাই, একটু ভালোভাবে বলো? আমি সব ভাষা বুঝি, কিন্তু এবারের টাটা একটু মিস করলাম 😅","হুম, বুঝলাম না ঠিকমতো। তুমি কি এনিমে খুঁজছো? নাকি অন্য কিছু লাগবে?","এবার বুঝিনি বস! তবে হারিয়ে যেও না — 'সাজেস্ট করো', 'VIP কী', 'পয়েন্ট কত' বললে জলদি উত্তর দেব!","ও আচ্ছা, একটু পরিষ্কার করো প্লিজ! আমি তোমার সেবায় প্রস্তুত 🤖"],
+            en: ["Hmm, didn't quite catch that! Try asking me to suggest an anime, check your points, or about VIP 😅","Didn't get that, bro! But I'm here — just ask in any language 🎌"],
+        }
+    };
+
+    function _detectLang(text) {
+        if(/[\u0980-\u09FF]/.test(text)) return 'bn';
+        if(/[\u0600-\u06FF]/.test(text)) return 'ur';
+        if(/[\u0900-\u097F]/.test(text)) return 'hi';
+        return 'en';
+    }
+
+    function _getResp(cat, lang) {
+        let obj = _AI_RESP[cat] || _AI_RESP.default;
+        let arr = obj[lang] || obj['en'] || obj['bn'] || ['...'];
+        return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    function _matchPattern(text) {
+        let t = text.toLowerCase();
+        for(let cat in _AI_PATTERNS) {
+            for(let p of _AI_PATTERNS[cat]) {
+                if(p.test(t)) return cat;
+            }
+        }
+        return null;
+    }
+
+    // Override processLocalVoiceCommand with enhanced AI
+    window.processLocalVoiceCommand = function(text) {
+        let t = text.replace(/[.,!?।,،]/g,'').trim();
+        let tl = t.toLowerCase();
+        let lang = _detectLang(t);
+        if(typeof currentAppLang !== 'undefined') {
+            if(currentAppLang==='bn') lang='bn';
+            else if(currentAppLang==='hi') lang='hi';
+        }
+        let reply = '', action = null;
+
+        // 1. Custom admin commands
+        if(typeof customAICommands !== 'undefined') {
+            for(let cmd of customAICommands) {
+                let triggers = cmd.triggers.split(',').map(x=>x.trim().toLowerCase());
+                for(let tr of triggers) {
+                    if(tl.includes(tr)||tl===tr) {
+                        if(cmd.type==='reply') return {reply:cmd.value, action:null};
+                        if(cmd.type==='play') return {reply:(lang==='bn'?'চালাচ্ছি!':'Playing!'), action:()=>executeVoicePlayCommand(cmd.value)};
+                        if(cmd.type==='link') return {reply:(lang==='bn'?'লিংক খুলছি!':'Opening!'), action:()=>window.open(cmd.value,'_blank')};
+                    }
+                }
+            }
+        }
+
+        // 2. Name memory
+        let nameMatch = t.match(/(?:my name is|i am|call me|আমার নাম|মেরা নাম)\s+([\u0980-\u09FFa-zA-Z]+)/i);
+        if(nameMatch && !tl.includes('what') && !tl.includes('কি') && !tl.includes('কী')) {
+            let n = nameMatch[1].trim();
+            if(typeof saveAIMemory==='function') saveAIMemory('name', n);
+            reply = lang==='bn' ? 'ঠিক আছে! তোমার নাম '+n+' মনে রেখেছি! 😊' : 'Got it! I will remember your name is '+n+' 😊';
+            return {reply, action};
+        }
+        if(tl.match(/what is my name|আমার নাম কি|আমার নাম কী/)) {
+            if(typeof aiMemory!=='undefined' && aiMemory.name) reply = lang==='bn' ? 'তোমার নাম '+aiMemory.name+'! আমি কি ভুলতে পারি? 😄' : 'Your name is '+aiMemory.name+'! How could I forget? 😄';
+            else reply = lang==='bn' ? 'তুমি তো আমাকে নামই বলোনি! বলো "আমার নাম..."' : "You never told me your name! Say 'My name is...'";
+            return {reply, action};
+        }
+
+        // 3. Play command
+        let playMatch = tl.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|दिखाओ|चलाओ)\s+(.+)/);
+        if(playMatch && typeof executeVoicePlayCommand==='function') {
+            let q = playMatch[1].trim();
+            reply = lang==='bn' ? '"'+q+'" চালাচ্ছি! 🎌' : 'Playing "'+q+'" now! 🎌';
+            action = ()=>executeVoicePlayCommand(q);
+            return {reply, action};
+        }
+
+        // 4. Search command
+        let searchMatch = tl.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|খোঁজো)\s+(.+)/);
+        if(searchMatch) {
+            let q = searchMatch[1].trim();
+            reply = lang==='bn' ? '"'+q+'" খুঁজছি! 🔍' : 'Searching for "'+q+'"! 🔍';
+            action = ()=>{ let sw=document.getElementById('header-search-wrapper'); if(sw)sw.click(); setTimeout(()=>{ if(typeof executeSearch==='function')executeSearch(q); },500); };
+            return {reply, action};
+        }
+
+        // 5. Suggest anime
+        if(tl.match(/suggest|সাজেস্ট|what should i watch|কী দেখব|কি দেখব|কোনটা দেখব|সাজেশন/)) {
+            if(typeof allContentList!=='undefined' && allContentList.length>0) {
+                let item = allContentList[Math.floor(Math.random()*allContentList.length)];
+                reply = lang==='bn' ? '"'+item.title+'" দেখো — একদম ধামাকা হবে! চালাচ্ছি 🔥' : 'Watch "'+item.title+'" — it is absolutely fire! 🔥';
+                action = ()=>{
+                    if(item.type==='anime' && typeof openFolder==='function') openFolder(item.folder);
+                    else if(typeof playVideo==='function') playVideo(item.title, item.data.url, item.data.id||item.title, item.data.type==='premium', item.type, -1);
+                };
+            } else {
+                reply = lang==='bn' ? 'কন্টেন্ট লোড হচ্ছে! একটু পরে জিজ্ঞেস করো!' : 'Content is loading! Ask me again soon!';
+            }
+            return {reply, action};
+        }
+
+        // 6. Time
+        if(tl.match(/time|কয়টা বাজে|সময় কত|কটা বাজে|বাজে কয়টা/)) {
+            let now = new Date();
+            let ts = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+            reply = lang==='bn' ? 'এখন বাজে '+ts+'. এনিমে দেখার পারফেক্ট সময়! 🕐' : 'It\'s '+ts+'. Perfect time for anime! 🕐';
+            return {reply, action};
+        }
+
+        // 7. Gift VIP
+        if(tl.match(/গিফট|gift|উপহার|বন্ধুকে vip/)) {
+            reply = _getResp('gift_vip', lang);
+            action = ()=>{ if(typeof openGiftModal==='function') openGiftModal(); };
+            return {reply, action};
+        }
+
+        // 8. Pattern matching
+        let cat = _matchPattern(t);
+        if(cat) {
+            reply = _getResp(cat, lang);
+            if(cat==='vip_query') action = ()=>{ if(typeof openPremiumHub==='function') openPremiumHub(); };
+            if(cat==='missing_content') action = ()=>window.open(typeof TELEGRAM_LINK!=='undefined'?TELEGRAM_LINK:'#','_blank');
+            if(cat==='encourage_watch' && typeof allContentList!=='undefined' && allContentList.length>0) {
+                let item = allContentList[Math.floor(Math.random()*allContentList.length)];
+                reply += (lang==='bn'?' চলো "'+item.title+'" দিয়ে শুরু করি!':' Let\'s start with "'+item.title+'"!');
+                action = ()=>{ if(item.type==='anime'&&typeof openFolder==='function')openFolder(item.folder); else if(typeof playVideo==='function')playVideo(item.title,item.data.url,item.data.id||item.title,item.data.type==='premium',item.type,-1); };
+            }
+            return {reply, action};
+        }
+
+        // 9. Smart anime name detection (not found in library)
+        if(t.length > 3 && typeof allContentList !== 'undefined' && allContentList.length > 0) {
+            let found = allContentList.find(x => x.title.toLowerCase().includes(tl.substring(0,Math.min(8,tl.length))));
+            if(!found && tl.length > 4) {
+                let tgLink = typeof TELEGRAM_LINK!=='undefined'?TELEGRAM_LINK:'#';
+                let msgs_bn = ['"'+t+'" এখনো আপলোড হয়নি ভাই! কিন্তু হতাশ হয়ো না — আমাদের টিম কাজ করছে। Telegram-এ Join করো, আপলোড হলেই নোটিফিকেশন পাবে! 📢','তুমি যেটা খুঁজছো সেটা এই মুহূর্তে সার্ভারে নেই। তবে খুব শীঘ্রই আসবে — একটু অপেক্ষা করো বস! 🕐','"'+t+'" এখন আপলোড করা হয়নি। তবে আমাদের টিম এটা জানে এবং শীঘ্রই যোগ করা হবে! ততক্ষণে অন্য কিছু দেখো 🎌'];
+                let msgs_en = ['"'+t+'" isn\'t uploaded yet! Our team is on it. Join Telegram for notifications 📢','That content isn\'t on our servers yet, but it\'s coming soon! Try something else 🎌'];
+                let arr = lang==='bn'?msgs_bn:msgs_en;
+                reply = arr[Math.floor(Math.random()*arr.length)];
+                action = ()=>window.open(tgLink,'_blank');
+                return {reply, action};
+            }
+        }
+
+        // 10. Default fallback
+        reply = _getResp('default', lang);
+        return {reply, action};
+    };
+
+    </script>
+
 </body>
 </html>
