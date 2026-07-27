@@ -663,13 +663,16 @@
         #lp-watch-btn { width:100%; padding:14px; background:var(--accent-gradient); color:#000; border:none; border-radius:14px; font-size:15px; font-weight:900; font-family:'Orbitron',sans-serif; cursor:pointer; letter-spacing:1px; box-shadow:0 4px 20px rgba(255,183,3,0.4); transition:transform 0.15s; }
         #lp-watch-btn:active { transform:scale(0.97); }
 
-        /* ══ EMOJI REACTIONS ══ */
-        .emoji-reaction-bar{position:absolute;right:14px;bottom:80px;z-index:9002;display:flex;flex-direction:column;gap:7px;}
-        .emo-btn{font-size:20px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s;-webkit-user-select:none;user-select:none;}
-        .emo-btn:active{transform:scale(1.35);}
-        #emoji-float-zone{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:9001;}
-        .float-emo{position:absolute;font-size:26px;animation:emoFloat 2.8s ease-out forwards;pointer-events:none;}
-        @keyframes emoFloat{0%{transform:translateY(0) scale(1);opacity:1;}80%{opacity:.6;}100%{transform:translateY(-230px) scale(.35);opacity:0;}}
+        /* ══ EMOJI REACTIONS — hidden ══ */
+        .emoji-reaction-bar{display:none !important;}
+        #emoji-float-zone{display:none !important;}
+        /* ══ LOVE HEART BUTTON ══ */
+        #love-heart-wrap{cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(255,0,127,0.08);border:1px solid rgba(255,0,127,0.2);transition:background .2s,transform .15s;-webkit-user-select:none;user-select:none;}
+        #love-heart-wrap:active{transform:scale(0.93);}
+        #love-heart-wrap.loved{background:rgba(255,0,127,0.2);border-color:rgba(255,0,127,0.5);}
+        #love-heart-icon{font-size:15px;color:#ff007f;transition:transform .25s;}
+        #love-heart-wrap.loved #love-heart-icon{animation:heartPop .35s cubic-bezier(.4,0,.2,1);}
+        @keyframes heartPop{0%{transform:scale(1);}40%{transform:scale(1.5);}70%{transform:scale(0.85);}100%{transform:scale(1);}}
         /* ══ LIVE VIEWER COUNT ══ */
         #live-viewer-count{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.52);backdrop-filter:blur(8px);border:1px solid var(--glass-border);color:#fff;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;z-index:9000;display:none;font-family:'Orbitron',sans-serif;white-space:nowrap;}
         /* ══ SHARE SCENE MODAL ══ */
@@ -728,6 +731,52 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-15px); }
         }
+        /* ════════ WATCH REWARD WIDGET CSS ════════ */
+        @keyframes wrGlowPulse {
+            0%   { box-shadow: 0 0 6px rgba(0,255,135,0.4), 0 0 12px rgba(0,255,135,0.2); opacity: 1; }
+            50%  { box-shadow: 0 0 14px rgba(0,255,135,0.8), 0 0 28px rgba(0,255,135,0.4); opacity: 0.85; }
+            100% { box-shadow: 0 0 6px rgba(0,255,135,0.4), 0 0 12px rgba(0,255,135,0.2); opacity: 1; }
+        }
+        #wr-widget { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7)); }
+        /* ════════ WATCH REWARD CLAIM MODAL CSS ════════ */
+        #wr-claim-modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(5,5,8,0.96); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            z-index: 99998; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+        }
+        .wr-modal-box {
+            width: 100%; max-width: 400px; background: rgba(15,15,25,0.9);
+            border: 1px solid rgba(255,183,3,0.25); border-radius: 24px;
+            padding: 30px 24px 24px; text-align: center; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,183,3,0.05);
+        }
+        .wr-modal-close {
+            position: absolute; top: 16px; right: 18px;
+            font-size: 20px; color: rgba(255,255,255,0.4); cursor: pointer; transition: .2s;
+        }
+        .wr-modal-close:hover { color: #fff; }
+        .wr-modal-icon { font-size: 44px; margin-bottom: 12px; }
+        .wr-modal-title { font-family:'Orbitron',sans-serif; font-size:17px; font-weight:900; color:#fff; margin-bottom:6px; }
+        .wr-modal-sub { font-size:13px; color:rgba(255,255,255,0.55); font-weight:500; line-height:1.6; margin-bottom:22px; }
+        .wr-pts-badge {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: rgba(255,183,3,0.12); border: 1px solid rgba(255,183,3,0.3);
+            border-radius: 30px; padding: 8px 18px; margin-bottom: 22px;
+            font-size:16px; font-weight:900; color:var(--accent-glow); font-family:'Orbitron';
+        }
+        #wr-claim-start-btn {
+            width:100%; padding:15px; background:var(--accent-gradient); color:#000;
+            border:none; border-radius:14px; font-size:14px; font-weight:900;
+            font-family:'Orbitron'; cursor:pointer; letter-spacing:.5px;
+            box-shadow: 0 6px 20px rgba(255,183,3,0.4); transition: transform .15s;
+        }
+        #wr-claim-start-btn:active { transform: scale(0.97); }
+        #wr-claim-timer-sec { display:none; }
+        .wr-timer-big { font-size:52px; font-weight:900; font-family:'Orbitron'; color:#00ff87; line-height:1; margin: 4px 0 10px; }
+        .wr-timer-label { font-size:13px; color:rgba(255,255,255,0.5); font-weight:600; margin-bottom:16px; }
+        .wr-prog-bg { height:8px; background:rgba(255,255,255,0.1); border-radius:8px; overflow:hidden; margin-bottom:14px; }
+        .wr-prog-fill { height:100%; background:linear-gradient(90deg,#00c853,#00ff87); border-radius:8px; width:0%; transition:width .9s linear; }
+        .wr-warning-text { font-size:11px; color:rgba(255,100,100,0.7); font-weight:600; }
     </style>
 
     <script>
@@ -794,6 +843,40 @@
         // Prevent Console Overriding
         Object.freeze(console);
     </script>
+
+    <!-- 🪙 WATCH REWARD CLAIM MODAL -->
+    <div id="wr-claim-modal">
+        <div class="wr-modal-box">
+            <span class="wr-modal-close" onclick="_closeWrClaimModal()">✕</span>
+            <div class="wr-modal-icon">🪙</div>
+            <div class="wr-modal-title">WATCH REWARD CLAIM</div>
+            <div class="wr-pts-badge">
+                <i class="fas fa-star" style="font-size:14px;"></i>
+                <span id="wr-modal-pts-count">0</span> পয়েন্ট Claim করুন
+            </div>
+
+            <!-- Step 1: Start screen -->
+            <div id="wr-claim-desc">
+                <div class="wr-modal-sub">
+                    পয়েন্ট Claim করতে একটি ছোট বিজ্ঞাপন দেখুন।<br>
+                    <strong style="color:#ffb703;">৩০ সেকেন্ড</strong> Ad পেজে থাকতে হবে।<br>
+                    ১ সেকেন্ড আগে ফিরলেও Claim হবে না!
+                </div>
+                <button id="wr-claim-start-btn" onclick="startWrClaimAd()">📺 AD দেখো — পয়েন্ট নাও</button>
+            </div>
+
+            <!-- Step 2: Countdown (while user is on ad tab) -->
+            <div id="wr-claim-timer-sec">
+                <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:4px; font-weight:600;">Ad যাচাই হচ্ছে... অপেক্ষা করুন</div>
+                <div class="wr-timer-big" id="wr-claim-sec-num">30</div>
+                <div class="wr-timer-label">সেকেন্ড বাকি</div>
+                <div class="wr-prog-bg">
+                    <div class="wr-prog-fill" id="wr-claim-prog-fill"></div>
+                </div>
+                <div class="wr-warning-text">⚠️ Ad পেজ বন্ধ করবেন না — ৩০ সেকেন্ড পূর্ণ হলে স্বয়ংক্রিয়ভাবে Claim হবে</div>
+            </div>
+        </div>
+    </div>
 
     <!-- 🌟 ANTI-ADBLOCKER OVERLAY 🌟 -->
     <div id="adblock-guard">
@@ -975,6 +1058,26 @@
                     <div class="b-header"><div class="b-user-info"><h2 id="b-profile-name">GUEST</h2><div class="b-user-id" id="b-profile-id">ID: --------</div></div></div>
                     <div id="streak-badge">🔥 <span id="streak-count">0</span> Day Streak!</div>
                     
+                    <!-- 🪙 WATCH REWARD INFO CARD -->
+                    <div style="background:rgba(255,183,3,0.08); border:1px solid rgba(255,183,3,0.2); border-radius:14px; padding:12px 15px; margin-top:10px; display:flex; align-items:center; gap:12px;">
+                        <div style="font-size:22px;">🪙</div>
+                        <div>
+                            <div style="font-size:12px; font-weight:800; color:var(--accent-glow); font-family:'Orbitron';">WATCH & EARN</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-weight:500; margin-top:2px;">প্রতি ৩ মিনিট দেখলে +১ পয়েন্ট • Episode শেষে Quiz দিলে +২-৬ পয়েন্ট</div>
+                        </div>
+                    </div>
+
+                    <!-- 🎯 STREAK MILESTONE INFO -->
+                    <div style="background:rgba(255,100,0,0.08); border:1px solid rgba(255,100,0,0.2); border-radius:14px; padding:12px 15px; margin-top:8px; margin-bottom:5px;">
+                        <div style="font-size:12px; font-weight:800; color:#ff6a00; font-family:'Orbitron'; margin-bottom:8px;">🏆 STREAK MILESTONES</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                            <div style="font-size:11px; color:var(--text-muted);">🔥 ৩ দিন → <span style="color:var(--accent-glow); font-weight:700;">+৩ পয়েন্ট</span></div>
+                            <div style="font-size:11px; color:var(--text-muted);">⚡ ৭ দিন → <span style="color:var(--accent-glow); font-weight:700;">+৫ পয়েন্ট + VIP</span></div>
+                            <div style="font-size:11px; color:var(--text-muted);">💫 ১৪ দিন → <span style="color:var(--accent-glow); font-weight:700;">+১০ পয়েন্ট</span></div>
+                            <div style="font-size:11px; color:var(--text-muted);">🏆 ৩০ দিন → <span style="color:var(--accent-glow); font-weight:700;">+১৫ পয়েন্ট</span></div>
+                        </div>
+                    </div>
+
                     <div class="b-banner-alert" onclick="openRewardPage()">
                         <i class="fas fa-gift" style="font-size:18px;"></i> <span id="daily-bonus-text" style="font-weight:800; font-family:'Orbitron';">CLAIM DAILY BONUS (+2 PTS)</span>
                     </div>
@@ -1277,14 +1380,6 @@
                 <i class="fas fa-clone"></i>
             </div>
 
-            <!-- 🔥 EMOJI REACTION BAR -->
-            <div class="emoji-reaction-bar" id="emoji-reaction-bar">
-                <div class="emo-btn" onclick="sendReaction('🔥')">🔥</div>
-                <div class="emo-btn" onclick="sendReaction('😂')">😂</div>
-                <div class="emo-btn" onclick="sendReaction('❤️')">❤️</div>
-                <div class="emo-btn" onclick="sendReaction('😱')">😱</div>
-                <div class="emo-btn" onclick="sendReaction('💀')">💀</div>
-            </div>
             <div id="emoji-float-zone"></div>
             <!-- 👁 LIVE VIEWER COUNT -->
             <div id="live-viewer-count">👁 0 জন দেখছে</div>
@@ -1317,6 +1412,32 @@
 
             <video id="main-video" controls playsinline webkit-playsinline preload="metadata" x5-video-player-type="h5" x5-playsinline="true" controlsList="nodownload" oncontextmenu="return false;"></video>
             
+            <!-- 🪙 WATCH REWARD FLOATING WIDGET -->
+            <div id="wr-widget" style="display:none; position:absolute; bottom:80px; right:12px; z-index:8500; flex-direction:column; align-items:center; gap:5px; pointer-events:auto;">
+                <!-- Circular progress ring -->
+                <div style="position:relative; width:58px; height:58px; cursor:pointer;" onclick="openWatchRewardClaim()" title="Watch Reward Claim">
+                    <svg width="58" height="58" viewBox="0 0 58 58" style="position:absolute;top:0;left:0;">
+                        <!-- Track -->
+                        <circle cx="29" cy="29" r="24" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="4"/>
+                        <!-- Progress -->
+                        <circle id="wr-ring-fill" cx="29" cy="29" r="24" fill="none" stroke="#ffb703" stroke-width="4"
+                                stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round"
+                                transform="rotate(-90 29 29)" style="transition:stroke-dashoffset 0.9s linear, stroke 0.4s;"/>
+                    </svg>
+                    <!-- Center content -->
+                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                        <div style="font-size:10px; font-weight:900; color:#fff; font-family:'Orbitron'; line-height:1;" id="wr-pts-num">0</div>
+                        <div style="font-size:8px; color:rgba(255,255,255,0.6); font-weight:700; line-height:1; margin-top:1px;">pts</div>
+                    </div>
+                    <!-- Glow ring when claimable -->
+                    <div id="wr-glow-ring" style="display:none; position:absolute;inset:-3px; border-radius:50%; border:2px solid #00ff87; animation:wrGlowPulse 1.2s infinite;"></div>
+                </div>
+                <!-- Time left label -->
+                <div id="wr-mins-left" style="font-size:9px; color:rgba(255,255,255,0.55); font-weight:700; font-family:'Outfit'; text-align:center; line-height:1;">10মিঃ</div>
+                <!-- CLAIM button (visible only when pts >= 10) -->
+                <button id="wr-claim-btn" onclick="openWatchRewardClaim()" style="display:none; background:linear-gradient(135deg,#00ff87,#00c853); color:#000; border:none; border-radius:20px; padding:4px 10px; font-size:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; letter-spacing:0.5px; box-shadow:0 0 12px rgba(0,255,135,0.5); animation:wrGlowPulse 1.2s infinite;">CLAIM</button>
+            </div>
+
             <!-- 🌟 COMING SOON OVERLAY 🌟 -->
             <div id="coming-soon-overlay" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.9); z-index:5002; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
                 <i class="fas fa-server" style="font-size:40px; color:var(--accent-glow); margin-bottom:15px; animation: pulse 2s infinite;"></i>
@@ -1334,7 +1455,10 @@
                 </span>
                 <span id="avg-rating-text" style="color:var(--text-main); font-weight:800;">4.8</span>
                 <span style="margin-left:auto;"><i class="fas fa-eye" style="color:var(--text-muted); margin-right:5px;"></i> <span id="view-count">0</span></span>
-                <span style="margin-left:15px;"><i class="fas fa-heart" style="color:#ff007f; margin-right:5px;"></i> <span id="like-count">0</span></span>
+                <span id="love-heart-wrap" style="margin-left:15px;" onclick="toggleLike()" title="Love this!">
+                    <i class="fas fa-heart" id="love-heart-icon"></i>
+                    <span id="like-count">0</span>
+                </span>
             </div>
             
             <div class="action-buttons-row">
@@ -2613,6 +2737,9 @@
                 }
             }
 
+            // ── Watch Reward Claim verification ──────────────────
+            if(_wrClaimActive) { _checkWrClaimReturn(); }
+
             if (epUnlockActive) {
                 let elapsed = now - epUnlockStart;
                 if (elapsed > 500) {
@@ -2622,6 +2749,14 @@
                         document.getElementById('ep-unlock-overlay').style.display = 'none';
                         if(pendingEpPlayback) pendingEpPlayback();
                         pendingEpPlayback = null;
+                        // +1 পয়েন্ট বোনাস Ad দেখার জন্য
+                        if(currentUser) {
+                            db.ref('users/'+currentUser.uid+'/points').transaction(function(c){ return (c||0)+1; });
+                            userPoints += 1;
+                            let el = document.getElementById('task-coin-balance');
+                            if(el) el.innerText = userPoints;
+                            showDlToast('🎁 +১ বোনাস পয়েন্ট! Ad দেখার জন্য ধন্যবাদ।', false);
+                        }
                     } else {
                         alert("❌ Verification Failed! You returned too early.");
                         btn.innerText = "VERIFY TO UNLOCK"; btn.style.background = "var(--accent-gradient)"; btn.style.color = "#fff";
@@ -2660,8 +2795,20 @@
         function copyReferCode() {
             if(!currentUser) return alert("Please login to copy refer code.");
             let code = currentUser.uid.substring(0, 8).toUpperCase();
-            let msg = `Hey! Join ANIMAX TV using my referral code: ${code} and we both get free VIP points!`;
-            navigator.clipboard.writeText(msg).then(() => { alert("✅ Referral code copied! Share it with your friends."); });
+            let baseUrl = window.location.origin + window.location.pathname;
+            let referLink = baseUrl + '?ref=' + code;
+            let msg = '🎌 ANIMAX TV-তে Join করো!\n\nসেরা Anime ফ্রিতে দেখো। আমার রেফারেল লিংক দিয়ে Join করলে তুমি ও আমি দুজনেই +৫ পয়েন্ট পাবো! 🎁\n\n👉 ' + referLink;
+            if(navigator.share) {
+                navigator.share({ title: 'ANIMAX TV', text: msg, url: referLink }).catch(function(){
+                    navigator.clipboard.writeText(msg).then(function(){ alert('✅ রেফারেল লিংক কপি হয়েছে! বন্ধুদের পাঠাও।'); });
+                });
+            } else {
+                navigator.clipboard.writeText(msg).then(function(){ 
+                    alert('✅ রেফারেল লিংক কপি হয়েছে!\n\nবন্ধুরা এই লিংক দিয়ে Join করলে দুজনেই +৫ পয়েন্ট পাবে।'); 
+                }).catch(function(){
+                    prompt('এই লিংকটি কপি করো:', referLink);
+                });
+            }
         }
 
         function openSpinWheel() { 
@@ -3049,9 +3196,43 @@
             const e = document.getElementById(t==='login'?'email-in':'remail-in').value; const p = document.getElementById(t==='login'?'pass-in':'rpass-in').value; 
             if(t === 'reg') {
                 const n = document.getElementById('rname-in').value.trim(); if(!n || !e || !p) return alert("Please fill all details.");
-                auth.createUserWithEmailAndPassword(e,p).then((cred) => { db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { if(committed) db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n, name: n, email: e }); }); }).catch(err=>alert(err.message)); 
+                // রেফারেল কোড চেক
+                const refCode = new URLSearchParams(window.location.search).get('ref') || localStorage.getItem('animax_ref_code');
+                auth.createUserWithEmailAndPassword(e,p).then((cred) => { 
+                    db.ref('metadata/totalUsers').transaction(current => (current || 0) + 1, (err, committed, snap) => { 
+                        if(committed) db.ref(`users/${cred.user.uid}`).update({ rank: snap.val(), username: n, name: n, email: e, points: 5 }); 
+                    });
+                    // রেফারেল বোনাস প্রক্রিয়া
+                    if(refCode && refCode.length === 8) {
+                        db.ref('users').orderByChild('uid_prefix').once('value', function(){});
+                        // UID prefix দিয়ে referrer খোঁজা
+                        db.ref('users').once('value', function(snap){
+                            snap.forEach(function(child){
+                                let uid = child.key;
+                                if(uid.substring(0, 8).toUpperCase() === refCode.toUpperCase() && uid !== cred.user.uid) {
+                                    // Referrer-কে +৫ পয়েন্ট
+                                    db.ref('users/'+uid+'/points').transaction(function(c){ return (c||0)+5; });
+                                    // নতুন user-কে +৫ পয়েন্ট (মোট ১০)
+                                    db.ref('users/'+cred.user.uid+'/points').transaction(function(c){ return (c||0)+5; });
+                                    db.ref('users/'+cred.user.uid).update({ referredBy: uid });
+                                    setTimeout(function(){ 
+                                        showDlToast('🎁 রেফারেল বোনাস! তুমি +৫ পয়েন্ট পেয়েছ!', false); 
+                                    }, 2000);
+                                    localStorage.removeItem('animax_ref_code');
+                                    return true; // break forEach
+                                }
+                            });
+                        });
+                    }
+                }).catch(err=>alert(err.message)); 
             } else { if(!e || !p) return alert("Please fill details."); auth.signInWithEmailAndPassword(e,p).catch(err=>alert(err.message)); }
         }
+
+        // রেফারেল কোড URL থেকে সেভ করা
+        (function saveRefCodeFromUrl(){
+            var ref = new URLSearchParams(window.location.search).get('ref');
+            if(ref && ref.length === 8) localStorage.setItem('animax_ref_code', ref.toUpperCase());
+        })();
 
         let sliderInterval;
         function initSlider() { clearInterval(sliderInterval); sliderInterval = setInterval(() => changeSlide(1), 5000); }
@@ -3329,7 +3510,7 @@
             if (v.src && !v.paused && v.dataset.currentId === id) prevTime = v.currentTime;
 
             v.src = u; v.dataset.currentId = id; v.load(); 
-            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos(); if(!isPremium && !isTrialActive) { adsInjected = false; injectFreeAds(); } startReactionListener(id); startViewerTracking(id); updateWatchStreak();
+            document.getElementById('player-view').style.display='block'; window.scrollTo(0,0); switchPlayerTab('foryou'); loadForYouVideos(); if(!isPremium && !isTrialActive) { adsInjected = false; injectFreeAds(); } startReactionListener(id); startViewerTracking(id); updateWatchStreak(); startWatchTimeCoin(id);
 
             let hThumb = "logo.png";
             if(type === 'anime' && currentFolder && window.animeData && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
@@ -3490,7 +3671,7 @@
                 document.getElementById('view-count').innerText = formatNumber(v); 
             });
 
-            if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; } }); }
+            if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); const hw=document.getElementById('love-heart-wrap'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; if(hw) hw.classList.add('loved'); } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; if(hw) hw.classList.remove('loved'); } }); }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
             currentCommentsRef.on('value', s => {
@@ -3529,7 +3710,207 @@
             else { document.getElementById('tab-btn-comments').classList.add('active'); document.getElementById('tab-btn-foryou').classList.remove('active'); document.getElementById('tab-content-comments').style.display='block'; document.getElementById('tab-content-foryou').style.display='none'; } 
         }
         
-        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; stopViewerTracking(); }
+        // ════════ ENHANCED WATCH REWARD SYSTEM ════════
+        // ১০ মিনিট real watch = ১ pending point | ১০ পয়েন্ট জমলে Claim করা যাবে (৩০ সেকেন্ড Ad)
+        // Anti-scrub: seek করলে block progress রিসেট হয়
+        const WR_SECS_PER_PT = 600;   // 10 মিনিট
+        let _watchCoinInterval = null;
+        let _wrBlockSecs    = 0;      // current 10-min block progress
+        let _wrPendingPts   = 0;      // জমানো কিন্তু claim না হওয়া পয়েন্ট
+        let _wrLastVidTime  = -1;     // scrub detection
+        let _wrClaimActive  = false;  // claim ad চলছে কিনা
+        let _wrClaimStart   = 0;      // claim শুরু timestamp
+        let _wrClaimTimer   = null;   // countdown interval
+
+        function startWatchTimeCoin(videoId) {
+            stopWatchTimeCoin();
+            _wrBlockSecs   = 0;
+            _wrLastVidTime = -1;
+            _showWrWidget();
+
+            _watchCoinInterval = setInterval(function() {
+                const v  = document.getElementById('main-video');
+                const pv = document.getElementById('player-view');
+                if(!v || v.paused || v.ended) return;
+                if(!pv || pv.style.display !== 'block') return;
+
+                const cur = v.currentTime;
+
+                // ── Scrub / seek detection ──────────────────────────
+                if(_wrLastVidTime >= 0) {
+                    const delta = cur - _wrLastVidTime;
+                    if(delta < 0 || delta > 2.5) {
+                        // seek বা skip detected → block progress ৩০ সেকেন্ড কমাও
+                        _wrBlockSecs   = Math.max(0, _wrBlockSecs - 30);
+                        _wrLastVidTime = cur;
+                        _updateWrWidget();
+                        return;
+                    }
+                }
+                _wrLastVidTime = cur;
+                _wrBlockSecs++;
+
+                if(_wrBlockSecs >= WR_SECS_PER_PT) {
+                    _wrBlockSecs = 0;
+                    _wrPendingPts = Math.min(_wrPendingPts + 1, 99);
+                }
+                _updateWrWidget();
+
+                if(_wrPendingPts >= 10 && !_wrClaimActive) {
+                    _showWrClaimPulse();
+                }
+            }, 1000);
+        }
+
+        function stopWatchTimeCoin() {
+            if(_watchCoinInterval) { clearInterval(_watchCoinInterval); _watchCoinInterval = null; }
+            if(_wrClaimTimer)      { clearInterval(_wrClaimTimer);      _wrClaimTimer = null; }
+            _wrLastVidTime = -1;
+            _hideWrWidget();
+        }
+
+        // ── Widget show/hide ──────────────────────────────────────
+        function _showWrWidget() {
+            const el = document.getElementById('wr-widget');
+            if(el) { el.style.display = 'flex'; _updateWrWidget(); }
+        }
+        function _hideWrWidget() {
+            const el = document.getElementById('wr-widget');
+            if(el) el.style.display = 'none';
+        }
+
+        // ── Update the circular widget ────────────────────────────
+        let _wrPulseShown = false;
+        function _updateWrWidget() {
+            const progress = _wrBlockSecs / WR_SECS_PER_PT;
+            const circ = 2 * Math.PI * 24;  // r=24
+            const ring = document.getElementById('wr-ring-fill');
+            if(ring) {
+                ring.style.strokeDasharray  = circ;
+                ring.style.strokeDashoffset = circ - progress * circ;
+                ring.style.stroke = _wrPendingPts >= 10 ? '#00ff87' : '#ffb703';
+            }
+
+            const ptsEl  = document.getElementById('wr-pts-num');
+            const minsEl = document.getElementById('wr-mins-left');
+            if(ptsEl)  ptsEl.textContent  = _wrPendingPts;
+            if(minsEl) {
+                const minsLeft = Math.max(0, Math.ceil((WR_SECS_PER_PT - _wrBlockSecs) / 60));
+                minsEl.textContent = minsLeft + 'মিঃ';
+            }
+
+            const claimBtn = document.getElementById('wr-claim-btn');
+            if(claimBtn) claimBtn.style.display = _wrPendingPts >= 10 ? 'block' : 'none';
+
+            const glowRing = document.getElementById('wr-glow-ring');
+            if(glowRing) glowRing.style.display = _wrPendingPts >= 10 ? 'block' : 'none';
+        }
+
+        let _wrPulseTimeout = null;
+        function _showWrClaimPulse() {
+            if(_wrPulseShown) return; _wrPulseShown = true;
+            showDlToast('🎉 ১০ পয়েন্ট হয়েছে! Claim করতে 🪙 আইকনে ক্লিক করুন।', false);
+            clearTimeout(_wrPulseTimeout);
+            _wrPulseTimeout = setTimeout(function(){ _wrPulseShown = false; }, 15000);
+        }
+
+        // ── Claim modal open/close ────────────────────────────────
+        function openWatchRewardClaim() {
+            if(!currentUser) return alert('পয়েন্ট Claim করতে Login করুন!');
+            if(_wrPendingPts < 10) return alert('কমপক্ষে ১০ পয়েন্ট জমতে হবে Claim করতে।');
+            // modal-এ pts count আপডেট
+            const ptsCountEl = document.getElementById('wr-modal-pts-count');
+            if(ptsCountEl) ptsCountEl.textContent = _wrPendingPts;
+            document.getElementById('wr-claim-modal').style.display = 'flex';
+            _resetWrClaimUI();
+        }
+        function _closeWrClaimModal() {
+            document.getElementById('wr-claim-modal').style.display = 'none';
+            if(_wrClaimTimer){ clearInterval(_wrClaimTimer); _wrClaimTimer = null; }
+            _wrClaimActive = false;
+            _resetWrClaimUI();
+        }
+        function _resetWrClaimUI() {
+            const startBtn = document.getElementById('wr-claim-start-btn');
+            const timerSec = document.getElementById('wr-claim-timer-sec');
+            const desc     = document.getElementById('wr-claim-desc');
+            const progFill = document.getElementById('wr-claim-prog-fill');
+            const secEl    = document.getElementById('wr-claim-sec-num');
+            if(startBtn){ startBtn.style.display='block'; startBtn.textContent='📺 AD দেখো ('+_wrPendingPts+' পয়েন্ট Claim)'; }
+            if(timerSec) timerSec.style.display='none';
+            if(desc)     desc.style.display='block';
+            if(progFill) progFill.style.width = '0%';
+            if(secEl)    secEl.textContent = '30';
+        }
+
+        // ── Start the 30s claim ad ────────────────────────────────
+        function startWrClaimAd() {
+            if(_wrClaimActive) return;
+            window.open(typeof AD_SMARTLINK !== 'undefined' ? AD_SMARTLINK : '#', '_blank');
+            _wrClaimActive = true;
+            _wrClaimStart  = Date.now();
+
+            document.getElementById('wr-claim-start-btn').style.display = 'none';
+            document.getElementById('wr-claim-timer-sec').style.display = 'block';
+            document.getElementById('wr-claim-desc').style.display = 'none';
+
+            let secsLeft = 30;
+            const secEl  = document.getElementById('wr-claim-sec-num');
+            const progEl = document.getElementById('wr-claim-prog-fill');
+            if(secEl)  secEl.textContent = secsLeft;
+            if(progEl) progEl.style.width = '0%';
+
+            _wrClaimTimer = setInterval(function(){
+                secsLeft--;
+                const elapsed = 30 - secsLeft;
+                if(secEl)  secEl.textContent = Math.max(0, secsLeft);
+                if(progEl) progEl.style.width = (elapsed / 30 * 100) + '%';
+
+                if(secsLeft <= 0) {
+                    clearInterval(_wrClaimTimer); _wrClaimTimer = null;
+                    _executeWrClaim();
+                }
+            }, 1000);
+        }
+
+        // ── Tab/focus return verification ─────────────────────────
+        // (also called from checkAllAdVerifications)
+        function _checkWrClaimReturn() {
+            if(!_wrClaimActive) return;
+            const elapsed = Date.now() - _wrClaimStart;
+            if(elapsed < 500) return;   // too quick, ignore
+            if(elapsed >= 29500) {
+                // ৩০ সেকেন্ড পার হয়েছে → claim success
+                if(_wrClaimTimer){ clearInterval(_wrClaimTimer); _wrClaimTimer = null; }
+                _executeWrClaim();
+            } else {
+                // তাড়াতাড়ি ফিরে এসেছে → fail
+                _wrClaimActive = false;
+                if(_wrClaimTimer){ clearInterval(_wrClaimTimer); _wrClaimTimer = null; }
+                alert('❌ Claim Failed!\n\nAd পেজে পুরো ৩০ সেকেন্ড থাকতে হবে। আবার চেষ্টা করুন।');
+                _resetWrClaimUI();
+            }
+        }
+
+        function _executeWrClaim() {
+            _wrClaimActive = false;
+            const pts    = _wrPendingPts;
+            _wrPendingPts = 0;
+            _wrPulseShown = false;
+            _updateWrWidget();
+            _closeWrClaimModal();
+
+            if(currentUser && pts > 0) {
+                db.ref('users/'+currentUser.uid+'/points').transaction(function(c){ return (c||0)+pts; });
+                userPoints += pts;
+                const el = document.getElementById('task-coin-balance');
+                if(el) el.innerText = userPoints;
+                if(typeof playSuccessSound === 'function') playSuccessSound();
+                showDlToast('🎉 +'+pts+' পয়েন্ট Claim সফল! ধন্যবাদ।', false);
+            }
+        }
+
+        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; stopViewerTracking(); stopWatchTimeCoin(); }
         
         function generateCardHtml(item) {
             if(item.type === 'anime') {
@@ -5469,6 +5850,36 @@
         if(currentUser) db.ref('users/'+currentUser.uid).update({watchStreak:n, lastStreakDate:today});
         renderStreakBadge(n);
         if(n>1) showDlToast((n>=30?'🏆':n>=7?'⚡':'🔥')+' '+n+' দিনের Streak!', false);
+
+        // ════ STREAK MILESTONE REWARDS ════
+        var milestones = {3:3, 7:5, 14:10, 30:15};
+        if(milestones[n] && currentUser) {
+            var bonus = milestones[n];
+            db.ref('users/'+currentUser.uid+'/streak_milestones/'+n).once('value', function(snap){
+                if(snap.val()) return; // ইতিমধ্যে পেয়েছে
+                db.ref('users/'+currentUser.uid+'/streak_milestones/'+n).set(true);
+                db.ref('users/'+currentUser.uid+'/points').transaction(function(c){ return (c||0)+bonus; });
+                userPoints += bonus;
+                var el = document.getElementById('task-coin-balance');
+                if(el) el.innerText = userPoints;
+                // ৭ দিনে VIP trial
+                if(n === 7) {
+                    var exp = Date.now() + (24*60*60*1000); // ১ দিন ফ্রি VIP
+                    db.ref('users/'+currentUser.uid+'/premiumExpiry').once('value', function(s){
+                        var cur = s.val()||0;
+                        var base = cur > Date.now() ? cur : Date.now();
+                        db.ref('users/'+currentUser.uid+'/premiumExpiry').set(base + 24*60*60*1000);
+                    });
+                    setTimeout(function(){
+                        alert('🏆 '+n+' দিনের Streak!\n\n🎉 মিলেস্টোন বোনাস: +'+bonus+' পয়েন্ট\n👑 বোনাস: ১ দিন ফ্রি VIP!');
+                    }, 800);
+                } else {
+                    setTimeout(function(){
+                        alert('🔥 '+n+' দিনের Streak মিলেস্টোন!\n\n🎁 +'+bonus+' পয়েন্ট বোনাস পেয়েছ!');
+                    }, 800);
+                }
+            });
+        }
     }
     function renderStreakBadge(n) {
         var b=document.getElementById('streak-badge'), c=document.getElementById('streak-count');
@@ -5566,6 +5977,22 @@
         {q:"Hunter x Hunter-এ Gon কোন ধরনের Nen ব্যবহার করে?",opts:["Transmutation","Enhancement","Emission","Conjuration"],a:1},
         {q:"Tokyo Ghoul-এর main character?",opts:["Ken Kaneki","Touka","Hide","Juuzou"],a:0},
         {q:"Bleach-এ Ichigo মূলত কী?",opts:["Pure Shinigami","Pure Hollow","Half Shinigami/Hollow","Quincy"],a:2},
+        /* ══ নতুন প্রশ্ন ══ */
+        {q:"One Punch Man-এর Saitama কত ঘুষিতে শত্রু হারায়?",opts:["দুই ঘুষিতে","তিন ঘুষিতে","এক ঘুষিতে","কোনোটাই নয়"],a:2},
+        {q:"Re:Zero-এর main character-এর special power কী?",opts:["Time travel","Death Reset","Teleport","Healing"],a:1},
+        {q:"Jujutsu Kaisen-এ Gojo Satoru-এর কোন technique সবচেয়ে বিখ্যাত?",opts:["Domain Expansion","Hollow Purple","Infinity","Black Flash"],a:2},
+        {q:"Chainsaw Man-এর Denji কীসের সাথে merge হয়?",opts:["Gun Devil","Bat Devil","Chainsaw Devil","Katana Devil"],a:2},
+        {q:"Spy x Family-তে Anya কী পড়তে পারে?",opts:["ভবিষ্যৎ","মন","চিন্তা","আবেগ"],a:2},
+        {q:"Mob Psycho 100-এর main character-এর real নাম?",opts:["Reigen","Shigeo Kageyama","Dimple","Sho"],a:1},
+        {q:"Black Clover-এ Asta-এর কোন জিনিস নেই?",opts:["তলোয়ার","বন্ধু","Magic Power","সাহস"],a:2},
+        {q:"Fairy Tail-এর Natsu কোন Dragon-এর কাছে fire magic শিখেছিল?",opts:["Sky Dragon","Iron Dragon","Fire Dragon Igneel","Celestial Dragon"],a:2},
+        {q:"No Game No Life-এ Sora ও Shiro কোন নামে পরিচিত?",opts:["Phantom","Blank","Zero","Null"],a:1},
+        {q:"Overlord-এ Ainz Ooal Gown-এর আসল পরিচয় কী?",opts:["Undead Skeleton","Human Wizard","Vampire","Demon King"],a:0},
+        {q:"Violet Evergarden-এর Violet কী লিখে জীবিকা নির্বাহ করে?",opts:["গান","চিঠি","উপন্যাস","কবিতা"],a:1},
+        {q:"Made in Abyss-এ Riko কোথায় যেতে চায়?",opts:["Abyss-এর তলদেশে","Abyss-এর বাইরে","শহরে","মায়ের কাছে"],a:0},
+        {q:"Vinland Saga-এর Thorfinn কার প্রতিশোধ নিতে চায়?",opts:["Askeladd","Canute","Floki","Thors"],a:0},
+        {q:"Steins;Gate-এ Okabe Rintaro কোন technology আবিষ্কার করে?",opts:["Teleportation","Phone Microwave (Time machine)","Mind control","Invisibility"],a:1},
+        {q:"Neon Genesis Evangelion-এ Shinji কী চালায়?",opts:["Robot","Tank","EVA Unit","Spaceship"],a:2},
     ];
     var _qList=[], _qIdx=0, _qScore=0, _qDone=false;
     function startQuiz() {
