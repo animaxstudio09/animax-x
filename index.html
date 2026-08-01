@@ -1654,7 +1654,7 @@
         <div id="admin-sec-gifts" class="section-view" style="display:none;">
             <div class="input-group">
                 <h3><i class="fas fa-gift" style="color:#ff007f;"></i> VIP গিফট অনুরোধ</h3>
-                <p style="color:#888;font-size:13px;margin-bottom:15px;">ইউজারদের পাঠানো VIP গিফট অনুরোধ এখানে দেখুন এবং অনুমোদন করুন।</p>
+                <p style="color:#888;font-size:13px;margin-bottom:15px;">ইউজারদের পাঠানো VIP গিফট অনুরোধ এখানে দেখুন এবং অনুমোদন করুন。</p>
                 <button class="btn-action" style="background:#ff007f;margin-bottom:15px;" onclick="loadGiftRequests()"><i class="fas fa-sync"></i> রিফ্রেশ করুন</button>
                 <div id="admin-gift-list"><div style="color:#666;text-align:center;padding:20px;">লোড হচ্ছে...</div></div>
             </div>
@@ -2077,18 +2077,18 @@
             });
         });
 
-        // 🌟 FEATURE 1: 10-LANGUAGE UI & AI 🌟
+        // 🌟 FEATURE 1: 10-LANGUAGE UI & AI (30-Minute Trial updated) 🌟
         const langDict = {
-            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 12-Hour Free Trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!", guideTitle: "GUIDE & RULES", rule1: "🎁 Daily Bonus: Claim +2 points every day.", rule2: "🎰 Lucky Spin: Costs 2 points to spin.", rule3: "👑 VIP Benefits: Zero ads, 1080p HD & Offline Downloads.", rule4: "✅ Tasks: Complete ads to earn points."},
-            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার 12-Hour Free Trial শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!", guideTitle: "নিয়মাবলী ও গাইড", rule1: "🎁 দৈনিক বোনাস: প্রতিদিন +২ পয়েন্ট নিন।", rule2: "🎰 লাকি স্পিন: প্রতিবার ২ পয়েন্ট খরচ হবে।", rule3: "👑 ভিআইপি সুবিধা: কোনো অ্যাড নেই, 1080p HD এবং অফলাইন ডাউনলোড।", rule4: "✅ টাস্ক: অ্যাড দেখে পয়েন্ট আয় করুন।"},
-            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस कमांड", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 12-Hour Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!", guideTitle: "मार्गदर्शिका और नियम", rule1: "🎁 दैनिक बोनस: प्रतिदिन +2 अंक प्राप्त करें।", rule2: "🎰 लकी स्पिन: 2 अंक लगते हैं।", rule3: "👑 वीआईपी लाभ: बिना विज्ञापन, 1080p HD और डाउनलोड।", rule4: "✅ कार्य: अंक कमाने के लिए विज्ञापन देखें।"},
-            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"あなたの12-Hour Free Trialが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！", guideTitle: "ガイドとルール", rule1: "🎁 デイリーボーナス: 毎日+2ポイント", rule2: "🎰 ラッキースピン: コスト2ポイント", rule3: "👑 VIP特典: 広告なし、1080p、ダウンロード", rule4: "✅ タスク: 広告を見てポイントを稼ぐ"},
-            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu 12-Hour Free Trial ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!", guideTitle: "GUÍA Y REGLAS", rule1: "🎁 Bono Diario: Reclama +2 puntos cada día.", rule2: "🎰 Giro de Suerte: Cuesta 2 puntos.", rule3: "👑 Beneficios VIP: Sin anuncios, 1080p HD y Descargas.", rule4: "✅ Tareas: Completa anuncios para ganar puntos."},
-            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 12-Hour Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !", guideTitle: "GUIDE ET RÈGLES", rule1: "🎁 Bonus Quotidien: +2 points par jour.", rule2: "🎰 Tour de chance: Coûte 2 points.", rule3: "👑 Avantages VIP: Sans pub, 1080p, Téléchargements.", rule4: "✅ Tâches: Regardez des pubs pour des points."},
-            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu 12-Hour Free Trial acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!", guideTitle: "GUIA E REGRAS", rule1: "🎁 Bônus Diário: +2 pontos todo dia.", rule2: "🎰 Giro da Sorte: Custa 2 pontos.", rule3: "👑 Benefícios VIP: Sem anúncios, 1080p, Downloads.", rule4: "✅ Tarefas: Complete anúncios por pontos."},
-            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 12-Hour Free Trial ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!", guideTitle: "رہنما اور قواعد", rule1: "🎁 ڈیلی بونس: روزانہ +2 پوائنٹس حاصل کریں۔", rule2: "🎰 لکی اسپن: گھمانے کے لیے 2 پوائنٹس لگتے ہیں۔", rule3: "👑 VIP فوائد: کوئی اشتہارات نہیں، 1080p اور ڈاؤن لوڈز۔", rule4: "✅ ٹاسکس: پوائنٹس کے لیے اشتہارات دیکھیں۔"},
-            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة 12-Hour Free Trial! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!", guideTitle: "الدليل والقواعد", rule1: "🎁 مكافأة يومية: احصل على +2 نقطة يوميًا.", rule2: "🎰 عجلة الحظ: التكلفة 2 نقاط.", rule3: "👑 فوائد VIP: بدون إعلانات، 1080p وتنزيلات.", rule4: "✅ المهام: شاهد الإعلانات لكسب النقاط."},
-            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", spinDesc:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"당신의 12-Hour Free Trial이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!", guideTitle: "가이드 및 규칙", rule1: "🎁 데일리 보너스: 매일 +2 포인트.", rule2: "🎰 럭키 스핀: 2 포인트.", rule3: "👑 VIP 혜택: 광고 없음, 1080p, 다운로드.", rule4: "✅ 임무: 광고를 보고 포인트를 획득하세요."}
+            en: { menu:"MENU", latest:"LATEST", cwTitle:"CONTINUE WATCHING", trendingNow:"TRENDING NOW", series:"SERIES", movies:"MOVIES", allMovies:"ALL MOVIES", offlineDownloads:"Offline Downloads", appLang:"App Language", langDesc:"Choose UI & AI Language", vipStatus:"VIP Premium Status", referEarn:"Refer & Earn", inviteFriends:"Invite friends & get +5 points", luckySpin:"Lucky Spin 🎰", spinDesc:"Cost 2 Pts • Win up to 10 Pts / VIP", requestContent:"Request Content", joinTelegram:"Join Telegram to request", requestBtn:"Request", aiVoiceCommands:"AI Voice Commands", leaderboard:"Point Leaderboard", myList:"My List", myLikes:"My Likes", watchHistory:"Watch History", clickToTalk:"Click to Talk! 🎤", adblockTitle:"AdBlock Detected!", adblockDesc:"Please disable your AdBlocker to continue watching. We rely on ads to keep the servers running for free users.", adblockBtn:"I HAVE DISABLED IT", aiWelcome:"Yo! Welcome to Animax TV. I'm Ani. What's the vibe today?", aiError:"Bruh, I didn't get that. Speak my language: play, search, or open profile.", aiTrialOver:"RIP friend! Your 30-Minute Free Trial clutched out. Upgrade to VIP to keep chatting with me!", aiReqMsg:"We don't have that yet. I told the admin to stop slacking and upload it soon!", guideTitle: "GUIDE & RULES", rule1: "🎁 Daily Bonus: Claim +2 points every day.", rule2: "🎰 Lucky Spin: Costs 2 points to spin.", rule3: "👑 VIP Benefits: Zero ads, 1080p HD & Offline Downloads.", rule4: "✅ Tasks: Complete ads to earn points."},
+            bn: { menu:"মেনু", latest:"সর্বশেষ", cwTitle:"দেখা চালিয়ে যান", trendingNow:"ট্রেন্ডিং", series:"সিরিজ", movies:"সিনেমা", allMovies:"সব সিনেমা", offlineDownloads:"অফলাইন ডাউনলোড", appLang:"অ্যাপের ভাষা", langDesc:"UI ও AI ভাষা বাছুন", vipStatus:"ভিআইপি স্ট্যাটাস", referEarn:"রেফার ও আয়", inviteFriends:"বন্ধুদের ডাকুন, পান +৫ পয়েন্ট", luckySpin:"লাকি স্পিন 🎰", spinDesc:"খরচ ২ পয়েন্ট • জিতুন ১০ পয়েন্ট বা ভিআইপি", requestContent:"কন্টেন্ট রিকোয়েস্ট", joinTelegram:"টেলিগ্রামে যুক্ত হোন", requestBtn:"অনুরোধ", aiVoiceCommands:"এআই ভয়েস কমান্ড", leaderboard:"পয়েন্ট লিডারবোর্ড", myList:"আমার লিস্ট", myLikes:"পছন্দের ভিডিও", watchHistory:"হিস্ট্রি", clickToTalk:"কথা বলতে ক্লিক করুন! 🎤", adblockTitle:"অ্যাডব্লকার পাওয়া গেছে!", adblockDesc:"দয়া করে অ্যাডব্লকার বন্ধ করুন। আমরা ফ্রি ইউজারদের জন্য অ্যাডের মাধ্যমে সার্ভার চালাই।", adblockBtn:"আমি বন্ধ করেছি", aiWelcome:"অ্যানিম্যাক্স টিভিতে আপনাকে স্বাগতম! আমি কীভাবে আপনাকে সাহায্য করতে পারি?", aiError:"দুঃখিত, আমি বুঝতে পারিনি। প্লে, সার্চ বা ওপেন প্রোফাইল বলে চেষ্টা করুন।", aiTrialOver:"দুঃখিত বন্ধু! আপনার 30-Minute Free Trial শেষ। আমার সাথে কথা বলতে ভিআইপি কিনুন!", aiReqMsg:"এটি এখনও আপলোড করা হয়নি। আমি এডমিনকে জানিয়ে দিয়েছি, খুব শীঘ্রই আপলোড করা হবে!", guideTitle: "নিয়মাবলী ও গাইড", rule1: "🎁 দৈনিক বোনাস: প্রতিদিন +২ পয়েন্ট নিন।", rule2: "🎰 লাকি স্পিন: প্রতিবার ২ পয়েন্ট খরচ হবে।", rule3: "👑 ভিআইপি সুবিধা: কোনো অ্যাড নেই, 1080p HD এবং অফলাইন ডাউনলোড।", rule4: "✅ টাস্ক: অ্যাড দেখে পয়েন্ট আয় করুন।"},
+            hi: { menu:"मेनू", latest:"नवीनतम", cwTitle:"देखना जारी रखें", trendingNow:"ट्रेंडिंग", series:"श्रृंखला", movies:"फिल्में", allMovies:"सभी फिल्में", offlineDownloads:"ऑफ़लाइन डाउनलोड", appLang:"ऐप की भाषा", langDesc:"UI और AI ভাষা चुनें", vipStatus:"वीआईपी स्थिति", referEarn:"रेफर करें और कमाएं", inviteFriends:"दोस्तों को बुलाएं, +5 पॉइंट पाएं", luckySpin:"लकी स्पिन 🎰", spinDesc:"लागत 2 पॉइंट • 10 पॉइंट या वीआईपी जीतें", requestContent:"कंटेंट अनुरोध", joinTelegram:"टेलीग्राम से जुड़ें", requestBtn:"अनुरोध", aiVoiceCommands:"एआई वॉयस কমান্ড", leaderboard:"लीडरबोर्ड", myList:"मेरी सूची", myLikes:"पसंद", watchHistory:"इतिहास", clickToTalk:"बोलने के लिए क्लिक करें! 🎤", adblockTitle:"AdBlock का पता चला!", adblockDesc:"कृपया अपना एडब्लॉकर अक्षम करें।", adblockBtn:"मैंने इसे बंद कर दिया है", aiWelcome:"एनिमैक्स टीवी में आपका स्वागत है! मैं आपकी कैसे मदद कर सकता हूँ?", aiError:"क्षमा करें, मुझे समझ नहीं आया।", aiTrialOver:"क्षमा करें दोस्त! आपका 30-Minute Free Trial समाप्त हो गया है।", aiReqMsg:"यह अभी तक अपलोड नहीं हुआ है। मैंने एडमिन को बता दिया है, जल्द ही अपलोड हो जाएगा!", guideTitle: "मार्गदर्शिका और नियम", rule1: "🎁 दैनिक बोनस: प्रतिदिन +2 अंक प्राप्त करें।", rule2: "🎰 लकी स्पिन: 2 अंक लगते हैं।", rule3: "👑 वीआईपी लाभ: बिना विज्ञापन, 1080p HD और डाउनलोड।", rule4: "✅ कार्य: अंक कमाने के लिए विज्ञापन देखें।"},
+            ja: { menu:"メニュー", latest:"最新", cwTitle:"視聴を続ける", trendingNow:"トレンド", series:"シリーズ", movies:"映画", allMovies:"すべての映画", offlineDownloads:"オフラインダウンロード", appLang:"アプリの言語", langDesc:"言語を選択", vipStatus:"VIP ステータス", referEarn:"紹介して稼ぐ", inviteFriends:"友達を招待して+5ポイント", luckySpin:"ラッキースピン 🎰", spinDesc:"コスト2ポイント", requestContent:"リクエスト", joinTelegram:"Telegramに参加", requestBtn:"リクエスト", aiVoiceCommands:"AI 音声コマンド", leaderboard:"リーダーボード", myList:"マイリスト", myLikes:"お気に入り", watchHistory:"履歴", clickToTalk:"クリックして話す! 🎤", adblockTitle:"AdBlock 検出!", adblockDesc:"AdBlockerを無効にしてください。", adblockBtn:"無効にしました", aiWelcome:"Animax TVへようこそ！ご用件は何でしょうか？", aiError:"すみません、わかりませんでした。", aiTrialOver:"あなたの30-Minute Free Trialが終了しました。VIPにアップグレードしてください。", aiReqMsg:"まだアップロードされていません。管理者に通知しました！", guideTitle: "ガイドとルール", rule1: "🎁 デイリーボーナス: 毎日+2ポイント", rule2: "🎰 ラッキースピン: コスト2ポイント", rule3: "👑 VIP特典: 広告なし、1080p、ダウンロード", rule4: "✅ タスク: 広告を見てポイントを稼ぐ"},
+            es: { menu:"MENÚ", latest:"LO ÚLTIMO", cwTitle:"SEGUIR VIENDO", trendingNow:"TENDENCIAS", series:"SERIES", movies:"PELÍCULAS", allMovies:"TODAS LAS PELÍCULAS", offlineDownloads:"Descargas Offline", appLang:"Idioma de la App", langDesc:"Elegir idioma", vipStatus:"Estado VIP", referEarn:"Recomendar y Ganar", inviteFriends:"Invita amigos y gana +5 pts", luckySpin:"Giro de Suerte 🎰", spinDesc:"Costo 2 pts", requestContent:"Solicitar Contenido", joinTelegram:"Unirse a Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Tabla de Clasificación", myList:"Mi Lista", myLikes:"Mis Me Gusta", watchHistory:"Historial", clickToTalk:"¡Haz clic para hablar! 🎤", adblockTitle:"¡AdBlock Detectado!", adblockDesc:"Por favor, desactiva tu AdBlocker.", adblockBtn:"LO HE DESACTIVADO", aiWelcome:"¡Bienvenido a Animax TV! ¿En qué puedo ayudarte?", aiError:"Lo siento, no entendí.", aiTrialOver:"¡Tu 30-Minute Free Trial ha terminado! Actualiza a VIP.", aiReqMsg:"Aún no se ha subido. Le he informado al administrador, se subirá pronto!", guideTitle: "GUÍA Y REGLAS", rule1: "🎁 Bono Diario: Reclama +2 puntos cada día.", rule2: "🎰 Giro de Suerte: Cuesta 2 puntos.", rule3: "👑 Beneficios VIP: Sin anuncios, 1080p HD y Descargas.", rule4: "✅ Tareas: Completa anuncios para ganar puntos."},
+            fr: { menu:"MENU", latest:"RÉCENT", cwTitle:"CONTINUER", trendingNow:"TENDANCES", series:"SÉRIES", movies:"FILMS", allMovies:"TOUS LES FILMS", offlineDownloads:"Téléchargements hors ligne", appLang:"Langue", langDesc:"Choisir la langue", vipStatus:"Statut VIP", referEarn:"Parrainer", inviteFriends:"Invitez des amis", luckySpin:"Tour de chance 🎰", spinDesc:"Coût 2 pts", requestContent:"Demander", joinTelegram:"Rejoindre Telegram", requestBtn:"Demander", aiVoiceCommands:"Commandes Vocales AI", leaderboard:"Classement", myList:"Ma Liste", myLikes:"Mis J'aime", watchHistory:"Historique", clickToTalk:"Cliquez pour parler! 🎤", adblockTitle:"AdBlock Détecté!", adblockDesc:"Veuillez désactiver AdBlocker.", adblockBtn:"J'AI DÉSACTIVÉ", aiWelcome:"Bienvenue sur Animax TV! Comment puis-je vous aider?", aiError:"Désolé, je n'ai pas compris.", aiTrialOver:"Votre 30-Minute Free Trial est terminé! Passez au VIP.", aiReqMsg:"Ce n'est pas encore téléchargé. J'ai informé l'administrateur !", guideTitle: "GUIDE ET RÈGLES", rule1: "🎁 Bonus Quotidien: +2 points par jour.", rule2: "🎰 Tour de chance: Coûte 2 points.", rule3: "👑 Avantages VIP: Sans pub, 1080p, Téléchargements.", rule4: "✅ Tâches: Regardez des pubs pour des points."},
+            pt: { menu:"MENU", latest:"MAIS RECENTE", cwTitle:"CONTINUAR ASSISTINDO", trendingNow:"EM ALTA", series:"SÉRIES", movies:"FILMES", allMovies:"TODOS OS FILMES", offlineDownloads:"Downloads Offline", appLang:"Idioma", langDesc:"Escolher idioma", vipStatus:"Status VIP", referEarn:"Indique e Ganhe", inviteFriends:"Convide amigos", luckySpin:"Giro da Sorte 🎰", spinDesc:"Custo 2 pts", requestContent:"Solicitar Conteúdo", joinTelegram:"Junte-se ao Telegram", requestBtn:"Solicitar", aiVoiceCommands:"Comandos de Voz AI", leaderboard:"Classificação", myList:"Minha Lista", myLikes:"Minhas Curtidas", watchHistory:"Histórico", clickToTalk:"Clique para falar! 🎤", adblockTitle:"AdBlock Detectado!", adblockDesc:"Desative o AdBlocker.", adblockBtn:"DESATIVEI", aiWelcome:"Bem-vindo à Animax TV! Como posso ajudar?", aiError:"Desculpe, não entendi.", aiTrialOver:"Seu 30-Minute Free Trial acabou! Atualize para VIP.", aiReqMsg:"Ainda não foi enviado. Eu informei o administrador!", guideTitle: "GUIA E REGRAS", rule1: "🎁 Bônus Diário: +2 pontos todo dia.", rule2: "🎰 Giro da Sorte: Custa 2 pontos.", rule3: "👑 Benefícios VIP: Sem anúncios, 1080p, Downloads.", rule4: "✅ Tarefas: Complete anúncios por pontos."},
+            ur: { menu:"مینو", latest:"تازہ ترین", cwTitle:"دیکھنا جاری رکھیں", trendingNow:"ٹرینڈنگ", series:"سیریز", movies:"فلمیں", allMovies:"تمام فلمیں", offlineDownloads:"آف لائن ڈاؤن لوڈز", appLang:"ایپ کی زبان", langDesc:"زبان منتخب کریں", vipStatus:"وی آئی پی اسٹیٹس", referEarn:"حوالہ دیں", inviteFriends:"دوستوں کو مدعو کریں", luckySpin:"لکی اسپن 🎰", spinDesc:"قیمت 2 پوائنٹس", requestContent:"درخواست کریں", joinTelegram:"ٹیلیگرام سے جڑیں", requestBtn:"درخواست", aiVoiceCommands:"وائس کمانڈز", leaderboard:"لیڈر بورڈ", myList:"میری فہرست", myLikes:"میری پسند", watchHistory:"ہسٹری", clickToTalk:"بات کرنے کے لیے کلک کریں! 🎤", adblockTitle:"ایڈ بلاک پکڑا گیا!", adblockDesc:"براہ کرم اپنا ایڈ بلاکر بند کریں۔", adblockBtn:"میں نے بند کر دیا ہے", aiWelcome:"اینی میکس ٹی وی میں خوش آمدید! میں آپ کی کیسے مدد کر سکتا ہوں؟", aiError:"معاف کیجیے گا، مجھے سمجھ نہیں آیا۔", aiTrialOver:"آپ کا 30-Minute Free Trial ختم ہو گیا ہے۔", aiReqMsg:"یہ ابھی تک اپ لوڈ نہیں ہوا ہے۔ میں نے ایڈمن کو بتا دیا ہے!", guideTitle: "رہنما اور قواعد", rule1: "🎁 ڈیلی بونس: روزانہ +2 پوائنٹس حاصل کریں۔", rule2: "🎰 لکی اسپن: گھمانے کے لیے 2 پوائنٹس لگتے ہیں۔", rule3: "👑 VIP فوائد: کوئی اشتہارات نہیں، 1080p اور ڈاؤن لوڈز۔", rule4: "✅ ٹاسکس: پوائنٹس کے لیے اشتہارات دیکھیں۔"},
+            ar: { menu:"قائمة", latest:"أحدث", cwTitle:"مواصلة المشاهدة", trendingNow:"شائع", series:"مسلسلات", movies:"أفلام", allMovies:"كل الأفلام", offlineDownloads:"التحميلات", appLang:"لغة التطبيق", langDesc:"اختر لغة", vipStatus:"حالة VIP", referEarn:"إحالة", inviteFriends:"ادعُ أصدقاءك", luckySpin:"عجلة الحظ 🎰", spinDesc:"التكلفة 2 نقاط", requestContent:"طلب محتوى", joinTelegram:"انضم لتليجرام", requestBtn:"طلب", aiVoiceCommands:"أوامر صوتية", leaderboard:"المتصدرين", myList:"قائمتي", myLikes:"إعجاباتي", watchHistory:"التاريخ", clickToTalk:"انقر للتحدث! 🎤", adblockTitle:"تم اكتشاف AdBlock!", adblockDesc:"يرجى تعطيل AdBlocker.", adblockBtn:"قمت بتعطيله", aiWelcome:"مرحبًا بك في أنيماكس تي في! كيف يمكنني مساعدتك؟", aiError:"عذرًا، لم أفهم.", aiTrialOver:"انتهت تجربة 30-Minute Free Trial! يرجى الترقية.", aiReqMsg:"لم يتم الرفع بعد. لقد أبلغت المسؤول وسيتم رفعه قريباً!", guideTitle: "الدليل والقواعد", rule1: "🎁 مكافأة يومية: احصل على +2 نقطة يوميًا.", rule2: "🎰 عجلة الحظ: التكلفة 2 نقاط.", rule3: "👑 فوائد VIP: بدون إعلانات، 1080p وتنزيلات.", rule4: "✅ المهام: شاهد الإعلانات لكسب النقاط."},
+            ko: { menu:"메뉴", latest:"최신", cwTitle:"계속 시청하기", trendingNow:"인기", series:"시리즈", movies:"영화", allMovies:"모든 영화", offlineDownloads:"오프라인 다운로드", appLang:"앱 언어", langDesc:"언어 선택", vipStatus:"VIP 상태", referEarn:"추천 및 적립", inviteFriends:"친구 초대", luckySpin:"럭키 스핀 🎰", spinDesc:"비용 2포인트", requestContent:"요청하기", joinTelegram:"텔레그램 가입", requestBtn:"요청", aiVoiceCommands:"음성 명령", leaderboard:"리더보드", myList:"내 목록", myLikes:"좋아요", watchHistory:"시청 기록", clickToTalk:"클릭해서 말하기! 🎤", adblockTitle:"광고 차단기 감지!", adblockDesc:"광고 차단기를 비활성화하세요.", adblockBtn:"비활성화했습니다", aiWelcome:"Animax TV에 오신 것을 환영합니다!", aiError:"죄송합니다. 이해하지 못했습니다.", aiTrialOver:"당신의 30-Minute Free Trial이 종료되었습니다. VIP로 업그레이드하세요.", aiReqMsg:"아직 업로드되지 않았습니다. 관리자에게 알렸습니다!", guideTitle: "가이드 및 규칙", rule1: "🎁 데일리 보너스: 매일 +2 포인트.", rule2: "🎰 럭키 스핀: 2 포인트.", rule3: "👑 VIP 혜택: 광고 없음, 1080p, 다운로드.", rule4: "✅ 임무: 광고를 보고 포인트를 획득하세요."}
         };
 
         const ttsLangMap = { en:'en-US', bn:'bn-IN', hi:'hi-IN', ja:'ja-JP', es:'es-ES', fr:'fr-FR', pt:'pt-BR', ur:'ur-PK', ar:'ar-SA', ko:'ko-KR' };
@@ -2143,21 +2143,17 @@
         // --- 🌟 FEATURE 6: ANTI AD-BLOCKER SYSTEM 🌟 ---
         let isAdblockerActive = false;
         function checkAdBlocker() {
-            // পুরানো 'adsbox' ক্লাস ব্রাউজার নিজেই লুকিয়ে দেয়, তাই false positive হতো।
-            // নতুন method: একটি fake ad script load করার চেষ্টা করি।
             let testAd = document.createElement('div');
             testAd.innerHTML = '&nbsp;';
             testAd.className = 'animax-ad-check-probe';
             testAd.style.cssText = 'position:absolute;width:1px;height:1px;left:-9999px;top:-9999px;';
             document.body.appendChild(testAd);
             window.setTimeout(function() {
-                // শুধুমাত্র সত্যিকারের adblocker থাকলে এই element লুকানো থাকবে
-                // কিন্তু সাধারণ browser tracking protection এটা লুকাবে না
                 if (testAd.offsetHeight === 0 && testAd.offsetWidth === 0) {
-                    isAdblockerActive = false; // false positive এড়াতে disable করা হলো
+                    isAdblockerActive = false; 
                 }
                 testAd.remove();
-                isAdblockerActive = false; // Adblocker check বন্ধ — false positive থেকে রক্ষা
+                isAdblockerActive = false; 
             }, 100);
         }
         checkAdBlocker();
@@ -2265,15 +2261,12 @@
             
             if (!bannerWrap) return;
 
-            // 🌟 AD FIX: Global banner is ALWAYS hidden — no banner ads on home / profile / login / downloads.
-            // Ads only run inside the player (via #ad-enforce-overlay mid-roll system).
             bannerWrap.style.display = 'none';
 
             if (isPremium || isTrialActive) {
                 if(rewardTop) rewardTop.innerHTML = "";
                 if(rewardBottom) rewardBottom.innerHTML = "";
             } else {
-                // Reward-page banner: only inject when the reward flow is actually visible
                 let rewardView = document.getElementById('reward-waiting-view');
                 let isRewardOpen = rewardView && rewardView.style.display !== '' && rewardView.style.display !== 'none';
                 if(isRewardOpen) {
@@ -2547,8 +2540,6 @@
         function injectFreeAds() {
             if(adsInjected || isPremium || isTrialActive) return;
 
-            // 🌟 AD FIX: Popunder & social bar ONLY activate when the player view is open.
-            // Home page, profile, login page and downloads remain 100% ad-free.
             let playerView = document.getElementById('player-view');
             if(!playerView || playerView.style.display !== 'block') return;
 
@@ -2604,7 +2595,7 @@
                 if(vipTimerInterval) clearInterval(vipTimerInterval);
 
                 let creationTime = currentUser.metadata ? new Date(currentUser.metadata.creationTime).getTime() : 0;
-                let vipTrialTimeLeft = (creationTime + (12 * 60 * 60 * 1000)) - actualServerTime; 
+                let vipTrialTimeLeft = (creationTime + (30 * 60 * 1000)) - actualServerTime; 
                 isTrialActive = (vipTrialTimeLeft > 0);
 
                 if(d.premiumExpiry && d.premiumExpiry > actualServerTime) { 
@@ -2641,7 +2632,7 @@
                         document.getElementById('tab-vault').style.display = 'inline-block';
                         
                         vipTimerInterval = setInterval(() => {
-                            let now = Date.now() + serverTimeOffset; let timeLeft = (creationTime + (12 * 60 * 60 * 1000)) - now;
+                            let now = Date.now() + serverTimeOffset; let timeLeft = (creationTime + (30 * 60 * 1000)) - now;
                             if(timeLeft <= 0) {
                                 clearInterval(vipTimerInterval); isTrialActive = false;
                                 document.body.classList.remove('vip-cyber-theme');
@@ -2649,8 +2640,8 @@
                                 document.getElementById('b-vip-status').innerText = "Free User"; document.getElementById('b-vip-status').style.color = "var(--text-muted)";
                                 injectFreeAds();
                             } else {
-                                let hours = Math.floor(timeLeft / (1000 * 60 * 60)); let mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                                document.getElementById('b-vip-status').innerText = `Free Trial: ${hours}h ${mins}m left`; document.getElementById('b-vip-status').style.color = "#b14bff";
+                                let hours = Math.floor(timeLeft / (1000 * 60 * 60)); let mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); let secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                                document.getElementById('b-vip-status').innerText = `Free Trial: ${mins}m ${secs}s left`; document.getElementById('b-vip-status').style.color = "#b14bff";
                             }
                         }, 1000);
                         
@@ -2678,10 +2669,10 @@
             if(creationTime === 0) return true; 
 
             let now = Date.now();
-            if (now - creationTime > 12 * 60 * 60 * 1000) {
+            if (now - creationTime > 30 * 60 * 1000) {
                 let d = langDict[currentAppLang] || langDict['en'];
                 speakLocalized(d.aiTrialOver, currentAppLang);
-                alert("🤖 AI Trial Ended!\n\nYour 12-Hour Free AI Assistant trial has expired. Please purchase VIP to continue talking to Ani.");
+                alert("🤖 AI Trial Ended!\n\nYour 30-Minute Free AI Assistant trial has expired. Please purchase VIP to continue talking to Ani.");
                 openPremiumHub();
                 return false;
             }
@@ -2839,7 +2830,6 @@
                         document.getElementById('ep-unlock-overlay').style.display = 'none';
                         if(pendingEpPlayback) pendingEpPlayback();
                         pendingEpPlayback = null;
-                        // +1 পয়েন্ট বোনাস Ad দেখার জন্য
                         if(currentUser) {
                             db.ref('users/'+currentUser.uid+'/points').transaction(function(c){ return (c||0)+1; });
                             userPoints += 1;
@@ -3536,7 +3526,16 @@
             }
 
             // --- 🚀 COMING SOON LOGIC 🚀 ---
-            if (!u || u.trim() === "") {
+            let hasAnyUrl = (u && u.trim() !== "");
+            let currentEpObj = null;
+            if(idx !== -1 && currentFolder && window.animeData[currentFolder]) { currentEpObj = window.animeData[currentFolder][idx]; }
+            
+            if(!hasAnyUrl && currentEpObj) {
+                if(currentEpObj.url_hin && currentEpObj.url_hin.trim() !== "") hasAnyUrl = true;
+                if(currentEpObj.url_eng && currentEpObj.url_eng.trim() !== "") hasAnyUrl = true;
+            }
+
+            if (!hasAnyUrl) {
                 document.getElementById('player-view').style.display = 'block';
                 document.getElementById('main-video').style.display = 'none';
                 let overlay = document.getElementById('coming-soon-overlay');
@@ -3587,6 +3586,14 @@
                 }
             }
             
+            // If primary URL is somehow empty but we passed hasAnyUrl check, grab the first available
+            if(!u || u.trim() === "") {
+                if(currentPlayingEpisodeData) {
+                    if(currentPlayingEpisodeData.url_hin) u = currentPlayingEpisodeData.url_hin;
+                    else if(currentPlayingEpisodeData.url_eng) u = currentPlayingEpisodeData.url_eng;
+                }
+            }
+
             const v = document.getElementById('main-video'); let prevTime = seekTime;
             const bufferUI = document.getElementById('vid-buffering');
             
@@ -3801,16 +3808,14 @@
         }
         
         // ════════ ENHANCED WATCH REWARD SYSTEM ════════
-        // ১০ মিনিট real watch = ১ pending point | ১০ পয়েন্ট জমলে Claim করা যাবে (৩০ সেকেন্ড Ad)
-        // Anti-scrub: seek করলে block progress রিসেট হয়
-        let WR_SECS_PER_PT = 600;   // 10 মিনিট (can be overridden by admin)
+        let WR_SECS_PER_PT = 600;  
         let _watchCoinInterval = null;
-        let _wrBlockSecs    = 0;      // current 10-min block progress
-        let _wrPendingPts   = 0;      // জমানো কিন্তু claim না হওয়া পয়েন্ট
-        let _wrLastVidTime  = -1;     // scrub detection
-        let _wrClaimActive  = false;  // claim ad চলছে কিনা
-        let _wrClaimStart   = 0;      // claim শুরু timestamp
-        let _wrClaimTimer   = null;   // countdown interval
+        let _wrBlockSecs    = 0;      
+        let _wrPendingPts   = 0;     
+        let _wrLastVidTime  = -1;    
+        let _wrClaimActive  = false; 
+        let _wrClaimStart   = 0;      
+        let _wrClaimTimer   = null;   
 
         function startWatchTimeCoin(videoId) {
             stopWatchTimeCoin();
@@ -3826,11 +3831,9 @@
 
                 const cur = v.currentTime;
 
-                // ── Scrub / seek detection ──────────────────────────
                 if(_wrLastVidTime >= 0) {
                     const delta = cur - _wrLastVidTime;
                     if(delta < 0 || delta > 2.5) {
-                        // seek বা skip detected → block progress ৩০ সেকেন্ড কমাও
                         _wrBlockSecs   = Math.max(0, _wrBlockSecs - 30);
                         _wrLastVidTime = cur;
                         _updateWrWidget();
@@ -3859,7 +3862,6 @@
             _hideWrWidget();
         }
 
-        // ── Widget show/hide ──────────────────────────────────────
         function _showWrWidget() {
             const el = document.getElementById('wr-widget');
             if(el) { el.style.display = 'flex'; _updateWrWidget(); }
@@ -3869,7 +3871,6 @@
             if(el) el.style.display = 'none';
         }
 
-        // ── Update the circular widget ────────────────────────────
         let _wrPulseShown = false;
         function _updateWrWidget() {
             const progress = _wrBlockSecs / WR_SECS_PER_PT;
@@ -3904,11 +3905,9 @@
             _wrPulseTimeout = setTimeout(function(){ _wrPulseShown = false; }, 15000);
         }
 
-        // ── Claim modal open/close ────────────────────────────────
         function openWatchRewardClaim() {
             if(!currentUser) return alert('পয়েন্ট Claim করতে Login করুন!');
             if(_wrPendingPts < 10) return alert('কমপক্ষে ১০ পয়েন্ট জমতে হবে Claim করতে।');
-            // modal-এ pts count আপডেট
             const ptsCountEl = document.getElementById('wr-modal-pts-count');
             if(ptsCountEl) ptsCountEl.textContent = _wrPendingPts;
             document.getElementById('wr-claim-modal').style.display = 'flex';
@@ -3933,7 +3932,6 @@
             if(secEl)    secEl.textContent = '30';
         }
 
-        // ── Start the 30s claim ad ────────────────────────────────
         function startWrClaimAd() {
             if(_wrClaimActive) return;
             window.open(typeof AD_SMARTLINK !== 'undefined' ? AD_SMARTLINK : '#', '_blank');
@@ -3963,18 +3961,14 @@
             }, 1000);
         }
 
-        // ── Tab/focus return verification ─────────────────────────
-        // (also called from checkAllAdVerifications)
         function _checkWrClaimReturn() {
             if(!_wrClaimActive) return;
             const elapsed = Date.now() - _wrClaimStart;
-            if(elapsed < 500) return;   // too quick, ignore
+            if(elapsed < 500) return;   
             if(elapsed >= 29500) {
-                // ৩০ সেকেন্ড পার হয়েছে → claim success
                 if(_wrClaimTimer){ clearInterval(_wrClaimTimer); _wrClaimTimer = null; }
                 _executeWrClaim();
             } else {
-                // তাড়াতাড়ি ফিরে এসেছে → fail
                 _wrClaimActive = false;
                 if(_wrClaimTimer){ clearInterval(_wrClaimTimer); _wrClaimTimer = null; }
                 alert('❌ Claim Failed!\n\nAd পেজে পুরো ৩০ সেকেন্ড থাকতে হবে। আবার চেষ্টা করুন।');
@@ -4379,7 +4373,6 @@
             
             utter.lang = targetCode;
             
-            // 🌟 STRICT AI VOICE SETTINGS 🌟
             utter.rate = 0.9; 
             utter.pitch = 1.5; 
             
@@ -4421,7 +4414,6 @@
             
             let isLang = (lang) => currentAppLang === lang;
 
-            // 🌟 CHECK DYNAMIC AI COMMANDS FIRST
             for(let i=0; i<customAICommands.length; i++) {
                 let cmd = customAICommands[i];
                 let triggers = cmd.triggers.split(',').map(tr => tr.trim().toLowerCase());
@@ -4441,7 +4433,6 @@
             let playMatch = t.match(/(?:play|watch|start|open|চালাও|দেখাও|প্লে|प्ले|चलाओ|लगाओ|reproducir)\s+(.+)/);
             let searchMatch = t.match(/(?:search|find|look for|খুঁজো|খুঁজে দাও|সার্চ|खोजो|ढूंढो|buscar)\s+(.+)/);
             
-            // 🌟 AI Memory Extraction
             let nameMatch = t.match(/(?:my name is|i am|call me|আমার নাম|मेरा नाम)\s+([a-zA-Z\s]+)/i);
 
             if (nameMatch && !t.includes("what")) {
@@ -4697,7 +4688,7 @@
         }
 
         function generateAndSendOTP() {
-            currentOTP = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit OTP
+            currentOTP = Math.floor(100000 + Math.random() * 900000).toString(); 
             isOtpValid = true;
             sendOTPToTelegram(currentOTP);
             
@@ -4728,7 +4719,7 @@
             resendBtn.style.display = 'block';
             resendBtn.disabled = true;
             
-            let waitTime = 120; // 2 minutes
+            let waitTime = 120; 
             clearInterval(resendTimer);
             resendTimer = setInterval(() => {
                 waitTime--;
@@ -4835,7 +4826,6 @@
             var targetEl = document.getElementById('admin-' + tab) || document.getElementById(tab);
             if(targetEl) targetEl.style.display = 'block';
             panel.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
-            // Mark the clicked nav button as active
             try {
                 if(clickedEl) { clickedEl.classList.add('active'); }
                 else if(window.event && window.event.currentTarget) { window.event.currentTarget.classList.add('active'); }
@@ -4968,7 +4958,7 @@
             const url_hin = document.getElementById('an-url-hin').value; const url_eng = document.getElementById('an-url-eng').value;
             const type = document.getElementById('an-type').value; const key = document.getElementById('an-key').value;
             
-            if(!folder || !title) return alert("Fill required fields!"); // Note: URL can be empty now for 'Coming Soon'
+            if(!folder || !title) return alert("Fill required fields!");
 
             if (key) {
                 db.ref('anime/' + key).update({ category, folder, title, thumbnail: thumb, url, url_hin, url_eng, type });
@@ -4988,6 +4978,7 @@
             document.getElementById('an-type').value = type;
             const btn = document.getElementById('an-btn'); btn.innerText = "UPDATE CHANGES"; btn.classList.add('updating');
             document.getElementById('an-head').innerText = "EDITING MODE"; document.getElementById('an-cancel').style.display = 'block'; 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function uploadMovie() {
@@ -5007,6 +4998,7 @@
             const catArray = (categoryStr || 'movie').split(','); document.querySelectorAll('.mv-cat-chk').forEach(cb => { cb.checked = catArray.includes(cb.value); });
             const btn = document.getElementById('mv-btn'); btn.innerText = "UPDATE MOVIE"; btn.classList.add('updating');
             document.getElementById('mv-head').innerText = "EDITING MOVIE"; document.getElementById('mv-cancel').style.display = 'block'; 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function uploadCartoon() {
@@ -5026,6 +5018,7 @@
             const catArray = (categoryStr || 'cartoon').split(','); document.querySelectorAll('.ct-cat-chk').forEach(cb => { cb.checked = catArray.includes(cb.value); });
             const btn = document.getElementById('ct-btn'); btn.innerText = "UPDATE CARTOON"; btn.classList.add('updating');
             document.getElementById('ct-head').innerText = "EDITING CARTOON"; document.getElementById('ct-cancel').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cancelEdit(type) {
@@ -5070,6 +5063,7 @@
             document.getElementById('bn-key').value = key; document.getElementById('bn-img').value = img; document.getElementById('bn-folder').value = folderName; 
             const btn = document.getElementById('bn-btn'); btn.innerText = "UPDATE BANNER"; btn.classList.add('updating'); 
             document.getElementById('bn-head').innerHTML = '<i class="fas fa-edit"></i> EDIT BANNER'; document.getElementById('bn-cancel').style.display = 'block'; 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function uploadMovieBanner() { 
@@ -5124,12 +5118,22 @@
                 for(const f in folders) {
                     const safeId = f.replace(/[^a-zA-Z0-9]/g, '_');
                     const isFolderVIP = (folders[f][0].v.type === 'premium'); 
-                    const vipBtn = isFolderVIP ? `<button style="background:var(--cyan); color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/'/g, "\\'")}', false)">SET FREE</button>` : `<button style="background:#ffb703; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/'/g, "\\'")}', true)">SET VIP</button>`;
+                    const vipBtn = isFolderVIP ? `<button style="background:var(--cyan); color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/"/g, '&quot;').replace(/'/g, "\\'")}', false)">SET FREE</button>` : `<button style="background:#ffb703; color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:9px; font-weight:bold; cursor:pointer;" onclick="event.stopPropagation(); toggleFolderVIP('${f.replace(/"/g, '&quot;').replace(/'/g, "\\'")}', true)">SET VIP</button>`;
                     
                     let html = `<div class="folder-header" onclick="toggleAdminFolder('${safeId}')"><div class="folder-header-title"><i class="fas fa-folder-open" style="color:var(--gold); font-size:18px;"></i> <span>${f}</span></div><div class="folder-header-meta">${vipBtn} ${folders[f].length} EP <i id="admin-icon-${safeId}" class="fas fa-chevron-down" style="font-size:10px; margin-left:3px;"></i></div></div><div id="admin-folder-${safeId}" class="folder-content"><div class="data-list">`;
                     folders[f].forEach(item => {
-                        const d = item.v; const safeFolder = (d.folder || "").replace(/'/g, "\\'"); const safeTitle = (d.title || "").replace(/'/g, "\\'"); const safeThumb = (d.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (d.url || "").replace(/'/g, "\\'"); const safeUrlHin = (d.url_hin || "").replace(/'/g, "\\'"); const safeUrlEng = (d.url_eng || "").replace(/'/g, "\\'"); const safeCat = (d.category || "anime").replace(/'/g, "\\'");
-                        const vipLabel = d.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = d.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${d.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                        const d = item.v; 
+                        const safeFolder = (d.folder || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeTitle = (d.title || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeThumb = (d.thumbnail || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeUrl = (d.url || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeUrlHin = (d.url_hin || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeUrlEng = (d.url_eng || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                        const safeCat = (d.category || "anime").replace(/"/g, '&quot;').replace(/'/g, "\\'");
+                        const vipLabel = d.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; 
+                        const uploaderTag = d.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${d.uploadedBy.split('@')[0]}</div>` : ''; 
+                        const isTrending = safeCat.includes('trending'); 
+                        const starColor = isTrending ? 'var(--gold)' : '#555';
                         html += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('anime', '${item.k}', '${safeCat}')"></i><img src="${d.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge">${(d.category || 'anime').toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title">${d.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editAnime('${item.k}', '${safeFolder}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${d.type || 'free'}', '${safeUrlHin}', '${safeUrlEng}', '${safeCat}')">EDIT</button><button class="del-btn" onclick="deleteItem('anime','${item.k}')">DEL</button></div></div></div>`;
                     }); html += `</div></div>`; c.innerHTML += html;
                 }
@@ -5138,8 +5142,15 @@
             db.ref('movies').on('value', s => {
                 const c = document.getElementById('admin-movie-list'); c.innerHTML = ""; 
                 s.forEach(d => { 
-                    const val = d.val(); const safeTitle = (val.title || "").replace(/'/g, "\\'"); const safeThumb = (val.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (val.url || "").replace(/'/g, "\\'"); const safeCat = (val.category || "movie").replace(/'/g, "\\'");
-                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                    const val = d.val(); 
+                    const safeTitle = (val.title || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeThumb = (val.thumbnail || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeUrl = (val.url || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeCat = (val.category || "movie").replace(/"/g, '&quot;').replace(/'/g, "\\'");
+                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; 
+                    const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; 
+                    const isTrending = safeCat.includes('trending'); 
+                    const starColor = isTrending ? 'var(--gold)' : '#555';
                     c.innerHTML += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('movies', '${d.key}', '${safeCat}')"></i><img src="${val.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge">${safeCat.toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title">${val.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editMovie('${d.key}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${val.type || 'free'}', '${safeCat}')">EDIT</button><button class="del-btn" onclick="deleteItem('movies','${d.key}')">DEL</button></div></div></div>`;
                 });
             });
@@ -5147,8 +5158,15 @@
             db.ref('cartoons').on('value', s => {
                 const c = document.getElementById('admin-cartoon-list'); c.innerHTML = ""; 
                 s.forEach(d => { 
-                    const val = d.val(); const safeTitle = (val.title || "").replace(/'/g, "\\'"); const safeThumb = (val.thumbnail || "").replace(/'/g, "\\'"); const safeUrl = (val.url || "").replace(/'/g, "\\'"); const safeCat = (val.category || "cartoon").replace(/'/g, "\\'");
-                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; const isTrending = safeCat.includes('trending'); const starColor = isTrending ? 'var(--gold)' : '#555';
+                    const val = d.val(); 
+                    const safeTitle = (val.title || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeThumb = (val.thumbnail || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeUrl = (val.url || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); 
+                    const safeCat = (val.category || "cartoon").replace(/"/g, '&quot;').replace(/'/g, "\\'");
+                    const vipLabel = val.type === 'premium' ? '<span class="vip-badge-small">VIP</span>' : ''; 
+                    const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; 
+                    const isTrending = safeCat.includes('trending'); 
+                    const starColor = isTrending ? 'var(--gold)' : '#555';
                     c.innerHTML += `<div class="data-card"><i class="fas fa-star star-btn" style="color:${starColor};" onclick="toggleTrending('cartoons', '${d.key}', '${safeCat}')"></i><img src="${val.thumbnail || ''}">${vipLabel}<div class="data-info"><div class="data-badge" style="color:var(--cyan);">${safeCat.toUpperCase().replace(/,/g, ' & ')}</div><div class="data-title" style="color:var(--cyan)">${val.title || 'Untitled'}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editCartoon('${d.key}', '${safeTitle}', '${safeThumb}', '${safeUrl}', '${val.type || 'free'}', '${safeCat}')" style="border-color:var(--cyan); color:var(--cyan)">EDIT</button><button class="del-btn" onclick="deleteItem('cartoons','${d.key}')">DEL</button></div></div></div>`;
                 });
             });
@@ -5160,7 +5178,7 @@
             
             db.ref('banners').on('value', s => { 
                 const c = document.getElementById('admin-banner-list'); c.innerHTML=""; 
-                s.forEach(d => { const val = d.val(); const safeImg = (val.image || "").replace(/'/g, "\\'"); const safeFolder = (val.folderName || "").replace(/'/g, "\\'"); const linkedFolder = val.folderName ? `<span style="color:var(--gold)">Link: ${val.folderName}</span>` : `<span style="color:#666">No Link</span>`; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title">Home Banner<br>${linkedFolder}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editBanner('${d.key}', '${safeImg}', '${safeFolder}')">EDIT</button><button class="del-btn" onclick="deleteItem('banners','${d.key}')">DEL</button></div></div></div>`; }); 
+                s.forEach(d => { const val = d.val(); const safeImg = (val.image || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const safeFolder = (val.folderName || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const linkedFolder = val.folderName ? `<span style="color:var(--gold)">Link: ${val.folderName}</span>` : `<span style="color:#666">No Link</span>`; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title">Home Banner<br>${linkedFolder}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editBanner('${d.key}', '${safeImg}', '${safeFolder}')">EDIT</button><button class="del-btn" onclick="deleteItem('banners','${d.key}')">DEL</button></div></div></div>`; }); 
             });
             
             db.ref('movie_banners').on('value', s => { 
@@ -5443,18 +5461,17 @@
         }
 
         function autoFillURL(safeId, slug) {
-            // Try to auto-generate a gogoanime embed URL
             var input = document.getElementById('url_' + safeId);
             var epTitle = document.getElementById('eptitle_' + safeId);
             var epMatch = epTitle ? epTitle.value.match(/[Ee]pisode\s*(\d+)/) : null;
             var epNum = epMatch ? epMatch[1] : '1';
 
-            // Generate gogoanime embed URL
             var embedUrl = 'https://gogoanime3.co/videos/' + slug + '-episode-' + epNum;
             input.value = embedUrl;
             input.style.borderColor = '#b14bff';
             setTimeout(function(){ input.style.borderColor = '#333'; }, 1500);
         }
+        
         function addFetchedContent(safeId, thumb) {
             if(!window.isMasterAdminLoggedIn) return;
             var url = document.getElementById('url_' + safeId) ? document.getElementById('url_' + safeId).value.trim() : '';
@@ -5465,7 +5482,6 @@
             if(!folder) return alert('❌ Folder name দাও!');
             if(!epTitle) return alert('❌ Episode title দাও!');
 
-            // Warn if no URL, but allow "coming soon" mode
             if(!url) {
                 var proceed = confirm('⚠️ Video URL দাওনি! URL ছাড়া add করলে users "Coming Soon" দেখবে।\nতারপরও add করবে?');
                 if(!proceed) return;
@@ -5485,10 +5501,8 @@
             }).then(function() {
                 var status = url ? '✅ "' + epTitle + '" সফলভাবে add হয়েছে!' : '✅ "' + epTitle + '" add হয়েছে (URL নেই — Coming Soon দেখাবে)।';
                 alert(status);
-                // Remove just this card
                 var card = document.getElementById('url_' + safeId);
                 if(card && card.closest('div[style]')) {
-                    // Go up to the outermost card div
                     var el = card;
                     for(var i = 0; i < 6; i++) { if(el.parentElement) el = el.parentElement; }
                     if(el && el.parentElement && el.parentElement.id === 'fetch-results') {
@@ -5888,8 +5902,6 @@
                 }, { passive: false });
             }
         }
-        // Attach on DOM ready and again when the player opens (openFolder / playVideo call attachDtTouchSeek is not needed —
-        // the elements are already in the DOM; we just bind once after DOMContentLoaded)
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', attachDtTouchSeek);
         } else {
@@ -5946,15 +5958,14 @@
         if(milestones[n] && currentUser) {
             var bonus = milestones[n];
             db.ref('users/'+currentUser.uid+'/streak_milestones/'+n).once('value', function(snap){
-                if(snap.val()) return; // ইতিমধ্যে পেয়েছে
+                if(snap.val()) return; 
                 db.ref('users/'+currentUser.uid+'/streak_milestones/'+n).set(true);
                 db.ref('users/'+currentUser.uid+'/points').transaction(function(c){ return (c||0)+bonus; });
                 userPoints += bonus;
                 var el = document.getElementById('task-coin-balance');
                 if(el) el.innerText = userPoints;
-                // ৭ দিনে VIP trial
                 if(n === 7) {
-                    var exp = Date.now() + (24*60*60*1000); // ১ দিন ফ্রি VIP
+                    var exp = Date.now() + (24*60*60*1000); 
                     db.ref('users/'+currentUser.uid+'/premiumExpiry').once('value', function(s){
                         var cur = s.val()||0;
                         var base = cur > Date.now() ? cur : Date.now();
@@ -6033,7 +6044,6 @@
             showDlToast('🔗 লিংক কপি হয়েছে!', false); closeShareModal();
         });
     }
-    // Deep-link handler
     window.addEventListener('DOMContentLoaded', function(){
         var p=new URLSearchParams(window.location.search);
         var pid=p.get('play'), seekT=parseInt(p.get('t')||'0');
@@ -6067,7 +6077,6 @@
         {q:"Hunter x Hunter-এ Gon কোন ধরনের Nen ব্যবহার করে?",opts:["Transmutation","Enhancement","Emission","Conjuration"],a:1},
         {q:"Tokyo Ghoul-এর main character?",opts:["Ken Kaneki","Touka","Hide","Juuzou"],a:0},
         {q:"Bleach-এ Ichigo মূলত কী?",opts:["Pure Shinigami","Pure Hollow","Half Shinigami/Hollow","Quincy"],a:2},
-        /* ══ নতুন প্রশ্ন ══ */
         {q:"One Punch Man-এর Saitama কত ঘুষিতে শত্রু হারায়?",opts:["দুই ঘুষিতে","তিন ঘুষিতে","এক ঘুষিতে","কোনোটাই নয়"],a:2},
         {q:"Re:Zero-এর main character-এর special power কী?",opts:["Time travel","Death Reset","Teleport","Healing"],a:1},
         {q:"Jujutsu Kaisen-এ Gojo Satoru-এর কোন technique সবচেয়ে বিখ্যাত?",opts:["Domain Expansion","Hollow Purple","Infinity","Black Flash"],a:2},
@@ -6125,7 +6134,6 @@
         }
     }
     function closeQuiz(){ var m=document.getElementById('quiz-modal'); m.classList.remove('qopen'); m.style.display='none'; }
-    // Trigger quiz when video ends
     document.addEventListener('DOMContentLoaded', function(){
         var v=document.getElementById('main-video');
         if(v) v.addEventListener('ended', function(){
@@ -6205,7 +6213,6 @@
         var lpSavedAction = null;
         var LP_MS = 520;
 
-        /* ── Show modal ─────────────────────────────────────────── */
         function lpShow(card) {
             var thumb  = (card.querySelector('.img-wrapper img') || {}).src || '';
             var title  = (card.querySelector('.folder-title')   || {}).innerText || '';
@@ -6230,7 +6237,6 @@
             if (navigator.vibrate) navigator.vibrate(40);
         }
 
-        /* ── Close modal ────────────────────────────────────────── */
         window.lpClose = function () {
             var ov = document.getElementById('lp-overlay');
             ov.classList.remove('lp-open');
@@ -6238,19 +6244,16 @@
             lpSavedAction = null;
         };
 
-        /* ── Watch Now ──────────────────────────────────────────── */
         window.lpWatchNow = function () {
             var action = lpSavedAction;
             window.lpClose();
             if (action) { try { eval(action); } catch(e) {} }
         };
 
-        /* ── Tap outside card to close ──────────────────────────── */
         document.getElementById('lp-overlay').addEventListener('click', function (e) {
             if (e.target === this) window.lpClose();
         });
 
-        /* ── Long-press detection (touch) ───────────────────────── */
         document.addEventListener('touchstart', function (e) {
             var card = e.target.closest('.folder-card');
             if (!card) return;
@@ -6270,7 +6273,6 @@
             if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
         }, { passive: true });
 
-        /* Suppress the click that fires after a long-press touchend */
         document.addEventListener('click', function (e) {
             if (lpTriggered) {
                 e.stopPropagation();
@@ -6498,7 +6500,7 @@
             items.forEach(d => {
                 let isPending = d.status === 'pending';
                 let date = new Date(d.timestamp).toLocaleString('bn-BD');
-                list.innerHTML += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:12px;border-left:4px solid '+(isPending?'#ffb703':'#00e676')+';"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;"><div><span style="color:#fff;font-weight:700;font-size:14px;">🎁 '+(d.fromName||'?')+' → '+(d.toName||'?')+'</span><div style="color:#888;font-size:11px;margin-top:2px;">'+date+'</div></div><span style="background:'+(isPending?'rgba(255,183,3,0.15)':'rgba(0,230,118,0.15)')+';color:'+(isPending?'#ffb703':'#00e676')+';font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;">'+(isPending?'PENDING':'APPROVED')+'</span></div><div style="color:#D4AF37;font-family:Orbitron;font-size:12px;margin-bottom:8px;">'+d.days+' দিন VIP • '+d.price+' TK</div><div style="background:#050505;border:1px solid #333;padding:8px;border-radius:6px;color:#00f5d4;font-family:monospace;font-size:13px;margin-bottom:10px;">TxnID: <strong>'+d.txnId+'</strong></div>'+(isPending?'<div style="display:flex;gap:8px;"><button onclick="approveGiftRequest(''+d.key+'',''+d.toUid+'','+d.days+',''+d.fromUid+'')" style="flex:1;background:#00e676;color:#000;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">✅ অনুমোদন</button><button onclick="rejectGiftRequest(''+d.key+'')" style="flex:1;background:#ff3b3b;color:#fff;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">❌ বাতিল</button></div>':'<div style="color:#888;font-size:11px;">✅ অনুমোদিত</div>')+'</div>';
+                list.innerHTML += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:12px;border-left:4px solid '+(isPending?'#ffb703':'#00e676')+';"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;"><div><span style="color:#fff;font-weight:700;font-size:14px;">🎁 '+(d.fromName||'?')+' → '+(d.toName||'?')+'</span><div style="color:#888;font-size:11px;margin-top:2px;">'+date+'</div></div><span style="background:'+(isPending?'rgba(255,183,3,0.15)':'rgba(0,230,118,0.15)')+';color:'+(isPending?'#ffb703':'#00e676')+';font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;">'+(isPending?'PENDING':'APPROVED')+'</span></div><div style="color:#D4AF37;font-family:Orbitron;font-size:12px;margin-bottom:8px;">'+d.days+' দিন VIP • '+d.price+' TK</div><div style="background:#050505;border:1px solid #333;padding:8px;border-radius:6px;color:#00f5d4;font-family:monospace;font-size:13px;margin-bottom:10px;">TxnID: <strong>'+d.txnId+'</strong></div>'+(isPending?'<div style="display:flex;gap:8px;"><button onclick="approveGiftRequest(\''+d.key+'\',\''+d.toUid+'\','+d.days+',\''+d.fromUid+'\')" style="flex:1;background:#00e676;color:#000;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">✅ অনুমোদন</button><button onclick="rejectGiftRequest(\''+d.key+'\')" style="flex:1;background:#ff3b3b;color:#fff;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">❌ বাতিল</button></div>':'<div style="color:#888;font-size:11px;">✅ অনুমোদিত</div>')+'</div>';
             });
         });
     }
@@ -6574,7 +6576,7 @@
     window.showAdminTab = function(section, btn) {
         document.querySelectorAll('#master-admin-panel .section-view').forEach(s => s.style.display='none');
         document.querySelectorAll('#master-admin-panel .nav-btn').forEach(b => b.classList.remove('active'));
-        let el = document.getElementById('admin-sec-'+section);
+        let el = document.getElementById('admin-sec-'+section) || document.getElementById('admin-'+section) || document.getElementById(section);
         if(el) el.style.display='block';
         if(btn) btn.classList.add('active');
         if(section==='gifts') loadGiftRequests();
@@ -6585,7 +6587,7 @@
                 db.ref('premium_codes').limitToLast(50).once('value', s => {
                     let list=document.getElementById('admin-code-list'); if(!list) return; list.innerHTML='';
                     let codes=[]; s.forEach(c=>codes.unshift({key:c.key,val:c.val()}));
-                    codes.forEach(c=>{let d=c.val||{};let isU=d.status==='unused';let sc=isU?'unused':'used';let st=isU?'ACTIVE':'USED';let bc=isU?'st-active':'st-used';let ic=isU?'fa-check-circle':'fa-times-circle';let ub=d.usedBy?'<div style="font-size:10px;color:#ff3b3b;">User: '+d.usedBy+'</div>':'';list.innerHTML+='<div class="code-card '+sc+'" onclick="copyToClipboard(''+c.key+'')" title="Click to Copy"><div><div class="code-status '+bc+'">'+st+'</div><div class="code-text"><i class="fas '+ic+'"></i> '+c.key+'</div><div class="code-days">'+(d.days||0)+' Days Validity</div>'+ub+'</div><div style="text-align:right;"><button class="del-btn" style="padding:5px 15px;" onclick="deleteCode(event,''+c.key+'')">DELETE</button></div></div>';});
+                    codes.forEach(c=>{let d=c.val||{};let isU=d.status==='unused';let sc=isU?'unused':'used';let st=isU?'ACTIVE':'USED';let bc=isU?'st-active':'st-used';let ic=isU?'fa-check-circle':'fa-times-circle';let ub=d.usedBy?'<div style="font-size:10px;color:#ff3b3b;">User: '+d.usedBy+'</div>':'';list.innerHTML+='<div class="code-card '+sc+'" onclick="copyToClipboard(\''+c.key+'\')" title="Click to Copy"><div><div class="code-status '+bc+'">'+st+'</div><div class="code-text"><i class="fas '+ic+'"></i> '+c.key+'</div><div class="code-days">'+(d.days||0)+' Days Validity</div>'+ub+'</div><div style="text-align:right;"><button class="del-btn" style="padding:5px 15px;" onclick="deleteCode(event,\''+c.key+'\')">DELETE</button></div></div>';});
                 });
             }
         }
