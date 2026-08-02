@@ -6730,6 +6730,113 @@
             }
         }
 
+        // --- MASTER MODE & NAVIGATION COMMANDS (RESTORED) ---
+        if ((tl.includes(typeof ADMIN_TRIGGER !== 'undefined' ? ADMIN_TRIGGER : 'master mode') || tl.match(/(মাস্টার মোড অ্যাক্টিভেট|master mode activate|মাস্টার মুড|master mode)/)) && !tl.includes("back")) {
+            reply = lang==='bn' ? "মাস্টার মোড সিকোয়েন্স শুরু হচ্ছে। পিন দিন।" : "Master Mode sequence initiated. Awaiting verification, Boss.";
+            action = () => initiateMasterModeAuth();
+            return {reply, action};
+        }
+        if (tl.match(/(master mode back|মাস্টার মোড ব্যাক|exit master mode|close master mode)/)) {
+            reply = lang==='bn' ? "মাস্টার মোড বন্ধ করছি বস।" : "Closing master mode. We cool.";
+            action = () => closeMasterMode();
+            return {reply, action};
+        }
+        if (tl.match(/(home|main menu|হোম|মেইন মেনু|होम पेज)/)) {
+            reply = lang==='bn' ? "হোম পেজে যাচ্ছি।" : "Teleporting to the home page right now.";
+            action = () => switchTab('home');
+            return {reply, action};
+        }
+        if (tl.match(/(profile|account|my account|প্রোফাইল|একাউন্ট|আমার একাউন্ট|प्रोफाइल)/)) {
+            reply = lang==='bn' ? "আপনার প্রোফাইল খুলছি বস।" : "Opening your profile flex.";
+            action = () => switchTab('profile');
+            return {reply, action};
+        }
+        if (tl.match(/(download|offline|ডাউনলোড|অফলাইন|डाउनलोड)/)) {
+            reply = lang==='bn' ? "ডাউনলোড পেজ খুলছি।" : "Opening your offline stash. Let's see what you got.";
+            action = () => switchTab('downloads');
+            return {reply, action};
+        }
+        if (tl.match(/(spin|wheel|lucky|চাকা ঘুরাও|স্পিন|स्पिन|पहिया)/)) {
+            reply = lang==='bn' ? "লাকি স্পিন খুলছি! শুভকামনা।" : "Opening lucky spin. Don't go broke now, buddy!";
+            action = () => openSpinWheel();
+            return {reply, action};
+        }
+        if (tl.match(/(leaderboard|rank|top|র‍্যাংক|লিডারবোর্ড|র‍্যাংকিং|रैंक|लीडरबोर्ड)/)) {
+            reply = lang==='bn' ? "লিডারবোর্ড দেখাচ্ছি।" : "Pulling up the sweatiest users on the leaderboard.";
+            action = () => openLeaderboard();
+            return {reply, action};
+        }
+        if (tl.match(/(history|recent|হিস্ট্রি|ইতিহাস|इतिहास)/)) {
+            reply = lang==='bn' ? "আপনার হিস্ট্রি খুলছি।" : "Opening your watch history. No judging here, promise.";
+            action = () => { if(typeof currentUser!=='undefined' && currentUser) openHistory(); else alert("Login required!"); };
+            return {reply, action};
+        }
+        if (tl.match(/(vault|secret|সিক্রেট|ভল্ট|गुप्त)/)) {
+            reply = lang==='bn' ? "সিক্রেট ভল্ট খুলছি।" : "Opening the secret vault. Keep it lowkey, alright?";
+            action = () => { filterHomeCategory('vault', document.getElementById('tab-vault')); switchTab('home'); };
+            return {reply, action};
+        }
+
+        // --- PLAYER CONTROLS (RESTORED) ---
+        if (tl.match(/(pause|stop|wait|থামাও|বন্ধ করো|পজ|रोको|पॉज|ठहरो)/) && !tl.match(/video/)) {
+            let v = document.getElementById('main-video');
+            if(v && !v.paused) { v.pause(); reply = lang==='bn' ? "ভিডিও থামালাম বন্ধু। যাও, পপকর্ন নিয়ে এসো।" : "Paused it. Go grab your snacks, I'll wait right here."; }
+            else { reply = lang==='bn' ? "ভিডিও তো আগে থেকেই বন্ধ ভাই।" : "Bruh, it's already paused. Chill."; }
+            return {reply, action};
+        } 
+        if (tl.match(/(play video|resume|চালু করো|আবার চালাও|शुरू करो|continuar)/)) {
+            let v = document.getElementById('main-video');
+            if(v && v.paused) { v.play(); reply = lang==='bn' ? "আবার চালু করলাম।" : "Resuming! Let's get back to the action."; }
+            else { reply = "It's already playing, bro! Keep your eyes on the screen."; }
+            return {reply, action};
+        }
+        if (tl.match(/(mute|sound off|মিউট|শব্দ বন্ধ|म्यूट|आवाज बंद)/)) {
+            let v = document.getElementById('main-video');
+            if(v) { v.muted = true; reply = lang==='bn' ? "মিউট করা হয়েছে।" : "Muted. Enjoy the silent treatment."; }
+            return {reply, action};
+        }
+        if (tl.match(/(unmute|sound on|আনমিউট|শব্দ চালু|अनम्यूट|आवाज चालू)/)) {
+            let v = document.getElementById('main-video');
+            if(v) { v.muted = false; reply = lang==='bn' ? "আনমিউট করা হয়েছে।" : "Unmuted. Let the hype resume."; }
+            return {reply, action};
+        }
+        if (tl.match(/(fullscreen|full screen|বড় করো|ফুলস্ক্রিন|बड़ा करो|फुलस्क्रीन)/)) {
+            let v = document.getElementById('main-video');
+            if(v) {
+                if (v.requestFullscreen) v.requestFullscreen();
+                else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+                reply = lang==='bn' ? "ফুলস্ক্রিন করছি।" : "Going full screen. Max immersion mode on!";
+            }
+            return {reply, action};
+        }
+        if (tl.match(/(skip|forward|next|সামনে যাও|১০ সেকেন্ড সামনে|স্কিপ|आगे बढ़ाओ|स्किप)/)) {
+            reply = lang==='bn' ? "একটু সামনে এগোচ্ছি।" : "Skipping the boring parts. Done.";
+            action = () => skipTime(10);
+            return {reply, action};
+        }
+        if (tl.match(/(rewind|backward|back|পিছনে যাও|১০ সেকেন্ড পিছনে|पीछे करो)/)) {
+            reply = lang==='bn' ? "একটু পিছনে যাচ্ছি।" : "Rewinding. Guess you missed that plot twist, huh?";
+            action = () => skipTime(-10);
+            return {reply, action};
+        }
+        if (tl.match(/(close video|stop video|back to home|ভিডিও কাটো|ভিডিও বন্ধ করো|वीडियो बंद करो)/)) {
+            reply = lang==='bn' ? "ভিডিও বন্ধ করে দিলাম।" : "Killing the video. Going back.";
+            action = () => closePlayer();
+            return {reply, action};
+        }
+        if (tl.match(/(dance|নাচো|ড্যান্স|নাচতে পারো|नाचो|ড্যান্স করো)/)) {
+            reply = lang==='bn' ? "চলুন একটু নেচে নিই!" : "Hold my logic gates, let me show you some epic moves!";
+            action = () => executeDanceRoutine();
+            return {reply, action};
+        }
+        if (tl.match(/(joke|funny|মজা|জোকস|কৌতুক|চুটকি|चुटकुला|मजाक)/)) {
+            let jokesEn =["Why did the anime fan cross the road? To get to the next episode, obviously!", "I would tell you an anime joke, but honestly, it's just filler."];
+            let jokesBn =["অ্যানিমে ফ্যানরা কেন রাস্তা পার হয়? কারণ ওই পারে নতুন এপিসোড আছে!", "আমি একটা জোকস বলতাম, কিন্তু ওটা ফিলার এপিসোডের মতো বোরিং!"];
+            reply = lang==='bn' ? jokesBn[Math.floor(Math.random()*jokesBn.length)] : jokesEn[Math.floor(Math.random()*jokesEn.length)];
+            action = () => executeDanceRoutine();
+            return {reply, action};
+        }
+
         // 2. Name memory
         let nameMatch = t.match(/(?:my name is|i am|call me|আমার নাম|মেরা নাম)\s+([\u0980-\u09FFa-zA-Z]+)/i);
         if(nameMatch && !tl.includes('what') && !tl.includes('কি') && !tl.includes('কী')) {
