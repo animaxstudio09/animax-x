@@ -360,6 +360,11 @@
         #player-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--primary-bg); z-index: 5000; overflow-y: auto; padding-bottom: 50px;}
         .video-wrapper { position: sticky; top: 0; z-index: 5001; background: #000; width: 100%; aspect-ratio: 16/9; box-shadow: 0 10px 30px rgba(0,0,0,0.8);}
         video { width: 100%; height: 100%; object-fit: contain; }
+        /* Keep the media element mounted while browser PiP is active.
+           This prevents the player from stopping when the user navigates away. */
+        #player-view.pip-background { display:block !important; position:fixed; inset:auto auto 1px 1px; width:1px; height:1px; opacity:0.01; overflow:hidden; pointer-events:none; z-index:-1; }
+        #player-view.pip-background .video-wrapper { width:1px; height:1px; min-height:1px; position:fixed; inset:auto auto 1px 1px; }
+        #player-view.pip-background video { width:1px; height:1px; }
         
         .player-meta-container { padding: 20px 15px; background: linear-gradient(to bottom, var(--primary-bg), #000); min-height: calc(100vh - 56vw);}
         .meta-title { font-size: 22px; font-weight: 800; color: var(--text-main); line-height: 1.3; font-family: 'Outfit'; margin-bottom: 10px;}
@@ -699,6 +704,16 @@
         .quiz-score-big{font-size:46px;font-weight:900;font-family:'Orbitron';color:var(--accent-glow);}
         /* ══ STREAK BADGE ══ */
         #streak-badge{display:none;align-items:center;gap:6px;background:rgba(255,100,0,.13);border:1px solid rgba(255,100,0,.4);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:800;color:#ff6a00;font-family:'Orbitron';margin-top:6px;cursor:default;}
+
+        /* Profile collections */
+        #collection-view { display:none; position:fixed; inset:0; z-index:8000; overflow-y:auto; padding-bottom:30px; background:var(--primary-bg); background-image:radial-gradient(circle at top right, rgba(177,75,255,.12), transparent 45%); }
+        .collection-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; padding:20px 15px; }
+        .collection-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:16px; overflow:hidden; cursor:pointer; min-width:0; }
+        .collection-card img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#111; }
+        .collection-card-info { padding:10px; }
+        .collection-card-title { color:var(--text-main); font-size:13px; font-weight:700; line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .collection-card-meta { color:var(--text-muted); font-size:10px; margin-top:5px; }
+        @media (max-width:380px) { .collection-grid { grid-template-columns:1fr; } }
     
         /* =========================================
            🎁 VIP GIFT SYSTEM STYLES
@@ -1167,8 +1182,8 @@
                         <div class="b-list-item" onclick="openAIGuide()"><div class="b-list-item-left"><i class="fas fa-robot" style="color:#00d2ff;"></i> <span data-i18n="aiVoiceCommands">AI Voice Commands</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
 
                         <div class="b-list-item" onclick="openLeaderboard()"><div class="b-list-item-left"><i class="fas fa-trophy"></i> <span data-i18n="leaderboard">Point Leaderboard</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-bookmark" style="color:#00f5d4;"></i> <span data-i18n="myList">My List</span></div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:var(--text-main); font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
-                        <div class="b-list-item" onclick="if(!currentUser) alert('Login required!');"><div class="b-list-item-left"><i class="far fa-heart" style="color:#ff0055;"></i> <span data-i18n="myLikes">My Likes</span></div><div class="b-list-item-right"><span style="color:var(--text-main); font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="openCollection('favorites')"><div class="b-list-item-left"><i class="far fa-bookmark" style="color:#00f5d4;"></i> <span data-i18n="myList">My List</span></div><div class="b-list-item-right"><span id="b-watchlist-count" style="color:var(--text-main); font-weight:bold;">0</span> <i class="fas fa-chevron-right"></i></div></div>
+                        <div class="b-list-item" onclick="openCollection('likes')"><div class="b-list-item-left"><i class="far fa-heart" style="color:#ff0055;"></i> <span data-i18n="myLikes">My Likes</span></div><div class="b-list-item-right"><span style="color:var(--text-main); font-weight:bold;" id="b-mylikes-count">0</span> <i class="fas fa-chevron-right"></i></div></div>
                         <div class="b-history-section">
                             <div class="b-list-item" style="padding: 15px 0 10px 0; border: none;" onclick="openHistory()"><div class="b-list-item-left"><i class="fas fa-history" style="color:var(--text-muted);"></i> <span data-i18n="watchHistory">Watch History</span></div><div class="b-list-item-right"><i class="fas fa-chevron-right"></i></div></div>
                             <div class="b-history-scroll" id="b-recent-history-scroll"></div>
@@ -1384,6 +1399,7 @@
                 <div class="v-step-title">ধাপ ২: লেনদেনের তথ্য</div>
                 <div class="v-step-box" style="padding: 25px 20px;">
                     <input type="text" id="pay-txnid" class="vs-input" placeholder="লেনদেনের আইডি (TxnID) লিখুন">
+                         <input type="tel" id="pay-sender-number" class="vs-input" placeholder="যে নম্বর থেকে পেমেন্ট করেছেন (ঐচ্ছিক)">
                     
                     <div class="vs-payment-methods">
                         <div class="vs-method bkash"><img src="https://i.ibb.co/bPDN2c9/bkash.png" style="height:15px; margin-right:5px;" alt="" onerror="this.style.display='none'">bKash</div>
@@ -1405,13 +1421,8 @@
                 <i class="fas fa-arrow-left" style="color:var(--text-main); background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; font-size:18px; border:1px solid var(--glass-border);"></i>
             </div>
             
-            <div id="pip-btn" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; color:#fff; z-index:9000; border:1px solid var(--glass-border); font-size:18px; display:flex; justify-content:center; align-items:center; width:45px; height:45px;" onclick="togglePiP()" title="Picture in Picture">
-                <i class="fas fa-clone"></i>
-            </div>
-
-            <!-- 🌟 MANUAL FULLSCREEN BUTTON 🌟 -->
-            <div id="fs-btn" style="position:absolute; top:20px; right:75px; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); padding:12px; border-radius:50%; cursor:pointer; color:#fff; z-index:9000; border:1px solid var(--glass-border); font-size:18px; display:flex; justify-content:center; align-items:center; width:45px; height:45px;" onclick="toggleFullScreen()" title="Fullscreen">
-                <i class="fas fa-expand"></i>
+            <div id="pip-btn" style="position:absolute; top:20px; right:20px; background:linear-gradient(135deg,rgba(177,75,255,.85),rgba(0,210,255,.7)); backdrop-filter:blur(10px); padding:12px; border-radius:14px; cursor:pointer; color:#fff; z-index:9000; border:1px solid rgba(255,255,255,.3); font-size:15px; display:flex; justify-content:center; align-items:center; gap:7px; min-width:118px; height:45px; box-shadow:0 8px 22px rgba(0,0,0,.35);" onclick="togglePlayerMode()" title="Picture-in-Picture / Fullscreen">
+                <i class="fas fa-clone"></i><span style="font-size:10px;font-family:'Orbitron';font-weight:800;">PiP / FULL</span>
             </div>
 
             <div id="emoji-float-zone"></div>
@@ -1496,7 +1507,7 @@
             </div>
             
             <div class="action-buttons-row">
-                <button class="act-btn" id="like-btn" onclick="toggleLike()"><i class="fas fa-plus"></i> Watchlist</button>
+                <button class="act-btn" id="like-btn" onclick="toggleFavorite()"><i class="fas fa-plus"></i> Watchlist</button>
                 <button class="act-btn" onclick="shareContent()"><i class="fas fa-share"></i> Share</button>
                 <button class="act-btn" onclick="shareCurrentScene()"><i class="fas fa-film"></i> Share Scene</button>
                 <button class="act-btn" onclick="handleDownload()"><i class="fas fa-download"></i> Download</button>
@@ -1538,7 +1549,12 @@
         <div id="history-list-container" style="padding: 20px;"></div>
     </div>
 
-    <!-- SEARCH OVERLAY -->
+     <div id="collection-view">
+         <div class="lb-header"><i class="fas fa-arrow-left lb-back" onclick="closeCollection()"></i><div class="lb-title" id="collection-title">My Collection</div></div>
+         <div id="collection-list-container" class="collection-grid"></div>
+     </div>
+
+     <!-- SEARCH OVERLAY -->
     <div id="search-overlay-view">
         <div class="so-header"><i class="fas fa-arrow-left so-back" onclick="closeSearchOverlay()"></i><div class="so-input-box"><i class="fas fa-search" style="color:var(--text-muted); font-size:16px; margin-right:8px;"></i><input type="text" id="overlay-search-input" placeholder="Search anime, movies..." oninput="handleOverlaySearch(this.value)"></div></div>
         <div style="padding: 20px;"><div id="search-tags-section"><div style="color:var(--text-main); font-size:16px; font-weight:800; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-family:'Orbitron';"><i class="fas fa-fire" style="color:#ff007f;"></i> Trending Searches</div><div class="so-tags-container" id="trending-search-tags" style="display:flex; flex-wrap:wrap; gap:10px;"></div></div><div id="search-results-list" style="margin-top: 15px;"></div></div>
@@ -1557,7 +1573,7 @@
         <div id="otp-step" class="auth-box">
             <button style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:var(--red); font-size:20px; cursor:pointer; transition:0.2s;" onclick="closeMasterAuth()" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-times"></i></button>
             <div class="auth-title">ADMIN LOGIN</div>
-            <div style="font-size:11px; color:var(--text-muted); margin-bottom:20px; font-family:'Outfit';">An OTP has been sent to your Telegram.</div>
+             <div style="font-size:11px; color:var(--text-muted); margin-bottom:20px; font-family:'Outfit';">Enter the configured master PIN to continue.</div>
             
             <div class="otp-timer-display" id="otp-countdown">20s</div>
             
@@ -1824,11 +1840,6 @@
                     <option value="premium">Premium Movie (VIP)</option>
                 </select>
                 <input type="hidden" id="mv-key">
-                <select id="mv-type" style="border-color:#ff3b3b;">
-                    <option value="free">Free Movie</option>
-                    <option value="premium">Premium Movie (VIP)</option>
-                </select>
-                <input type="hidden" id="mv-key">
                 <button id="mv-btn" class="btn-action" style="background:linear-gradient(45deg, #800000, #ff3b3b); color:#fff;" onclick="uploadMovie()">UPLOAD MOVIE</button>
                 <button id="mv-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('movies')">CANCEL EDIT</button>
             </div>
@@ -1874,6 +1885,7 @@
                 <h3 id="bn-head"><i class="fas fa-images"></i> HOME SLIDER BANNER</h3>
                 <input type="text" id="bn-img" placeholder="Banner Image URL">
                 <input type="text" id="bn-folder" placeholder="Folder Name (For Watch Now click)">
+                <input type="text" id="bn-link" placeholder="External Link (optional — opens instead of folder)">
                 <input type="hidden" id="bn-key">
                 <button id="bn-btn" class="btn-action" onclick="uploadBanner()">ADD HOME BANNER</button>
                 <button id="bn-cancel" style="display:none; width:100%; margin-top:5px; background:#333; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:bold; font-family:'Orbitron'; cursor:pointer;" onclick="cancelEdit('banners')">CANCEL EDIT</button>
@@ -2026,6 +2038,24 @@
             }
         }
 
+        async function togglePlayerMode() {
+            const v = document.getElementById('main-video');
+            if (!v) return;
+            if (document.pictureInPictureElement === v) {
+                if (document.exitPictureInPicture) await document.exitPictureInPicture().catch(() => {});
+                document.getElementById('player-view').classList.remove('pip-background');
+                document.getElementById('player-view').style.display = 'block';
+                return;
+            }
+            if (document.pictureInPictureEnabled && v.requestPictureInPicture) {
+                await v.requestPictureInPicture().then(() => {
+                    document.getElementById('player-view').classList.add('pip-background');
+                }).catch(() => toggleFullScreen());
+            } else {
+                toggleFullScreen();
+            }
+        }
+
         // PIP ON APP EXIT (Visibility Change Fix)
         document.addEventListener("visibilitychange", () => { 
             if (!document.hidden) { 
@@ -2035,14 +2065,24 @@
                 // Video running & user minimizes app = Auto PiP
                 if (v && !v.paused && document.pictureInPictureElement !== v) { 
                     if (document.pictureInPictureEnabled && v.requestPictureInPicture) {
-                        v.requestPictureInPicture().catch(e => {
-                            v.pause(); // fallback pause if pip blocked
+                        v.requestPictureInPicture().then(() => {
+                            document.getElementById('player-view').classList.add('pip-background');
+                        }).catch(() => {
+                            // PiP may be blocked by browser policy. Keep playback running
+                            // instead of unexpectedly pausing the user's video.
                         });
-                    } else {
-                        v.pause(); // browser doesn't support pip
                     }
                 }
             }
+        });
+
+        document.addEventListener('enterpictureinpicture', () => {
+            const p = document.getElementById('player-view');
+            if (p) p.classList.add('pip-background');
+        });
+        document.addEventListener('leavepictureinpicture', () => {
+            const p = document.getElementById('player-view');
+            if (p) { p.classList.remove('pip-background'); if (p.style.display === 'block') p.style.display = 'none'; }
         });
 
         // ADMIN PANEL: REQUESTS MANAGER
@@ -2469,16 +2509,19 @@
         let offlineBlobUrl = null; 
         function switchTab(t) { 
             document.querySelectorAll('.app-view').forEach(d => d.style.display='none'); 
+            const activeVideo = document.getElementById('main-video');
+            const pipActive = activeVideo && (document.pictureInPictureElement === activeVideo || document.getElementById('player-view').classList.contains('pip-background'));
             
             if(offlineBlobUrl && t !== 'downloads') {
                 const v = document.getElementById('main-video');
-                v.pause(); v.src = "";
+                if(!pipActive) v.pause(); v.src = "";
                 URL.revokeObjectURL(offlineBlobUrl);
                 offlineBlobUrl = null;
             }
 
-            document.getElementById('player-view').style.display='none'; 
+            if(!pipActive) document.getElementById('player-view').style.display='none'; 
             try { closeHistory(); } catch(e) {} 
+            try { closeCollection(); } catch(e) {} 
             try { hideShorts(); } catch(e) {} 
             try { closePremiumHub(); } catch(e) {} 
             try { closeSearchOverlay(); } catch(e) {} 
@@ -2666,7 +2709,8 @@
                 document.getElementById('b-profile-id').innerText = "ID: " + uid.substring(0, 10).toUpperCase();
                 let dpImg = d.avatar ? d.avatar : "https://github.com/animaxstudio09/anime-world/releases/download/2/9855-anime-characters.png";
                 document.getElementById('profile-img').src = dpImg; document.getElementById('task-av').src = dpImg;
-                db.ref(`users/${uid}/watchlist`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
+                db.ref(`users/${uid}/favorites`).once('value', w => { document.getElementById('b-watchlist-count').innerText = w.numChildren() || "0"; });
+                db.ref(`users/${uid}/likes`).once('value', w => { document.getElementById('b-mylikes-count').innerText = w.numChildren() || "0"; });
                 db.ref(`lb_users/${uid}`).update({ name: currentUser.username.toUpperCase(), avatar: dpImg });
 
                 if(d.appLang && d.appLang !== currentAppLang) {
@@ -3283,16 +3327,7 @@
             } else { alert("❌ Not enough points!"); }
         }
 
-        async function togglePiP() {
-            const v = document.getElementById('main-video');
-            if (document.pictureInPictureElement) {
-                document.exitPictureInPicture().catch(e => console.log(e));
-            } else {
-                if (document.pictureInPictureEnabled) {
-                    v.requestPictureInPicture().catch(e => { alert("Picture-in-Picture is not supported or blocked on this device."); });
-                } else { alert("Picture-in-Picture is not supported on your browser."); }
-            }
-        }
+        async function togglePiP() { return togglePlayerMode(); }
 
         function redeemCode(inputId) { 
             if(!currentUser) { alert("Please login first!"); return; }
@@ -3328,7 +3363,7 @@
                     let title = d.title; let thumb = d.thumb; let typeBadge = d.type === 'movie' ? 'MV' : 'TV';
                     if(!thumb) { let matchedData = findDataByTitle(title); if(matchedData) { thumb = matchedData.thumbnail; if(matchedData.typeBadge === 'movie') typeBadge = "MV"; } else { thumb = "https://via.placeholder.com/160x90/111/555?text=Video"; } }
                     let safeTitle = title.replace(/'/g, "\\'"); let safeFolder = d.folderName ? d.folderName.replace(/'/g, "\\'") : safeTitle; let passType = d.type || 'unknown';
-                    c.innerHTML += `<div class="b-history-card" onclick="playFromHistoryV2('${safeTitle}', '${safeFolder}', '${passType}', '${d.key}')"><div class="b-history-img-wrap"><img src="${thumb}"><div class="b-history-type">${typeBadge}</div></div><div class="b-history-title">${title}</div></div>`;
+                     c.innerHTML += `<div class="b-history-card" onclick="playFromHistoryV2('${safeTitle}', '${safeFolder}', '${passType}', '${d.key}')"><div class="b-history-img-wrap"><img src="${thumb}"><div class="b-history-type">${typeBadge}</div></div><div class="b-history-title">${title}</div></div>`;
                 });
             });
         }
@@ -3340,12 +3375,34 @@
             return null;
         }
 
-        function playFromHistoryV2(title, folder, type, key) {
-            if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } else {
-                let data = findDataByTitle(title);
-                if(data) { if(data.type === 'anime') openFolder(data.folder); else playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1); } 
-                else { alert("Content not found. It may have been removed or renamed."); }
-            }
+         function playFromHistoryV2(title, folder, type, key) {
+             const fallback = function(entry) {
+                 const saved = entry || {};
+                 const savedIdx = Number.isFinite(Number(saved.idx)) ? Number(saved.idx) : 0;
+                 const savedTime = Number(saved.time || 0);
+                 const savedLang = saved.language || '';
+                 if(type === 'anime' && folder && window.animeData && window.animeData[folder]) {
+                    openFolder(folder, savedIdx, savedTime, savedLang);
+                     if(savedLang) setTimeout(() => {
+                         const sel = document.getElementById('language-select');
+                         if(sel && Array.from(sel.options).some(o => o.value === savedLang)) {
+                             sel.value = savedLang;
+                             changeLanguage(savedLang);
+                         }
+                     }, 500);
+                     return;
+                 }
+                 let data = findDataByTitle(title);
+                 if(data) {
+                     if(data.type === 'anime') openFolder(data.folder, savedIdx, savedTime);
+                     else playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, savedTime);
+                 } else alert("Content not found. It may have been removed or renamed.");
+             };
+             if(currentUser && key) {
+                 db.ref(`users/${currentUser.uid}/watchlist/${key}`).once('value')
+                     .then(s => fallback(s.exists() ? s.val() : null))
+                     .catch(() => fallback(null));
+             } else fallback(null);
         }
 
         function handleAuth(t) { 
@@ -3455,7 +3512,9 @@
                 s.forEach(b => { 
                     let data = b.val(); 
                     let title = (data.folderName || "").trim(); 
-                    c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="playBannerAnime('${title.replace(/'/g, "\\'")}')" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; 
+                    let external = (data.link || "").trim();
+                    let action = external ? `window.open('${external.replace(/'/g, "\\'")}', '_blank')` : `playBannerAnime('${title.replace(/'/g, "\\'")}')`;
+                    c.innerHTML += `<div class="slide ${i++===0?'active':''}" onclick="${action}" style="background-image:url('${data.image}')"><div class="banner-watch-btn">WATCH NOW <i class="fas fa-play"></i></div></div>`; 
                 });
                 if(i === 0) {
                     c.innerHTML = `<div class="slide active" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;"><div style="font-size:48px;margin-bottom:10px;filter:drop-shadow(0 0 15px rgba(255,183,3,0.5));">🎌</div><div style="color:var(--accent-glow);font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:3px;margin-bottom:6px;text-shadow:0 0 20px rgba(255,183,3,0.4);">ANIMAX TV</div><div style="color:rgba(255,255,255,0.4);font-size:11px;font-weight:600;font-family:'Outfit';">Admin Panel থেকে Banner যোগ করুন</div></div><div class="slide" style="background:linear-gradient(135deg,#1a0a2e,#16213e,#0f3460);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;"><div style="font-size:48px;margin-bottom:10px;">🌸</div><div style="color:#b14bff;font-family:'Orbitron';font-weight:900;font-size:16px;letter-spacing:2px;margin-bottom:6px;">Watch Anime Free</div><div style="color:rgba(255,255,255,0.4);font-size:11px;font-family:'Outfit';">Register করুন, VIP পান</div></div>`;
@@ -3465,7 +3524,9 @@
 
             db.ref('anime').on('value', snap => {
                 const animeGrid = document.getElementById('anime-grid'); animeGrid.innerHTML = ""; trendingAnimeHTML = ""; let folders = {};
-                snap.forEach(c => { let d = c.val(); let f = (d.folder||'Misc').trim(); if(!folders[f]) folders[f]=[]; folders[f].push(d); }); window.animeData = folders;
+                snap.forEach(c => { let d = {...c.val(), _key: c.key}; let f = (d.folder||'Misc').trim(); if(!folders[f]) folders[f]=[]; folders[f].push(d); });
+                Object.keys(folders).forEach(f => folders[f].sort((a,b) => (Number(a.order) || 999999) - (Number(b.order) || 999999)));
+                window.animeData = folders;
                 
                 Object.keys(folders).forEach(name => {
                     let firstEp = folders[name][0]; let thumb = firstEp.thumbnail; let epCount = folders[name].length;
@@ -3510,11 +3571,12 @@
             });
         }
 
-        function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); }
+        function playBannerAnime(f) { if(!f) return; if(window.animeData && window.animeData[f]) openFolder(f); else alert('This banner is not linked to an available folder yet.'); }
 
-        function openFolder(n) { 
+        function openFolder(n, requestedIndex = 0, requestedTime = 0, requestedLanguage = '') { 
             const episodes = window.animeData[n]; if(!episodes||episodes.length===0)return; 
-            const firstEp = episodes[0]; 
+             const safeIndex = Math.max(0, Math.min(parseInt(requestedIndex, 10) || 0, episodes.length - 1));
+             const firstEp = episodes[safeIndex]; 
             
             if(firstEp.type === 'premium' && !isPremium && !isTrialActive) {
                 setCatEmote('talking');
@@ -3530,10 +3592,14 @@
             let folderElement = document.getElementById('season-select');
             if(folderElement) { folderElement.innerHTML = `<option value="${n}">${n}</option>`; }
             
-            let savedData = localStorage.getItem('cw_' + getSafeId(epId));
-            let parsedTime = savedData ? JSON.parse(savedData).time : 0;
+             let savedData = localStorage.getItem('cw_' + getSafeId(epId));
+             let savedProgress = {};
+             try { savedProgress = savedData ? JSON.parse(savedData) : {}; } catch(e) { savedProgress = {}; }
+             let parsedTime = requestedTime || Number(savedProgress.time || 0);
+             let savedLanguage = requestedLanguage || savedProgress.language || '';
+             if(savedLanguage) localStorage.setItem('preferred_language', savedLanguage);
             
-            playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', 0, parsedTime); loadPlayerUI(n); 
+             playVideo(firstEp.title, firstEp.url, epId, firstEp.type==='premium', 'anime', safeIndex, parsedTime); loadPlayerUI(n); 
         }
 
         function loadPlayerUI(f) { 
@@ -3556,7 +3622,7 @@
                 b.innerText = (i < 9) ? "0" + (i + 1) : (i + 1).toString(); 
                 b.id=`ep-btn-${i}`; 
                 if(ep.type === 'premium') { b.innerHTML += '<div class="ep-vip-badge-small">VIP</div>'; }
-                b.onclick=()=>{let eid=ep.id?ep.id:ep.title; playVideo(ep.title,ep.url,eid,ep.type==='premium', 'anime', i);}; c.appendChild(b); 
+                    b.onclick=()=>{let eid=ep.id?ep.id:ep.title; playVideo(ep.title,ep.url,eid,ep.type==='premium', 'anime', i);}; c.appendChild(b); 
             }); 
         }
         
@@ -3763,8 +3829,17 @@
                 let hThumb = "";
                 if(currentPlayType === 'anime' && currentFolder && window.animeData[currentFolder]) { hThumb = window.animeData[currentFolder][0].thumbnail; }
                 else if(currentPlayType === 'movie' && window.movieData) { let match = window.movieData.find(m => m.title === document.getElementById('player-title').innerText); if(match) hThumb = match.thumbnail; }
-                let progress = { id: currentSafeVideoId, title: document.getElementById('player-title').innerText, time: ct, duration: v.duration, thumb: hThumb, folder: currentFolder, type: currentPlayType, idx: currentEpIndex, ts: Date.now() };
+                 let selectedLanguage = document.getElementById('language-select')?.value || '';
+                 let progress = { id: currentSafeVideoId, title: document.getElementById('player-title').innerText, time: ct, duration: v.duration, thumb: hThumb, folder: currentFolder, type: currentPlayType, idx: currentEpIndex, language: selectedLanguage, ts: Date.now() };
                 localStorage.setItem('cw_' + currentSafeVideoId, JSON.stringify(progress));
+                 if(currentUser) {
+                     db.ref(`users/${currentUser.uid}/watchlist/${currentSafeVideoId}`).update({
+                         title: document.getElementById('player-title').innerText,
+                         time: ct, duration: v.duration, idx: currentEpIndex,
+                         language: selectedLanguage, folderName: currentFolder || '',
+                         type: currentPlayType, date: Date.now(), thumb: hThumb
+                     });
+                 }
             }
 
             if(isPremium || isTrialActive) return;
@@ -3811,8 +3886,16 @@
         }
 
         function resumeVideo(title, folder, type, id, idx) {
-            if(type === 'anime' && folder && window.animeData[folder]) { openFolder(folder); } 
-            else { let data = findDataByTitle(title); if(data) { playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, JSON.parse(localStorage.getItem('cw_'+getSafeId(id))).time); } }
+            const saved = localStorage.getItem('cw_' + getSafeId(id));
+            const progress = saved ? JSON.parse(saved) : {};
+            const time = Number(progress.time || 0);
+            const episodeIndex = Number.isFinite(Number(idx)) ? Number(idx) : Number(progress.idx || 0);
+            if(type === 'anime' && folder && window.animeData[folder]) {
+                openFolder(folder, episodeIndex, time, progress.language || '');
+            } else {
+                let data = findDataByTitle(title);
+                if(data) playVideo(title, data.url, data.id || title, data.isPremium, data.type, -1, time);
+            }
         }
 
         function changeLanguage(lang) {
@@ -3821,6 +3904,22 @@
             let newUrl = currentPlayingEpisodeData.url; 
             if (lang === 'english' && currentPlayingEpisodeData.url_eng) newUrl = currentPlayingEpisodeData.url_eng; else if (lang === 'hindi' && currentPlayingEpisodeData.url_hin) newUrl = currentPlayingEpisodeData.url_hin;
             if (newUrl) { let currentTime = v.currentTime; let isPaused = v.paused; v.src = newUrl; v.load(); v.onloadedmetadata = function() { v.currentTime = currentTime; if(!isPaused) v.play(); v.onloadedmetadata = null; }; }
+        }
+
+        let currentUserFavoriteRef = null;
+
+        function getCurrentCollectionItem() {
+            const data = currentPlayingEpisodeData || {};
+            return {
+                id: currentVideoId || currentSafeVideoId,
+                title: document.getElementById('player-title').innerText,
+                thumb: data.thumbnail || '',
+                url: data.url || document.getElementById('main-video').currentSrc || '',
+                type: currentPlayType,
+                folder: currentFolder || '',
+                idx: currentEpIndex,
+                isPremium: !!(data.type === 'premium' || isPremium)
+            };
         }
 
         function loadSocialData(safeId) {
@@ -3844,7 +3943,20 @@
                 document.getElementById('view-count').innerText = formatNumber(v); 
             });
 
-            if(currentUser) { currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`); currentUserLikeRef.on('value', s => { const b=document.getElementById('like-btn'); const hw=document.getElementById('love-heart-wrap'); if(s.exists()){ b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; if(hw) hw.classList.add('loved'); } else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; if(hw) hw.classList.remove('loved'); } }); }
+            const hw = document.getElementById('love-heart-wrap');
+            if(currentUser) {
+                currentUserLikeRef=db.ref(`likes/${safeId}/${currentUser.uid}`);
+                currentUserLikeRef.on('value', s => {
+                    if(hw) hw.classList.toggle('loved', s.exists());
+                });
+                currentUserFavoriteRef=db.ref(`users/${currentUser.uid}/favorites/${safeId}`);
+                currentUserFavoriteRef.on('value', s => {
+                    const b=document.getElementById('like-btn');
+                    if(!b) return;
+                    if(s.exists()) { b.classList.add('liked'); b.innerHTML=`<i class="fas fa-check"></i> Added`; }
+                    else { b.classList.remove('liked'); b.innerHTML=`<i class="fas fa-plus"></i> Watchlist`; }
+                });
+            }
             
             const l = document.getElementById('comments-list'); l.innerHTML = ""; currentCommentsRef = db.ref(`comments/${safeId}`); 
             currentCommentsRef.on('value', s => {
@@ -3865,11 +3977,24 @@
             const r=db.ref(`likes/${currentSafeVideoId}/${currentUser.uid}`); 
             r.once('value', s=>{ 
                 if(s.exists()){ 
-                    r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)-1); 
+                    r.remove(); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>Math.max(0,(c||0)-1));
+                    db.ref(`users/${currentUser.uid}/likes/${currentSafeVideoId}`).remove();
                 } else { 
-                    r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1); 
+                    const item = getCurrentCollectionItem();
+                    r.set(true); db.ref(`likes/${currentSafeVideoId}/count`).transaction(c=>(c||0)+1);
+                    db.ref(`users/${currentUser.uid}/likes/${currentSafeVideoId}`).set(item);
                 } 
             }); 
+        }
+
+        function toggleFavorite() {
+            if(!currentUser){ alert("Please Login"); return; }
+            if(!currentSafeVideoId) return;
+            const ref = db.ref(`users/${currentUser.uid}/favorites/${currentSafeVideoId}`);
+            ref.once('value', snap => {
+                if(snap.exists()) ref.remove();
+                else ref.set(getCurrentCollectionItem());
+            });
         }
         
         function postComment() { 
@@ -4070,7 +4195,16 @@
             }
         }
 
-        function closePlayer() { const v=document.getElementById('main-video'); cancelAutoplay(); v.pause(); v.src=""; document.getElementById('player-view').style.display='none'; removePopunders(); adsInjected = false; stopViewerTracking(); stopWatchTimeCoin(); }
+        function closePlayer() {
+            const v=document.getElementById('main-video');
+            if(document.pictureInPictureElement === v) {
+                document.getElementById('player-view').classList.add('pip-background');
+                return;
+            }
+            cancelAutoplay(); v.pause(); v.src="";
+            document.getElementById('player-view').style.display='none';
+            removePopunders(); adsInjected = false; stopViewerTracking(); stopWatchTimeCoin();
+        }
         
         function generateCardHtml(item) {
             if(item.type === 'anime') {
@@ -4169,10 +4303,57 @@
                 const c = document.getElementById('history-list-container'); c.innerHTML=""; 
                 if(!s.exists()){ c.innerHTML=`<div style="text-align:center; padding-top:50px; color:var(--text-muted); font-weight:600;">No history found.</div>`; return; } 
                 let historyArray =[]; s.forEach(i => { historyArray.push(i.val()); }); 
-                historyArray.reverse().forEach(d => { let dateStr = new Date(d.date).toLocaleDateString(); c.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:16px; margin-bottom:12px; border:1px solid var(--glass-border);"><div style="color:var(--text-main); font-size:15px; font-weight:700;">${d.title}</div><div style="color:var(--text-muted); font-size:12px; margin-top:8px; font-family:'Orbitron';">WATCHED: ${dateStr}</div></div>`; }); 
+                historyArray.reverse().forEach(d => {
+                    let dateStr = new Date(d.date).toLocaleDateString();
+                    let title = String(d.title || 'Untitled').replace(/'/g, "\\'");
+                    let folder = String(d.folderName || '').replace(/'/g, "\\'");
+                    let key = d.id || d.title;
+                    c.innerHTML += `<div class="collection-card" onclick="resumeVideo('${title}','${folder}','${d.type || 'anime'}','${String(key).replace(/'/g, "\\'")}',${Number.isFinite(Number(d.idx)) ? Number(d.idx) : 0})"><div class="collection-card-info"><div class="collection-card-title">${d.title || 'Untitled'}</div><div class="collection-card-meta">WATCHED: ${dateStr}</div></div></div>`;
+                });
             }); 
         }
         function closeHistory() { document.getElementById('history-view').style.display='none'; }
+
+        function openCollection(kind) {
+            if(!currentUser) { alert("Please login first."); return; }
+            const view = document.getElementById('collection-view');
+            const list = document.getElementById('collection-list-container');
+            const title = document.getElementById('collection-title');
+            if(!view || !list) return;
+            const path = kind === 'likes' ? `users/${currentUser.uid}/likes` : `users/${currentUser.uid}/favorites`;
+            title.innerText = kind === 'likes' ? 'Liked Videos' : 'My List';
+            view.style.display = 'block';
+            list.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:40px;">Loading...</div>`;
+            db.ref(path).once('value').then(s => {
+                list.innerHTML = '';
+                if(!s.exists()) {
+                    list.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:50px 20px;">Nothing here yet.</div>`;
+                    return;
+                }
+                const items = [];
+                s.forEach(child => {
+                    const item = child.val() || {};
+                    if(child.key !== 'count') items.push({...item, safeId: child.key});
+                });
+                items.reverse().forEach(item => {
+                    const itemTitle = String(item.title || 'Untitled').replace(/'/g, "\\'");
+                    const folder = String(item.folder || '').replace(/'/g, "\\'");
+                    const id = String(item.id || item.safeId).replace(/'/g, "\\'");
+                    const thumb = item.thumb || 'https://via.placeholder.com/320x180/111/555?text=Video';
+                    const action = item.type === 'anime' && folder && window.animeData && window.animeData[folder]
+                        ? `openFolder('${folder}',${Number(item.idx) || 0},0)`
+                        : `playVideo('${itemTitle}','${String(item.url || '').replace(/'/g, "\\'")}','${id}',false,'${item.type || 'movie'}',-1)`;
+                    list.innerHTML += `<div class="collection-card" onclick="${action}"><img src="${thumb}" alt=""><div class="collection-card-info"><div class="collection-card-title">${item.title || 'Untitled'}</div><div class="collection-card-meta">${(item.type || 'video').toUpperCase()}</div></div></div>`;
+                });
+            }).catch(() => {
+                list.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#ff6b6b;padding:40px;">Could not load this collection.</div>`;
+            });
+        }
+
+        function closeCollection() {
+            const view = document.getElementById('collection-view');
+            if(view) view.style.display = 'none';
+        }
 
         let phInterval;
         function startPlaceholderAnimation() {
@@ -4751,14 +4932,11 @@
         let resendTimer = null;
         let isOtpValid = false;
 
-        const TELEGRAM_BOT_TOKEN = "8886551340:AAG3VP-SL8uirznpQzUtmckb_H6qfs8GU00";
-        const TELEGRAM_CHAT_ID = "6438545807";
-
-        function sendOTPToTelegram(otp) {
-            const message = `🔐 *ANIMAX TV MASTER LOGIN*\n\nYour Admin OTP is: \`${otp}\`\n\n_Valid for 20 seconds only!_`;
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
-            fetch(url).catch(err => console.error("OTP Send Error:", err));
-        }
+         function sendOTPToTelegram(otp) {
+             // Telegram delivery was intentionally removed. Never put bot credentials in client HTML.
+             // Keep the hook for compatibility; the configured master PIN remains the secure login path.
+             console.warn("OTP delivery is not configured; use the configured master PIN.");
+         }
 
         function initiateMasterModeAuth() {
             setCatEmote('neutral');
@@ -4770,12 +4948,15 @@
             generateAndSendOTP();
         }
 
-        function generateAndSendOTP() {
-            currentOTP = Math.floor(100000 + Math.random() * 900000).toString(); 
+         function generateAndSendOTP() {
+             currentOTP = String(ADMIN_PIN || "").trim();
+             if(!currentOTP) {
+                 isOtpValid = false;
+                 return alert("❌ Master PIN is not configured.");
+             }
             isOtpValid = true;
-            sendOTPToTelegram(currentOTP);
             
-            let timeLeft = 20;
+             let timeLeft = 120;
             document.getElementById('otp-countdown').innerText = timeLeft + "s";
             document.getElementById('otp-countdown').style.color = "#00e676";
             document.getElementById('otp-input-field').focus();
@@ -4784,7 +4965,7 @@
             otpTimer = setInterval(() => {
                 timeLeft--;
                 document.getElementById('otp-countdown').innerText = timeLeft + "s";
-                if(timeLeft <= 5) document.getElementById('otp-countdown').style.color = "#ff3b3b";
+                 if(timeLeft <= 10) document.getElementById('otp-countdown').style.color = "#ff3b3b";
                 
                 if(timeLeft <= 0) {
                     clearInterval(otpTimer);
@@ -5121,7 +5302,7 @@
                 const btn = document.getElementById('ct-btn'); btn.innerText = "UPLOAD CARTOON"; btn.classList.remove('updating');
                 document.getElementById('ct-head').innerHTML = '<i class="fas fa-paw"></i> UPLOAD CARTOON'; document.getElementById('ct-cancel').style.display = 'none';
             } else if (type === 'banners') {
-                document.getElementById('bn-key').value = ""; clearInputs(['bn-img', 'bn-folder']);
+                document.getElementById('bn-key').value = ""; clearInputs(['bn-img', 'bn-folder', 'bn-link']);
                 const btn = document.getElementById('bn-btn'); btn.innerText = "ADD HOME BANNER"; btn.classList.remove('updating');
                 document.getElementById('bn-head').innerHTML = '<i class="fas fa-images"></i> HOME SLIDER BANNER'; document.getElementById('bn-cancel').style.display = 'none';
             }
@@ -5138,12 +5319,13 @@
             if(!window.isMasterAdminLoggedIn) return;
             const img = document.getElementById('bn-img').value; const folderName = document.getElementById('bn-folder').value.trim(); const key = document.getElementById('bn-key').value; 
             if(!img) return alert("Image URL is required!");
-            if(key) { db.ref('banners/' + key).update({ image: img, folderName: folderName }); cancelEdit('banners'); setTimeout(() => alert("Banner Updated Successfully!"), 10); } 
-            else { db.ref('banners').push({ image: img, folderName: folderName, uploadedBy: "MasterAdmin" }); document.getElementById('bn-img').value = ""; document.getElementById('bn-folder').value = ""; setTimeout(() => alert("Home Banner Added!"), 10); }
+             const link = document.getElementById('bn-link').value.trim();
+             if(key) { db.ref('banners/' + key).update({ image: img, folderName: folderName, link }); cancelEdit('banners'); setTimeout(() => alert("Banner Updated Successfully!"), 10); } 
+             else { db.ref('banners').push({ image: img, folderName: folderName, link, uploadedBy: "MasterAdmin" }); document.getElementById('bn-img').value = ""; document.getElementById('bn-folder').value = ""; document.getElementById('bn-link').value = ""; setTimeout(() => alert("Home Banner Added!"), 10); }
         }
         
-        function editBanner(key, img, folderName) { 
-            document.getElementById('bn-key').value = key; document.getElementById('bn-img').value = img; document.getElementById('bn-folder').value = folderName; 
+        function editBanner(key, img, folderName, link) { 
+            document.getElementById('bn-key').value = key; document.getElementById('bn-img').value = img; document.getElementById('bn-folder').value = folderName; document.getElementById('bn-link').value = link || ''; 
             const btn = document.getElementById('bn-btn'); btn.innerText = "UPDATE BANNER"; btn.classList.add('updating'); 
             document.getElementById('bn-head').innerHTML = '<i class="fas fa-edit"></i> EDIT BANNER'; document.getElementById('bn-cancel').style.display = 'block'; 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5261,7 +5443,7 @@
             
             db.ref('banners').on('value', s => { 
                 const c = document.getElementById('admin-banner-list'); c.innerHTML=""; 
-                s.forEach(d => { const val = d.val(); const safeImg = (val.image || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const safeFolder = (val.folderName || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const linkedFolder = val.folderName ? `<span style="color:var(--gold)">Link: ${val.folderName}</span>` : `<span style="color:#666">No Link</span>`; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title">Home Banner<br>${linkedFolder}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editBanner('${d.key}', '${safeImg}', '${safeFolder}')">EDIT</button><button class="del-btn" onclick="deleteItem('banners','${d.key}')">DEL</button></div></div></div>`; }); 
+                 s.forEach(d => { const val = d.val(); const safeImg = (val.image || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const safeFolder = (val.folderName || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const safeLink = (val.link || "").replace(/"/g, '&quot;').replace(/'/g, "\\'"); const linkedFolder = val.folderName ? `<span style="color:var(--gold)">Link: ${val.folderName}</span>` : `<span style="color:#666">No Folder Link</span>`; const externalLink = val.link ? `<span style="color:var(--cyan);display:block;margin-top:3px;">External link</span>` : ''; const uploaderTag = val.uploadedBy ? `<div style="font-size:9px; color:var(--cyan); margin-top:5px; border-top:1px solid #333; padding-top:4px;"><i class="fas fa-user-edit"></i> By: ${val.uploadedBy.split('@')[0]}</div>` : ''; c.innerHTML += `<div class="data-card"><img src="${val.image || ''}"><div class="data-info"><div class="data-title">Home Banner<br>${linkedFolder}${externalLink}</div>${uploaderTag}<div class="card-btns" style="margin-top:5px;"><button class="edit-btn" onclick="editBanner('${d.key}', '${safeImg}', '${safeFolder}', '${safeLink}')">EDIT</button><button class="del-btn" onclick="deleteItem('banners','${d.key}')">DEL</button></div></div></div>`; }); 
             });
             
             db.ref('movie_banners').on('value', s => { 
@@ -5300,6 +5482,8 @@
             document.getElementById('pay-plan-price-display').innerText = price + " TK";
             
             document.getElementById('pay-txnid').value = "";
+             const senderField = document.getElementById('pay-sender-number');
+             if(senderField) senderField.value = "";
             document.getElementById('manual-payment-modal').style.display = 'flex';
         }
 
@@ -5330,6 +5514,7 @@
                 uid: currentUser.uid,
                 email: currentUser.email || "Unknown",
                 name: currentUser.username || "User",
+                 senderNumber: document.getElementById('pay-sender-number').value.trim(),
                 txnId: txnId,
                 amount: currentPayPlan.price,
                 planName: currentPayPlan.name,
@@ -5375,7 +5560,9 @@
                             ${d.planName} (${d.planDays} Days) • Amount: <span style="color:#fff;">${d.amount} TK</span>
                         </div>
                         <div style="background:#050505; border:1px solid #333; padding:10px; border-radius:6px; color:#fff; font-family:monospace; font-size:14px; margin-bottom:12px; user-select:text; -webkit-user-select:text;">
-                            TxnID: <strong style="color:var(--cyan);">${d.txnId}</strong>
+                            TxnID: <strong style="color:var(--cyan);">${d.txnId}</strong><br>
+                            Sender: <strong style="color:#ffb703;">${d.senderNumber || 'Not provided'}</strong><br>
+                            UID: <span style="color:#aaa;">${d.uid || 'Unknown'}</span>
                         </div>
                         <div style="display:flex; gap:10px;">
                             <button onclick="approvePayment('${c.key}', '${d.uid}', ${d.planDays})" style="flex:1; background:var(--green); color:#000; border:none; padding:10px; font-weight:bold; border-radius:6px; cursor:pointer;">APPROVE</button>
@@ -5463,6 +5650,22 @@
         // ==============================================================
         // 🌟 CONTENT FETCHER (JIKAN API) — UPGRADED 🌟
         // ==============================================================
+        async function fetchJikanWithRetry(url, attempts = 3) {
+            let lastError = null;
+            for(let attempt = 0; attempt < attempts; attempt++) {
+                try {
+                    const response = await fetch(url);
+                    if(response.ok) return response;
+                    lastError = new Error('Jikan HTTP ' + response.status);
+                    if(response.status !== 429 && response.status < 500) break;
+                } catch(error) {
+                    lastError = error;
+                }
+                if(attempt < attempts - 1) await new Promise(resolve => setTimeout(resolve, 900 * (attempt + 1)));
+            }
+            throw lastError || new Error('Jikan request failed');
+        }
+
         async function searchContentAPI() {
             var query = document.getElementById('fetch-query').value.trim();
             var resultDiv = document.getElementById('fetch-results');
@@ -5471,7 +5674,7 @@
             resultDiv.innerHTML = "<div style='color:#00f3ff; text-align:center; padding:20px; font-family:Orbitron; font-size:12px;'>⏳ Jikan API থেকে খুঁজছি...</div>";
 
             try {
-                var response = await fetch('https://api.jikan.moe/v4/anime?q=' + encodeURIComponent(query) + '&limit=12');
+                var response = await fetchJikanWithRetry('https://api.jikan.moe/v4/anime?q=' + encodeURIComponent(query) + '&limit=12');
                 var data = await response.json();
 
                 if(!data.data || data.data.length === 0) {
@@ -5539,7 +5742,7 @@
                     resultDiv.innerHTML += cardHtml;
                 });
             } catch(e) {
-                resultDiv.innerHTML = "<div style='color:var(--red); text-align:center; padding:20px;'>API Error: " + e.message + "</div>";
+                resultDiv.innerHTML = "<div style='color:var(--red); text-align:center; padding:20px;'>Jikan সাময়িকভাবে ব্যস্ত। কিছুক্ষণ পরে আবার চেষ্টা করুন।</div>";
             }
         }
 
@@ -5658,9 +5861,35 @@
                 html += '<div style="color:#555; font-size:10px; margin-top:2px;">Joined: ' + joinDate + '</div></div></div>';
                 html += '<div style="color:#555; font-size:10px; font-family:monospace; margin-top:4px; user-select:text; -webkit-user-select:text;">UID: ' + uid + '</div>';
                 html += expiry;
+                html += '<div style="display:flex;gap:8px;margin-top:12px;"><button class="edit-btn" onclick="editAdminUser(\'' + uid + '\')" style="flex:1;">EDIT POINTS / VIP</button></div>';
                 html += '</div>';
             });
             list.innerHTML = html;
+        }
+
+        function editAdminUser(uid) {
+            if(!window.isMasterAdminLoggedIn) return alert('Permission Denied!');
+            const user = allUsersData.find(u => u._uid === uid);
+            if(!user) return;
+            const pointsInput = prompt('Set points for this user:', String(Number(user.points) || 0));
+            if(pointsInput === null) return;
+            const points = Number(pointsInput);
+            if(!Number.isFinite(points) || points < 0) return alert('Enter a valid non-negative points value.');
+            const currentExpiry = user.premiumExpiry && user.premiumExpiry > Date.now()
+                ? new Date(user.premiumExpiry).toISOString().slice(0, 10)
+                : '';
+            const expiryInput = prompt('VIP expiry date (YYYY-MM-DD). Leave blank to make user free:', currentExpiry);
+            if(expiryInput === null) return;
+            let premiumExpiry = null;
+            if(expiryInput.trim()) {
+                const parsed = new Date(expiryInput.trim() + 'T23:59:59').getTime();
+                if(!Number.isFinite(parsed)) return alert('Use the date format YYYY-MM-DD.');
+                premiumExpiry = parsed;
+            }
+            db.ref('users/' + uid).update({ points: Math.floor(points), premiumExpiry }).then(() => {
+                alert('✅ User points and VIP status updated.');
+                loadAllUsers();
+            }).catch(err => alert('❌ Update failed: ' + err.message));
         }
 
         function filterUserList(query) {
@@ -6221,8 +6450,8 @@
         var res=document.getElementById('ai-search-results');
         res.innerHTML='<p style="color:#888;font-size:13px;">Searching...</p>';
         document.getElementById('ai-import-config').style.display='none';
-        fetch('https://api.jikan.moe/v4/anime?q='+encodeURIComponent(q)+'&limit=8')
-            .then(function(r){return r.json();})
+        fetchJikanWithRetry('https://api.jikan.moe/v4/anime?q='+encodeURIComponent(q)+'&limit=8')
+            .then(function(r){if(!r.ok) throw new Error('Jikan request failed'); return r.json();})
             .then(function(data){
                 if(!data.data||!data.data.length){res.innerHTML='<p style="color:#888;">কোনো ফলাফল পাওয়া যায়নি।</p>';return;}
                 var h='<div style="display:flex;flex-direction:column;gap:9px;">';
@@ -6235,7 +6464,7 @@
                 });
                 h+='</div>'; res.innerHTML=h;
             })
-            .catch(function(){res.innerHTML='<p style="color:#e63946;">Error. Try again.</p>';});
+            .catch(function(){res.innerHTML='<p style="color:#e63946;">Jikan সাময়িকভাবে ব্যস্ত। কিছুক্ষণ পরে আবার চেষ্টা করুন।</p>';});
     }
     function selectAIAnime(id,title,thumb,eps){
         _aiData={id:id,title:title,thumb:thumb,eps:eps};
@@ -6257,13 +6486,13 @@
         prog.style.display='block'; prog.textContent='Importing... 0/'+eps;
         var updates={}, folder=_aiData.title, thumb=_aiData.thumb;
         for(var i=1;i<=eps;i++){
-            var key=db.ref('anime_data').push().key;
-            updates['anime_data/'+key]={
-                folder:folder, title:folder+' Episode '+i, thumbnail:thumb,
+            var key=db.ref('anime').push().key;
+            updates['anime/'+key]={
+                category:'anime', folder:folder, title:folder+' Episode '+i, thumbnail:thumb,
                 url:tpl.replace(/{n}/g,i),
                 url_hin:hin?hin.replace(/{n}/g,i):'',
                 url_eng:eng?eng.replace(/{n}/g,i):'',
-                type:type, order:i
+                type:type, order:i, timestamp:Date.now(), uploadedBy:'AutoImporter'
             };
         }
         db.ref().update(updates).then(function(){
@@ -6401,6 +6630,7 @@
                 <div style="margin-top:12px;">
                     <label style="color:#ddd;font-size:12px;font-weight:600;display:block;margin-bottom:6px;">ট্রানজেকশন ID (TxnID) লিখুন:</label>
                     <input type="text" id="gift-txnid" placeholder="যেমন: 8TGH2B9K1P..." style="width:100%;background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.08);padding:12px 16px;border-radius:10px;color:#fff;font-size:14px;outline:none;box-sizing:border-box;">
+                    <input type="tel" id="gift-sender-number" placeholder="যে নম্বর থেকে পেমেন্ট করেছেন (ঐচ্ছিক)" style="width:100%;margin-top:9px;background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.08);padding:12px 16px;border-radius:10px;color:#fff;font-size:14px;outline:none;box-sizing:border-box;">
                 </div>
             </div>
             <button class="gift-confirm-btn" id="gift-send-btn" onclick="sendVIPGift()" disabled><i class="fas fa-gift"></i> গিফট পাঠান</button>
@@ -6482,6 +6712,8 @@
         document.getElementById('gift-user-result').style.display = 'none';
         document.getElementById('gift-search-error').style.display = 'none';
         document.getElementById('gift-txnid').value = '';
+        const giftSenderField = document.getElementById('gift-sender-number');
+        if(giftSenderField) giftSenderField.value = '';
         selectedGiftPlan = null; giftTargetUser = null;
         document.getElementById('gift-send-btn').disabled = true;
         document.querySelectorAll('.gift-plan-card').forEach(c => c.classList.remove('selected'));
@@ -6548,8 +6780,12 @@
         let giftData = {
             fromUid: currentUser.uid,
             fromName: currentUser.username || currentUser.email || 'Unknown',
+            fromEmail: currentUser.email || 'Unknown',
+            fromNumber: document.getElementById('gift-sender-number').value.trim(),
             toUid: giftTargetUser.uid,
             toName: giftTargetUser.username || giftTargetUser.name || 'Unknown',
+            toEmail: giftTargetUser.email || 'Unknown',
+            toNumber: giftTargetUser.phone || giftTargetUser.mobile || giftTargetUser.number || 'Not provided',
             days: selectedGiftPlan, price: vipPrices[selectedGiftPlan], txnId: txnId,
             status: 'pending', timestamp: Date.now() + (typeof serverTimeOffset!=='undefined'?serverTimeOffset:0)
         };
@@ -6573,7 +6809,7 @@
             items.forEach(d => {
                 let isPending = d.status === 'pending';
                 let date = new Date(d.timestamp).toLocaleString('bn-BD');
-                list.innerHTML += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:12px;border-left:4px solid '+(isPending?'#ffb703':'#00e676')+';"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;"><div><span style="color:#fff;font-weight:700;font-size:14px;">🎁 '+(d.fromName||'?')+' → '+(d.toName||'?')+'</span><div style="color:#888;font-size:11px;margin-top:2px;">'+date+'</div></div><span style="background:'+(isPending?'rgba(255,183,3,0.15)':'rgba(0,230,118,0.15)')+';color:'+(isPending?'#ffb703':'#00e676')+';font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;">'+(isPending?'PENDING':'APPROVED')+'</span></div><div style="color:#D4AF37;font-family:Orbitron;font-size:12px;margin-bottom:8px;">'+d.days+' দিন VIP • '+d.price+' TK</div><div style="background:#050505;border:1px solid #333;padding:8px;border-radius:6px;color:#00f5d4;font-family:monospace;font-size:13px;margin-bottom:10px;">TxnID: <strong>'+d.txnId+'</strong></div>'+(isPending?'<div style="display:flex;gap:8px;"><button onclick="approveGiftRequest(\''+d.key+'\',\''+d.toUid+'\','+d.days+',\''+d.fromUid+'\')" style="flex:1;background:#00e676;color:#000;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">✅ অনুমোদন</button><button onclick="rejectGiftRequest(\''+d.key+'\')" style="flex:1;background:#ff3b3b;color:#fff;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">❌ বাতিল</button></div>':'<div style="color:#888;font-size:11px;">✅ অনুমোদিত</div>')+'</div>';
+                list.innerHTML += '<div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:12px;border-left:4px solid '+(isPending?'#ffb703':'#00e676')+';"><div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;"><div><span style="color:#fff;font-weight:700;font-size:14px;">🎁 '+(d.fromName||'?')+' → '+(d.toName||'?')+'</span><div style="color:#aaa;font-size:11px;margin-top:4px;">From: '+(d.fromEmail||'Unknown')+' • '+(d.fromNumber||'Number not provided')+'</div><div style="color:#aaa;font-size:11px;margin-top:2px;">To: '+(d.toEmail||'Unknown')+' • '+(d.toNumber||'Number not provided')+'</div><div style="color:#888;font-size:11px;margin-top:2px;">'+date+'</div></div><span style="background:'+(isPending?'rgba(255,183,3,0.15)':'rgba(0,230,118,0.15)')+';color:'+(isPending?'#ffb703':'#00e676')+';font-size:10px;padding:3px 8px;border-radius:6px;font-weight:700;">'+(isPending?'PENDING':'APPROVED')+'</span></div><div style="color:#D4AF37;font-family:Orbitron;font-size:12px;margin-bottom:8px;">'+d.days+' দিন VIP • '+d.price+' TK</div><div style="background:#050505;border:1px solid #333;padding:8px;border-radius:6px;color:#00f5d4;font-family:monospace;font-size:13px;margin-bottom:10px;">TxnID: <strong>'+d.txnId+'</strong><br>From UID: <span style="color:#aaa;">'+(d.fromUid||'Unknown')+'</span><br>To UID: <span style="color:#aaa;">'+(d.toUid||'Unknown')+'</span></div>'+(isPending?'<div style="display:flex;gap:8px;"><button onclick="approveGiftRequest(\''+d.key+'\',\''+d.toUid+'\','+d.days+',\''+d.fromUid+'\')" style="flex:1;background:#00e676;color:#000;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">✅ অনুমোদন</button><button onclick="rejectGiftRequest(\''+d.key+'\')" style="flex:1;background:#ff3b3b;color:#fff;border:none;padding:10px;font-weight:700;border-radius:6px;cursor:pointer;font-family:Orbitron;font-size:11px;">❌ বাতিল</button></div>':'<div style="color:#888;font-size:11px;">✅ অনুমোদিত</div>')+'</div>';
             });
         });
     }
